@@ -30,7 +30,9 @@
 **User Stories**
 - As a user, I want to be able to add a track to my project so that I can start creating music with different layers of sound.
 - As a user, I want to be able to view the list of tracks in my project so that I can see all the elements I've been working with.
-- As a user, I want to be able to add MIDI notes to a track and specify the pitch, velocity, and duration so that I can create a sequence of sounds on the track.
-- As a user, I want to be able to add a melody using a piano roll with different instruments.
-- As a user, I want to be able to modify an existing note on a track by changing its pitch, velocity, or timing so that I can make adjustments to my composition.
-- As a user, I want to be able to delete a track from my project so that I can remove elements I no longer need.
+- As a user, I want to be able to add a Block to my track.
+- As a user, I want to be able to add MIDI notes to a block and specify the pitch, velocity, and duration so that I can create a sequence of sounds.
+- As a user, I want to be able to add MIDI notes using a piano roll.
+- As a user, I want to be able to move the position of a block so that I can change when the notes inside play.
+- As a user, I want to be able to modify an existing note on a block by changing its pitch, velocity, or timing so that I can make adjustments to my composition.
+- As a user, I want to be able to delete tracks, blocks, and notes from my project so that I can remove elements I no longer need.
