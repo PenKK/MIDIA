@@ -46,7 +46,8 @@ public class SequencerController {
         return new ArrayList<MidiTrack>(); //stub
     }
 
+    // EFFECTS: returns the track at the specified index from tracks array
     public MidiTrack getTrack(int index) {
-        return new MidiTrack(null); // stub
+        return new MidiTrack(null, false); // stub
     }
 }

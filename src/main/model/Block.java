@@ -6,31 +6,27 @@ import java.util.ArrayList;
 public class Block {
 
     // REQUIRES: startTick > 0
-    // EFFECTS: Creates a block with no notes inside of it with a startTick and a default durationTick
-    public Block(int startTick) {
+    // EFFECTS: Creates a block with no notes inside of it with a startTick
+    public Block(long startTick) {
         // stub
     }
     
     // MODIFIES: this
-    // EFFECTS: Adds the note to the list of notes in this block and adjusts lengthTick if neccessary, returns created notes index
+    // EFFECTS: Adds the note to the list of notes in this block and adjusts lengthTick if neccessary, 
+    //          returns created notes index
     public int addNote(Note note) {
         return 0; // stub
     }
 
-    // REQUIRES: index >= 0 >= notes.size() - 1
-    // EFFECTS: Removes the specified index note from notes and returns it
+    // REQUIRES: 0 <= index <= notes.size() - 1
+    // EFFECTS: Removes the specified index note from notes and returns it, adjusts lengthTick if neccessary
     public Note removeNote(int index) {
         return null; // stub
     }
 
-    // REQUIRES: newDurationTicks > 0
-    public void setDuration(long newDurationTicks) {
-        // stub
-    }
-
     // REQUIRES: newStartTime > 0
     // EFFECTS: Changes the position of the block on the time line
-    public void setStartTime(long newStartTime) {
+    public void setStartTick(long newStartTick) {
         // stub
     }
 
@@ -43,7 +39,8 @@ public class Block {
         return null; // stub
     }
 
-    public long getStartTime() {
+    public long getStartTick() {
         return 0; // stub
     }
+
 }
