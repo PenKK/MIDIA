@@ -28,6 +28,12 @@ public class MidiTrack {
         return 0; // stub
     }
 
+    // MODIFIES: this 
+    // EFFECTS: removes the block at the given index in this track
+    public void removeBlock(int index) {
+        // stub
+    }
+
     // MODIFIES: track
     // EFFECTS: Converts each block from blocks to individual notes to MIDI events and applies it to an actual
     //          lower level Track object. Creates one event for the play sound, and one for the end per note.

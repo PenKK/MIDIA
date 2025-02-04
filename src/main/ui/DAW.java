@@ -82,7 +82,7 @@ public class DAW {
     // MODIFIES: track
     // EFFECTS : removes the given block by index from the track
     public void deleteBlock(MidiTrack track, int index) {
-        //stub
+        // stub
     }
 
     // MODIFIES: block
@@ -96,6 +96,6 @@ public class DAW {
     // EFFECTS: prompts the user to modify (and pottenally delete) a notes pitch, velocity, startTick, 
     //          and duration by prompted index
     public void selectNote(Note block) {
-
+        // stub
     }
 }
