@@ -1,6 +1,6 @@
 package model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
@@ -13,7 +13,6 @@ public class TestBlock {
     @BeforeEach
     void runBefore() {
         block = new Block(10);
-
     }
 
     @Test

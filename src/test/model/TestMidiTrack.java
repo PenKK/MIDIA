@@ -1,7 +1,6 @@
 package model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
@@ -41,12 +40,12 @@ public class TestMidiTrack {
 
     @Test
     void testConstructorOverload() {
-        midiTrack = new MidiTrack("Non Precussive", 25, false);  // 25 is acoustic guitar (nylon)
+        midiTrack = new MidiTrack("Non Precussive", 25, false); // 25 is acoustic guitar (nylon)
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
         assertEquals(midiTrack.getInstrument(), 25);
         assertEquals(midiTrack.getVolume(), 100);
-        assertEquals(midiTrack.getName(), "Piano Melody");
+        assertEquals(midiTrack.getName(), "Non Precussive");
 
         midiTrack = new MidiTrack("Precussive", 38, true); // 38 is acoustic snare
         assertFalse(midiTrack.isMuted());
@@ -57,7 +56,7 @@ public class TestMidiTrack {
     }
 
     @Test
-    void testAddBlock(Block block) {
+    void testAddBlock() {
         Block b1 = new Block(0);
         Block b2 = new Block(30);
         Block b3 = new Block(50);
@@ -66,12 +65,12 @@ public class TestMidiTrack {
         assertEquals(0, midiTrack.addBlock(b1));
         expectedBlocks.add(b1);
         assertEquals(expectedBlocks, midiTrack.getBlocks());
-        
-        assertEquals(1, midiTrack.addBlock(b1));
+
+        assertEquals(1, midiTrack.addBlock(b2));
         expectedBlocks.add(b2);
         assertEquals(expectedBlocks, midiTrack.getBlocks());
-        
-        assertEquals(2, midiTrack.addBlock(b1));
+
+        assertEquals(2, midiTrack.addBlock(b3));
         expectedBlocks.add(b3);
         assertEquals(expectedBlocks, midiTrack.getBlocks());
 
@@ -121,7 +120,7 @@ public class TestMidiTrack {
 
         midiTrack.addBlock(b2);
         expectedBlocks.add(b2);
-        
+
         midiTrack.addBlock(b3);
         expectedBlocks.add(b3);
 
@@ -147,13 +146,14 @@ public class TestMidiTrack {
 
         midiTrack.addBlock(new Block(1000));
         assertEquals(4, midiTrack.getBlocks().size());
+
     }
 
     @Test
-    void testApplyToTrack() {
+    void testApplyToTrack() throws InvalidMidiDataException {
         Sequence sequence;
         Track track;
-        
+
         Block b1;
         Block b2;
         Note n1;
@@ -161,58 +161,60 @@ public class TestMidiTrack {
         Note n3;
         Note n4;
 
-        try {
-            sequence = new Sequence(Sequence.PPQ, 10);
+        sequence = new Sequence(Sequence.PPQ, 10);
 
-            track = sequence.createTrack();
-            
-            b1 = new Block(0);
-            b2 = new Block(5);
+        track = sequence.createTrack();
 
-            n1 = new Note(60, 60, 0, 5);
-            n2 = new Note(56, 50, 4, 9);
+        b1 = new Block(0);
+        b2 = new Block(5);
 
-            n3 = new Note(65, 90, 9, 17);
-            n4 = new Note(64, 40, 30, 10);
+        n1 = new Note(60, 60, 0, 5);
+        n2 = new Note(56, 50, 4, 9);
 
-            b1.addNote(n1);
-            b1.addNote(n2);
-            b2.addNote(n3);
-            b2.addNote(n4);
-            midiTrack.applyToTrack(track);
+        n3 = new Note(65, 90, 9, 17);
+        n4 = new Note(64, 40, 30, 10);
 
-            // Create MidiEvents equivalent to above
-            ArrayList<MidiEvent> expectedMidiEvents = new ArrayList<>();
+        b1.addNote(n1);
+        b1.addNote(n2);
+        b2.addNote(n3);
+        b2.addNote(n4);
 
-            MidiEvent n1on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
-            MidiEvent n1off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 60), 5);
+        midiTrack.addBlock(b1);
+        midiTrack.addBlock(b2);
+        midiTrack.applyToTrack(track);
 
-            MidiEvent n2on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 56, 50), 4);
-            MidiEvent n2off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 56, 50), 13);
+        ArrayList<MidiEvent> expectedMidiEvents = new ArrayList<>();
 
-            MidiEvent n3on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 65, 90), 14);
-            MidiEvent n3off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 65, 90), 31);
+        MidiEvent n1on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
+        MidiEvent n1off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 60), 5);
 
-            MidiEvent n4on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 64, 40, 90), 35);
-            MidiEvent n4off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 64, 40, 90), 45);
+        MidiEvent n2on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 56, 50), 4);
+        MidiEvent n2off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 56, 50), 13);
 
-            expectedMidiEvents.add(n1on);
-            expectedMidiEvents.add(n1off);
-            expectedMidiEvents.add(n2on);
-            expectedMidiEvents.add(n2off);
-            expectedMidiEvents.add(n3on);
-            expectedMidiEvents.add(n3off);
-            expectedMidiEvents.add(n4on);
-            expectedMidiEvents.add(n4off);
+        MidiEvent n3on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 65, 90), 14);
+        MidiEvent n3off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 65, 90), 31);
 
-            // since Track does not allow direct access to MidiEvent arraylist
-            for (int i = 0; i < expectedMidiEvents.size(); i++) {
-                assertEquals(expectedMidiEvents.get(i), track.get(i));
-            }
+        MidiEvent n4on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 64, 40), 35);
+        MidiEvent n4off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 64, 40), 45);
+        // as Track keeps them in playing order, we add them in playing order as well
+        expectedMidiEvents.add(n1on);
+        expectedMidiEvents.add(n2on);
+        expectedMidiEvents.add(n1off);
+        expectedMidiEvents.add(n2off);
+        expectedMidiEvents.add(n3on);
+        expectedMidiEvents.add(n3off);
+        expectedMidiEvents.add(n4on);
+        expectedMidiEvents.add(n4off);
 
-        } catch (InvalidMidiDataException e) {
-            e.printStackTrace();
+        // since Track does not allow direct access to MidiEvent arraylist
+        for (int i = 0; i < expectedMidiEvents.size(); i++) {
+            MidiEvent expectedEvent = expectedMidiEvents.get(i);
+            MidiEvent realEvent = track.get(i);
+
+            assertEquals(expectedEvent.getMessage().getStatus(), realEvent.getMessage().getStatus());
+            assertEquals(expectedEvent.getMessage().getMessage()[0], realEvent.getMessage().getMessage()[0]);
+            assertEquals(expectedEvent.getMessage().getMessage()[1], realEvent.getMessage().getMessage()[1]);
+            assertEquals(expectedEvent.getMessage().getMessage()[2], realEvent.getMessage().getMessage()[2]);
         }
-        
     }
 }

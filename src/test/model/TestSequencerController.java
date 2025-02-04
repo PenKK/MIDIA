@@ -2,9 +2,7 @@ package model;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
@@ -94,7 +92,7 @@ public class TestSequencerController {
     }
 
     @Test
-    void testUpdateSequence() {
+    void testUpdateSequence() throws InvalidMidiDataException {
         MidiEvent n1on;
         MidiEvent n1off;
         MidiEvent n2on;
@@ -129,34 +127,44 @@ public class TestSequencerController {
         sequencerController.addMidiTrack(mt2);
         sequencerController.updateSequence();
 
-        try {
-            // Update sequence by hand
-            n1on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
-            n1off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 60), 5);
-            n2on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 50), 4);
-            n2off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 50), 13);
-            n3on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 62, 90), 14);
-            n3off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 62, 90), 31);
-            n4on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 64, 62, 90), 35);
-            n4off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 64, 62, 90), 45);
+        // Update sequence by hand
+        n1on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
+        n1off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 60), 5);
+        n2on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 50), 4);
+        n2off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 50), 13);
+        n3on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 62, 90), 14);
+        n3off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 62, 90), 31);
+        n4on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 62, 90), 35);
+        n4off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 62, 40), 45);
 
-            expectedSequence = new Sequence(Sequence.PPQ, 10);
-            track1 = expectedSequence.createTrack();
-            track2 = expectedSequence.createTrack();
+        expectedSequence = new Sequence(Sequence.PPQ, 960);
+        track1 = expectedSequence.createTrack();
+        track2 = expectedSequence.createTrack();
 
-            track1.add(n1on);
-            track1.add(n1off);
-            track1.add(n2on);
-            track1.add(n2off);
-            track2.add(n3on);
-            track2.add(n3off);
-            track2.add(n4on);
-            track2.add(n4off);
+        track1.add(n1on);
+        track1.add(n2on);
+        track1.add(n1off);
+        track1.add(n2off);
+        track2.add(n3on);
+        track2.add(n3off);
+        track2.add(n4on);
+        track2.add(n4off);
 
-            assertEquals(sequencerController.getSequence().getTracks()[0], track1);
-            assertEquals(sequencerController.getSequence().getTracks()[1], track2);
-        } catch (InvalidMidiDataException e) {
-            e.printStackTrace();
+        Track[] expectedTracks = { track1, track2 };
+
+        for (int i = 0; i < 2; i++) {
+            Track expectedTrack = expectedTracks[i];
+            Track actualTrack = sequencerController.getSequence().getTracks()[i];
+
+            for (int j = 0; j < expectedTrack.size(); j++) {
+                MidiEvent expectedEvent = expectedTrack.get(i);
+                MidiEvent realEvent = actualTrack.get(i);
+    
+                assertEquals(expectedEvent.getMessage().getStatus(), realEvent.getMessage().getStatus());
+                assertEquals(expectedEvent.getMessage().getMessage()[0], realEvent.getMessage().getMessage()[0]);
+                assertEquals(expectedEvent.getMessage().getMessage()[1], realEvent.getMessage().getMessage()[1]);
+                assertEquals(expectedEvent.getMessage().getMessage()[2], realEvent.getMessage().getMessage()[2]);
+            }
         }
     }
 
@@ -184,13 +192,13 @@ public class TestSequencerController {
     void testPlayBack() {
         sequencerController.play();
         try {
-            assertTrue(sequencerController.getSequencer().isRecording());
+            assertTrue(sequencerController.getSequencer().isRunning());
             sequencerController.pause();
-            assertFalse(sequencerController.getSequencer().isRecording());
+            assertFalse(sequencerController.getSequencer().isRunning());
             sequencerController.pause();
-            assertFalse(sequencerController.getSequencer().isRecording());
+            assertFalse(sequencerController.getSequencer().isRunning());
             sequencerController.play();
-            assertTrue(sequencerController.getSequencer().isRecording());
+            assertTrue(sequencerController.getSequencer().isRunning());
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
         }
