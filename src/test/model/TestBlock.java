@@ -84,7 +84,8 @@ public class TestBlock {
         expectedNotes.add(new Note(65, 90, 9 + 10, 17));
         expectedNotes.add(new Note(56, 50, 4 + 10, 9));
 
-        assertEquals(expectedNotes, block.getNotesTimeline());
+        checkNotesEqual(expectedNotes, block.getNotesTimeline());
+
         expectedNotes.clear();
 
         block.setStartTick(4);
@@ -92,6 +93,16 @@ public class TestBlock {
         expectedNotes.add(new Note(65, 90, 9 + 4, 17));
         expectedNotes.add(new Note(56, 50, 4 + 4, 9));
 
-        assertEquals(expectedNotes, block.getNotesTimeline());
+        checkNotesEqual(expectedNotes, block.getNotesTimeline());
+    }
+
+    void checkNotesEqual(ArrayList<Note> n1, ArrayList<Note> n2) {
+        assertEquals(n1.size(), n2.size());
+        for (int i = 0; i < n1.size(); i++) {
+            assertEquals(n1.get(i).getPitch(), n2.get(i).getPitch());
+            assertEquals(n1.get(i).getStartTick(), n2.get(i).getStartTick());
+            assertEquals(n1.get(i).getDurationTicks(), n2.get(i).getDurationTicks());
+            assertEquals(n1.get(i).getVelocity(), n2.get(i).getVelocity());
+        }
     }
 }

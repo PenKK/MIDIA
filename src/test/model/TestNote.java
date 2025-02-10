@@ -20,4 +20,27 @@ public class TestNote {
         assertEquals(0, note.getStartTick());
         assertEquals(5, note.getDurationTicks());
     }
+
+    @Test
+    void testSetters() {
+        note.setDurationTicks(100);
+        assertEquals(note.getDurationTicks(), 100);
+        note.setDurationTicks(3);
+        assertEquals(note.getDurationTicks(), 3);
+
+        note.setPitch(100);
+        assertEquals(note.getPitch(), 100);
+        note.setPitch(65);
+        assertEquals(note.getPitch(), 65);
+
+        note.setVelocity(99);
+        assertEquals(note.getVelocity(), 99);
+        note.setVelocity(33);
+        assertEquals(note.getVelocity(), 33);
+
+        note.setStartTick(43);
+        assertEquals(note.getStartTick(), 43);
+        note.setStartTick(2000);
+        assertEquals(note.getStartTick(), 2000);
+    }
 }
