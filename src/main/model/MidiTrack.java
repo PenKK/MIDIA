@@ -7,7 +7,9 @@ import javax.sound.midi.MidiEvent;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
-// A high level representation of a track, which is a single layer/instrument of the project
+// A high level representation of a track, which is a single layer/instrument of the project.
+// See https://midi.org/expanded-midi-1-0-messages-list for midi message correspondence
+// See https://en.wikipedia.org/wiki/General_MIDI for more midi information
 public class MidiTrack {
 
     private static final int DEFAULT_VOLUME = 100;
@@ -53,6 +55,7 @@ public class MidiTrack {
         return blocks.size() - 1;
     }
 
+    // REQUIRES: index >= 0
     // MODIFIES: this 
     // EFFECTS: removes the block at the given index in this track and returns it
     public Block removeBlock(int index) {
@@ -60,8 +63,10 @@ public class MidiTrack {
     }
 
     // MODIFIES: track
-    // EFFECTS: Converts each block from blocks to individual notes to MIDI events and applies it to an actual
-    //          lower level Track object. Creates one event for the play sound, and one for the end per note.
+    // EFFECTS: Converts MidiTrack to Java Track data. First creates volume and instrument messages.
+    //          Then converts each block from blocks to individual notes to MIDI events.
+    //          Creates one event for the play sound, and one for the end per note.
+    //          All created events are applied to the track.
     public void applyToTrack(Track track) {
         ShortMessage programChangeMessage = new ShortMessage();
         ShortMessage volMessage = new ShortMessage();
@@ -81,24 +86,31 @@ public class MidiTrack {
 
         for (Block currentBlock : blocks) {
             for (Note note : currentBlock.getNotesTimeline()) {
-                try {
-                    ShortMessage onMessage = new ShortMessage();
-                    ShortMessage offMessage = new ShortMessage();
-
-                    onMessage.setMessage(ShortMessage.NOTE_ON, getChannel(), 
-                            note.getPitch(), note.getVelocity());
-                    offMessage.setMessage(ShortMessage.NOTE_OFF, getChannel(), 
-                            note.getPitch(), 0);
-
-                    MidiEvent noteOnEvent = new MidiEvent(onMessage, note.getStartTick());
-                    MidiEvent noteOffEvent = new MidiEvent(offMessage, note.getStartTick() + note.getDurationTicks());
-
-                    track.add(noteOnEvent);
-                    track.add(noteOffEvent);
-                } catch (InvalidMidiDataException e) {
-                    throw new RuntimeException("Failed to apply track", e);
-                }
+                applyNoteToTrack(note, track);
             }
+        }
+    }
+
+    // MODIFIES: track
+    // EFFECTS: Helper method for applyToTrack; converts note to MIDI event on and off
+    //          and applies it to the specified track.
+    private void applyNoteToTrack(Note note, Track track) {
+        try {
+            ShortMessage onMessage = new ShortMessage();
+            ShortMessage offMessage = new ShortMessage();
+
+            onMessage.setMessage(ShortMessage.NOTE_ON, getChannel(), 
+                    note.getPitch(), note.getVelocity());
+            offMessage.setMessage(ShortMessage.NOTE_OFF, getChannel(), 
+                    note.getPitch(), 0);
+
+            MidiEvent noteOnEvent = new MidiEvent(onMessage, note.getStartTick());
+            MidiEvent noteOffEvent = new MidiEvent(offMessage, note.getStartTick() + note.getDurationTicks());
+
+            track.add(noteOnEvent);
+            track.add(noteOffEvent);
+        } catch (InvalidMidiDataException e) {
+            throw new RuntimeException("Failed to apply track", e);
         }
     }
 
@@ -107,7 +119,8 @@ public class MidiTrack {
         volume = newVolume;
     }
 
-    // EFFECTS: Returns correct channel corresponding to the whether or not the track is precussive
+    // EFFECTS: Returns correct channel corresponding to the whether or not the track is precussive.
+    //          Percussive channels are played on channel 9 while regular instruments are on 0.
     public int getChannel() {
         return percussive ? 9 : 0;
     }
