@@ -28,17 +28,24 @@ public class TestBlock {
         Note note3 = new Note(65, 90, 9, 17);
         ArrayList<Note> expectedNotes = new ArrayList<>();
 
-        block.addNote(note1);
+        assertEquals(block.addNote(note1), 0);
         expectedNotes.add(note1);
         assertEquals(block.getNotes(), expectedNotes);
 
-        block.addNote(note2);
+        assertEquals(block.addNote(note2), 1);
         expectedNotes.add(note2);
         assertEquals(block.getNotes(), expectedNotes);
 
-        block.addNote(note3);
+        assertEquals(block.addNote(note3), 2);
         expectedNotes.add(note3);
         assertEquals(block.getNotes(), expectedNotes);
+
+        block.getNotes().clear();
+        assertEquals(block.getNotes().size(), 0);
+
+        assertEquals(block.addNote(note1), 0);
+        assertEquals(block.addNote(note2), 1);
+        assertEquals(block.addNote(note3), 2);
     }
 
     @Test
@@ -56,15 +63,15 @@ public class TestBlock {
         expectedNotes.add(note2);
         expectedNotes.add(note3);
 
-        block.removeNote(2);
+        assertEquals(block.removeNote(2), note3);
         expectedNotes.remove(2);
         assertEquals(expectedNotes, block.getNotes());
 
-        block.removeNote(0);
+        assertEquals(block.removeNote(0), note1);
         expectedNotes.remove(0);
         assertEquals(expectedNotes, block.getNotes());
 
-        block.removeNote(0);
+        assertEquals(block.removeNote(0), note2);
         expectedNotes.remove(0);
         assertEquals(expectedNotes.isEmpty(), block.getNotes().isEmpty());
     }
@@ -96,7 +103,7 @@ public class TestBlock {
         checkNotesEqual(expectedNotes, block.getNotesTimeline());
     }
 
-    void checkNotesEqual(ArrayList<Note> n1, ArrayList<Note> n2) {
+    private void checkNotesEqual(ArrayList<Note> n1, ArrayList<Note> n2) {
         assertEquals(n1.size(), n2.size());
         for (int i = 0; i < n1.size(); i++) {
             assertEquals(n1.get(i).getPitch(), n2.get(i).getPitch());

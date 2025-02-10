@@ -182,14 +182,14 @@ public class TestMidiTrack {
         Note n3 = new Note(65, 90, 9, 17);
         Note n4 = new Note(64, 40, 30, 10);
 
-        b1.addNote(n1);
-        b1.addNote(n2);
+        assertEquals(b1.addNote(n1), 0);
+        assertEquals(b1.addNote(n2), 1);
 
-        b2.addNote(n3);
-        b2.addNote(n4);
+        assertEquals(b2.addNote(n3), 0);
+        assertEquals(b2.addNote(n4), 1);
 
-        midiTrack.addBlock(b1);
-        midiTrack.addBlock(b2);
+        assertEquals(midiTrack.addBlock(b1), 0);
+        assertEquals(midiTrack.addBlock(b2), 1);
         midiTrack.applyToTrack(track);
 
         ArrayList<MidiEvent> expectedMidiEvents = new ArrayList<>();
