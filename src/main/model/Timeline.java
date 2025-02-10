@@ -23,7 +23,12 @@ public class Timeline {
     private static final int PULSES_PER_QUARTER_NOTE = 960;
     private static final float DEFAULT_BPM = 120;
 
-    // EFFECTS: Creates a timeline with a single sequence with no tracks and the positon tick at 0, and a BPM of 120
+    // EFFECTS: Creates a timeline with a single sequence with no tracks and the positon 
+    //          tick at 0, and a BPM of 120.
+    //          Method throws MidiUnavailableException if the device has no MIDI sequencer
+    //          avaliable which is fatal and unrecoverable.
+    //          Method throws InvalidMidiDataException if the Sequence has an invalid 
+    //          divison type, which is impossile since the division type will be constant.
     public Timeline() throws MidiUnavailableException, InvalidMidiDataException {
         sequencer = MidiSystem.getSequencer();
         sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
@@ -50,8 +55,9 @@ public class Timeline {
     }
 
     // MODIFIES: this
-    // EFFECTS: updates the sequence with the current
-    //          midiTracks, converting each one to a Java Track
+    // EFFECTS: updates the sequence with the current midiTracks, converting each one 
+    //          to a Java Track. Throws InvalidMidiDataException if invalid midi data
+    //          is found when setting the sequence to the sequencer
     public void updateSequence() throws InvalidMidiDataException {
         resetTracks();
         for (MidiTrack currentMidiTrack : midiTracks) {
@@ -75,7 +81,7 @@ public class Timeline {
     }
 
     // EFFECTS: Begins playback, can throw InvalidMidiDataException if invalid
-    //          midi data is found during the sequence update
+    //          midi data is found during the sequence update (handled by UI)
     public void play() throws InvalidMidiDataException {
         updateSequence();
 
@@ -88,7 +94,7 @@ public class Timeline {
         sequencer.stop();
     }
 
-    // REQUIRES: time > 0
+    // REQUIRES: newPositionTick >= 0
     // MODIFIES: this
     // EFFECTS: Changes timeline to start playback
     public void setPositionTick(int newPositionTick) {
@@ -96,7 +102,7 @@ public class Timeline {
     }
 
     // REQUIRES: bpm >= 1
-    //  EFFECTS: changes the BPM
+    // EFFECTS: changes the BPM
     public void setBPM(float bpm) {
         this.beatsPerMinute = bpm;
     }
@@ -111,7 +117,7 @@ public class Timeline {
 
     // EFFECTS: calculates the tick at which the last note ends, this method
     //          is needed to calculate without first calling updateSequence()
-    //
+
     public long getLengthTicks() {
         long lastNoteEndTick = 0;
         for (MidiTrack midiTrack : midiTracks) {

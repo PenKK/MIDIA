@@ -24,12 +24,14 @@ public class Block {
     }
 
     // REQUIRES: 0 <= index <= notes.size() - 1
-    // EFFECTS: Removes the specified index note from notes and returns it, adjusts lengthTick if neccessary
+    // MODIFIES: this
+    // EFFECTS: Removes the specified index note from notes and returns it
     public Note removeNote(int index) {
         return notes.remove(index);
     }
 
     // REQUIRES: newStartTime > 0
+    // MODIFIES: this
     // EFFECTS: Changes the position of the block on the time line
     public void setStartTick(int newStartTick) {
         startTick = newStartTick;
