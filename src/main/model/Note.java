@@ -5,42 +5,55 @@ package model;
 // to a MIDIEvent object and applied to a Track object by the MidiTrack class.
 public class Note {
 
+    private int pitch;
+    private int velocity;
+    private int startTick;
+    private int durationTicks;
+
     // REQUIRES: startTick >= 0
     // EFFECTS: Creates a note with pitch, velocity, startTick, and durationTicks.
     //          Tick timings are kept relative to the block that they are in
-    public Note(int pitch, int velocity, long startTick, long durationTicks) {
-        // stub
+    public Note(int pitch, int velocity, int startTick, int durationTicks) {
+        this.pitch = pitch;
+        this.velocity = velocity;
+        this.startTick = startTick;
+        this.durationTicks = durationTicks;
     }
 
     public int getPitch() {
-        return 0; // stub
+        return pitch;
     }
 
     public int getVelocity() {
-        return 0; // stub
+        return velocity;
     }
 
-    public long getDurationTicks() {
-        return 0; // stub
+    public int getDurationTicks() {
+        return durationTicks;
     }
 
-    public long getStartTick() {
-        return 0; // stub
+    public int getStartTick() {
+        return startTick;
     }
 
-    public void setPitch(int pitch) {
-        // stub
+    public void setPitch(int newPitch) {
+        pitch = newPitch;
     }
 
-    public void setVelocity(int velocity) {
-        // stub
+    public void setVelocity(int newVelocity) {
+        velocity = newVelocity;
     }
 
-    public void setStartTick(long startTick) {
-        // stub
+    public void setStartTick(int newStartTick) {
+        startTick = newStartTick;
     }
 
-    public void setDurationTicks(long durationTicks) {
-        // stub
+    public void setDurationTicks(int newDurationTicks) {
+        durationTicks = newDurationTicks;
+    }
+
+    @Override
+    public Note clone() {
+        return new Note(getPitch(), getVelocity(), getStartTick(), getDurationTicks());
     }
 }

@@ -5,42 +5,55 @@ import java.util.ArrayList;
 // A block is a group of notes that can be moved on the timeline
 public class Block {
 
+    private ArrayList<Note> notes;
+    private int startTick;
+
     // REQUIRES: startTick > 0
     // EFFECTS: Creates a block with no notes inside of it with a startTick
-    public Block(long startTick) {
-        // stub
+    public Block(int startTick) {
+        this.notes = new ArrayList<>();
+        this.startTick = startTick;
     }
     
     // MODIFIES: this
     // EFFECTS: Adds the note to the list of notes in this block and adjusts lengthTick if neccessary, 
     //          returns created notes index
     public int addNote(Note note) {
-        return 0; // stub
+        notes.add(note);
+        return notes.size() - 1;
     }
 
     // REQUIRES: 0 <= index <= notes.size() - 1
     // EFFECTS: Removes the specified index note from notes and returns it, adjusts lengthTick if neccessary
     public Note removeNote(int index) {
-        return null; // stub
+        return notes.remove(index);
     }
 
     // REQUIRES: newStartTime > 0
     // EFFECTS: Changes the position of the block on the time line
-    public void setStartTick(long newStartTick) {
-        // stub
+    public void setStartTick(int newStartTick) {
+        startTick = newStartTick;
     }
 
     // EFFECTS: Returns notes with timings adjusted relative to the timeline, rather than the block
     public ArrayList<Note> getNotesTimeline() {
-        return null; // stub
+        ArrayList<Note> adjustedNotes = new ArrayList<>();
+
+        for (Note note : notes) {
+            Note adjustedNote = note.clone();
+            adjustedNote.setStartTick(this.startTick + note.getStartTick());
+            adjustedNotes.add(adjustedNote);
+        }
+
+        return adjustedNotes;
     }
 
     public ArrayList<Note> getNotes() {
-        return null; // stub
+        return notes;
     }
 
-    public long getStartTick() {
-        return 0; // stub
+    public int getStartTick() {
+        return startTick;
     }
 
 }
