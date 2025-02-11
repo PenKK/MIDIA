@@ -207,9 +207,17 @@ public class TestTimeline {
     void testTimelinePosition() throws MidiUnavailableException {
         timeline.setPositionTick(30);
         assertEquals(timeline.getPositionTick(), 30);
-        
+        assertEquals(timeline.getPositionMs(), 15);
+
         timeline.setPositionTick(20);
         assertEquals(timeline.getPositionTick(), 20);
+        assertEquals(timeline.getPositionMs(), 10);
+
+        timeline.setBPM(240);
+
+        timeline.setPositionTick(20);
+        assertEquals(timeline.getPositionTick(), 20);
+        assertEquals(timeline.getPositionMs(), 5);
 
         timeline.setPositionTick(0);
         assertEquals(timeline.getPositionTick(), 0);
@@ -268,7 +276,7 @@ public class TestTimeline {
         // So 1 quarter note at 120 BPM
         // 120 BPM = 0.5 seconds per quarter note
         assertEquals(timeline.getLengthMS(), 500);
-
+        assertEquals(Timeline.msToTicks(500, timeline.getBPM()), 960); // Check the reverse
         MidiTrack testTrack2 = new MidiTrack("track", false);
         Block testBlock2 = new Block(960);
         Note testNote2 = new Note(60, 100, 0, 1920);
@@ -278,6 +286,7 @@ public class TestTimeline {
         timeline.addMidiTrack(testTrack2);
 
         assertEquals(timeline.getLengthMS(), 1500);
+        assertEquals(Timeline.msToTicks(1500, timeline.getBPM()), 1920 + 960); // Check the reverse
 
         timeline.setBPM(240); // double BPM
         assertEquals(timeline.getLengthMS(), 750); // ms halves

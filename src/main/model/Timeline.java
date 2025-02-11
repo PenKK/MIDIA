@@ -26,7 +26,7 @@ public class Timeline {
     // EFFECTS: Creates a timeline with a single sequence with no tracks and the positon 
     //          tick at 0, and a BPM of 120.
     //          Method throws MidiUnavailableException if the device has no MIDI sequencer
-    //          avaliable which is fatal and unrecoverable.
+    //          avaliable, which is fatal and unrecoverable.
     //          Method throws InvalidMidiDataException if the Sequence has an invalid 
     //          divison type, which is impossile since the division type will be constant.
     public Timeline() throws MidiUnavailableException, InvalidMidiDataException {
@@ -109,10 +109,23 @@ public class Timeline {
 
     // EFFECTS: returns the calculation of the sequence length in milliseconds
     public long getLengthMS() {
-        double durationInQuarterNotes = (double) getLengthTicks() / (double) PULSES_PER_QUARTER_NOTE;
-        double durationInMinutes =  durationInQuarterNotes / beatsPerMinute;
+        return ticksToMs(getLengthTicks(), beatsPerMinute);
+    }
+
+    // EFFECTS: converts ticks to milliseconds given the BPM
+    public static long ticksToMs(long ticks, float BPM) {
+        double durationInQuarterNotes = (double) ticks / (double) PULSES_PER_QUARTER_NOTE;
+        double durationInMinutes = durationInQuarterNotes / BPM;
         double durationInMS = durationInMinutes * 60000;
         return (long) durationInMS;
+    }
+
+    // EFFECTS: converts milliseconds to ticks (reverse of above)
+    public static long msToTicks(long ms, float BPM) {
+        double duartionInMinutes = (double) ms / (double) 60000;
+        double durationInQuarterNotes = BPM * duartionInMinutes;
+        double ticks = durationInQuarterNotes * PULSES_PER_QUARTER_NOTE;
+        return (long) ticks;
     }
 
     // EFFECTS: calculates the tick at which the last note ends, this method
@@ -156,6 +169,10 @@ public class Timeline {
 
     public int getPositionTick() {
         return positionTick;
+    }
+
+    public long getPositionMs() {
+        return ticksToMs(positionTick, beatsPerMinute);
     }
 
 }
