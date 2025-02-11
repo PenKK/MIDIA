@@ -207,17 +207,19 @@ public class TestTimeline {
     void testTimelinePosition() throws MidiUnavailableException {
         timeline.setPositionTick(30);
         assertEquals(timeline.getPositionTick(), 30);
-        assertEquals(timeline.getPositionMs(), 15);
+        assertEquals(timeline.getPositionMs(), 15.625, 0.01);
+        timeline.setPositionMs(15.625);
+        assertEquals(timeline.getPositionTick(), 30);
 
         timeline.setPositionTick(20);
         assertEquals(timeline.getPositionTick(), 20);
-        assertEquals(timeline.getPositionMs(), 10);
+        assertEquals(timeline.getPositionMs(), 10.42, 0.01);
 
         timeline.setBPM(240);
 
         timeline.setPositionTick(20);
         assertEquals(timeline.getPositionTick(), 20);
-        assertEquals(timeline.getPositionMs(), 5);
+        assertEquals(timeline.getPositionMs(), 5.2, 0.01);
 
         timeline.setPositionTick(0);
         assertEquals(timeline.getPositionTick(), 0);
@@ -275,8 +277,9 @@ public class TestTimeline {
         // PPQ = 960, note ends at 960, and the bpm is 120.
         // So 1 quarter note at 120 BPM
         // 120 BPM = 0.5 seconds per quarter note
-        assertEquals(timeline.getLengthMS(), 500);
-        assertEquals(Timeline.msToTicks(500, timeline.getBPM()), 960); // Check the reverse
+        assertEquals(timeline.getLengthMs(), 500);
+        assertEquals(timeline.msToTicks(500), 960); // Check the reverse
+        assertEquals(timeline.getLengthBeats(), 1); // 1 beat = 1 quarter note
         MidiTrack testTrack2 = new MidiTrack("track", false);
         Block testBlock2 = new Block(960);
         Note testNote2 = new Note(60, 100, 0, 1920);
@@ -285,13 +288,31 @@ public class TestTimeline {
         testTrack2.addBlock(testBlock2);
         timeline.addMidiTrack(testTrack2);
 
-        assertEquals(timeline.getLengthMS(), 1500);
-        assertEquals(Timeline.msToTicks(1500, timeline.getBPM()), 1920 + 960); // Check the reverse
+        assertEquals(timeline.getLengthMs(), 1500);
+        assertEquals(timeline.msToTicks(1500), 1920 + 960); // Check the reverse
+        assertEquals(timeline.getLengthBeats(), 3);
 
         timeline.setBPM(240); // double BPM
-        assertEquals(timeline.getLengthMS(), 750); // ms halves
+        assertEquals(timeline.getLengthMs(), 750); // ms halves
 
         testBlock2.addNote(new Note(60, 60, 231, 500));
-        assertEquals(timeline.getLengthMS(), 750);
+        assertEquals(timeline.getLengthMs(), 750);
+    }
+
+    @Test
+    void testBeats() {
+        assertEquals(timeline.ticksToBeats(960), 1);
+        assertEquals(timeline.beatsToTicks(1), 960);
+        assertEquals(timeline.ticksToBeats(960 + 960 / 2), 1.5);
+        assertEquals(timeline.ticksToBeats(960 / 4), 0.25);
+
+        timeline.setBPM(100); 
+        // BPM does not change the converstion as beats = ticks / PPQN
+        assertEquals(timeline.ticksToBeats(960 / 4), 0.25); // remains same
+
+        timeline.setPositionBeats(4);
+        assertEquals(timeline.getPositionTick(), 4 * 960);
+        timeline.setPositionBeats(0.5);
+        assertEquals(timeline.getPositionTick(), 960 / 2);
     }
 }

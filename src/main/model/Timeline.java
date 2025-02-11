@@ -11,7 +11,7 @@ import javax.sound.midi.Track;
 
 // The orchestrator of the whole project.
 // This class will manage the primary Sequence object and is responsible for playback.
-// Higher level MidiTrack(s) will be converted to the lower level Java Track here
+// Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
 public class Timeline {
 
     private Sequencer sequencer;
@@ -96,9 +96,23 @@ public class Timeline {
 
     // REQUIRES: newPositionTick >= 0
     // MODIFIES: this
-    // EFFECTS: Changes timeline to start playback
+    // EFFECTS: Changes timeline position to start playback given ticks
     public void setPositionTick(int newPositionTick) {
         this.positionTick = newPositionTick;
+    }
+
+    // REQUIRES: newPositionTick >= 0
+    // MODIFIES: this
+    // EFFECTS: Changes timeline positionto start playback given milliseconds
+    public void setPositionMs(double newPositionMs) {
+        this.positionTick = msToTicks(newPositionMs);
+    }
+
+    // REQUIRES: newPositionTick >= 0
+    // MODIFIES: this
+    // EFFECTS: Changes timeline positionto start playback given milliseconds
+    public void setPositionBeats(double newPositionBeats) {
+        this.positionTick = beatsToTicks(newPositionBeats);
     }
 
     // REQUIRES: bpm >= 1
@@ -108,31 +122,51 @@ public class Timeline {
     }
 
     // EFFECTS: returns the calculation of the sequence length in milliseconds
-    public long getLengthMS() {
-        return ticksToMs(getLengthTicks(), beatsPerMinute);
+    public double getLengthMs() {
+        return ticksToMs(getLengthTicks());
     }
 
+    // EFFECTS: returns the calculation of the sequence length in milliseconds
+    public double getLengthBeats() {
+        return ticksToBeats(getLengthTicks());
+    } 
+
+    // REQUIRES: ticks >= 0
     // EFFECTS: converts ticks to milliseconds given the BPM
-    public static long ticksToMs(long ticks, float BPM) {
+    public double ticksToMs(int ticks) {
         double durationInQuarterNotes = (double) ticks / (double) PULSES_PER_QUARTER_NOTE;
-        double durationInMinutes = durationInQuarterNotes / BPM;
+        double durationInMinutes = durationInQuarterNotes / beatsPerMinute;
         double durationInMS = durationInMinutes * 60000;
-        return (long) durationInMS;
+        return durationInMS;
     }
 
+    // REQUIRES: ms >= 0
     // EFFECTS: converts milliseconds to ticks (reverse of above)
-    public static long msToTicks(long ms, float BPM) {
-        double duartionInMinutes = (double) ms / (double) 60000;
-        double durationInQuarterNotes = BPM * duartionInMinutes;
+    public int msToTicks(double ms) {
+        double durationInMinutes = ms / (double) 60000;
+        double durationInQuarterNotes = beatsPerMinute * durationInMinutes;
         double ticks = durationInQuarterNotes * PULSES_PER_QUARTER_NOTE;
-        return (long) ticks;
+        return (int) Math.round(ticks);
+    }
+
+    // REQUIRES: beats >= 0
+    // EFFECTS: calculates beats to ticks conversion
+    public int beatsToTicks(double beats) {
+        double ticks = beats * (double) PULSES_PER_QUARTER_NOTE;
+        return (int) Math.round(ticks);
+    }
+
+    // REQUIRES: ticks >= 0
+    // EFFECTS: calculates ticks to beats conversion (reverse of above)
+    public double ticksToBeats(int ticks) {
+        double beats = (double) ticks / (double) PULSES_PER_QUARTER_NOTE;
+        return beats;
     }
 
     // EFFECTS: calculates the tick at which the last note ends, this method
-    //          is needed to calculate without first calling updateSequence()
-
-    public long getLengthTicks() {
-        long lastNoteEndTick = 0;
+    //          is needed to calculate length ticks without first calling updateSequence()
+    public int getLengthTicks() {
+        int lastNoteEndTick = 0;
         for (MidiTrack midiTrack : midiTracks) {
             for (Block block : midiTrack.getBlocks()) {
                 for (Note note : block.getNotesTimeline()) {
@@ -171,8 +205,8 @@ public class Timeline {
         return positionTick;
     }
 
-    public long getPositionMs() {
-        return ticksToMs(positionTick, beatsPerMinute);
+    public double getPositionMs() {
+        return ticksToMs(positionTick);
     }
 
 }
