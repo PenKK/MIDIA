@@ -84,8 +84,8 @@ public class Timeline {
     //          midi data is found during the sequence update (handled by UI)
     public void play() throws InvalidMidiDataException {
         updateSequence();
-
         sequencer.setTickPosition(positionTick);
+        sequencer.setTempoInBPM(beatsPerMinute);
         sequencer.start();
     }
 
