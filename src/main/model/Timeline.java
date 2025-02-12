@@ -184,6 +184,16 @@ public class Timeline {
         return midiTracks;
     }
 
+    // EFFECTS: returns the timeline position in ms by converting ticks
+    public double getPositionMs() {
+        return ticksToMs(positionTick);
+    }
+
+    // EFFECTS: returns the timeline position in beats by converting ticks
+    public double getPositionBeats() {
+        return ticksToBeats(positionTick);
+    }
+
     // EFFECTS: returns the track at the specified index from tracks array
     public MidiTrack getTrack(int index) {
         return midiTracks.get(index);
@@ -205,8 +215,6 @@ public class Timeline {
         return positionTick;
     }
 
-    public double getPositionMs() {
-        return ticksToMs(positionTick);
-    }
+
 
 }

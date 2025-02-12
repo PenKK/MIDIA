@@ -218,24 +218,32 @@ public class TestTimeline {
 
     @Test
     void testTimelinePosition() throws MidiUnavailableException {
+        double roundingDelta = 0.01;
+
         timeline.setPositionTick(30);
         assertEquals(timeline.getPositionTick(), 30);
-        assertEquals(timeline.getPositionMs(), 15.625, 0.01);
+
+        assertEquals(timeline.getPositionMs(), 15.625, roundingDelta);
+        assertEquals(timeline.getPositionBeats(), 0.03125, roundingDelta); // 30 ms is very short
         timeline.setPositionMs(15.625);
         assertEquals(timeline.getPositionTick(), 30);
 
         timeline.setPositionTick(20);
         assertEquals(timeline.getPositionTick(), 20);
-        assertEquals(timeline.getPositionMs(), 10.42, 0.01);
+        assertEquals(timeline.getPositionMs(), 10.42, roundingDelta);
 
         timeline.setBPM(240);
-
         timeline.setPositionTick(20);
         assertEquals(timeline.getPositionTick(), 20);
-        assertEquals(timeline.getPositionMs(), 5.2, 0.01);
+        assertEquals(timeline.getPositionMs(), 5.2, roundingDelta);
+        assertEquals(timeline.getPositionBeats(), 0.0208, roundingDelta);
 
         timeline.setPositionTick(0);
         assertEquals(timeline.getPositionTick(), 0);
+        assertEquals(timeline.getPositionBeats(), 0);
+
+        timeline.setPositionBeats(10);
+        assertEquals(timeline.getPositionMs(), 2500);
     }
 
     @Test
