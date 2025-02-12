@@ -15,6 +15,8 @@ import javax.sound.midi.Track;
 
 import org.junit.jupiter.api.BeforeEach;
 
+// See https://midi.org/expanded-midi-1-0-messages-list 
+// to understand the checking of bytes in MidiEvents in tests
 public class TestTimeline {
     Timeline timeline;
 
@@ -97,7 +99,6 @@ public class TestTimeline {
 
     @Test
     void testUpdateSequence() throws InvalidMidiDataException {
-
         MidiTrack mt1 = new MidiTrack("C notes", false);
         MidiTrack mt2 = new MidiTrack("cool notes", 4, true);
         mt2.setVolume(50);
@@ -124,13 +125,13 @@ public class TestTimeline {
         timeline.updateSequence();
 
         // Update sequence by hand, creating the expected midi events
-        MidiEvent n1on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
+        MidiEvent n1on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
         MidiEvent n1off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 0), 5);
-        MidiEvent n2on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 50), 4);
+        MidiEvent n2on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 50), 4);
         MidiEvent n2off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 0), 13);
-        MidiEvent n3on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 62, 90), 14);
+        MidiEvent n3on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 62, 90), 14);
         MidiEvent n3off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 62, 0), 31);
-        MidiEvent n4on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 62, 90), 35);
+        MidiEvent n4on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 62, 90), 35);
         MidiEvent n4off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 62, 0), 45);
 
         Sequence expectedSequence = new Sequence(Sequence.PPQ, 960);
@@ -180,27 +181,39 @@ public class TestTimeline {
     }
 
     @Test
-    void testPlay() throws MidiUnavailableException, InvalidMidiDataException {
-        timeline.play();
-        assertTrue(timeline.getSequencer().isRunning());
-    }
+    void testPlayBack() throws MidiUnavailableException, InvalidMidiDataException, InterruptedException {
+        Block b = new Block(0);
+        Note n = new Note(60, 100, 0, 960);
+        Note n2 = new Note(64, 127, 960, 960);
+        b.addNote(n);
+        b.addNote(n2);
+        MidiTrack midiTrack = new MidiTrack("test", false);
+        midiTrack.addBlock(b);
+        timeline.addMidiTrack(midiTrack);
 
-    @Test
-    void testPause() throws MidiUnavailableException {
-        timeline.pause();
+        timeline.play();
+        assertTrue(timeline.getSequencer().isRunning());
+        Thread.sleep((long) (timeline.getLengthMs() + 500));
         assertFalse(timeline.getSequencer().isRunning());
-    }
 
-    @Test
-    void testPlayBack() throws MidiUnavailableException, InvalidMidiDataException {
+        // test playback a second time
+        b.removeNote(1);
         timeline.play();
+        assertTrue(timeline.getSequencer().isRunning());
+        Thread.sleep((long) (timeline.getLengthMs() + 500));
+        assertFalse(timeline.getSequencer().isRunning());
+
+        // test play and pause
+        timeline.play();
+        assertTrue(timeline.getSequencer().isRunning());
+        Thread.sleep((long) (timeline.getLengthMs() / 2));
         assertTrue(timeline.getSequencer().isRunning());
         timeline.pause();
         assertFalse(timeline.getSequencer().isRunning());
-        timeline.pause();
-        assertFalse(timeline.getSequencer().isRunning());
         timeline.play();
         assertTrue(timeline.getSequencer().isRunning());
+        Thread.sleep((long) (timeline.getLengthMs() / 2) + 500);
+        assertFalse(timeline.getSequencer().isRunning());
     }
 
     @Test
@@ -265,7 +278,7 @@ public class TestTimeline {
     }
 
     @Test
-    void testBPMChange() {
+    void testTempoChange() {
         MidiTrack testTrack = new MidiTrack("track", false);
         Block testBlock = new Block(0);
         Note testNote = new Note(60, 100, 0, 960);
