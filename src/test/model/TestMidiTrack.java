@@ -194,16 +194,13 @@ public class TestMidiTrack {
 
         ArrayList<MidiEvent> expectedMidiEvents = new ArrayList<>();
 
-        MidiEvent n1on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
+        MidiEvent n1on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
         MidiEvent n1off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 0), 5);
-
-        MidiEvent n2on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 56, 50), 4);
+        MidiEvent n2on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 56, 50), 4);
         MidiEvent n2off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 56, 0), 13);
-
-        MidiEvent n3on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 65, 90), 14);
+        MidiEvent n3on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 65, 90), 14);
         MidiEvent n3off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 65, 0), 31);
-
-        MidiEvent n4on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 64, 40), 35);
+        MidiEvent n4on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 64, 40), 35);
         MidiEvent n4off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 64, 0), 45);
 
         MidiEvent programChangeEvent = new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE,
