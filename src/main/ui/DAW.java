@@ -234,6 +234,7 @@ public class DAW {
 
     // REQUIRES: index >= 0 and for there to be at least 1 track in the timeline
     // EFFECTS: Prompts the user to edit a track by giving an index
+    @SuppressWarnings("methodlength")
     private void editTrack(int index) {
         String[] validInputs = { "n", "b", "i", "v", "m", "n", "r", "d" };
         MidiTrack selectedTrack = timeline.getTrack(index);
@@ -260,6 +261,9 @@ public class DAW {
             case "d":
                 timeline.getTracks().remove(index);
                 return;
+            case "m":
+                selectedTrack.setMuted(!selectedTrack.isMuted());
+                break;
             case "r":
                 return;
             default:
@@ -363,7 +367,7 @@ public class DAW {
                 break;
             case "d":
                 midiTrack.removeBlock(index);
-                break;
+                return;
             case "e":
                 chooseNote(selectedBlock);
                 break;
@@ -380,7 +384,30 @@ public class DAW {
     private void chooseNote(Block selectedBlock) {
         displayNotes(selectedBlock.getNotes());
         System.out.println("Enter an index");
-        int index = getNumericalInput(1, selectedBlock.getNotes().size());
+        int displayIndex = getNumericalInput(1, selectedBlock.getNotes().size());
+        editNote(selectedBlock, displayIndex);
+    }
+
+    private void editNote(Block block, int displayIndex) {
+        Note note = block.getNotes().get(displayIndex - 1);
+        displayEditNoteOptions(note, displayIndex);
+    }
+
+    private void displayEditNoteOptions(Note note, int displayIndex) {
+        clearConsole();
+        System.out.printf("Note index: %d%n", displayIndex);
+        System.out.printf("Pitch           : %d%n", note.getPitch());
+        System.out.printf("Velocity        : %d%n", note.getVelocity());
+        System.out.printf("On beat         : %.2f%n", timeline.ticksToBeats(note.getStartTick()) + 1);
+        System.out.printf("Off beat        : %.2f%n", timeline.ticksToBeats(note.getStartTick() 
+                                                + note.getDurationTicks()));
+        System.out.printf("Duration beats  : %.2f%n%n", timeline.ticksToBeats(note.getDurationTicks()));
+
+        System.out.println("What would you like to do?");
+        System.out.println("Change pitch           [p]");
+        System.out.println("Change velocity        [v]");
+        System.out.println("Change on beat         [o]");
+        System.out.println("Change duration beats  [d]");
     }
 
     // EFFECTS: prints block information and possible options
@@ -402,7 +429,8 @@ public class DAW {
     // EFFECTS: creates a table of the given notes and their relevant fields
     private void displayNotes(ArrayList<Note> notes) {
         clearConsole();
-        System.out.printf("%-12s%-12s%-12s%-12s%-12s%-12s%n", "Index", "Pitch", "Velocity", "On beat", "Off beat", "Duration");
+        System.out.printf("%-12s%-12s%-12s%-12s%-12s%-12s%n", 
+                          "Index", "Pitch", "Velocity", "On beat", "Off beat", "Duration beats");
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
             System.out.printf("%-12d%-12d%-12d%-12.2f%-12.2f%-12.2f%n", i + 1, note.getPitch(),
