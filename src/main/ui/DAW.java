@@ -15,7 +15,8 @@ import model.Timeline;
 // Digital Audio Workstation application
 // This class is partially inspired by TellerApp ui/TellerApp.java 
 // https://github.students.cs.ubc.ca/CPSC210/TellerApp/blob/main/src/main/ca/ubc/cpsc210/bank/ui/TellerApp.java
-//
+// The MIDI spec was referenced heavily to interpret MIDI events: https://midi.org/spec-detail
+// The MIDI instruments prompted for are from https://en.wikipedia.org/wiki/General_MIDI
 public class DAW {
 
     private Timeline timeline;
@@ -66,19 +67,24 @@ public class DAW {
 
     // MODIFIES: this
     // EFFECTS: Loads two sample tracks into the timeline
+    @SuppressWarnings("methodlength")
     private void loadSample() {
         MidiTrack melody = new MidiTrack("Sample melody", false);
         MidiTrack drums = new MidiTrack("Sample drums", true);
+        MidiTrack bass = new MidiTrack("bass", false);
         final int beatTicks = timeline.beatsToTicks(1);
 
         melody.setInstrument(81);
         drums.setInstrument(35);
+        bass.setInstrument(32);
 
         Block melodyBlock = new Block(0);
         Block drumsBlock = new Block(0);
+        Block bassBlock = new Block(beatTicks * 3);
 
         melody.addBlock(melodyBlock);
         drums.addBlock(drumsBlock);
+        bass.addBlock(bassBlock);
 
         for (int beat = 0; beat < 20; beat++) {
             drumsBlock.addNote(new Note(0, 127, beatTicks * beat, beatTicks));
@@ -92,8 +98,11 @@ public class DAW {
         melodyBlock.addNote(new Note(62, 127, beatTicks * 14, beatTicks));
         melodyBlock.addNote(new Note(66, 127, beatTicks * 15, beatTicks * 4));
 
+        bassBlock.addNote(new Note(60, 100, 0, beatTicks));
+
         timeline.addMidiTrack(drums);
         timeline.addMidiTrack(melody);
+        timeline.addMidiTrack(bass);
     }
 
     // MODIFIES: this
@@ -165,8 +174,7 @@ public class DAW {
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
-    // MODIFES: this
-    // EFFECTS: Processes track options by
+    // EFFECTS: Prompts user for options to modify track array
     private void handleTrackOptions() {
         String input;
         String[] validStrings = new String[] { "n", "n", "r", "d", "s" };
@@ -196,6 +204,7 @@ public class DAW {
         handleTrackOptions();
     }
 
+    // EFFECTS: displays possible options for a user with tracks
     private void displayTrackOptions() {
         clearConsole();
         System.out.printf("Current number of tracks: %d, what would you like to do?%n",
@@ -208,6 +217,7 @@ public class DAW {
         System.out.println("Return to timeline [r]");
     }
 
+    // EFFECTS: displays tracks then prompts for an index to edit
     private void selectTrack() {
         displayTracks();
         System.out.println("Enter the index of the track to edit");
@@ -273,7 +283,7 @@ public class DAW {
     }
 
     // MODFIES: selectedTrack
-    // EFFECTS: prompts user for new value in 0 to 100 and applies to to selectedTrack
+    // EFFECTS: prompts user for new volume in 0 to 100 and applies to to selectedTrack
     private void changeTrackVolume(MidiTrack selectedTrack) {
         System.out.println("Enter new volume");
         int volume = getNumericalInput(0, 100);
@@ -281,13 +291,16 @@ public class DAW {
         selectedTrack.setVolume(volumeScaled);
     }
 
+    // MODIFIES: selectedTrack
+    // EFFECTS: prompts user for a new name for the selected track and applies it
     private void changeTrackName(MidiTrack selectedTrack) {
         System.out.println("Enter a new name");
         selectedTrack.setName(getStringInput(null, true));
     }
 
     // MODIFIES: midiTrack
-    // EFFECTS: Prompts for input to change a tracks instrument (and percussive)
+    // EFFECTS: Prompts for input to change a tracks instrument, gives different ranges depending on
+    //          if the track is percussive.
     private void changeTrackInstrument(MidiTrack midiTrack) {
         System.out.printf("Is %s percussive? t/f%n", midiTrack.getName());
 
@@ -301,18 +314,20 @@ public class DAW {
         midiTrack.setInstrument(instrument);
     }
 
+    // EFFECTS: prompts user to select a block by index to edit
     private void chooseBlock(MidiTrack selectedTrack) {
         displayBlocks(selectedTrack);
         System.out.println("Select an index");
         editBlock(getNumericalInput(1, selectedTrack.getBlocks().size()) - 1, selectedTrack);
     }
 
+    // EFFECTS: prints possible options for user to edit a track and other track info
     private void displayEditTrackOptions(String[] validInputs, MidiTrack selectedTrack) {
         clearConsole();
 
         System.out.printf("Track             %s%n", selectedTrack.getName());
         System.out.printf("Number of blocks  %d%n", selectedTrack.getBlocks().size());
-        System.out.printf("Instrument        %d%s%n", selectedTrack.getInstrument(),
+        System.out.printf("Instrument        %d%s%n", selectedTrack.getInstrument() + 1,
                 selectedTrack.isPercussive() ? " (Percussive)" : "");
         System.out.printf("Volume            %d%n", selectedTrack.getVolumeScaled());
         System.out.printf("Muted             %s%n%n", selectedTrack.isMuted() ? "Yes" : "No");
@@ -354,7 +369,7 @@ public class DAW {
     // EFFECTS: selects the indexed block
     private void editBlock(int index, MidiTrack midiTrack) {
         Block selectedBlock = midiTrack.getBlock(index);
-        String[] validStrings = new String[] { "n", "n", "d", "r" };
+        String[] validStrings = new String[] { "n", "n", "d", "r", "o" };
 
         displayEditBlockOptions(index, selectedBlock, validStrings);
 
@@ -407,7 +422,7 @@ public class DAW {
         editNote(selectedBlock, displayIndex, percussive);
     }
 
-    // REQUIRES: displayIndex > 0
+    // REQUIRES: displayIndex > 0, must be at least 1 note in the block
     // MODIFIES: block
     // EFFECTS: prompts user for input to edit the note in a block
     @SuppressWarnings("methodlength")
@@ -445,16 +460,17 @@ public class DAW {
         chooseNoteToEdit(block, percussive);
     }
 
+    // EFFECTS: prints possible options in editing a note and other note info
     private void displayEditNoteOptions(Note note, int displayIndex, boolean percussive) {
         clearConsole();
-        System.out.printf("Note index: %d%n", displayIndex);
+        System.out.printf("Note index      : %d%n", displayIndex);
         if (!percussive) {
             System.out.printf("Pitch           : %d%n", note.getPitch());
         }
         System.out.printf("Velocity        : %d%n", note.getVelocity());
         System.out.printf("On beat         : %.2f%n", timeline.ticksToBeats(note.getStartTick()) + 1);
         System.out.printf("Off beat        : %.2f%n", timeline.ticksToBeats(note.getStartTick()
-                + note.getDurationTicks()));
+                + note.getDurationTicks()) + 1);
         System.out.printf("Duration beats  : %.2f%n%n", timeline.ticksToBeats(note.getDurationTicks()));
 
         System.out.println("What would you like to do?");
@@ -468,7 +484,7 @@ public class DAW {
         System.out.println("Return                 [r]");
     }
 
-    // EFFECTS: creates a table of the given notes and their relevant fields
+    // EFFECTS: prints a table of the given notes and their relevant fields 
     private void displayNotes(ArrayList<Note> notes) {
         clearConsole();
         System.out.printf("%-12s%-12s%-12s%-12s%-12s%-12s%n",
@@ -477,7 +493,7 @@ public class DAW {
             Note note = notes.get(i);
             System.out.printf("%-12d%-12d%-12d%-12.2f%-12.2f%-12.2f%n", i + 1, note.getPitch(),
                     note.getVelocity(), timeline.ticksToBeats(note.getStartTick()) + 1,
-                    timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()),
+                    timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()) + 1,
                     timeline.ticksToBeats(note.getDurationTicks()));
         }
     }
@@ -490,7 +506,7 @@ public class DAW {
 
         if (!percussive) {
             System.out.println("Whats the note pitch?");
-            System.out.println("(See https://inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies)");
+            System.out.println("(See note table on https://studiocode.dev/resources/midi-middle-c/)");
             pitch = getNumericalInput(0, 127);
         }
 
@@ -516,63 +532,64 @@ public class DAW {
         }
     }
 
-    // MODIFIES: this, block
-    // EFFECTS: moves the specified blocks start time to the prompted user input
-    private void moveBlockStartTime(Block block) {
-        System.out.println("What is the new start beat?");
-        int newStartTick = timeline.beatsToTicks(getNumericalInput(1, Double.MAX_VALUE) - 1);
-        block.setStartTick(newStartTick);
-    }
-
-    // EFFECTS: prompts the user for integer input in a range where min <= max
+    // REQUIRES: min <= max
+    // EFFECTS: prompts the user for integer input in a range and returns it
     private int getNumericalInput(int min, int max) {
-        int input;
-        System.out.printf("Input in range [%d, %d]: ", min, max);
+        while (true) {
+            int input;
+            System.out.printf("Input in range [%d, %d]: ", min, max);
 
-        try {
-            input = sc.nextInt();
-        } catch (InputMismatchException e) {
-            System.out.println("Enter an integer!");
+            try {
+                input = sc.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("Enter an integer!");
+                sc.nextLine();
+                continue;
+            }
+
+            if (input < min || input > max) {
+                System.out.println("Input out of range!");
+                sc.nextLine();
+                continue;
+            }
+
             sc.nextLine();
-            return getNumericalInput(min, max);
+            return input;
         }
-
-        if (input < min || input > max) {
-            System.out.println("Input out of range!");
-            sc.nextLine();
-            return getNumericalInput(min, max);
-        }
-
-        sc.nextLine();
-        return input;
     }
 
-    // EFFECTS: prompts the user for double input in a range where min <= max
+    // REQUIRES: min <= max
+    // EFFECTS: prompts the user for double input in a range and returns it
     private double getNumericalInput(double min, double max) {
-        double input;
-        if (max == Double.MAX_VALUE) {
-            System.out.printf("Input in range [%.2f, infinity]: ", min, max);
-        } else {
-            System.out.printf("Input in range [%.2f, %.2f]: ", min, max);
-        }
+        while (true) {
+            double input;
 
-        try {
-            input = sc.nextDouble();
-        } catch (InputMismatchException e) {
-            System.out.println("Enter an integer!");
-            sc.nextLine();
-            return getNumericalInput(min, max);
-        }
+            if (max == Double.MAX_VALUE) {
+                System.out.printf("Input in range [%.2f, infinity]: ", min, max);
+            } else {
+                System.out.printf("Input in range [%.2f, %.2f]: ", min, max);
+            }
 
-        if (input < min || input > max) {
-            System.out.println("Input out of range!");
+            try {
+                input = sc.nextDouble();
+            } catch (InputMismatchException e) {
+                System.out.println("Enter an integer!");
+                sc.nextLine();
+                continue;
+            }
+
+            if (input < min || input > max) {
+                System.out.println("Input out of range!");
+                sc.nextLine();
+                continue;
+            }
+
             sc.nextLine();
-            return getNumericalInput(min, max);
+            return input;
         }
-        sc.nextLine();
-        return input;
     }
 
+    // REQUIRES: if acceptsAnyString == false, acceptedStrings != null.
     // EFFECTS: takes input for a string value. If acceptsAnyString is true accepted strings will be ingnored
     private String getStringInput(String[] acceptedStrings, boolean acceptsAnyString) {
         String input;
