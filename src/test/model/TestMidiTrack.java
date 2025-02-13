@@ -31,6 +31,7 @@ public class TestMidiTrack {
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
         assertEquals(midiTrack.getInstrument(), 0); // 0 is piano
         assertEquals(midiTrack.getVolume(), 100);
+        assertEquals(midiTrack.getVolumeScaled(), 79); // 100 / 127
         assertEquals(midiTrack.getName(), "Piano Melody");
 
         midiTrack = new MidiTrack("Percussive drums", true);
@@ -38,6 +39,7 @@ public class TestMidiTrack {
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
         assertEquals(midiTrack.getInstrument(), 35); // 35 is bass drum
         assertEquals(midiTrack.getVolume(), 100);
+        assertEquals(midiTrack.getVolumeScaled(), 79);
         assertEquals(midiTrack.getName(), "Percussive drums");
     }
 
@@ -150,6 +152,28 @@ public class TestMidiTrack {
 
         midiTrack.addBlock(new Block(1000));
         assertEquals(4, midiTrack.getBlocks().size());
+    }
+
+    @Test
+    void testVolumeConversions() {
+        midiTrack.setVolume(0);
+        assertEquals(0, midiTrack.getVolume());
+        midiTrack.setVolumeScaled(0);
+        assertEquals(0, midiTrack.getVolume());
+        assertEquals(0, midiTrack.getVolumeScaled());
+
+        midiTrack.setVolume(127);
+        assertEquals(127, midiTrack.getVolume());
+        midiTrack.setVolumeScaled(100);
+        assertEquals(127, midiTrack.getVolume());
+        assertEquals(100, midiTrack.getVolumeScaled());
+
+        midiTrack.setVolume(60);
+        assertEquals(60, midiTrack.getVolume());
+        assertEquals(47, midiTrack.getVolumeScaled());
+        midiTrack.setVolumeScaled(100);
+        assertEquals(127, midiTrack.getVolume());
+        assertEquals(100, midiTrack.getVolumeScaled());
     }
 
     @Test

@@ -118,6 +118,11 @@ public class MidiTrack {
         volume = newVolume;
     }
 
+    // REQUIRES: 0 <= newVolume <= 100
+    public void setVolumeScaled(int newVolume) {
+        volume = (int) Math.round(newVolume * 1.27);
+    }
+
     // EFFECTS: Returns correct channel corresponding to the whether or not the track is precussive.
     //          Percussive channels are played on channel 9 while regular instruments are on 0.
     public int getChannel() {
@@ -148,6 +153,11 @@ public class MidiTrack {
 
     public int getVolume() {
         return volume;
+    }
+
+    // EFFECTS: returns volume scaled down from 127 to 100
+    public int getVolumeScaled() {
+        return (int) Math.round(volume / 1.27);
     }
 
     public boolean isMuted() {
