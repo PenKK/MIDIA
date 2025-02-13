@@ -119,6 +119,8 @@ public class MidiTrack {
     }
 
     // REQUIRES: 0 <= newVolume <= 100
+    // MODFIES: this
+    // EFFECTS: sets the volume in a range 0 - 100 and converts it to 0 - 127
     public void setVolumeScaled(int newVolume) {
         volume = (int) Math.round(newVolume * 1.27);
     }
