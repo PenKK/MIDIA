@@ -72,16 +72,16 @@ public class MidiTrack {
         ShortMessage volMessage = new ShortMessage();
 
         try {
-            programChangeMessage.setMessage(ShortMessage.PROGRAM_CHANGE, getChannel(),
-                    instrument, 0);
-            volMessage.setMessage(ShortMessage.CONTROL_CHANGE, getChannel(), 7,
-                    volume);
+            programChangeMessage.setMessage(ShortMessage.PROGRAM_CHANGE, getChannel(), instrument, 0);
+            volMessage.setMessage(ShortMessage.CONTROL_CHANGE, getChannel(), 7, volume);
         } catch (InvalidMidiDataException e) {
             throw new RuntimeException("Failed to update sequence in track: " 
                                         + name + "due to invalid MidiData", e);
         }
 
-        track.add(new MidiEvent(programChangeMessage, 0));
+        if (!percussive) { // Tracks on channel 10 ignore program change
+            track.add(new MidiEvent(programChangeMessage, 0));
+        }
         track.add(new MidiEvent(volMessage, 0));
 
         for (Block currentBlock : blocks) {
@@ -98,11 +98,10 @@ public class MidiTrack {
         try {
             ShortMessage onMessage = new ShortMessage();
             ShortMessage offMessage = new ShortMessage();
+            int data1 = percussive ? instrument : note.getPitch();
 
-            onMessage.setMessage(ShortMessage.NOTE_ON, getChannel(), 
-                    note.getPitch(), note.getVelocity());
-            offMessage.setMessage(ShortMessage.NOTE_OFF, getChannel(), 
-                    note.getPitch(), 0);
+            onMessage.setMessage(ShortMessage.NOTE_ON, getChannel(), data1, note.getVelocity());
+            offMessage.setMessage(ShortMessage.NOTE_OFF, getChannel(), data1, 0); 
 
             MidiEvent noteOnEvent = new MidiEvent(onMessage, note.getStartTick());
             MidiEvent noteOffEvent = new MidiEvent(offMessage, note.getStartTick() + note.getDurationTicks());

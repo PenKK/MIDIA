@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
+import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
@@ -100,7 +101,7 @@ public class TestTimeline {
     @Test
     void testUpdateSequence() throws InvalidMidiDataException {
         MidiTrack mt1 = new MidiTrack("C notes", false);
-        MidiTrack mt2 = new MidiTrack("cool notes", 4, true);
+        MidiTrack mt2 = new MidiTrack("cool notes", 4, false);
         mt2.setVolume(50);
 
         Block b1 = new Block(0);
@@ -143,8 +144,8 @@ public class TestTimeline {
         MidiEvent volumeEventT1 = new MidiEvent(new ShortMessage(ShortMessage.CONTROL_CHANGE, 0, 7, 100), 0);
 
         MidiEvent programChangeEventT2 = new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE,
-                9, 4, 127), 0);
-        MidiEvent volumeEventT2 = new MidiEvent(new ShortMessage(ShortMessage.CONTROL_CHANGE, 9, 7, 50), 0);
+                0, 4, 127), 0);
+        MidiEvent volumeEventT2 = new MidiEvent(new ShortMessage(ShortMessage.CONTROL_CHANGE, 0, 7, 50), 0);
 
         track1.add(programChangeEventT1);
         track1.add(volumeEventT1);
@@ -167,14 +168,14 @@ public class TestTimeline {
             Track actualTrack = timeline.getSequence().getTracks()[i];
 
             for (int j = 0; j < expectedTrack.size(); j++) {
-                MidiEvent expectedEvent = expectedTrack.get(i);
-                MidiEvent realEvent = actualTrack.get(i);
+                MidiMessage expectedEventData = expectedTrack.get(i).getMessage();
+                MidiMessage realEventData = actualTrack.get(i).getMessage();
 
-                assertEquals(expectedEvent.getMessage().getStatus(), realEvent.getMessage().getStatus());
-                assertEquals(expectedEvent.getMessage().getMessage()[0], realEvent.getMessage().getMessage()[0]);
-                assertEquals(expectedEvent.getMessage().getMessage()[1], realEvent.getMessage().getMessage()[1]);
-                if ((expectedEvent.getMessage().getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) {
-                    assertEquals(expectedEvent.getMessage().getMessage()[2], realEvent.getMessage().getMessage()[2]);
+                assertEquals(expectedEventData.getStatus(), realEventData.getStatus());
+                assertEquals(expectedEventData.getMessage()[0], realEventData.getMessage()[0]);
+                assertEquals(expectedEventData.getMessage()[1], realEventData.getMessage()[1]);
+                if ((expectedEventData.getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) {
+                    assertEquals(expectedEventData.getMessage()[2], realEventData.getMessage()[2]);
                 }
             }
         }

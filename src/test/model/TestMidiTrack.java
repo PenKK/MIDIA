@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
+import javax.sound.midi.MidiMessage;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
@@ -14,6 +15,7 @@ import javax.sound.midi.Track;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+// Much of testing is done according to https://midi.org/spec-detail
 public class TestMidiTrack {
 
     MidiTrack midiTrack;
@@ -221,16 +223,19 @@ public class TestMidiTrack {
         expectedMidiEvents.add(n4on);
         expectedMidiEvents.add(n4off);
 
+        // We ignore the last element of track since it always ending signal
+        assertEquals(expectedMidiEvents.size(), track.size() - 1);
+
         // since Track does not allow direct access to MidiEvent arraylist
         for (int i = 0; i < expectedMidiEvents.size(); i++) {
-            MidiEvent expectedEvent = expectedMidiEvents.get(i);
-            MidiEvent realEvent = track.get(i);
+            MidiMessage expectedEventData = expectedMidiEvents.get(i).getMessage();
+            MidiMessage realEventData = track.get(i).getMessage();
 
-            assertEquals(expectedEvent.getMessage().getStatus(), realEvent.getMessage().getStatus());
-            assertEquals(expectedEvent.getMessage().getMessage()[0], realEvent.getMessage().getMessage()[0]);
-            assertEquals(expectedEvent.getMessage().getMessage()[1], realEvent.getMessage().getMessage()[1]);
-            if ((expectedEvent.getMessage().getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) {
-                assertEquals(expectedEvent.getMessage().getMessage()[2], realEvent.getMessage().getMessage()[2]);
+            assertEquals(realEventData.getStatus(), realEventData.getStatus());
+            assertEquals(realEventData.getMessage()[0], realEventData.getMessage()[0]);
+            assertEquals(realEventData.getMessage()[1], realEventData.getMessage()[1]);
+            if ((realEventData.getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) {
+                assertEquals(realEventData.getMessage()[2], realEventData.getMessage()[2]);
             }
         }
     }
@@ -246,9 +251,33 @@ public class TestMidiTrack {
         assertTrue(midiTrack.isPercussive());
         midiTrack.applyToTrack(track);
 
-        assertEquals(track.size(), 3); // Program change, volume, and end message, no 
-        assertEquals(track.get(0).getMessage().getMessage()[0] & 0xFF, 201); // 201 is program change on channel 10
-        assertEquals(track.get(0).getMessage().getMessage()[1] & 0xFF, 35); // next byte specifies the program
+        assertEquals(track.size(), 2); // volume, and end message, there should be no program change event
+
+        byte[] volumeEventData = track.get(0).getMessage().getMessage();
+        assertEquals(volumeEventData[0] & 0xFF, 185); // 185 is change to channel 10, which is percussive
+        assertEquals(volumeEventData[1] & 0xFF, 7); // next byte is the function, 7 is channel volume
+        assertEquals(volumeEventData[2] & 0xFF, 100); // set volume to 100
+
+        sequence = new Sequence(Sequence.PPQ, 960);
+        track = sequence.createTrack();
+
+        Block block = new Block(0);
+        Note note = new Note(0, 100, 0, 960);
+
+        block.addNote(note);
+        midiTrack.addBlock(block);
+        midiTrack.setInstrument(40);
+        midiTrack.applyToTrack(track);
+
+        byte[] noteOnData = track.get(1).getMessage().getMessage();
+        assertEquals(noteOnData[0] & 0xFF, 153); // Note on on channel 10
+        assertEquals(noteOnData[1] & 0xFF, 40); // Note number 40, corresponding to instrument
+        assertEquals(noteOnData[2] & 0xFF, 100); // Velocity of note
+
+        byte[] noteOffData = track.get(2).getMessage().getMessage();
+        assertEquals(noteOffData[0] & 0xFF, 137); // Note off on channel 10
+        assertEquals(noteOffData[1] & 0xFF, 40); // Note number 40, corresponding to instrument
+        assertEquals(noteOffData[2] & 0xFF, 0); // Velocity of note
     }
 
     @Test
