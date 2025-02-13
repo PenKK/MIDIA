@@ -34,10 +34,9 @@ public class DAW {
         appLoop();
     }
 
-    // MODIFIES: this
     // EFFECTS: processes user input
     @SuppressWarnings("methodlength")
-    public void appLoop() {
+    private void appLoop() {
         while (true) {
             displayTimelineOptions();
             String input = getStringInput(new String[] { "p", "t", "q", "c", "b", "s" }, false);
@@ -65,6 +64,39 @@ public class DAW {
         }
     }
 
+    
+    // MODIFIES: this
+    // EFFECTS: Loads two sample tracks into the timeline
+    private void loadSample() {
+        MidiTrack melody = new MidiTrack("Sample melody", false);
+        MidiTrack drums = new MidiTrack("Sample drums", true);
+        final int beatTicks = timeline.beatsToTicks(1);
+
+        melody.setInstrument(81);
+        drums.setInstrument(35);
+
+        Block melodyBlock = new Block(0);
+        Block drumsBlock = new Block(0);
+
+        melody.addBlock(melodyBlock);
+        drums.addBlock(drumsBlock);
+
+        for (int beat = 0; beat < 20; beat++) {
+            drumsBlock.addNote(new Note(0, 127, beatTicks * beat, beatTicks));
+        }
+
+        melodyBlock.addNote(new Note(60, 127, beatTicks * 4, beatTicks * 2));
+        melodyBlock.addNote(new Note(62, 127, beatTicks * 6, beatTicks));
+        melodyBlock.addNote(new Note(56, 127, beatTicks * 7, beatTicks * 4));
+
+        melodyBlock.addNote(new Note(60, 127, beatTicks * 12, beatTicks * 2));
+        melodyBlock.addNote(new Note(62, 127, beatTicks * 14, beatTicks));
+        melodyBlock.addNote(new Note(66, 127, beatTicks * 15, beatTicks * 4));
+
+        timeline.addMidiTrack(drums);
+        timeline.addMidiTrack(melody);
+    }
+
     // MODIFIES: this
     // EFFECTS: changes the BPM of the timeline to the prompted input
     private void changeTimelineBPM() {
@@ -85,7 +117,8 @@ public class DAW {
     // EFFECTS: moves the timeline position to prompted beat
     private void changeTimelinePositionBeats() {
         System.out.println("To which beat?");
-        timeline.setPositionBeats(getNumericalInput(0, timeline.getLengthBeats()));
+        double maxBeats = timeline.getLengthBeats() == 0 ? 1 : timeline.getLengthBeats();
+        timeline.setPositionBeats(getNumericalInput(1, maxBeats) - 1);
     }
 
     // MODIFIES: this
@@ -114,8 +147,10 @@ public class DAW {
     private void displayTimelineOptions() {
         clearConsole();
         System.out.println("Welcome to the project timeline!");
-        System.out.printf("Length  : %.2f seconds, %.2f beats%n", timeline.getLengthMs() / 1000, timeline.getLengthBeats());
-        System.out.printf("Position: %.2f seconds, %.2f beats%n", timeline.getPositionMs() / 1000, timeline.getPositionBeats());
+        System.out.printf("Length  : %.2f seconds, %.2f beats%n", 
+                          timeline.getLengthMs() / 1000, timeline.getLengthBeats());
+        System.out.printf("Position: %.2f seconds, beat %.2f%n", 
+                          timeline.getPositionMs() / 1000, timeline.getPositionBeats() + 1);
         System.out.printf("BPM: %.2f%n%n", timeline.getBPM());
 
         System.out.println("Play the project!                  [p]");
@@ -133,9 +168,9 @@ public class DAW {
 
     // MODIFES: this
     // EFFECTS: Processes track options by
-    public void handleTrackOptions() {
+    private void handleTrackOptions() {
         String input;
-        String[] validStrings = new String[] { "n", "n", "r", "d" };
+        String[] validStrings = new String[] { "n", "n", "r", "d", "s" };
 
         if (timeline.getTracks().size() > 0) {
             validStrings[0] = "e";
@@ -151,9 +186,15 @@ public class DAW {
                 break;
             case "n":
                 editTrack(createNewTrack());
+                break;
+            case "s":
+                loadSample();
+                break;
             case "r":
                 return;
         }
+
+        handleTrackOptions();
     }
 
     private void displayTrackOptions() {
@@ -164,6 +205,7 @@ public class DAW {
             System.out.println("Edit a track       [e]");
         }
         System.out.println("Create a new track [n]");
+        System.out.println("Load sample song   [s]");
         System.out.println("Return to timeline [r]");
     }
 
@@ -176,7 +218,7 @@ public class DAW {
     // MODIFIES: this
     // EFFECTS: creates new track in the sequence, and prompts for a track name
     //          and instrument, returns the index of the created track
-    public int createNewTrack() {
+    private int createNewTrack() {
         System.out.println("Enter a name for the track");
         String name = getStringInput(null, true);
 
@@ -185,25 +227,23 @@ public class DAW {
 
         System.out.println(
                 "What instrument does this track play?\n(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
-        int instrument = percussive ? getNumericalInput(35, 81) : getNumericalInput(0, 127);
+        int instrument = percussive ? getNumericalInput(35, 81) : getNumericalInput(1, 128) - 1;
 
         return timeline.addMidiTrack(new MidiTrack(name, instrument, percussive));
     }
 
     // REQUIRES: index >= 0 and for there to be at least 1 track in the timeline
     // EFFECTS: Prompts the user to edit a track by giving an index
-    public void editTrack(int index) {
+    private void editTrack(int index) {
         String[] validInputs = { "n", "b", "i", "v", "m", "n", "r", "d" };
         MidiTrack selectedTrack = timeline.getTrack(index);
         displayEditTrackOptions(validInputs, selectedTrack);
-        validInputs[0] = "e";
 
         String input = getStringInput(validInputs, false);
 
         switch (input) {
             case "n":
-                System.out.println("Enter a new name");
-                selectedTrack.setName(getStringInput(null, true));
+                changeTrackName(selectedTrack);
                 break;
             case "b":
                 editBlock(createNewBlock(selectedTrack), selectedTrack);
@@ -211,6 +251,15 @@ public class DAW {
             case "e":
                 chooseBlock(selectedTrack);
                 break;
+            case "i":
+                changeTrackInstrument(selectedTrack);
+                break;
+            case "v":
+                changeTrackVolume(selectedTrack);
+                break;
+            case "d":
+                timeline.getTracks().remove(index);
+                return;
             case "r":
                 return;
             default:
@@ -218,6 +267,35 @@ public class DAW {
         }
 
         editTrack(index);
+    }
+
+    // MODFIES: selectedTrack
+    // EFFECTS: prompts user for new value in 0 to 100 and applies to to selectedTrack
+    private void changeTrackVolume(MidiTrack selectedTrack) {
+        System.out.println("Enter new volume");
+        int volume = getNumericalInput(0, 100);
+        int volumeScaled = (int) Math.round(volume * 1.27);
+        selectedTrack.setVolume(volumeScaled);
+    }
+
+    private void changeTrackName(MidiTrack selectedTrack) {
+        System.out.println("Enter a new name");
+        selectedTrack.setName(getStringInput(null, true));
+    }
+
+    // MODIFIES: midiTrack
+    // EFFECTS: Prompts for input to change a tracks instrument (and percussive)
+    private void changeTrackInstrument(MidiTrack midiTrack) {
+        System.out.printf("Is %s percussive? t/f%n", midiTrack.getName());
+
+        boolean percussive = getStringInput(new String[] { "t", "f" }, false).equals("t");
+        midiTrack.setPercussive(percussive);
+        
+        System.out.printf("What is the new instrument for track %s?%n", midiTrack.getName());
+        System.out.println("(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
+
+        int instrument = midiTrack.isPercussive() ? getNumericalInput(35, 81) : getNumericalInput(1, 128) - 1;
+        midiTrack.setInstrument(instrument);
     }
 
     private void chooseBlock(MidiTrack selectedTrack) {
@@ -233,13 +311,14 @@ public class DAW {
         System.out.printf("Number of blocks  %d%n", selectedTrack.getBlocks().size());
         System.out.printf("Instrument        %d%s%n", selectedTrack.getInstrument(),
                 selectedTrack.isPercussive() ? " (Percussive)" : "");
-        System.out.printf("Volume            %d%n", selectedTrack.getVolume());
+        System.out.printf("Volume            %d%n", selectedTrack.getVolumeScaled());
         System.out.printf("Muted             %s%n%n", selectedTrack.isMuted() ? "Yes" : "No");
 
         System.out.println("Change name        [n]");
         System.out.println("Create new block   [b]");
         if (selectedTrack.getBlocks().size() > 0) {
             System.out.println("Edit blocks        [e]");
+            validInputs[0] = "e";
         }
 
         System.out.println("Change instrument  [i]");
@@ -250,7 +329,7 @@ public class DAW {
     }
 
     // EFFECTS: Displays tracks and their indexes
-    public void displayTracks() {
+    private void displayTracks() {
         System.out.println("Here are the tracks");
         ArrayList<MidiTrack> tracks = timeline.getTracks();
         for (int i = 0; i < timeline.getTracks().size(); i++) {
@@ -258,17 +337,11 @@ public class DAW {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS : removes the given track by index from the sequence
-    public void deleteTrack(int index) {
-        //stub
-    }
-
-    // MODIFIES: this, midiTrack
+    // MODIFIES: midiTrack
     // EFFECTS: creates new block in a track, and prompts for a start tick, and returns the index it was created at
-    public int createNewBlock(MidiTrack midiTrack) {
+    private int createNewBlock(MidiTrack midiTrack) {
         System.out.println("At what beat does this block start?");
-        double startBeat = getNumericalInput(0, Double.MAX_VALUE);
+        double startBeat = getNumericalInput(1, Double.MAX_VALUE) - 1;
         midiTrack.addBlock(new Block(timeline.beatsToTicks(startBeat)));
         return midiTrack.getBlocks().size() - 1;
     }
@@ -276,7 +349,7 @@ public class DAW {
     // REQUIRES: index >= 0 and the midiTrack has to have at least 1 block
     // MODIFIES: midiTrack, this
     // EFFECTS: selects the indexed block
-    public void editBlock(int index, MidiTrack midiTrack) {
+    private void editBlock(int index, MidiTrack midiTrack) {
         Block selectedBlock = midiTrack.getBlock(index);
         String[] validStrings = new String[] { "n", "n", "d", "r" };
 
@@ -310,12 +383,13 @@ public class DAW {
         int index = getNumericalInput(1, selectedBlock.getNotes().size());
     }
 
+    // EFFECTS: prints block information and possible options
     private void displayEditBlockOptions(int index, Block selectedBlock, String[] validStrings) {
         clearConsole();
         System.out.printf("You are editing block %d%n", index + 1);
         System.out.printf("The block starts at %.2f seconds, on beat %.2f%n",
                 timeline.ticksToMs(selectedBlock.getStartTick()) / 1000,
-                timeline.ticksToBeats(selectedBlock.getStartTick()));
+                timeline.ticksToBeats(selectedBlock.getStartTick()) + 1);
         System.out.printf("Add a note         [n]%n", index + 1);
         if (selectedBlock.getNotes().size() > 0) {
             System.out.printf("Edit a note        [e]%n", index + 1);
@@ -326,14 +400,14 @@ public class DAW {
     }
 
     // EFFECTS: creates a table of the given notes and their relevant fields
-    public void displayNotes(ArrayList<Note> notes) {
+    private void displayNotes(ArrayList<Note> notes) {
         clearConsole();
-        System.out.printf("%-12s%-12s%-12s%-12s%-12s%-12s%n", "Index", "Pitch", "Velocity", "Start", "End", "Duration");
+        System.out.printf("%-12s%-12s%-12s%-12s%-12s%-12s%n", "Index", "Pitch", "Velocity", "On beat", "Off beat", "Duration");
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
             System.out.printf("%-12d%-12d%-12d%-12.2f%-12.2f%-12.2f%n", i + 1, note.getPitch(),
-                    note.getVelocity(), timeline.ticksToBeats(note.getStartTick()),
-                    timeline.ticksToBeats(note.getDurationTicks() + note.getStartTick()),
+                    note.getVelocity(), timeline.ticksToBeats(note.getStartTick()) + 1,
+                    timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()),
                     timeline.ticksToBeats(note.getDurationTicks()));
         }
     }
@@ -341,7 +415,7 @@ public class DAW {
     // MODIFIES: block
     // EFFECTS: creates new note in a block, prompts for the appropriate parameters, 
     //          returns the created notes index
-    public void createNewNote(Block block) {
+    private void createNewNote(Block block) {
         System.out.println("Whats the note pitch?");
         System.out.println("(See https://inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies)");
         int pitch = getNumericalInput(0, 127);
@@ -350,7 +424,7 @@ public class DAW {
         int velocity = getNumericalInput(0, 127);
 
         System.out.println("What beat does the note start on? (relative to this block)");
-        double startBeat = getNumericalInput(0, Double.MAX_VALUE);
+        double startBeat = getNumericalInput(1, Double.MAX_VALUE) - 1;
 
         System.out.println("How many beats long is the note?");
         double durationBeats = getNumericalInput(0, Double.MAX_VALUE);
@@ -360,7 +434,7 @@ public class DAW {
     }
 
     // EFFECTS: Displays tracks and their indexes
-    public void displayBlocks(MidiTrack midiTrack) {
+    private void displayBlocks(MidiTrack midiTrack) {
         clearConsole();
         System.out.println("All blocks and the number of notes in each one:");
         for (int i = 0; i < midiTrack.getBlocks().size(); i++) {
@@ -370,25 +444,27 @@ public class DAW {
 
     // MODIFIES: this, block
     // EFFECTS: moves the specified blocks start time to the prompted user input
-    public void moveBlockStartTime(Block block) {
-        // stub        
+    private void moveBlockStartTime(Block block) {
+        System.out.println("What is the new start beat?");
+        int newStartTick = timeline.beatsToTicks(getNumericalInput(1, Double.MAX_VALUE) - 1);
+        block.setStartTick(newStartTick);
     }
 
     // MODIFIES: track
     // EFFECTS : removes the given block by index from the track
-    public void deleteBlock(MidiTrack track, int index) {
+    private void deleteBlock(MidiTrack track, int index) {
         // stub
     }
 
     // MODIFIES: block
     // EFFECTS: prompts the user to modify (and pottenally delete) a notes pitch, velocity, startTick, 
     //          and duration by prompted index
-    public void selectNote(Note block) {
+    private void selectNote(Note block) {
         // stub
     }
 
     // EFFECTS: prompts the user for integer input in a range where min <= max
-    public int getNumericalInput(int min, int max) {
+    private int getNumericalInput(int min, int max) {
         int input;
         System.out.printf("Input in range [%d, %d]: ", min, max);
 
@@ -411,7 +487,7 @@ public class DAW {
     }
 
     // EFFECTS: prompts the user for double input in a range where min <= max
-    public double getNumericalInput(double min, double max) {
+    private double getNumericalInput(double min, double max) {
         double input;
         if (max == Double.MAX_VALUE) {
             System.out.printf("Input in range [%.2f, infinity]: ", min, max);
@@ -437,7 +513,7 @@ public class DAW {
     }
 
     // EFFECTS: takes input for a string value. If acceptsAnyString is true accepted strings will be ingnored
-    public String getStringInput(String[] acceptedStrings, boolean acceptsAnyString) {
+    private String getStringInput(String[] acceptedStrings, boolean acceptsAnyString) {
         String input;
         while (true) {
             System.out.printf("Input: ");
