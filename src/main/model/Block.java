@@ -8,7 +8,7 @@ public class Block {
     private ArrayList<Note> notes;
     private int startTick;
 
-    // REQUIRES: startTick > 0
+    // REQUIRES: startTick >= 0
     // EFFECTS: Creates a block with no notes inside of it with a startTick
     public Block(int startTick) {
         this.notes = new ArrayList<>();
@@ -30,7 +30,7 @@ public class Block {
         return notes.remove(index);
     }
 
-    // REQUIRES: newStartTime > 0
+    // REQUIRES: newStartTime >= 0
     // MODIFIES: this
     // EFFECTS: Changes the position of the block on the time line
     public void setStartTick(int newStartTick) {
