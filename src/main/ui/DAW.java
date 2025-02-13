@@ -64,7 +64,6 @@ public class DAW {
         }
     }
 
-    
     // MODIFIES: this
     // EFFECTS: Loads two sample tracks into the timeline
     private void loadSample() {
@@ -147,10 +146,10 @@ public class DAW {
     private void displayTimelineOptions() {
         clearConsole();
         System.out.println("Welcome to the project timeline!");
-        System.out.printf("Length  : %.2f seconds, %.2f beats%n", 
-                          timeline.getLengthMs() / 1000, timeline.getLengthBeats());
-        System.out.printf("Position: %.2f seconds, beat %.2f%n", 
-                          timeline.getPositionMs() / 1000, timeline.getPositionBeats() + 1);
+        System.out.printf("Length  : %.2f seconds, %.2f beats%n",
+                timeline.getLengthMs() / 1000, timeline.getLengthBeats());
+        System.out.printf("Position: %.2f seconds, beat %.2f%n",
+                timeline.getPositionMs() / 1000, timeline.getPositionBeats() + 1);
         System.out.printf("BPM: %.2f%n%n", timeline.getBPM());
 
         System.out.println("Play the project!                  [p]");
@@ -294,7 +293,7 @@ public class DAW {
 
         boolean percussive = getStringInput(new String[] { "t", "f" }, false).equals("t");
         midiTrack.setPercussive(percussive);
-        
+
         System.out.printf("What is the new instrument for track %s?%n", midiTrack.getName());
         System.out.println("(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
 
@@ -363,13 +362,16 @@ public class DAW {
 
         switch (input) {
             case "n":
-                createNewNote(selectedBlock);
+                createNewNote(selectedBlock, midiTrack.isPercussive());
                 break;
             case "d":
                 midiTrack.removeBlock(index);
                 return;
             case "e":
-                chooseNote(selectedBlock);
+                chooseNoteToEdit(selectedBlock, midiTrack.isPercussive());
+                break;
+            case "o":
+                selectedBlock.setStartTick(timeline.beatsToTicks(getNumericalInput(1, Double.MAX_VALUE) - 1));
                 break;
             case "r":
                 return;
@@ -380,36 +382,6 @@ public class DAW {
         editBlock(index, midiTrack);
     }
 
-    // EFFECTS: Prompts user to select a note from the given table of notes
-    private void chooseNote(Block selectedBlock) {
-        displayNotes(selectedBlock.getNotes());
-        System.out.println("Enter an index");
-        int displayIndex = getNumericalInput(1, selectedBlock.getNotes().size());
-        editNote(selectedBlock, displayIndex);
-    }
-
-    private void editNote(Block block, int displayIndex) {
-        Note note = block.getNotes().get(displayIndex - 1);
-        displayEditNoteOptions(note, displayIndex);
-    }
-
-    private void displayEditNoteOptions(Note note, int displayIndex) {
-        clearConsole();
-        System.out.printf("Note index: %d%n", displayIndex);
-        System.out.printf("Pitch           : %d%n", note.getPitch());
-        System.out.printf("Velocity        : %d%n", note.getVelocity());
-        System.out.printf("On beat         : %.2f%n", timeline.ticksToBeats(note.getStartTick()) + 1);
-        System.out.printf("Off beat        : %.2f%n", timeline.ticksToBeats(note.getStartTick() 
-                                                + note.getDurationTicks()));
-        System.out.printf("Duration beats  : %.2f%n%n", timeline.ticksToBeats(note.getDurationTicks()));
-
-        System.out.println("What would you like to do?");
-        System.out.println("Change pitch           [p]");
-        System.out.println("Change velocity        [v]");
-        System.out.println("Change on beat         [o]");
-        System.out.println("Change duration beats  [d]");
-    }
-
     // EFFECTS: prints block information and possible options
     private void displayEditBlockOptions(int index, Block selectedBlock, String[] validStrings) {
         clearConsole();
@@ -417,20 +389,90 @@ public class DAW {
         System.out.printf("The block starts at %.2f seconds, on beat %.2f%n",
                 timeline.ticksToMs(selectedBlock.getStartTick()) / 1000,
                 timeline.ticksToBeats(selectedBlock.getStartTick()) + 1);
-        System.out.printf("Add a note         [n]%n", index + 1);
+        System.out.printf("Add a note            [n]%n", index + 1);
         if (selectedBlock.getNotes().size() > 0) {
-            System.out.printf("Edit a note        [e]%n", index + 1);
+            System.out.printf("Edit a note           [e]%n", index + 1);
             validStrings[0] = "e";
         }
-        System.out.printf("Delete this block  [d]%n", index + 1);
-        System.out.printf("Return             [r]%n");
+        System.out.printf("Change block on beat  [o]%n", index + 1);
+        System.out.printf("Delete this block     [d]%n", index + 1);
+        System.out.printf("Return                [r]%n");
+    }
+
+    // EFFECTS: Prompts user to select a note from the given table of notes
+    private void chooseNoteToEdit(Block selectedBlock, boolean percussive) {
+        displayNotes(selectedBlock.getNotes());
+        System.out.println("Enter an index");
+        int displayIndex = getNumericalInput(1, selectedBlock.getNotes().size());
+        editNote(selectedBlock, displayIndex, percussive);
+    }
+
+    // REQUIRES: displayIndex > 0
+    // MODIFIES: block
+    // EFFECTS: prompts user for input to edit the note in a block
+    @SuppressWarnings("methodlength")
+    private void editNote(Block block, int displayIndex, boolean percussive) {
+        Note note = block.getNotes().get(displayIndex - 1);
+        displayEditNoteOptions(note, displayIndex, percussive);
+        String[] validStrings = new String[] { "p", "v", "o", "d", "r" };
+
+        if (percussive) {
+            validStrings[0] = "v";
+        }
+
+        String input = getStringInput(validStrings, false);
+
+        switch (input) {
+            case "p":
+                note.setPitch(getNumericalInput(0, 127));
+                break;
+            case "v":
+                note.setVelocity(getNumericalInput(0, 127));
+                break;
+            case "o":
+                note.setStartTick(timeline.beatsToTicks(getNumericalInput(1, Double.MAX_VALUE) - 1));
+                break;
+            case "b":
+                note.setDurationTicks(timeline.beatsToTicks(getNumericalInput(0, Double.MAX_VALUE)));
+                break;
+            case "d":
+                block.removeNote(displayIndex - 1);
+                return;
+            case "r":
+                return;
+        }
+
+        chooseNoteToEdit(block, percussive);
+    }
+
+    private void displayEditNoteOptions(Note note, int displayIndex, boolean percussive) {
+        clearConsole();
+        System.out.printf("Note index: %d%n", displayIndex);
+        if (!percussive) {
+            System.out.printf("Pitch           : %d%n", note.getPitch());
+        }
+        System.out.printf("Velocity        : %d%n", note.getVelocity());
+        System.out.printf("On beat         : %.2f%n", timeline.ticksToBeats(note.getStartTick()) + 1);
+        System.out.printf("Off beat        : %.2f%n", timeline.ticksToBeats(note.getStartTick()
+                + note.getDurationTicks()));
+        System.out.printf("Duration beats  : %.2f%n%n", timeline.ticksToBeats(note.getDurationTicks()));
+
+        System.out.println("What would you like to do?");
+        if (!percussive) {
+            System.out.println("Change pitch           [p]");
+        }
+        System.out.println("Change velocity        [v]");
+        System.out.println("Change on beat         [o]");
+        System.out.println("Change duration beats  [b]");
+        System.out.println("Delete this note       [d]");
+        System.out.println("Return                 [r]");
     }
 
     // EFFECTS: creates a table of the given notes and their relevant fields
     private void displayNotes(ArrayList<Note> notes) {
         clearConsole();
-        System.out.printf("%-12s%-12s%-12s%-12s%-12s%-12s%n", 
-                          "Index", "Pitch", "Velocity", "On beat", "Off beat", "Duration beats");
+        System.out.printf("%-12s%-12s%-12s%-12s%-12s%-12s%n",
+                "Index", "Pitch", "Velocity", "On beat", "Off beat", "Duration beats");
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
             System.out.printf("%-12d%-12d%-12d%-12.2f%-12.2f%-12.2f%n", i + 1, note.getPitch(),
@@ -443,10 +485,14 @@ public class DAW {
     // MODIFIES: block
     // EFFECTS: creates new note in a block, prompts for the appropriate parameters, 
     //          returns the created notes index
-    private void createNewNote(Block block) {
-        System.out.println("Whats the note pitch?");
-        System.out.println("(See https://inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies)");
-        int pitch = getNumericalInput(0, 127);
+    private void createNewNote(Block block, boolean percussive) {
+        int pitch = 0;
+
+        if (!percussive) {
+            System.out.println("Whats the note pitch?");
+            System.out.println("(See https://inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies)");
+            pitch = getNumericalInput(0, 127);
+        }
 
         System.out.println("Whats the note velocity?");
         int velocity = getNumericalInput(0, 127);
@@ -476,19 +522,6 @@ public class DAW {
         System.out.println("What is the new start beat?");
         int newStartTick = timeline.beatsToTicks(getNumericalInput(1, Double.MAX_VALUE) - 1);
         block.setStartTick(newStartTick);
-    }
-
-    // MODIFIES: track
-    // EFFECTS : removes the given block by index from the track
-    private void deleteBlock(MidiTrack track, int index) {
-        // stub
-    }
-
-    // MODIFIES: block
-    // EFFECTS: prompts the user to modify (and pottenally delete) a notes pitch, velocity, startTick, 
-    //          and duration by prompted index
-    private void selectNote(Note block) {
-        // stub
     }
 
     // EFFECTS: prompts the user for integer input in a range where min <= max
@@ -560,7 +593,6 @@ public class DAW {
                     return input;
                 }
             }
-
 
             System.out.println("Invalid input! Choose a valid option.");
         }

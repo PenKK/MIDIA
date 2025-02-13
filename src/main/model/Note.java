@@ -5,7 +5,7 @@ package model;
 // to a MIDIEvent object and applied to a Track object by the MidiTrack class.
 public class Note {
 
-    private int pitch;
+    private int pitch; // Notes in a percussive track do not utilize pitch
     private int velocity;
     private int startTick;
     private int durationTicks;
