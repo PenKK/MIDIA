@@ -107,7 +107,8 @@ public class Timeline {
         }
     }
 
-    // EFFECTS: Begins playback, can throw InvalidMidiDataException if invalid
+    // EFFECTS: Begins playback at the current tick position and with tempo according to 
+    //          beatsPerMinute. Can throw InvalidMidiDataException if invalid
     //          midi data is found during the sequence update (handled by UI)
     public void play() throws InvalidMidiDataException {
         updateSequence();
