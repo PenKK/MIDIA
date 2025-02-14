@@ -23,7 +23,6 @@ public class TestMidiTrack {
     @BeforeEach
     void runBefore() {
         midiTrack = new MidiTrack("Piano Melody", 0, 0);
-        
     }
 
     @Test
