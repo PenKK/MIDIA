@@ -321,7 +321,7 @@ public class TestMidiTrack {
         Track t = sequence.createTrack();
         try {
             midiTrack.applyToTrack(t);
-            fail();
+            fail("Invalid midi data was not detected");
         } catch(RuntimeException e) {
             // success
         }
