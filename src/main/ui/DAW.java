@@ -76,11 +76,11 @@ public class DAW {
             return;
         }
 
-        MidiTrack melody = timeline.createMidiTrack("Sample melody", 81, false);
+        MidiTrack melody = timeline.createMidiTrack("Sample melody", 89, false);
         MidiTrack drums = timeline.createMidiTrack("Sample drums", 35, true);
         MidiTrack bass = timeline.createMidiTrack("Sample bass", 38, false);
 
-        melody.setVolume(75);
+        melody.setVolume(90);
         drums.setVolume(110);
         bass.setVolume(110);
 
