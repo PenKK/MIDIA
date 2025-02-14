@@ -58,4 +58,14 @@ public class Block {
         return startTick;
     }
 
+    // EFFECTS: Returns a clone of this block with its own unique memory address
+    @Override
+    public Block clone() {
+        Block cloneBlock = new Block(startTick);
+        for (Note note : notes) {
+            cloneBlock.addNote(note.clone());
+        }
+        return cloneBlock;
+    }
+
 }

@@ -66,7 +66,7 @@ public class DAW {
     }
 
     // MODIFIES: this
-    // EFFECTS: Loads two sample tracks into the timeline
+    // EFFECTS: Loads three sample tracks into the timeline
     @SuppressWarnings("methodlength")
     private void loadSample() {
         if (timeline.getAvaliableInstrumentalChannels().size() < 2) {
@@ -100,7 +100,15 @@ public class DAW {
         melodyBlock.addNote(new Note(62, 127, beatTicks * 14, beatTicks));
         melodyBlock.addNote(new Note(66, 127, beatTicks * 15, beatTicks * 4));
 
-        bassBlock.addNote(new Note(60, 100, 0, beatTicks));
+        bassBlock.addNote(new Note(32, 100, beatTicks, beatTicks / 2));
+        bassBlock.addNote(new Note(32, 100, (int) (beatTicks * (double) 1.5), beatTicks / 2));
+
+        bassBlock.addNote(new Note(32, 100, beatTicks * 4, beatTicks / 2));
+        bassBlock.addNote(new Note(32, 100, (int) (beatTicks * (double) 4.5), beatTicks / 2));
+
+        Block bassBlock2 = bassBlock.clone();
+        bassBlock2.setStartTick(beatTicks * 11);
+        bass.addBlock(bassBlock2);
     }
 
     // MODIFIES: this
