@@ -12,7 +12,8 @@ import model.MidiTrack;
 import model.Note;
 import model.Timeline;
 
-// Digital Audio Workstation application
+// Digital Audio Workstation console based application
+// This class is the user interface to interact with the MIDI timeline
 // This class is partially inspired by TellerApp ui/TellerApp.java 
 // https://github.students.cs.ubc.ca/CPSC210/TellerApp/blob/main/src/main/ca/ubc/cpsc210/bank/ui/TellerApp.java
 // The MIDI spec was referenced heavily to interpret MIDI events: https://midi.org/spec-detail

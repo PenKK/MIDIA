@@ -1,8 +1,8 @@
 package model;
 
-// A high level MIDI note abstraction
+// A high level MIDI note abstraction.
 // On its own, this Note is just pure information, which will be converted
-// to a MIDIEvent object and applied to a Track object by the MidiTrack class.
+// to a MIDIEvent object and applied to a Track object by the MidiTrack class (by the timeline).
 public class Note {
 
     private int pitch; // Notes in a percussive track do not utilize pitch

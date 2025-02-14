@@ -2,7 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
-// A block is a group of notes that can be moved on the timeline
+// A block exists in a track and is a group of notes.
+// The block can be moved on the timeline by changing the startTick.
 public class Block {
 
     private ArrayList<Note> notes;

@@ -8,6 +8,7 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
 // A high level representation of a track, which is a single layer/instrument of the project.
+// For playback the MidiTrack will be converted to a javax.sound.midi.Track
 // See https://midi.org/expanded-midi-1-0-messages-list for midi message correspondence
 // See https://en.wikipedia.org/wiki/General_MIDI for more midi information
 public class MidiTrack {
@@ -85,6 +86,7 @@ public class MidiTrack {
         try {
             ShortMessage onMessage = new ShortMessage();
             ShortMessage offMessage = new ShortMessage();
+            // Percussive tracks use data1 for the instrument as they have no pitch
             int data1 = isPercussive() ? instrument : note.getPitch();
 
             onMessage.setMessage(ShortMessage.NOTE_ON, getChannel(), data1, note.getVelocity());
@@ -112,8 +114,6 @@ public class MidiTrack {
         volume = (int) Math.round(newVolume * 1.27);
     }
 
-    // EFFECTS: Returns correct channel corresponding to the whether or not the track is precussive.
-    //          Percussive tracks are played on channel 9 while others are on 0-15 excluding 9.
     public int getChannel() {
         return channel;
     }
@@ -160,6 +160,7 @@ public class MidiTrack {
         return name;
     }
 
+    // EFFECTS: returns true if the track is on channel 9, which is reserved for percussion
     public boolean isPercussive() {
         return channel == 9;
     }
