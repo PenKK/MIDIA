@@ -204,9 +204,11 @@ public class DAW {
 
     // EFFECTS: displays possible options for a user with tracks
     private void displayTrackOptions() {
+        int instrumentalTracks = 15 - timeline.getAvaliableChannels().size();
         clearConsole();
-        System.out.printf("Number of instrumental tracks: %d/15, what would you like to do?%n",
-                15 - timeline.getAvaliableChannels().size());
+        System.out.printf("Instrumental tracks: %d/15%nPercussion tracks  : %d%nTotal tracks       : %d%n%n",
+                          instrumentalTracks, timeline.getTracks().size() - instrumentalTracks,
+                          timeline.getTracks().size());
         if (timeline.getTracks().size() > 0) {
             System.out.println("Edit a track       [e]");
         }
@@ -230,7 +232,7 @@ public class DAW {
         String name = getStringInput(null, true);
 
         boolean percussive;
-        
+
         if (timeline.getAvaliableChannels().size() == 0) {
             System.out.println("Maximum instrumental tracks, track will be percussive");
             percussive = true;
@@ -257,10 +259,10 @@ public class DAW {
         String input = getStringInput(validInputs, false);
 
         switch (input) {
-            case "n":
+            case "c":
                 changeTrackName(selectedTrack);
                 break;
-            case "b":
+            case "n":
                 editBlock(createNewBlock(selectedTrack), selectedTrack);
                 break;
             case "e":
@@ -332,13 +334,12 @@ public class DAW {
         System.out.printf("Volume            %d%n", selectedTrack.getVolumeScaled());
         System.out.printf("Muted             %s%n%n", selectedTrack.isMuted() ? "Yes" : "No");
 
-        System.out.println("Change name        [n]");
-        System.out.println("Create new block   [b]");
+        System.out.println("Create new block   [n]");
         if (selectedTrack.getBlocks().size() > 0) {
             System.out.println("Edit blocks        [e]");
             validInputs[0] = "e";
         }
-
+        System.out.println("Change name        [c]");
         System.out.println("Change instrument  [i]");
         System.out.println("Change volume      [v]");
         System.out.println("Toggle mute        [m]");
@@ -416,7 +417,7 @@ public class DAW {
 
     // EFFECTS: Prompts user to select a note from the given table of notes
     private void chooseNoteToEdit(Block selectedBlock, boolean percussive) {
-        displayNotes(selectedBlock.getNotes());
+        displayNotes(selectedBlock.getNotes(), percussive);
         System.out.println("Enter an index");
         int displayIndex = getNumericalInput(1, selectedBlock.getNotes().size());
         editNote(selectedBlock, displayIndex, percussive);
@@ -484,17 +485,44 @@ public class DAW {
         System.out.println("Return                 [r]");
     }
 
-    // EFFECTS: prints a table of the given notes and their relevant fields 
-    private void displayNotes(ArrayList<Note> notes) {
+    // EFFECTS: prints notes out in a table according to if they are percussive
+    private void displayNotes(ArrayList<Note> notes, boolean percussive) {
         clearConsole();
+        if (percussive) {
+            displayPercussiveNotes(notes);
+        } else {
+            displayInstrumentalNotes(notes);
+        }
+    }
+
+    // EFFECTS: prints out all note data in table format
+    private void displayInstrumentalNotes(ArrayList<Note> notes) {
         System.out.printf("%-12s%-12s%-12s%-12s%-12s%-12s%n",
-                "Index", "Pitch", "Velocity", "On beat", "Off beat", "Duration beats");
+                          "Index", "Pitch", "Velocity", "On beat", "Off beat", "Duration beats");
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
-            System.out.printf("%-12d%-12d%-12d%-12.2f%-12.2f%-12.2f%n", i + 1, note.getPitch(),
-                    note.getVelocity(), timeline.ticksToBeats(note.getStartTick()) + 1,
-                    timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()) + 1,
-                    timeline.ticksToBeats(note.getDurationTicks()));
+            System.out.printf("%-12d%-12d%-12d%-12.2f%-12.2f%-12.2f%n",
+                              i + 1,
+                              note.getPitch(),
+                              note.getVelocity(),
+                              timeline.ticksToBeats(note.getStartTick()) + 1,
+                              timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()) + 1,
+                              timeline.ticksToBeats(note.getDurationTicks()));
+        }
+    }
+
+    // EFFECTS: prints out all note data excluding pitch in table format
+    private void displayPercussiveNotes(ArrayList<Note> notes) {
+        System.out.printf("%-12s%-12s%-12s%-12s%-12s%n",
+                          "Index", "Velocity", "On beat", "Off beat", "Duration beats");
+        for (int i = 0; i < notes.size(); i++) {
+            Note note = notes.get(i);
+            System.out.printf("%-12d%-12d%-12.2f%-12.2f%-12.2f%n",
+                              i + 1,
+                              note.getVelocity(),
+                              timeline.ticksToBeats(note.getStartTick()) + 1,
+                              timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()) + 1,
+                              timeline.ticksToBeats(note.getDurationTicks()));
         }
     }
 
