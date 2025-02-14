@@ -176,7 +176,7 @@ public class DAW {
         System.out.println("Welcome to the project timeline!");
         System.out.printf("Length  : %.2f seconds, %.2f beats%n",
                 timeline.getLengthMs() / 1000, timeline.getLengthBeats());
-        System.out.printf("Position: %.2f seconds, beat %.2f%n",
+        System.out.printf("Position: %.2f seconds, on beat %.2f%n",
                 timeline.getPositionMs() / 1000, timeline.getPositionBeats() + 1);
         System.out.printf("BPM: %.2f%n%n", timeline.getBPM());
 
