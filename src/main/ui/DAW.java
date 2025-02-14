@@ -69,14 +69,16 @@ public class DAW {
     // EFFECTS: Loads two sample tracks into the timeline
     @SuppressWarnings("methodlength")
     private void loadSample() {
-        MidiTrack melody = new MidiTrack("Sample melody", false);
-        MidiTrack drums = new MidiTrack("Sample drums", true);
-        MidiTrack bass = new MidiTrack("bass", false);
-        final int beatTicks = timeline.beatsToTicks(1);
+        if (timeline.getAvaliableChannels().size() < 2) {
+            System.out.println("Not enough instrumental tracks avaliable, press enter to continue");
+            sc.nextLine();
+            return;
+        }
 
-        melody.setInstrument(81);
-        drums.setInstrument(35);
-        bass.setInstrument(32);
+        MidiTrack melody = timeline.createMidiTrack("Sample melody", 81, false);
+        MidiTrack drums = timeline.createMidiTrack("Sample drums", 35, true);
+        MidiTrack bass = timeline.createMidiTrack("Sample bass", 38, false);
+        final int beatTicks = timeline.beatsToTicks(1);
 
         Block melodyBlock = new Block(0);
         Block drumsBlock = new Block(0);
@@ -99,10 +101,6 @@ public class DAW {
         melodyBlock.addNote(new Note(66, 127, beatTicks * 15, beatTicks * 4));
 
         bassBlock.addNote(new Note(60, 100, 0, beatTicks));
-
-        timeline.addMidiTrack(drums);
-        timeline.addMidiTrack(melody);
-        timeline.addMidiTrack(bass);
     }
 
     // MODIFIES: this
@@ -207,8 +205,8 @@ public class DAW {
     // EFFECTS: displays possible options for a user with tracks
     private void displayTrackOptions() {
         clearConsole();
-        System.out.printf("Current number of tracks: %d, what would you like to do?%n",
-                timeline.getTracks().size());
+        System.out.printf("Number of instrumental tracks: %d/15, what would you like to do?%n",
+                15 - timeline.getAvaliableChannels().size());
         if (timeline.getTracks().size() > 0) {
             System.out.println("Edit a track       [e]");
         }
@@ -231,14 +229,21 @@ public class DAW {
         System.out.println("Enter a name for the track");
         String name = getStringInput(null, true);
 
-        System.out.println("Is this track percussive? t/f");
-        boolean percussive = getStringInput(new String[] { "t", "f" }, false).equals("t");
+        boolean percussive;
+        
+        if (timeline.getAvaliableChannels().size() == 0) {
+            System.out.println("Maximum instrumental tracks, track will be percussive");
+            percussive = true;
+        } else {
+            System.out.println("Is this track percussive? t/f");
+            percussive = getStringInput(new String[] { "t", "f" }, false).equals("t");
+        }
 
         System.out.println(
                 "What instrument does this track play?\n(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
         int instrument = percussive ? getNumericalInput(35, 81) : getNumericalInput(1, 128) - 1;
-
-        return timeline.addMidiTrack(new MidiTrack(name, instrument, percussive));
+        MidiTrack newMidiTrack = timeline.createMidiTrack(name, instrument, percussive);
+        return timeline.getTracks().indexOf(newMidiTrack);
     }
 
     // REQUIRES: index >= 0 and for there to be at least 1 track in the timeline
@@ -268,7 +273,7 @@ public class DAW {
                 changeTrackVolume(selectedTrack);
                 break;
             case "d":
-                timeline.getTracks().remove(index);
+                timeline.removeMidiTrack(index);
                 return;
             case "m":
                 selectedTrack.setMuted(!selectedTrack.isMuted());
@@ -302,11 +307,6 @@ public class DAW {
     // EFFECTS: Prompts for input to change a tracks instrument, gives different ranges depending on
     //          if the track is percussive.
     private void changeTrackInstrument(MidiTrack midiTrack) {
-        System.out.printf("Is %s percussive? t/f%n", midiTrack.getName());
-
-        boolean percussive = getStringInput(new String[] { "t", "f" }, false).equals("t");
-        midiTrack.setPercussive(percussive);
-
         System.out.printf("What is the new instrument for track %s?%n", midiTrack.getName());
         System.out.println("(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
 

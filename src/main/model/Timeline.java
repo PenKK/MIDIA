@@ -20,6 +20,8 @@ public class Timeline {
     private float beatsPerMinute;
     private int positionTick;
 
+    private ArrayList<Integer> avaliableChannels; 
+
     private static final int PULSES_PER_QUARTER_NOTE = 960;
     private static final float DEFAULT_BPM = 120;
 
@@ -39,18 +41,38 @@ public class Timeline {
         beatsPerMinute = DEFAULT_BPM;
         midiTracks = new ArrayList<>();
         positionTick = 0;
+
+        avaliableChannels = new ArrayList<>() {
+            {
+                for (int i = 0; i <= 15; i++) {
+                    if (i != 9) {
+                        add(i); // add numbers 0-15 exlcuding 9, 9 is for percussion
+                    }
+                    
+                }
+            }
+        };
     }
 
+    // REQUIRES: avaliableChannels.size() >= 0
     // MODIFIES: this
-    // EFFECTS: Adds the specified midiTrack to the list of midiTracks, returns the index of the created track
-    public int addMidiTrack(MidiTrack midiTrack) {
-        midiTracks.add(midiTrack);
-        return midiTracks.size() - 1;
+    // EFFECTS: Creates a midiTrack, add its to the list of tracks and returns it
+    public MidiTrack createMidiTrack(String name, int instrument, boolean percussive) {
+        MidiTrack newMidiTrack = new MidiTrack(name, instrument, percussive ? 9 : avaliableChannels.remove(0));
+        midiTracks.add(newMidiTrack);
+        return newMidiTrack;
     }
 
+    // REQUIRES: index >= 0 and midiTracks.size() > 0
     // MODIFIES: this
-    // EFFECTS: removes the MidiTrack at the specified index from midiTracks, and returns it
+    // EFFECTS: removes the MidiTrack at the specified index from midiTracks, adds the
+    //          channel to avaliable channels if the MidiTrack is not percussive, and then
+    //          returns the MidiTrack
     public MidiTrack removeMidiTrack(int index) {
+        MidiTrack toRemove = midiTracks.get(index);
+        if (!toRemove.isPercussive()) {
+            avaliableChannels.add(toRemove.getChannel());
+        }
         return midiTracks.remove(index);
     }
 
@@ -215,6 +237,7 @@ public class Timeline {
         return positionTick;
     }
 
-
-
+    public ArrayList<Integer> getAvaliableChannels() {
+        return avaliableChannels;
+    }
 }

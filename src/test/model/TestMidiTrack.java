@@ -22,7 +22,8 @@ public class TestMidiTrack {
 
     @BeforeEach
     void runBefore() {
-        midiTrack = new MidiTrack("Piano Melody", false);
+        midiTrack = new MidiTrack("Piano Melody", 0);
+        
     }
 
     @Test
@@ -33,26 +34,28 @@ public class TestMidiTrack {
         assertEquals(midiTrack.getVolume(), 100);
         assertEquals(midiTrack.getVolumeScaled(), 79); // 100 / 127
         assertEquals(midiTrack.getName(), "Piano Melody");
+        assertEquals(midiTrack.getChannel(), 0);
 
-        midiTrack = new MidiTrack("Percussive drums", true);
+        midiTrack = new MidiTrack("Percussive drums", 9);
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
         assertEquals(midiTrack.getInstrument(), 35); // 35 is bass drum
         assertEquals(midiTrack.getVolume(), 100);
         assertEquals(midiTrack.getVolumeScaled(), 79);
         assertEquals(midiTrack.getName(), "Percussive drums");
+        assertEquals(midiTrack.getChannel(), 9);
     }
 
     @Test
     void testConstructorOverload() {
-        midiTrack = new MidiTrack("Non Percussive", 25, false); // 25 is acoustic guitar (nylon)
+        midiTrack = new MidiTrack("Non Percussive", 25, 0); // 25 is acoustic guitar (nylon)
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
         assertEquals(midiTrack.getInstrument(), 25);
         assertEquals(midiTrack.getVolume(), 100);
         assertEquals(midiTrack.getName(), "Non Percussive");
 
-        midiTrack = new MidiTrack("Percussive", 38, true); // 38 is acoustic snare
+        midiTrack = new MidiTrack("Percussive", 38, 9); // 38 is acoustic snare
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
         assertEquals(midiTrack.getInstrument(), 38);
@@ -179,8 +182,8 @@ public class TestMidiTrack {
     @Test
     void testSetInstrument() throws InvalidMidiDataException, MidiUnavailableException {
         Timeline timeline = new Timeline();
-        timeline.addMidiTrack(midiTrack);
-
+        midiTrack = timeline.createMidiTrack("Piano melody", 0, false);
+        assertEquals(midiTrack.getInstrument(), 0);
         midiTrack.setInstrument(4);
         timeline.updateSequence();
 
@@ -255,11 +258,11 @@ public class TestMidiTrack {
             MidiMessage expectedEventData = expectedMidiEvents.get(i).getMessage();
             MidiMessage realEventData = track.get(i).getMessage();
 
-            assertEquals(realEventData.getStatus(), realEventData.getStatus());
-            assertEquals(realEventData.getMessage()[0], realEventData.getMessage()[0]);
-            assertEquals(realEventData.getMessage()[1], realEventData.getMessage()[1]);
+            assertEquals(realEventData.getStatus(), expectedEventData.getStatus());
+            assertEquals(realEventData.getMessage()[0], expectedEventData.getMessage()[0]);
+            assertEquals(realEventData.getMessage()[1], expectedEventData.getMessage()[1]);
             if ((realEventData.getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) {
-                assertEquals(realEventData.getMessage()[2], realEventData.getMessage()[2]);
+                assertEquals(realEventData.getMessage()[2], expectedEventData.getMessage()[2]);
             }
         }
     }
@@ -269,9 +272,7 @@ public class TestMidiTrack {
         Sequence sequence = new Sequence(Sequence.PPQ, 960);
         Track track = sequence.createTrack();
 
-        assertFalse(midiTrack.isPercussive());
-        midiTrack.setInstrument(35);
-        midiTrack.setPercussive(true);
+        midiTrack = new MidiTrack("percussive", 9);
         assertTrue(midiTrack.isPercussive());
         midiTrack.applyToTrack(track);
 
@@ -328,6 +329,40 @@ public class TestMidiTrack {
         blockWithInvalidNote.addNote(new Note(128, 0, 0, 0)); // pitch is [0, 127]
 
         assertThrows(RuntimeException.class, () -> midiTrack.applyToTrack(t));
+    }
 
+    @Test
+    void testTrackChannels() {
+        assertEquals(midiTrack.getChannel(), 0);
+        MidiTrack mt1 = new MidiTrack("ch 1", 1);
+        MidiTrack mt2 = new MidiTrack("ch 2", 2);
+        MidiTrack mt3 = new MidiTrack("ch 3", 3);
+        MidiTrack mt4 = new MidiTrack("ch 4", 4);
+        MidiTrack mt5 = new MidiTrack("ch 5", 5);
+        MidiTrack mt6 = new MidiTrack("ch 6", 6);
+        MidiTrack mt7 = new MidiTrack("ch 7", 7);
+        MidiTrack mt8 = new MidiTrack("ch 8", 8);
+        MidiTrack mt10 = new MidiTrack("ch 10", 10); // 9 should be skipped, it is for percussion
+        MidiTrack mt11 = new MidiTrack("ch 11", 11);
+        MidiTrack mt12 = new MidiTrack("ch 12", 12);
+        MidiTrack mt13 = new MidiTrack("ch 13", 13);
+        MidiTrack mt14 = new MidiTrack("ch 14", 14);
+        MidiTrack mt15 = new MidiTrack("ch 15", 15);
+        
+        assertEquals(mt1.getChannel(), 1);
+        assertEquals(mt2.getChannel(), 2);
+        assertEquals(mt3.getChannel(), 3);
+        assertEquals(mt4.getChannel(), 4);
+        assertEquals(mt5.getChannel(), 5);
+        assertEquals(mt6.getChannel(), 6);
+        assertEquals(mt7.getChannel(), 7);
+        assertEquals(mt8.getChannel(), 8);
+
+        assertEquals(mt10.getChannel(), 10);
+        assertEquals(mt11.getChannel(), 11);
+        assertEquals(mt12.getChannel(), 12);
+        assertEquals(mt13.getChannel(), 13);
+        assertEquals(mt14.getChannel(), 14);
+        assertEquals(mt15.getChannel(), 15);
     }
 }

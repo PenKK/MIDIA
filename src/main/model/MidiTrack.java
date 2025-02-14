@@ -16,22 +16,23 @@ public class MidiTrack {
     private static final int DEFAULT_PERCUSSIVE_INSTRUMENT = 35;
     private static final int DEFAULT_NON_PERCUSSIVE_INSTRUMENT = 0;
 
-    private boolean percussive;
     private boolean muted;
     private int instrument; // 0 to 127 inclusive if not percussive, else 35 to 81 inclusive
     private int volume; // 0 to 127 inclusive
     private String name;
     private ArrayList<Block> blocks;
+    private final int channel;
 
+    // REQUIRES: If !percussive, AVALIABLE_CHANNELS.size() > 0
     // EFFECTS: Creates a single track that initially: is not muted,
     //          has no blocks, a default instrument depending on percussive or not,
-    //          a default volume, percussive according to parameter, a name.
-    public MidiTrack(String name, boolean percussive) {
+    //          a default volume, channel according to percussive, a name.
+    public MidiTrack(String name, int channel) {
         this.muted = false;
         this.blocks = new ArrayList<Block>();
-        this.instrument = percussive ? DEFAULT_PERCUSSIVE_INSTRUMENT : DEFAULT_NON_PERCUSSIVE_INSTRUMENT;
+        this.instrument = channel == 9 ? DEFAULT_PERCUSSIVE_INSTRUMENT : DEFAULT_NON_PERCUSSIVE_INSTRUMENT;
         this.volume = DEFAULT_VOLUME;
-        this.percussive = percussive;
+        this.channel = channel;
         this.name = name;
     }
 
@@ -39,12 +40,12 @@ public class MidiTrack {
     // EFFECTS: Creates a single track that initially: is not muted,
     //          has no blocks, set to a specified instrument, a default volume,
     //          percussive according to parameter, and a name.
-    public MidiTrack(String name, int instrument, boolean percussive) {
+    public MidiTrack(String name, int instrument, int channel) {
         this.muted = false;
         this.blocks = new ArrayList<Block>();
         this.instrument = instrument;
         this.volume = DEFAULT_VOLUME;
-        this.percussive = percussive;
+        this.channel = channel;
         this.name = name;
     }
 
@@ -79,7 +80,7 @@ public class MidiTrack {
                                         + name + "due to invalid MidiData", e);
         }
 
-        if (!percussive) { // Tracks on channel 10 ignore program change
+        if (!isPercussive()) { // Tracks on channel 10 ignore program change
             track.add(new MidiEvent(programChangeMessage, 0));
         }
         track.add(new MidiEvent(volMessage, 0));
@@ -98,7 +99,7 @@ public class MidiTrack {
         try {
             ShortMessage onMessage = new ShortMessage();
             ShortMessage offMessage = new ShortMessage();
-            int data1 = percussive ? instrument : note.getPitch();
+            int data1 = isPercussive() ? instrument : note.getPitch();
 
             onMessage.setMessage(ShortMessage.NOTE_ON, getChannel(), data1, note.getVelocity());
             offMessage.setMessage(ShortMessage.NOTE_OFF, getChannel(), data1, 0); 
@@ -126,18 +127,13 @@ public class MidiTrack {
     }
 
     // EFFECTS: Returns correct channel corresponding to the whether or not the track is precussive.
-    //          Percussive channels are played on channel 9 while regular instruments are on 0.
+    //          Percussive tracks are played on channel 9 while others are on 0-15 excluding 9.
     public int getChannel() {
-        return percussive ? 9 : 0;
+        return channel;
     }
 
     public void setMuted(boolean mutedValue) {
         muted = mutedValue;
-    }
-
-    // REQUIRES: instrument value must be in range [35, 81]
-    public void setPercussive(boolean percussiveValue) {
-        percussive = percussiveValue;
     }
 
     // REQUIRES: 0 <= instrument <= 127 if not percussive, else 35 <= instrument <= 81
@@ -179,6 +175,6 @@ public class MidiTrack {
     }
 
     public boolean isPercussive() {
-        return percussive;
+        return channel == 9;
     }
 }
