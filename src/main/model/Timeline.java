@@ -58,6 +58,10 @@ public class Timeline {
     // MODIFIES: this
     // EFFECTS: Creates a midiTrack, add its to the list of tracks and returns it
     public MidiTrack createMidiTrack(String name, int instrument, boolean percussive) {
+        if (avaliableChannels.size() <= 0) {
+            return null;
+        }
+        
         MidiTrack newMidiTrack = new MidiTrack(name, instrument, percussive ? 9 : avaliableChannels.remove(0));
         midiTracks.add(newMidiTrack);
         return newMidiTrack;
