@@ -69,7 +69,7 @@ public class DAW {
     // EFFECTS: Loads two sample tracks into the timeline
     @SuppressWarnings("methodlength")
     private void loadSample() {
-        if (timeline.getAvaliableChannels().size() < 2) {
+        if (timeline.getAvaliableInstrumentalChannels().size() < 2) {
             System.out.println("Not enough instrumental tracks avaliable, press enter to continue");
             sc.nextLine();
             return;
@@ -204,11 +204,11 @@ public class DAW {
 
     // EFFECTS: displays possible options for a user with tracks
     private void displayTrackOptions() {
-        int instrumentalTracks = 15 - timeline.getAvaliableChannels().size();
+        int instrumentalTracks = 15 - timeline.getAvaliableInstrumentalChannels().size();
         clearConsole();
         System.out.printf("Instrumental tracks: %d/15%nPercussion tracks  : %d%nTotal tracks       : %d%n%n",
-                          instrumentalTracks, timeline.getTracks().size() - instrumentalTracks,
-                          timeline.getTracks().size());
+                instrumentalTracks, timeline.getTracks().size() - instrumentalTracks,
+                timeline.getTracks().size());
         if (timeline.getTracks().size() > 0) {
             System.out.println("Edit a track       [e]");
         }
@@ -233,8 +233,8 @@ public class DAW {
 
         boolean percussive;
 
-        if (timeline.getAvaliableChannels().size() == 0) {
-            System.out.println("Maximum instrumental tracks, track will be percussive");
+        if (timeline.getAvaliableInstrumentalChannels().size() == 0) {
+            System.out.println("\nMaximum instrumental tracks, track will be percussive");
             percussive = true;
         } else {
             System.out.println("Is this track percussive? t/f");
@@ -498,31 +498,31 @@ public class DAW {
     // EFFECTS: prints out all note data in table format
     private void displayInstrumentalNotes(ArrayList<Note> notes) {
         System.out.printf("%-12s%-12s%-12s%-12s%-12s%-12s%n",
-                          "Index", "Pitch", "Velocity", "On beat", "Off beat", "Duration beats");
+                "Index", "Pitch", "Velocity", "On beat", "Off beat", "Duration beats");
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
             System.out.printf("%-12d%-12d%-12d%-12.2f%-12.2f%-12.2f%n",
-                              i + 1,
-                              note.getPitch(),
-                              note.getVelocity(),
-                              timeline.ticksToBeats(note.getStartTick()) + 1,
-                              timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()) + 1,
-                              timeline.ticksToBeats(note.getDurationTicks()));
+                    i + 1,
+                    note.getPitch(),
+                    note.getVelocity(),
+                    timeline.ticksToBeats(note.getStartTick()) + 1,
+                    timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()) + 1,
+                    timeline.ticksToBeats(note.getDurationTicks()));
         }
     }
 
     // EFFECTS: prints out all note data excluding pitch in table format
     private void displayPercussiveNotes(ArrayList<Note> notes) {
         System.out.printf("%-12s%-12s%-12s%-12s%-12s%n",
-                          "Index", "Velocity", "On beat", "Off beat", "Duration beats");
+                "Index", "Velocity", "On beat", "Off beat", "Duration beats");
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
             System.out.printf("%-12d%-12d%-12.2f%-12.2f%-12.2f%n",
-                              i + 1,
-                              note.getVelocity(),
-                              timeline.ticksToBeats(note.getStartTick()) + 1,
-                              timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()) + 1,
-                              timeline.ticksToBeats(note.getDurationTicks()));
+                    i + 1,
+                    note.getVelocity(),
+                    timeline.ticksToBeats(note.getStartTick()) + 1,
+                    timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()) + 1,
+                    timeline.ticksToBeats(note.getDurationTicks()));
         }
     }
 

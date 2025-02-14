@@ -50,7 +50,7 @@ public class TestTimeline {
         assertEquals(timeline.getPositionTick(), 0);
         assertEquals(timeline.getSequence().getResolution(), 960);
         assertEquals(timeline.getSequence().getDivisionType(), Sequence.PPQ);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
     }
 
     @Test
@@ -65,8 +65,8 @@ public class TestTimeline {
         assertEquals(midiTrack.getChannel(), 0);
 
         expectedChannels.remove(0);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
-        
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
+
         MidiTrack anotherMidiTrack = timeline.createMidiTrack("sick violin", 0, false);
         expectedMidiTracks.add(anotherMidiTrack);
         assertEquals(timeline.getTracks(), expectedMidiTracks);
@@ -76,7 +76,7 @@ public class TestTimeline {
         assertEquals(anotherMidiTrack.getChannel(), 1);
 
         expectedChannels.remove(0);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
     }
 
     @Test
@@ -85,24 +85,23 @@ public class TestTimeline {
         MidiTrack midiTrack = timeline.createMidiTrack("cool track", 0, false);
         MidiTrack anotherMidiTrack = timeline.createMidiTrack("sick violin", 0, false);
 
-
         expectedMidiTracks.add(midiTrack);
         expectedMidiTracks.add(anotherMidiTrack);
 
         expectedChannels.remove(0);
         expectedChannels.remove(0);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
 
         assertEquals(timeline.getTracks().size(), 2);
         assertEquals(timeline.removeMidiTrack(0), midiTrack);
         expectedChannels.add(0);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
 
         assertEquals(timeline.getTracks().size(), 1);
         assertEquals(timeline.removeMidiTrack(0), anotherMidiTrack);
         assertEquals(timeline.getTracks().size(), 0);
         expectedChannels.add(1);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
     }
 
     @Test
@@ -110,15 +109,15 @@ public class TestTimeline {
         ArrayList<MidiTrack> expectedMidiTracks = new ArrayList<>();
         MidiTrack mt1 = timeline.createMidiTrack("cool track", 0, false);
         expectedChannels.remove(0);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
 
         MidiTrack mt2 = timeline.createMidiTrack("sick violin", 0, false);
         expectedChannels.remove(0);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
 
         MidiTrack mt3 = timeline.createMidiTrack("bass drum", 0, true);
         // Do not remove any as the track is percussive
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
 
         expectedMidiTracks.add(mt1);
         expectedMidiTracks.add(mt2);
@@ -126,17 +125,17 @@ public class TestTimeline {
 
         assertEquals(timeline.getTracks().size(), 3);
         assertEquals(timeline.removeMidiTrack(2), mt3);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
 
         assertEquals(timeline.getTracks().size(), 2);
         assertEquals(timeline.removeMidiTrack(0), mt1);
         expectedChannels.add(0);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
 
         assertEquals(timeline.getTracks().size(), 1);
         assertEquals(timeline.removeMidiTrack(0), mt2);
         expectedChannels.add(1);
-        assertEquals(expectedChannels, timeline.getAvaliableChannels());
+        assertEquals(expectedChannels, timeline.getAvaliableInstrumentalChannels());
         assertEquals(timeline.getTracks().size(), 0);
     }
 
@@ -144,7 +143,7 @@ public class TestTimeline {
     void testManyTracksAndPlayBack() {
         ArrayList<MidiTrack> midiTracks = new ArrayList<>();
 
-        while (timeline.getAvaliableChannels().size() != 0) {
+        while (timeline.getAvaliableInstrumentalChannels().size() != 0) {
             midiTracks.add(timeline.createMidiTrack("instrumental", 4, false));
         }
         assertTrue(midiTracks.size() == 15);
@@ -153,13 +152,13 @@ public class TestTimeline {
         assertEquals(timeline.createMidiTrack("cant make more", 0, false), null);
 
         timeline.removeMidiTrack(5);
-        assertTrue(timeline.getAvaliableChannels().size() == 1);
+        assertTrue(timeline.getAvaliableInstrumentalChannels().size() == 1);
         assertEquals(timeline.createMidiTrack("space for 1 more", 6, false).getChannel(), 5);
         assertEquals(timeline.createMidiTrack("cant make more", 0, false), null);
 
-        assertTrue(timeline.getAvaliableChannels().isEmpty());
+        assertTrue(timeline.getAvaliableInstrumentalChannels().isEmpty());
         timeline.removeMidiTrack(10);
-        assertTrue(timeline.getAvaliableChannels().size() == 1);
+        assertTrue(timeline.getAvaliableInstrumentalChannels().size() == 1);
         assertEquals(timeline.createMidiTrack("space for 1 more", 6, false).getChannel(), 12);
 
     }
@@ -189,13 +188,13 @@ public class TestTimeline {
         timeline.updateSequence();
 
         // Update sequence by hand, creating the expected midi events
-        MidiEvent n1on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
+        MidiEvent n1on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
         MidiEvent n1off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 0), 5);
-        MidiEvent n2on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 50), 4);
+        MidiEvent n2on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 50), 4);
         MidiEvent n2off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 0), 13);
-        MidiEvent n3on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 1, 62, 90), 14);
+        MidiEvent n3on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 1, 62, 90), 14);
         MidiEvent n3off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 1, 62, 0), 31);
-        MidiEvent n4on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 1, 62, 90), 35);
+        MidiEvent n4on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 1, 62, 90), 35);
         MidiEvent n4off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 1, 62, 0), 45);
 
         Sequence expectedSequence = new Sequence(Sequence.PPQ, 960);

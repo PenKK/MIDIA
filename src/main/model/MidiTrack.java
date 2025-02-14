@@ -13,8 +13,6 @@ import javax.sound.midi.Track;
 public class MidiTrack {
 
     private static final int DEFAULT_VOLUME = 100;
-    private static final int DEFAULT_PERCUSSIVE_INSTRUMENT = 35;
-    private static final int DEFAULT_NON_PERCUSSIVE_INSTRUMENT = 0;
 
     private boolean muted;
     private int instrument; // 0 to 127 inclusive if not percussive, else 35 to 81 inclusive

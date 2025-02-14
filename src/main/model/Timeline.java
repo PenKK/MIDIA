@@ -20,7 +20,7 @@ public class Timeline {
     private float beatsPerMinute;
     private int positionTick;
 
-    private ArrayList<Integer> avaliableChannels; 
+    private ArrayList<Integer> avaliableInstrumentalChannels;
 
     private static final int PULSES_PER_QUARTER_NOTE = 960;
     private static final float DEFAULT_BPM = 120;
@@ -42,13 +42,13 @@ public class Timeline {
         midiTracks = new ArrayList<>();
         positionTick = 0;
 
-        avaliableChannels = new ArrayList<>() {
+        avaliableInstrumentalChannels = new ArrayList<>() {
             {
                 for (int i = 0; i <= 15; i++) {
                     if (i != 9) {
                         add(i); // add numbers 0-15 exlcuding 9, 9 is for percussion
                     }
-                    
+
                 }
             }
         };
@@ -58,11 +58,12 @@ public class Timeline {
     // MODIFIES: this
     // EFFECTS: Creates a midiTrack, add its to the list of tracks and returns it
     public MidiTrack createMidiTrack(String name, int instrument, boolean percussive) {
-        if (avaliableChannels.size() <= 0) {
+        if (avaliableInstrumentalChannels.size() <= 0) {
             return null;
         }
-        
-        MidiTrack newMidiTrack = new MidiTrack(name, instrument, percussive ? 9 : avaliableChannels.remove(0));
+
+        MidiTrack newMidiTrack = new MidiTrack(name, instrument,
+                percussive ? 9 : avaliableInstrumentalChannels.remove(0));
         midiTracks.add(newMidiTrack);
         return newMidiTrack;
     }
@@ -75,7 +76,7 @@ public class Timeline {
     public MidiTrack removeMidiTrack(int index) {
         MidiTrack toRemove = midiTracks.get(index);
         if (!toRemove.isPercussive()) {
-            avaliableChannels.add(toRemove.getChannel());
+            avaliableInstrumentalChannels.add(toRemove.getChannel());
         }
         return midiTracks.remove(index);
     }
@@ -155,7 +156,7 @@ public class Timeline {
     // EFFECTS: returns the calculation of the sequence length in milliseconds
     public double getLengthBeats() {
         return ticksToBeats(getLengthTicks());
-    } 
+    }
 
     // REQUIRES: ticks >= 0
     // EFFECTS: converts ticks to milliseconds given the BPM
@@ -241,7 +242,7 @@ public class Timeline {
         return positionTick;
     }
 
-    public ArrayList<Integer> getAvaliableChannels() {
-        return avaliableChannels;
+    public ArrayList<Integer> getAvaliableInstrumentalChannels() {
+        return avaliableInstrumentalChannels;
     }
 }
