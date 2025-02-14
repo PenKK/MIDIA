@@ -9,10 +9,8 @@
     - Adjust tempo of the project.
     - Adjust pitch of audio.
     - Create melodies via piano roll.
-    - Cut, copy, paste, and delete audio clips and MIDI notes.
-    - Allow for the user to able to load in audio files that they want to use.
 - Playback of the project within the program.
-- Save and load progress via MIDI files
+- Save and load progress
 - All of the above via a graphical user interface
     - View and edit the timeline
 
@@ -36,3 +34,5 @@
 - As a user, I want to be able to move the position of a block so that I can change when the notes inside play.
 - As a user, I want to be able to modify an existing note on a block by changing its pitch, velocity, or timing so that I can make adjustments to my composition.
 - As a user, I want to be able to delete tracks, blocks, and notes from my project so that I can remove elements I no longer need.
+- As a user, I want to specify tempo so that I can change the speed of my project
+- As a user, I want to be able to control playback of my project so that I can start and stop where I want to on the timeline
