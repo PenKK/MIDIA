@@ -57,8 +57,7 @@ public class Note {
         durationTicks = newDurationTicks;
     }
 
-    // EFFECTS: Creates a replica of the note and returns it. 
-    //          Used for creating timeline adjusted notes.
+    // EFFECTS: Creates a clone of the note at a new memory address and returns it.
     @Override
     public Note clone() {
         return new Note(getPitch(), getVelocity(), getStartTick(), getDurationTicks());

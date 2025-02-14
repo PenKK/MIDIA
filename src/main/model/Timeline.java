@@ -128,16 +128,16 @@ public class Timeline {
         this.positionTick = newPositionTick;
     }
 
-    // REQUIRES: newPositionTick >= 0
+    // REQUIRES: newPositionMs >= 0
     // MODIFIES: this
-    // EFFECTS: Changes timeline positionto start playback given milliseconds
+    // EFFECTS: Changes timeline position to start playback at the given milliseconds
     public void setPositionMs(double newPositionMs) {
         this.positionTick = msToTicks(newPositionMs);
     }
 
     // REQUIRES: newPositionTick >= 0
     // MODIFIES: this
-    // EFFECTS: Changes timeline positionto start playback given milliseconds
+    // EFFECTS: Changes timeline position to start playback given the beat to start at
     public void setPositionBeats(double newPositionBeats) {
         this.positionTick = beatsToTicks(newPositionBeats);
     }
@@ -153,7 +153,7 @@ public class Timeline {
         return ticksToMs(getLengthTicks());
     }
 
-    // EFFECTS: returns the calculation of the sequence length in milliseconds
+    // EFFECTS: returns the calculation of the sequence length in beats
     public double getLengthBeats() {
         return ticksToBeats(getLengthTicks());
     }
@@ -211,12 +211,12 @@ public class Timeline {
         return midiTracks;
     }
 
-    // EFFECTS: returns the timeline position in ms by converting ticks
+    // EFFECTS: returns the timeline position in ms by converting ticks to ms
     public double getPositionMs() {
         return ticksToMs(positionTick);
     }
 
-    // EFFECTS: returns the timeline position in beats by converting ticks
+    // EFFECTS: returns the timeline position in beats by converting ticks to beats
     public double getPositionBeats() {
         return ticksToBeats(positionTick);
     }

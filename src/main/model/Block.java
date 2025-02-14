@@ -31,7 +31,7 @@ public class Block {
         return notes.remove(index);
     }
 
-    // REQUIRES: newStartTime >= 0
+    // REQUIRES: newStartTick >= 0
     // MODIFIES: this
     // EFFECTS: Changes the position of the block on the time line
     public void setStartTick(int newStartTick) {

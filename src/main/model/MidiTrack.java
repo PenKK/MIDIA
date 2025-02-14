@@ -22,7 +22,6 @@ public class MidiTrack {
     private ArrayList<Block> blocks;
     private final int channel;
 
-
     // REQUIRES: 0 <= instrument <= 127 if percussive is false, else 35 <= instrument <= 81
     // EFFECTS: Creates a single track that initially: is not muted,
     //          has no blocks, set to a specified instrument, a default volume,
@@ -51,10 +50,11 @@ public class MidiTrack {
     }
 
     // MODIFIES: track
-    // EFFECTS: Converts MidiTrack to Java Track data. First creates volume and instrument messages.
-    //          Then converts each block from blocks to individual notes to MIDI events.
-    //          Creates one event for the play sound, and one for the end per note.
+    // EFFECTS: Converts MidiTrack to Java Track data. First creates volume and instrument (program change) messages.
+    //          Then converts each block from blocks to individual notes to MIDI events.    
+    //          Creates one event for the note on event, and one for the end not event (per note).
     //          All created events are applied to the track.
+    //          Throws 
     public void applyToTrack(Track track) {
         ShortMessage programChangeMessage = new ShortMessage();
         ShortMessage volMessage = new ShortMessage();
@@ -109,7 +109,7 @@ public class MidiTrack {
 
     // REQUIRES: 0 <= newVolume <= 100
     // MODFIES: this
-    // EFFECTS: sets the volume in a range 0 - 100 and converts it to 0 - 127
+    // EFFECTS: sets the volume in a range 0 - 100 and scales it to 0 - 127
     public void setVolumeScaled(int newVolume) {
         volume = (int) Math.round(newVolume * 1.27);
     }
