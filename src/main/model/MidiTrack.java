@@ -23,18 +23,6 @@ public class MidiTrack {
     private ArrayList<Block> blocks;
     private final int channel;
 
-    // REQUIRES: If !percussive, AVALIABLE_CHANNELS.size() > 0
-    // EFFECTS: Creates a single track that initially: is not muted,
-    //          has no blocks, a default instrument depending on percussive or not,
-    //          a default volume, channel according to percussive, a name.
-    public MidiTrack(String name, int channel) {
-        this.muted = false;
-        this.blocks = new ArrayList<Block>();
-        this.instrument = channel == 9 ? DEFAULT_PERCUSSIVE_INSTRUMENT : DEFAULT_NON_PERCUSSIVE_INSTRUMENT;
-        this.volume = DEFAULT_VOLUME;
-        this.channel = channel;
-        this.name = name;
-    }
 
     // REQUIRES: 0 <= instrument <= 127 if percussive is false, else 35 <= instrument <= 81
     // EFFECTS: Creates a single track that initially: is not muted,
