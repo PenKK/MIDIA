@@ -43,4 +43,12 @@ public class TestNote {
         note.setStartTick(2000);
         assertEquals(note.getStartTick(), 2000);
     }
+
+    @Test
+    void testClone() {
+        assertEquals(note.getPitch(), note.clone().getPitch());
+        assertEquals(note.getVelocity(), note.clone().getVelocity());
+        assertEquals(note.getDurationTicks(), note.clone().getDurationTicks());
+        assertEquals(note.getStartTick(), note.clone().getStartTick());
+    }
 }

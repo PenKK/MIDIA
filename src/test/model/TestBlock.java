@@ -112,4 +112,15 @@ public class TestBlock {
             assertEquals(n1.get(i).getVelocity(), n2.get(i).getVelocity());
         }
     }
+
+    @Test
+    void testClone() {
+        block.addNote(new Note(42, 60, 22, 100));
+        block.addNote(new Note(22, 20, 88, 900));
+
+        Block cloneBlock = block.clone();
+        assertEquals(block.getNotes().size(), cloneBlock.getNotes().size());
+        assertEquals(block.getNotesTimeline().size(), cloneBlock.getNotesTimeline().size());
+        assertEquals(block.getStartTick(), cloneBlock.getStartTick());
+    }
 }
