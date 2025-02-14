@@ -10,7 +10,8 @@ import javax.sound.midi.Sequencer;
 import javax.sound.midi.Track;
 
 // The orchestrator of the whole project.
-// This class will manage the primary Sequence object and is responsible for playback.
+// This class will manage the primary Sequence/MidiTracks objects and is responsible for playback,
+// converting MidiTrack to javax.sound.midi.Track, tempo, assigning channels, 
 // Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
 public class Timeline {
 
@@ -36,7 +37,6 @@ public class Timeline {
         sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
 
         sequencer.open();
-        sequencer.setTempoInBPM(DEFAULT_BPM);
 
         beatsPerMinute = DEFAULT_BPM;
         midiTracks = new ArrayList<>();
