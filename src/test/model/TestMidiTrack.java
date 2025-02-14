@@ -319,7 +319,13 @@ public class TestMidiTrack {
         midiTrack.setInstrument(128); // instrument is [0, 127]
 
         Track t = sequence.createTrack();
-        assertThrows(RuntimeException.class, () -> midiTrack.applyToTrack(t));
+        try {
+            midiTrack.applyToTrack(t);
+            fail();
+        } catch(RuntimeException e) {
+            // success
+        }
+
 
         midiTrack.setInstrument(0); // Will now not throw
         midiTrack.applyToTrack(t); 
@@ -328,6 +334,11 @@ public class TestMidiTrack {
         midiTrack.addBlock(blockWithInvalidNote);
         blockWithInvalidNote.addNote(new Note(128, 0, 0, 0)); // pitch is [0, 127]
 
-        assertThrows(RuntimeException.class, () -> midiTrack.applyToTrack(t));
+        try {
+            midiTrack.applyToTrack(t);
+            fail();
+        } catch (RuntimeException e) {
+            // success
+        }
     }
 }
