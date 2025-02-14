@@ -79,6 +79,7 @@ public class DAW {
         MidiTrack melody = timeline.createMidiTrack("Sample melody", 89, false);
         MidiTrack drums = timeline.createMidiTrack("Sample drums", 35, true);
         MidiTrack bass = timeline.createMidiTrack("Sample bass", 38, false);
+        MidiTrack hiHat = timeline.createMidiTrack("Sample hi-hat", 42, true);
 
         melody.setVolume(90);
         drums.setVolume(110);
@@ -89,13 +90,19 @@ public class DAW {
         Block melodyBlock = new Block(0);
         Block drumsBlock = new Block(0);
         Block bassBlock = new Block(beatTicks * 3);
+        Block hiHatBlock = new Block(beatTicks * 4);
 
         melody.addBlock(melodyBlock);
         drums.addBlock(drumsBlock);
         bass.addBlock(bassBlock);
+        hiHat.addBlock(hiHatBlock);
 
         for (int beat = 0; beat < 20; beat++) {
             drumsBlock.addNote(new Note(0, 127, beatTicks * beat, beatTicks));
+        }
+
+        for (int beat = 0; beat < 14; beat++) {
+            hiHatBlock.addNote(new Note(0, 76, beat * beatTicks + beatTicks / 2, beatTicks / 2));
         }
 
         melodyBlock.addNote(new Note(60, 127, beatTicks * 4, beatTicks * 2));
