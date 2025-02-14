@@ -117,8 +117,9 @@ public class TestBlock {
     void testClone() {
         block.addNote(new Note(42, 60, 22, 100));
         block.addNote(new Note(22, 20, 88, 900));
-
         Block cloneBlock = block.clone();
+        
+        assertNotEquals(block, cloneBlock);
         assertEquals(block.getNotes().size(), cloneBlock.getNotes().size());
         assertEquals(block.getNotesTimeline().size(), cloneBlock.getNotesTimeline().size());
         assertEquals(block.getStartTick(), cloneBlock.getStartTick());
