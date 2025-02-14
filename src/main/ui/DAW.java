@@ -69,17 +69,17 @@ public class DAW {
     // MODIFIES: this
     // EFFECTS: Loads three sample tracks into the timeline
     @SuppressWarnings("methodlength")
-    private void loadSample() {
+    private void loadSampleSpooky() {
         if (timeline.getAvaliableInstrumentalChannels().size() < 2) {
             System.out.println("Not enough instrumental tracks avaliable, press enter to continue");
             sc.nextLine();
             return;
         }
 
-        MidiTrack melody = timeline.createMidiTrack("Sample melody", 89, false);
-        MidiTrack drums = timeline.createMidiTrack("Sample drums", 35, true);
-        MidiTrack bass = timeline.createMidiTrack("Sample bass", 38, false);
-        MidiTrack hiHat = timeline.createMidiTrack("Sample hi-hat", 42, true);
+        MidiTrack melody = timeline.createMidiTrack("synth pad", 89, false);
+        MidiTrack drums = timeline.createMidiTrack("bass drum", 35, true);
+        MidiTrack bass = timeline.createMidiTrack("bass", 38, false);
+        MidiTrack hiHat = timeline.createMidiTrack("hi-hat", 42, true);
 
         melody.setVolume(90);
         drums.setVolume(110);
@@ -214,7 +214,7 @@ public class DAW {
                 editTrack(createNewTrack());
                 break;
             case "s":
-                loadSample();
+                loadSampleSpooky();
                 break;
             case "r":
                 return;
