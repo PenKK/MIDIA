@@ -101,6 +101,14 @@ public class TestBlock {
         expectedNotes.add(new Note(56, 50, 4 + 4, 9));
 
         checkNotesEqual(expectedNotes, block.getNotesTimeline());
+
+        block.setStartTick(0);
+        expectedNotes.clear();
+
+        expectedNotes.add(new Note(60, 60, 0 + 0, 5));
+        expectedNotes.add(new Note(65, 90, 9 + 0, 17));
+        expectedNotes.add(new Note(56, 50, 4 + 0, 9));
+        checkNotesEqual(expectedNotes, block.getNotesTimeline());
     }
 
     private void checkNotesEqual(ArrayList<Note> n1, ArrayList<Note> n2) {
