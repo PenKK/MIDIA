@@ -88,7 +88,7 @@ public class Timeline {
     public void updateSequence() throws InvalidMidiDataException {
         resetTracks();
         for (MidiTrack currentMidiTrack : midiTracks) {
-            if (currentMidiTrack.isMuted()) {
+            if (currentMidiTrack.isMuted() || currentMidiTrack.getVolume() == 0) {
                 continue;
             }
 

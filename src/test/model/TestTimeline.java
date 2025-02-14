@@ -167,6 +167,8 @@ public class TestTimeline {
     void testUpdateSequence() throws InvalidMidiDataException {
         MidiTrack mt1 = timeline.createMidiTrack("C notes", 0, false);
         MidiTrack mt2 = timeline.createMidiTrack("cool notes", 4, false);
+        MidiTrack mt3 = timeline.createMidiTrack("basically muted", 50, false);
+        mt3.setVolume(0);
         mt2.setVolume(50);
 
         Block b1 = new Block(0);
