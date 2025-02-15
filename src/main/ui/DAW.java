@@ -370,7 +370,7 @@ public class DAW {
 
     // EFFECTS: Displays tracks and their indexes
     private void displayTracks() {
-        System.out.println("Here are the tracks");
+        clearConsole();
         ArrayList<MidiTrack> tracks = timeline.getTracks();
         for (int i = 0; i < timeline.getTracks().size(); i++) {
             System.out.printf("[%d] %s\n", i + 1, tracks.get(i).getName());
