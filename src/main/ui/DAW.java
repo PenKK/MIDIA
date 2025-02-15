@@ -264,7 +264,7 @@ public class DAW {
 
         System.out.println(
                 "What instrument does this track play?\n(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
-        int instrument = percussive ? getNumericalInput(35, 81) : getNumericalInput(1, 128) - 1;
+        int instrument = percussive ? getNumericalInput(35, 81) : (getNumericalInput(1, 128) - 1);
         MidiTrack newMidiTrack = timeline.createMidiTrack(name, instrument, percussive);
         return timeline.getTracks().indexOf(newMidiTrack);
     }
@@ -350,7 +350,7 @@ public class DAW {
 
         System.out.printf("Track             %s%n", selectedTrack.getName());
         System.out.printf("Number of blocks  %d%n", selectedTrack.getBlocks().size());
-        System.out.printf("Instrument        %d%s%n", selectedTrack.getInstrument() + 1,
+        System.out.printf("Instrument        %d%s%n", selectedTrack.getInstrument() + (selectedTrack.isPercussive() ? 0 : 1),
                 selectedTrack.isPercussive() ? " (Percussive)" : "");
         System.out.printf("Volume            %d%n", selectedTrack.getVolumeScaled());
         System.out.printf("Muted             %s%n%n", selectedTrack.isMuted() ? "Yes" : "No");
