@@ -81,7 +81,7 @@ public class DAW {
         MidiTrack bass = timeline.createMidiTrack("bass", 38, false);
         MidiTrack hiHat = timeline.createMidiTrack("hi-hat", 42, true);
 
-        melody.setVolume(90);
+        melody.setVolume(127);
         drums.setVolume(110);
         bass.setVolume(110);
 
