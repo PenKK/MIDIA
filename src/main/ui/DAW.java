@@ -57,7 +57,7 @@ public class DAW {
                     quit();
                     return;
                 case "b":
-                    changeTimelinePositionBeats();
+                    changeTimelinePositionBeat();
                     break;
                 case "s":
                     changeTimelineBPM();
@@ -142,10 +142,10 @@ public class DAW {
 
     // MODIFIES: this
     // EFFECTS: moves the timeline position to prompted beat
-    private void changeTimelinePositionBeats() {
+    private void changeTimelinePositionBeat() {
         System.out.println("To which beat?");
-        double maxBeats = timeline.getLengthBeats() + 1;
-        timeline.setPositionBeat(getNumericalInput(1, maxBeats));
+        double maxBeat = timeline.getLengthBeats() + 1;
+        timeline.setPositionBeat(getNumericalInput(1, maxBeat));
     }
 
     // MODIFIES: this
@@ -183,7 +183,7 @@ public class DAW {
         System.out.println("Play the project!                  [p]");
         System.out.println("Track options                      [t]");
         System.out.println("Change timeline position (seconds) [c]");
-        System.out.println("Change timeline position (beats)   [b]");
+        System.out.println("Change timeline position (beat)    [b]");
         System.out.println("Change timeline BPM                [s]");
         System.out.println("Quit                               [q]");
     }
