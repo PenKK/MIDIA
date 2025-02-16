@@ -67,7 +67,7 @@ public class DAW {
     }
 
     // MODIFIES: this
-    // EFFECTS: Loads three sample tracks into the timeline
+    // EFFECTS: Loads a sample song, 4 tracks (2 percussive, 2 instrumental) into the timeline
     @SuppressWarnings("methodlength")
     private void loadSampleSpooky() {
         if (timeline.getAvaliableInstrumentalChannels().size() < 2) {
