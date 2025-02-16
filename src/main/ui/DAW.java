@@ -102,7 +102,8 @@ public class DAW {
         }
 
         for (int beat = 0; beat < 14; beat++) {
-            hiHatBlock.addNote(new Note(0, 76, beat * beatTicks + beatTicks / 2, beatTicks / 2));
+            int velocity = beat % 4 == 0 ? 127 : 76; // louder first hit-hat of measure
+            hiHatBlock.addNote(new Note(0, velocity, beat * beatTicks + beatTicks / 2, beatTicks / 2));
         }
 
         melodyBlock.addNote(new Note(60, 127, beatTicks * 4, beatTicks * 2));
