@@ -144,8 +144,8 @@ public class DAW {
     // EFFECTS: moves the timeline position to prompted beat
     private void changeTimelinePositionBeats() {
         System.out.println("To which beat?");
-        double maxBeats = timeline.getLengthBeats() == 0 ? 1 : timeline.getLengthBeats();
-        timeline.setPositionBeats(getNumericalInput(1, maxBeats) - 1);
+        double maxBeats = timeline.getLengthBeats() + 1;
+        timeline.setPositionBeat(getNumericalInput(1, maxBeats));
     }
 
     // MODIFIES: this
@@ -177,7 +177,7 @@ public class DAW {
         System.out.printf("Length  : %.2f seconds, %.2f beats%n",
                 timeline.getLengthMs() / 1000, timeline.getLengthBeats());
         System.out.printf("Position: %.2f seconds, on beat %.2f%n",
-                timeline.getPositionMs() / 1000, timeline.getPositionBeats() + 1);
+                timeline.getPositionMs() / 1000, timeline.getPositionOnBeat());
         System.out.printf("BPM: %.2f%n%n", timeline.getBPM());
 
         System.out.println("Play the project!                  [p]");
@@ -350,7 +350,8 @@ public class DAW {
 
         System.out.printf("Track             %s%n", selectedTrack.getName());
         System.out.printf("Number of blocks  %d%n", selectedTrack.getBlocks().size());
-        System.out.printf("Instrument        %d%s%n", selectedTrack.getInstrument() + (selectedTrack.isPercussive() ? 0 : 1),
+        System.out.printf("Instrument        %d%s%n",
+                selectedTrack.getInstrument() + (selectedTrack.isPercussive() ? 0 : 1),
                 selectedTrack.isPercussive() ? " (Percussive)" : "");
         System.out.printf("Volume            %d%n", selectedTrack.getVolumeScaled());
         System.out.printf("Muted             %s%n%n", selectedTrack.isMuted() ? "Yes" : "No");
@@ -425,7 +426,7 @@ public class DAW {
         System.out.printf("You are editing block %d%n", index + 1);
         System.out.printf("The block starts at %.2f seconds, on beat %.2f%n",
                 timeline.ticksToMs(selectedBlock.getStartTick()) / 1000,
-                timeline.ticksToBeats(selectedBlock.getStartTick()) + 1);
+                timeline.ticksToOnBeat(selectedBlock.getStartTick()));
         System.out.printf("Add a note            [n]%n", index + 1);
         if (selectedBlock.getNotes().size() > 0) {
             System.out.printf("Edit a note           [e]%n", index + 1);
@@ -490,9 +491,9 @@ public class DAW {
             System.out.printf("Pitch           : %d%n", note.getPitch());
         }
         System.out.printf("Velocity        : %d%n", note.getVelocity());
-        System.out.printf("On beat         : %.2f%n", timeline.ticksToBeats(note.getStartTick()) + 1);
-        System.out.printf("Off beat        : %.2f%n", timeline.ticksToBeats(note.getStartTick()
-                + note.getDurationTicks()) + 1);
+        System.out.printf("On beat         : %.2f%n", timeline.ticksToOnBeat(note.getStartTick()));
+        System.out.printf("Off beat        : %.2f%n", timeline.ticksToOnBeat(note.getStartTick()
+                + note.getDurationTicks()));
         System.out.printf("Duration beats  : %.2f%n%n", timeline.ticksToBeats(note.getDurationTicks()));
 
         System.out.println("What would you like to do?");
@@ -526,8 +527,8 @@ public class DAW {
                     i + 1,
                     note.getPitch(),
                     note.getVelocity(),
-                    timeline.ticksToBeats(note.getStartTick()) + 1,
-                    timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()) + 1,
+                    timeline.ticksToOnBeat(note.getStartTick()),
+                    timeline.ticksToOnBeat(note.getStartTick() + note.getDurationTicks()),
                     timeline.ticksToBeats(note.getDurationTicks()));
         }
     }
@@ -541,8 +542,8 @@ public class DAW {
             System.out.printf("%-12d%-12d%-12.2f%-12.2f%-12.2f%n",
                     i + 1,
                     note.getVelocity(),
-                    timeline.ticksToBeats(note.getStartTick()) + 1,
-                    timeline.ticksToBeats(note.getStartTick() + note.getDurationTicks()) + 1,
+                    timeline.ticksToOnBeat(note.getStartTick()),
+                    timeline.ticksToOnBeat(note.getStartTick() + note.getDurationTicks()),
                     timeline.ticksToBeats(note.getDurationTicks()));
         }
     }
@@ -575,9 +576,11 @@ public class DAW {
     // EFFECTS: Displays tracks and their indexes
     private void displayBlocks(MidiTrack midiTrack) {
         clearConsole();
-        System.out.println("All blocks and the number of notes in each one:");
         for (int i = 0; i < midiTrack.getBlocks().size(); i++) {
-            System.out.printf("[%d] Note count: %d%n", i + 1, midiTrack.getBlock(i).getNotes().size());
+            Block b = midiTrack.getBlock(i);
+            System.out.printf("[%d] Note count: %d       On beat: %.2f %n",
+                    i + 1, b.getNotes().size(),
+                    timeline.ticksToOnBeat(b.getStartTick()));
         }
     }
 

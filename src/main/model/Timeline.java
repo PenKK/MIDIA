@@ -35,7 +35,6 @@ public class Timeline {
     public Timeline() throws MidiUnavailableException, InvalidMidiDataException {
         sequencer = MidiSystem.getSequencer();
         sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
-
         sequencer.open();
 
         beatsPerMinute = DEFAULT_BPM;
@@ -136,11 +135,11 @@ public class Timeline {
         this.positionTick = msToTicks(newPositionMs);
     }
 
-    // REQUIRES: newPositionTick >= 0
+    // REQUIRES: newPositionBeat >= 1
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback given the beat to start at
-    public void setPositionBeats(double newPositionBeats) {
-        this.positionTick = beatsToTicks(newPositionBeats);
+    public void setPositionBeat(double newPositionBeat) {
+        this.positionTick = beatsToTicks(newPositionBeat - 1);
     }
 
     // REQUIRES: bpm >= 1
@@ -162,7 +161,8 @@ public class Timeline {
     // REQUIRES: ticks >= 0
     // EFFECTS: converts ticks to milliseconds given the BPM
     public double ticksToMs(int ticks) {
-        double durationInQuarterNotes = (double) ticks / (double) PULSES_PER_QUARTER_NOTE;
+        double durationInQuarterNotes = (double) ticks / (double) sequence.getResolution();
+        ;
         double durationInMinutes = durationInQuarterNotes / beatsPerMinute;
         double durationInMS = durationInMinutes * 60000;
         return durationInMS;
@@ -173,22 +173,31 @@ public class Timeline {
     public int msToTicks(double ms) {
         double durationInMinutes = ms / (double) 60000;
         double durationInQuarterNotes = beatsPerMinute * durationInMinutes;
-        double ticks = durationInQuarterNotes * PULSES_PER_QUARTER_NOTE;
+        double ticks = durationInQuarterNotes * sequence.getResolution();
+        ;
         return (int) Math.round(ticks);
     }
 
     // REQUIRES: beats >= 0
     // EFFECTS: calculates beats to ticks conversion
     public int beatsToTicks(double beats) {
-        double ticks = beats * (double) PULSES_PER_QUARTER_NOTE;
+        double ticks = beats * (double) sequence.getResolution();
+        ;
         return (int) Math.round(ticks);
     }
 
     // REQUIRES: ticks >= 0
     // EFFECTS: calculates ticks to beats conversion (reverse of above)
     public double ticksToBeats(int ticks) {
-        double beats = (double) ticks / (double) PULSES_PER_QUARTER_NOTE;
+        double beats = (double) ticks / (double) sequence.getResolution();
+        ;
         return beats;
+    }
+
+    // REQUIRES: ticks >= 0
+    // EFFECTS: converts the ticks to which beat the ticks are on
+    public double ticksToOnBeat(int ticks) {
+        return ticksToBeats(ticks) + 1;
     }
 
     // EFFECTS: calculates the tick at which the last note ends, this method
@@ -220,6 +229,11 @@ public class Timeline {
     // EFFECTS: returns the timeline position in beats by converting ticks to beats
     public double getPositionBeats() {
         return ticksToBeats(positionTick);
+    }
+
+    // EFFECTS: returns the beat on which the timeline position starts playback
+    public double getPositionOnBeat() {
+        return getPositionBeats() + 1;
     }
 
     // EFFECTS: returns the track at the specified index from tracks array

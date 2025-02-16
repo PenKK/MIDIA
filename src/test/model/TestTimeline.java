@@ -289,6 +289,7 @@ public class TestTimeline {
 
         assertEquals(timeline.getPositionMs(), 15.625, roundingDelta);
         assertEquals(timeline.getPositionBeats(), 0.03125, roundingDelta); // 30 ms is very short
+        assertEquals(timeline.getPositionOnBeat(), 0.03125 + 1, roundingDelta);
         timeline.setPositionMs(15.625);
         assertEquals(timeline.getPositionTick(), 30);
 
@@ -301,13 +302,18 @@ public class TestTimeline {
         assertEquals(timeline.getPositionTick(), 20);
         assertEquals(timeline.getPositionMs(), 5.2, roundingDelta);
         assertEquals(timeline.getPositionBeats(), 0.0208, roundingDelta);
+        assertEquals(timeline.getPositionOnBeat(), 0.0208 + 1, roundingDelta);
 
         timeline.setPositionTick(0);
         assertEquals(timeline.getPositionTick(), 0);
         assertEquals(timeline.getPositionBeats(), 0);
+        assertEquals(timeline.getPositionOnBeat(), 1.0);
 
-        timeline.setPositionBeats(10);
+        timeline.setPositionBeat(11);
         assertEquals(timeline.getPositionMs(), 2500);
+
+        timeline.setPositionBeat(1);
+        assertEquals(timeline.getPositionMs(), 0);
     }
 
     @Test
@@ -380,17 +386,19 @@ public class TestTimeline {
     @Test
     void testBeats() {
         assertEquals(timeline.ticksToBeats(960), 1);
+        assertEquals(timeline.ticksToOnBeat(960), 1 + 1);
         assertEquals(timeline.beatsToTicks(1), 960);
         assertEquals(timeline.ticksToBeats(960 + 960 / 2), 1.5);
         assertEquals(timeline.ticksToBeats(960 / 4), 0.25);
+        assertEquals(timeline.ticksToOnBeat(960 / 4), 0.25 + 1);
 
         timeline.setBPM(100);
         // BPM does not change the converstion as beats = ticks / PPQN
         assertEquals(timeline.ticksToBeats(960 / 4), 0.25); // remains same
 
-        timeline.setPositionBeats(4);
+        timeline.setPositionBeat(5);
         assertEquals(timeline.getPositionTick(), 4 * 960);
-        timeline.setPositionBeats(0.5);
+        timeline.setPositionBeat(1.5);
         assertEquals(timeline.getPositionTick(), 960 / 2);
     }
 }
