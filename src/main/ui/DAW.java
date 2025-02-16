@@ -276,11 +276,10 @@ public class DAW {
         String[] validInputs = { "n", "i", "v", "m", "n", "r", "d", "c" };
         MidiTrack selectedTrack = timeline.getTrack(index);
         displayEditTrackOptions(validInputs, selectedTrack);
-        String input = getStringInput(validInputs, false);
-
         if (selectedTrack.getBlocks().size() > 0) {
             validInputs[0] = "e";
         }
+        String input = getStringInput(validInputs, false);
 
         switch (input) {
             case "c":
