@@ -273,7 +273,7 @@ public class DAW {
     // EFFECTS: Prompts the user to edit a track by giving an index
     @SuppressWarnings("methodlength")
     private void editTrack(int index) {
-        String[] validInputs = { "n", "b", "i", "v", "m", "n", "r", "d" };
+        String[] validInputs = { "n", "i", "v", "m", "n", "r", "d", "c" };
         MidiTrack selectedTrack = timeline.getTrack(index);
         displayEditTrackOptions(validInputs, selectedTrack);
 
