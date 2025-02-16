@@ -276,8 +276,11 @@ public class DAW {
         String[] validInputs = { "n", "i", "v", "m", "n", "r", "d", "c" };
         MidiTrack selectedTrack = timeline.getTrack(index);
         displayEditTrackOptions(validInputs, selectedTrack);
-
         String input = getStringInput(validInputs, false);
+
+        if (selectedTrack.getBlocks().size() > 0) {
+            validInputs[0] = "e";
+        }
 
         switch (input) {
             case "c":
@@ -359,7 +362,6 @@ public class DAW {
         System.out.println("Create new block   [n]");
         if (selectedTrack.getBlocks().size() > 0) {
             System.out.println("Edit blocks        [e]");
-            validInputs[0] = "e";
         }
         System.out.println("Change name        [c]");
         System.out.println("Change instrument  [i]");
