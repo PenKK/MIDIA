@@ -9,9 +9,6 @@ import javax.sound.midi.MidiUnavailableException;
 
 import org.junit.jupiter.api.Test;
 
-import model.Block;
-import model.MidiTrack;
-import model.Note;
 import model.Timeline;
 
 public class TestJsonWriter extends TestJson {
@@ -21,7 +18,7 @@ public class TestJsonWriter extends TestJson {
 
     @Test
     void testWriteValidPath() {
-        jsonWriter = new JsonWriter("./data/testFile.json");
+        jsonWriter = new JsonWriter("./data/test/testFile.json");
         try {
             jsonWriter.open();
             // pass
@@ -32,7 +29,7 @@ public class TestJsonWriter extends TestJson {
 
     @Test
     void testWriteInvalidPath() {
-        jsonWriter = new JsonWriter("./data/\0fil:e.json");
+        jsonWriter = new JsonWriter("./data/test/\0fil:e.json");
         try {
             jsonWriter.open();
             fail("Excepted exception due to invalid path");
@@ -44,7 +41,7 @@ public class TestJsonWriter extends TestJson {
     @Test
     void testWriteEmptyTimeline() throws MidiUnavailableException {
         try {
-            String path = "./data/testWriteEmptyTimeline.json";
+            String path = "./data/test/testWriteEmptyTimeline.json";
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("bob");
 
@@ -65,7 +62,7 @@ public class TestJsonWriter extends TestJson {
     @Test
     void testModifiedTimeline() throws MidiUnavailableException {
         try {
-            String path = "./data/testModifiedTimeline.json";
+            String path = "./data/test/testModifiedTimeline.json";
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe");
             timeline.setBPM(420);
@@ -88,7 +85,7 @@ public class TestJsonWriter extends TestJson {
     @Test
     void testWriteInvalidMidiData() throws MidiUnavailableException {
         try {
-            String path = "./data/testInvalidMidiDataTimeline.json";
+            String path = "./data/test/testInvalidMidiDataTimeline.json";
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe");
             timeline.setBPM(420);
@@ -111,7 +108,7 @@ public class TestJsonWriter extends TestJson {
     @Test
     void testMidiTracksTimeline() throws MidiUnavailableException {
         try {
-            String path = "./data/testMidiTracksTimeline.json";
+            String path = "./data/test/testMidiTracksTimeline.json";
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe");
             addSampleSong(timeline);
