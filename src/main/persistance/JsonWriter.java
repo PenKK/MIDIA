@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
+import org.json.JSONObject;
+
 import model.Timeline;
 
 // Represents a writer that writes JSON representation of Timeline to file
@@ -24,23 +26,24 @@ public class JsonWriter {
     // EFFECTS: opens writer; throws FileNotFoundException if the path is not found/accessible
     //          for writing
     public void open() throws FileNotFoundException {
-        // stub
+        writer = new PrintWriter(new File(path));
     }
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of timeline to path
     public void write(Timeline timeline) {
-        // stub
+        JSONObject timelineJson = timeline.toJson();
+        saveToFile(timelineJson.toString(TAB_SPACING));
     }
 
     // EFFECTS: closes the writer
     public void close() {
-        // stub
+        writer.close();
     }
 
     // MODFIES: this
     // EFFECTS: writes string to file
-    public void saveToFile() {
-        // stub
+    public void saveToFile(String json) {
+        writer.print(json);
     }
 }
