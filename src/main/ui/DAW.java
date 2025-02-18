@@ -70,7 +70,7 @@ public class DAW {
     // EFFECTS: Loads a sample song, 4 tracks (2 percussive, 2 instrumental) into the timeline
     @SuppressWarnings("methodlength")
     private void loadSampleSpooky() {
-        if (timeline.getAvaliableInstrumentalChannels().size() < 2) {
+        if (timeline.getAvaliableChannels().size() < 2) {
             System.out.println("Not enough instrumental tracks avaliable, press enter to continue");
             sc.nextLine();
             return;
@@ -227,7 +227,7 @@ public class DAW {
 
     // EFFECTS: displays possible options for a user with tracks
     private void displayTrackOptions() {
-        int instrumentalTracks = 15 - timeline.getAvaliableInstrumentalChannels().size();
+        int instrumentalTracks = 15 - timeline.getAvaliableChannels().size();
         clearConsole();
         System.out.printf("Instrumental tracks: %d/15%nPercussion tracks  : %d%nTotal tracks       : %d%n%n",
                 instrumentalTracks, timeline.getTracks().size() - instrumentalTracks,
@@ -256,7 +256,7 @@ public class DAW {
 
         boolean percussive;
 
-        if (timeline.getAvaliableInstrumentalChannels().size() == 0) {
+        if (timeline.getAvaliableChannels().size() == 0) {
             System.out.println("\nMaximum instrumental tracks, track will be percussive");
             percussive = true;
         } else {
