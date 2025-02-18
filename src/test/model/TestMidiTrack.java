@@ -180,7 +180,7 @@ public class TestMidiTrack {
 
     @Test
     void testSetInstrument() throws InvalidMidiDataException, MidiUnavailableException {
-        Timeline timeline = new Timeline();
+        Timeline timeline = new Timeline("test");
         midiTrack = timeline.createMidiTrack("Piano melody", 0, false);
         assertEquals(midiTrack.getInstrument(), 0);
         midiTrack.setInstrument(4);

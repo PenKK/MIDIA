@@ -24,7 +24,7 @@ public class TestTimeline {
 
     @BeforeEach
     void runBefore() throws MidiUnavailableException, InvalidMidiDataException {
-        timeline = new Timeline();
+        timeline = new Timeline("test");
         expectedChannels = new ArrayList<>();
         expectedChannels.add(0);
         expectedChannels.add(1);
@@ -45,6 +45,7 @@ public class TestTimeline {
 
     @Test
     void testConstructor() throws MidiUnavailableException {
+        assertEquals(timeline.getProjectName(), "test");
         assertEquals(timeline.getTracks(), new ArrayList<MidiTrack>());
         assertEquals(timeline.getBPM(), 120);
         assertEquals(timeline.getPositionTick(), 0);
@@ -400,5 +401,14 @@ public class TestTimeline {
         assertEquals(timeline.getPositionTick(), 4 * 960);
         timeline.setPositionBeat(1.5);
         assertEquals(timeline.getPositionTick(), 960 / 2);
+    }
+
+    @Test
+    void testProjectNameChange() {
+        assertEquals(timeline.getProjectName(), "test");
+        timeline.setProjectName("cool song");
+        assertEquals(timeline.getProjectName(), "cool song");
+        timeline.setProjectName("cooler song");
+        assertEquals(timeline.getProjectName(), "cooler song");
     }
 }
