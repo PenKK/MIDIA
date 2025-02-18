@@ -161,7 +161,21 @@ public class TestTimeline {
         timeline.removeMidiTrack(10);
         assertTrue(timeline.getAvaliableInstrumentalChannels().size() == 1);
         assertEquals(timeline.createMidiTrack("space for 1 more", 6, false).getChannel(), 12);
+    }
 
+    @Test
+    void testManyTracksCreate() {
+        ArrayList<MidiTrack> midiTracks = new ArrayList<>();
+
+        while (timeline.getAvaliableInstrumentalChannels().size() != 0) {
+            midiTracks.add(timeline.createMidiTrack("instrumental", 4, false));
+        }
+        assertTrue(midiTracks.size() == 15);
+
+        MidiTrack instrumentalTrack = timeline.createMidiTrack("inst", 0, false);
+        MidiTrack percussionTrack = timeline.createMidiTrack("perc", 50, true);
+        assertNull(instrumentalTrack);
+        assertNotNull(percussionTrack);
     }
 
     @Test
