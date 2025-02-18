@@ -17,7 +17,7 @@ public class JsonWriter {
 
     // EFFECTS: constructs writer that writes at the specified path
     public JsonWriter(String path) {
-        // stub
+        this.path = path;
     }
 
     // MODIFIES: this
@@ -35,6 +35,12 @@ public class JsonWriter {
 
     // EFFECTS: closes the writer
     public void close() {
+        // stub
+    }
+
+    // MODFIES: this
+    // EFFECTS: writes string to file
+    public void saveToFile() {
         // stub
     }
 }
