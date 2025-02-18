@@ -42,7 +42,7 @@ public class TestJsonWriter extends TestJson {
     }
 
     @Test
-    void testWriteEmptyTimeline() throws MidiUnavailableException, InvalidMidiDataException {
+    void testWriteEmptyTimeline() throws MidiUnavailableException {
         try {
             String path = "./data/testWriteEmptyTimeline.json";
             jsonWriter = new JsonWriter(path);
@@ -57,13 +57,15 @@ public class TestJsonWriter extends TestJson {
             checkTimeline(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
+        } catch (InvalidMidiDataException e) {
+            fail("InvalidMidiDataException should not be thrown");
         }
     }
 
     @Test
-    void testModifiedTimeline() throws MidiUnavailableException, InvalidMidiDataException {
+    void testModifiedTimeline() throws MidiUnavailableException {
         try {
-            String path = "./data/testWriteEmptyTimeline.json";
+            String path = "./data/testModifiedTimeline.json";
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe");
             timeline.setBPM(420);
@@ -78,13 +80,38 @@ public class TestJsonWriter extends TestJson {
             checkTimeline(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
+        } catch (InvalidMidiDataException e) {
+            fail("InvalidMidiDataException should not have been thrown");
         }
     }
 
     @Test
-    void testMidiTracksTimeline() throws MidiUnavailableException, InvalidMidiDataException {
+    void testWriteInvalidMidiData() throws MidiUnavailableException {
         try {
-            String path = "./data/testWriteEmptyTimeline.json";
+            String path = "./data/testInvalidMidiDataTimeline.json";
+            jsonWriter = new JsonWriter(path);
+            Timeline timeline = new Timeline("joe");
+            timeline.setBPM(420);
+            timeline.setPositionTick(1000);
+
+            jsonWriter.open();
+            jsonWriter.write(timeline);
+            jsonWriter.close();
+
+            jsonReader = new JsonReader(path);
+            Timeline timeline2 = jsonReader.read();
+            checkTimeline(timeline, timeline2);
+        } catch (IOException e) {
+            fail("Exception should not have been thrown");
+        } catch (InvalidMidiDataException e) {
+            fail("InvalidMidiDataException should not have been thrown");
+        }
+    }
+
+    @Test
+    void testMidiTracksTimeline() throws MidiUnavailableException {
+        try {
+            String path = "./data/testMidiTracksTimeline.json";
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe");
             addSampleSong(timeline);
@@ -99,6 +126,8 @@ public class TestJsonWriter extends TestJson {
             checkTimeline(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
+        } catch (InvalidMidiDataException e) {
+            fail("InvalidMidiDataException should not have been thrown");
         }
     }
 
