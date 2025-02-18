@@ -26,7 +26,7 @@ public class Timeline implements Writable {
     private ArrayList<MidiTrack> midiTracks;
     private float beatsPerMinute;
     private int positionTick;
-    private ArrayList<Integer> avaliableInstrumentalChannels;
+    private ArrayList<Integer> avaliableChannels;
 
     private static final int PULSES_PER_QUARTER_NOTE = 960;
     private static final float DEFAULT_BPM = 120;
@@ -47,7 +47,7 @@ public class Timeline implements Writable {
         midiTracks = new ArrayList<>();
         positionTick = 0;
 
-        avaliableInstrumentalChannels = new ArrayList<>() {
+        avaliableChannels = new ArrayList<>() {
             {
                 for (int i = 0; i <= 15; i++) {
                     if (i != 9) {
@@ -62,12 +62,12 @@ public class Timeline implements Writable {
     // MODIFIES: this
     // EFFECTS: Creates a midiTrack, add its to the list of tracks and returns it
     public MidiTrack createMidiTrack(String name, int instrument, boolean percussive) {
-        if (!percussive && avaliableInstrumentalChannels.size() <= 0) {
+        if (!percussive && avaliableChannels.size() <= 0) {
             return null;
         }
 
         MidiTrack newMidiTrack = new MidiTrack(name, instrument,
-                percussive ? 9 : avaliableInstrumentalChannels.remove(0));
+                percussive ? 9 : avaliableChannels.remove(0));
         midiTracks.add(newMidiTrack);
         return newMidiTrack;
     }
@@ -80,7 +80,7 @@ public class Timeline implements Writable {
     public MidiTrack removeMidiTrack(int index) {
         MidiTrack toRemove = midiTracks.get(index);
         if (!toRemove.isPercussive()) {
-            avaliableInstrumentalChannels.add(toRemove.getChannel());
+            avaliableChannels.add(toRemove.getChannel());
         }
         return midiTracks.remove(index);
     }
@@ -124,6 +124,13 @@ public class Timeline implements Writable {
     // EFFECTS: Pauses playback
     public void pause() {
         sequencer.stop();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: replaces current avaliable channels with new ones, use wisely
+    //          channels may be out of sync with tracks 
+    public void setAvaliableChannels(ArrayList<Integer> newChannels) {
+        avaliableChannels = newChannels;
     }
 
     // REQUIRES: newPositionTick >= 0
@@ -262,8 +269,8 @@ public class Timeline implements Writable {
         return positionTick;
     }
 
-    public ArrayList<Integer> getAvaliableInstrumentalChannels() {
-        return avaliableInstrumentalChannels;
+    public ArrayList<Integer> getAvaliableChannels() {
+        return avaliableChannels;
     }
 
     public String getProjectName() {
@@ -288,9 +295,9 @@ public class Timeline implements Writable {
         timelineJson.put("projectName", projectName);
         timelineJson.put("beatsPerMinute", beatsPerMinute);
         timelineJson.put("positionTick", positionTick);
-        timelineJson.put("avaliableInstrumentalChannels", new JSONArray(avaliableInstrumentalChannels));
+        timelineJson.put("avaliableChannels", new JSONArray(avaliableChannels));
         timelineJson.put("midiTracks", midiTracksToJson());
-        
+
         return timelineJson;
     }
 
