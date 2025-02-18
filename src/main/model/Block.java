@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import persistance.Writable;
@@ -76,6 +77,21 @@ public class Block implements Writable {
     // EFFECTS: returns a JSON object representation of the block
     @Override
     public JSONObject toJson() {
-        return new JSONObject();  // stub
+        JSONObject blockJson = new JSONObject();
+
+        blockJson.put("startTick", startTick);
+        blockJson.put("notes", notesToJson());
+        
+        return blockJson;
+    }
+
+    private JSONArray notesToJson() {
+        JSONArray notesJson = new JSONArray();
+
+        for (Note note : notes) {
+            notesJson.put(note.toJson());
+        }
+
+        return notesJson;
     }
 }

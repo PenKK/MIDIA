@@ -7,6 +7,7 @@ import javax.sound.midi.MidiEvent;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import persistance.Writable;
@@ -172,6 +173,24 @@ public class MidiTrack implements Writable {
     // EFFECTS: returns a JSON object representation of the MidiTrack
     @Override
     public JSONObject toJson() {
-        return new JSONObject();  // stub
+        JSONObject midiTrackJson = new JSONObject();
+        
+        midiTrackJson.put("channel", channel);
+        midiTrackJson.put("instrument", instrument);
+        midiTrackJson.put("volume", volume);
+        midiTrackJson.put("name", name);
+        midiTrackJson.put("blocks", blocksToJson());
+
+        return midiTrackJson;
+    }
+
+    private JSONArray blocksToJson() {
+        JSONArray blocksJson = new JSONArray();
+
+        for (Block block : blocks) {
+            blocksJson.put(block.toJson());
+        }
+
+        return blocksJson;
     }
 }

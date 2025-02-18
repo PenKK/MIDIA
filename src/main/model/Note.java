@@ -70,6 +70,13 @@ public class Note implements Writable {
     // EFFECTS: returns a JSON object representation of the note
     @Override
     public JSONObject toJson() {
-        return new JSONObject();  // stub
+        JSONObject noteJson = new JSONObject();
+
+        noteJson.put("pitch", pitch);
+        noteJson.put("velocity", velocity);
+        noteJson.put("startTick", startTick);
+        noteJson.put("durationTicks", durationTicks);
+        
+        return noteJson;
     }
 }
