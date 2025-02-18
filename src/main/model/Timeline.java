@@ -9,6 +9,7 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.Track;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import persistance.Writable;
@@ -273,9 +274,33 @@ public class Timeline implements Writable {
         this.projectName = newProjectName;
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds midiTrack to the list of tracks
+    public void addMidiTrack(MidiTrack midiTrack) {
+        midiTracks.add(midiTrack);
+    }
+
     // EFFECTS: returns JSON object representation of the timeline
     @Override
     public JSONObject toJson() {
-        return new JSONObject(); // stub
+        JSONObject timelineJson = new JSONObject();
+
+        timelineJson.put("projectName", projectName);
+        timelineJson.put("beatsPerMinute", beatsPerMinute);
+        timelineJson.put("positionTick", positionTick);
+        timelineJson.put("avaliableInstrumentalChannels", new JSONArray(avaliableInstrumentalChannels));
+        timelineJson.put("midiTracks", midiTracksToJson());
+        
+        return timelineJson;
+    }
+
+    private JSONArray midiTracksToJson() {
+        JSONArray midiTracksJson = new JSONArray();
+
+        for (MidiTrack midiTrack : midiTracks) {
+            midiTracksJson.put(midiTrack.toJson());
+        }
+
+        return midiTracksJson;
     }
 }
