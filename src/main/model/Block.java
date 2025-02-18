@@ -2,9 +2,13 @@ package model;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
+import persistance.Writable;
+
 // A block exists in a track and is a group of notes.
 // The block can be moved on the timeline by changing the startTick.
-public class Block {
+public class Block implements Writable {
 
     private ArrayList<Note> notes;
     private int startTick;
@@ -69,4 +73,9 @@ public class Block {
         return cloneBlock;
     }
 
+    // EFFECTS: returns a JSON object representation of the block
+    @Override
+    public JSONObject toJson() {
+        return new JSONObject();  // stub
+    }
 }

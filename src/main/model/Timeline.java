@@ -9,11 +9,15 @@ import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.Track;
 
+import org.json.JSONObject;
+
+import persistance.Writable;
+
 // The orchestrator of the whole project.
 // This class will manage the primary Sequence/MidiTracks objects and is responsible for playback,
 // converting MidiTrack to javax.sound.midi.Track, tempo, assigning channels, 
 // Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
-public class Timeline {
+public class Timeline implements Writable {
 
     private String projectName;
     private Sequencer sequencer;
@@ -267,5 +271,11 @@ public class Timeline {
 
     public void setProjectName(String newProjectName) {
         this.projectName = newProjectName;
+    }
+
+    // EFFECTS: returns JSON object representation of the timeline
+    @Override
+    public JSONObject toJson() {
+        return new JSONObject(); // stub
     }
 }

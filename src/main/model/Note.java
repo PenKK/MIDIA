@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONObject;
+
+import persistance.Writable;
+
 // A high level MIDI note abstraction.
 // On its own, this Note is just pure information, which will be converted
 // to a MIDIEvent object and applied to a Track object by the MidiTrack class (by the timeline).
-public class Note {
+public class Note implements Writable {
 
     private int pitch; // Notes in a percussive track do not utilize pitch
     private int velocity;
@@ -61,5 +65,11 @@ public class Note {
     @Override
     public Note clone() {
         return new Note(getPitch(), getVelocity(), getStartTick(), getDurationTicks());
+    }
+
+    // EFFECTS: returns a JSON object representation of the note
+    @Override
+    public JSONObject toJson() {
+        return new JSONObject();  // stub
     }
 }

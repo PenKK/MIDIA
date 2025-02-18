@@ -7,11 +7,15 @@ import javax.sound.midi.MidiEvent;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
+import org.json.JSONObject;
+
+import persistance.Writable;
+
 // A high level representation of a track, which is a single layer/instrument of the project.
 // For playback the MidiTrack will be converted to a javax.sound.midi.Track
 // See https://midi.org/expanded-midi-1-0-messages-list for midi message correspondence
 // See https://en.wikipedia.org/wiki/General_MIDI for more midi information
-public class MidiTrack {
+public class MidiTrack implements Writable {
 
     private static final int DEFAULT_VOLUME = 100;
 
@@ -163,5 +167,11 @@ public class MidiTrack {
     // EFFECTS: returns true if the track is on channel 9, which is reserved for percussion
     public boolean isPercussive() {
         return channel == 9;
+    }
+
+    // EFFECTS: returns a JSON object representation of the MidiTrack
+    @Override
+    public JSONObject toJson() {
+        return new JSONObject();  // stub
     }
 }
