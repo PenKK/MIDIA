@@ -26,7 +26,7 @@ public class DAW {
     // EFFECTS: initializes an empty timeline, sets up scanner, and runs the application
     public DAW() throws InvalidMidiDataException {
         try {
-            timeline = new Timeline();
+            timeline = new Timeline("New project");
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
             System.out.println("No MIDI device avaliable, exiting");
@@ -175,6 +175,7 @@ public class DAW {
     private void displayTimelineOptions() {
         clearConsole();
         System.out.println("Welcome to the project timeline!");
+        System.out.printf("Project: %s%n", timeline.getProjectName());
         System.out.printf("Length  : %.2f seconds, %.2f beats%n",
                 timeline.getLengthMs() / 1000, timeline.getLengthBeats());
         System.out.printf("Position: %.2f seconds, on beat %.2f%n",
