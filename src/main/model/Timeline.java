@@ -20,7 +20,6 @@ public class Timeline {
     private ArrayList<MidiTrack> midiTracks;
     private float beatsPerMinute;
     private int positionTick;
-
     private ArrayList<Integer> avaliableInstrumentalChannels;
 
     private static final int PULSES_PER_QUARTER_NOTE = 960;
@@ -45,9 +44,8 @@ public class Timeline {
             {
                 for (int i = 0; i <= 15; i++) {
                     if (i != 9) {
-                        add(i); // add numbers 0-15 exlcuding 9, 9 is for percussion
+                        add(i); // add numbers 0-15 excluding 9, 9 is for percussion
                     }
-
                 }
             }
         };
