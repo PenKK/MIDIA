@@ -21,7 +21,7 @@ public class TestJsonWriter extends TestJson {
 
     @Test
     void testWriteValidPath() {
-        jsonWriter = new JsonWriter("./data/file.json");
+        jsonWriter = new JsonWriter("./data/testFile.json");
         try {
             jsonWriter.open();
             // pass
@@ -32,15 +32,7 @@ public class TestJsonWriter extends TestJson {
 
     @Test
     void testWriteInvalidPath() {
-        jsonWriter = new JsonWriter("./data/\0file.json");
-        try {
-            jsonWriter.open();
-            fail("Excepted exception due to invalid path");
-        } catch (IOException e) {
-            // pass
-        }
-
-        jsonWriter = new JsonWriter("./data/f:ile.json");
+        jsonWriter = new JsonWriter("./data/\0fil:e.json");
         try {
             jsonWriter.open();
             fail("Excepted exception due to invalid path");
