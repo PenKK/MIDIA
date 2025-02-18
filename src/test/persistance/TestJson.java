@@ -14,8 +14,8 @@ public class TestJson {
         assertEquals(timeline1.getProjectName(), timeline2.getProjectName());
         assertEquals(timeline1.getBPM(), timeline2.getBPM());
         assertEquals(timeline1.getPositionTick(), timeline2.getPositionTick());
-        assertEquals(timeline1.getAvaliableInstrumentalChannels(), 
-                     timeline2.getAvaliableInstrumentalChannels());
+        assertEquals(timeline1.getAvaliableChannels(),
+                timeline2.getAvaliableChannels());
 
         checkMidiTracks(timeline1.getTracks(), timeline2.getTracks());
     }
@@ -35,7 +35,7 @@ public class TestJson {
         assertEquals(midiTrack1.getInstrument(), midiTrack2.getInstrument());
         assertEquals(midiTrack1.getVolume(), midiTrack2.getVolume());
         assertEquals(midiTrack1.getName(), midiTrack2.getName());
-        
+
         assertEquals(midiTrack1.getBlocks().size(), midiTrack2.getBlocks().size());
         for (int i = 0; i < midiTrack1.getBlocks().size(); i++) {
             Block b1 = midiTrack1.getBlock(i);
