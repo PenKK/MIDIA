@@ -15,6 +15,7 @@ import javax.sound.midi.Track;
 // Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
 public class Timeline {
 
+    private String projectName;
     private Sequencer sequencer;
     private Sequence sequence;
     private ArrayList<MidiTrack> midiTracks;
@@ -31,7 +32,8 @@ public class Timeline {
     //          avaliable, which is fatal and unrecoverable.
     //          Method throws InvalidMidiDataException if the Sequence has an invalid 
     //          divison type, which is impossile since the division type will be constant.
-    public Timeline() throws MidiUnavailableException, InvalidMidiDataException {
+    public Timeline(String projectName) throws MidiUnavailableException, InvalidMidiDataException {
+        this.projectName = projectName;
         sequencer = MidiSystem.getSequencer();
         sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
         sequencer.open();
@@ -257,5 +259,13 @@ public class Timeline {
 
     public ArrayList<Integer> getAvaliableInstrumentalChannels() {
         return avaliableInstrumentalChannels;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String newProjectName) {
+        this.projectName = newProjectName;
     }
 }
