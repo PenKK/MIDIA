@@ -43,12 +43,45 @@ public class DAW {
         }
     }
 
-    // EFFECTS: processes user input
+    // EFFECTS: displays and handles user intereaction with program 
     @SuppressWarnings("methodlength")
     private void appLoop() throws MidiUnavailableException {
         while (true) {
+            displayMenuOptions();
+            String[] validInputs = new String[] { "s", "l", "q", "t" };
+            String input = getStringInput(validInputs, false);
+
+            switch (input) {
+                case "q":
+                    quit();
+                    return;
+                case "s":
+                    save();
+                    break;
+                case "l":
+                    load();
+                    timelineOptions();
+                    break;
+                case "t":
+                    timelineOptions();
+            }
+        }
+    }
+
+    // EFFECTS: prints possible menu options and additional data
+    private void displayMenuOptions() {
+        clearConsole();
+        System.out.printf("Project: %s%n", timeline.getProjectName());
+        System.out.println("Open timeline   [t]");
+        System.out.println("Save project    [s]");
+        System.out.println("Load project    [l]");
+    }
+
+    // EFFECTS: displays and handles user interaction with timeline
+    private void timelineOptions() throws MidiUnavailableException {
+        while (true) {
             displayTimelineOptions();
-            String input = getStringInput(new String[] { "l", "p", "t", "q", "c", "b", "y", "s" }, false);
+            String input = getStringInput(new String[] { "p", "t", "c", "b", "y", "r" }, false);
 
             switch (input) {
                 case "p":
@@ -60,21 +93,14 @@ public class DAW {
                 case "t":
                     handleTrackOptions();
                     break;
-                case "q":
-                    quit();
-                    return;
-                case "s":
-                    save();
-                    break;
-                case "l":
-                    load();
-                    break;
                 case "b":
                     changeTimelinePositionBeat();
                     break;
                 case "y":
                     changeTimelineBPM();
                     break;
+                case "r":
+                    return;
             }
         }
     }
@@ -85,19 +111,8 @@ public class DAW {
         clearConsole();
         File projectsDirectory = new File("./data/projects");
         File[] projectFiles = projectsDirectory.listFiles();
-        int i = 1;
 
-        if (projectFiles.length == 0) {
-            System.out.println("No projects to load!\nPress enter to continue");
-            sc.nextLine();
-            return;
-        }
-        
-        for (File projectFile : projectFiles) {
-            String projectName = projectFile.getName();
-            reader = new JsonReader("./data/projects/" + projectName);
-            System.out.printf("[%d] %s%n", i++, projectName);
-        }
+        displayProjects(projectFiles);
 
         System.out.println("Select an index to load");
         int index = getNumericalInput(1, projectFiles.length) - 1;
@@ -110,6 +125,15 @@ public class DAW {
             System.out.println("Something went terribly wrong, unable to load project");
         } catch (InvalidMidiDataException e) {
             System.out.println("The project had invalid MIDI data! Unable to load project");
+        }
+    }
+
+    // EFFECTS: prints project file names and index
+    private void displayProjects(File[] projectFiles) {
+        int i = 1;
+        for (File projectFile : projectFiles) {
+            String projectName = projectFile.getName();
+            System.out.printf("[%d] %s%n", i++, projectName);
         }
     }
 
@@ -132,6 +156,7 @@ public class DAW {
             save();
         } else {
             try {
+                writer = new JsonWriter("./data/projects/" + timeline.getProjectName() + ".json");
                 writer.open();
             } catch (FileNotFoundException e) {
                 System.out.println("Unable to save");
@@ -155,7 +180,7 @@ public class DAW {
         } catch (FileNotFoundException e) {
             System.out.println("Unable to save file, the name must not have invalid characters\n"
                     + "Press enter to continue");
-            
+
             timeline.setProjectName("New project");
         }
     }
@@ -210,7 +235,6 @@ public class DAW {
     private void displayTimelineOptions() {
         clearConsole();
         System.out.println("Welcome to the project timeline!");
-        System.out.printf("Project: %s%n", timeline.getProjectName());
         System.out.printf("Length  : %.2f seconds, %.2f beats%n",
                 timeline.getLengthMs() / 1000, timeline.getLengthBeats());
         System.out.printf("Position: %.2f seconds, on beat %.2f%n",
@@ -219,12 +243,10 @@ public class DAW {
 
         System.out.println("Play the project!                  [p]");
         System.out.println("Track options                      [t]");
-        System.out.println("Save project                       [s]");
-        System.out.println("Load project                       [l]");
         System.out.println("Change timeline position (seconds) [c]");
         System.out.println("Change timeline position (beat)    [b]");
         System.out.println("Change timeline BPM                [y]");
-        System.out.println("Quit                               [q]");
+        System.out.println("Return to menu                     [r]");
     }
 
     // EFFECTS: prints a bunch of newline characters to clear the console
