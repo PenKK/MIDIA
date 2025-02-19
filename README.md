@@ -36,3 +36,4 @@
 - As a user, I want to be able to delete tracks, blocks, and notes from my project so that I can remove elements I no longer need.
 - As a user, I want to specify tempo so that I can change the speed of my project
 - As a user, I want to be able to control playback of my project so that I can start and stop where I want to on the timeline
+- As a user, I want to be able to save and load different projects so that I can save and load progress for multiple projects whenever I want to
