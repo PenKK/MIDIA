@@ -1,5 +1,8 @@
 package ui;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -11,6 +14,8 @@ import model.Block;
 import model.MidiTrack;
 import model.Note;
 import model.Timeline;
+import persistance.JsonReader;
+import persistance.JsonWriter;
 
 // Digital Audio Workstation console based application
 // This class is the user interface to interact with the MIDI timeline
@@ -22,26 +27,28 @@ public class DAW {
 
     private Timeline timeline;
     private Scanner sc;
+    JsonReader reader;
+    JsonWriter writer;
 
     // EFFECTS: initializes an empty timeline, sets up scanner, and runs the application
     public DAW() throws InvalidMidiDataException {
         try {
             timeline = new Timeline("New project");
+            sc = new Scanner(System.in);
+            appLoop();
         } catch (MidiUnavailableException e) {
             e.printStackTrace();
             System.out.println("No MIDI device avaliable, exiting");
             return;
         }
-        sc = new Scanner(System.in);
-        appLoop();
     }
 
     // EFFECTS: processes user input
     @SuppressWarnings("methodlength")
-    private void appLoop() {
+    private void appLoop() throws MidiUnavailableException {
         while (true) {
             displayTimelineOptions();
-            String input = getStringInput(new String[] { "p", "t", "q", "c", "b", "s" }, false);
+            String input = getStringInput(new String[] { "l", "p", "t", "q", "c", "b", "y", "s" }, false);
 
             switch (input) {
                 case "p":
@@ -56,10 +63,16 @@ public class DAW {
                 case "q":
                     quit();
                     return;
+                case "s":
+                    save();
+                    break;
+                case "l":
+                    load();
+                    break;
                 case "b":
                     changeTimelinePositionBeat();
                     break;
-                case "s":
+                case "y":
                     changeTimelineBPM();
                     break;
             }
@@ -67,62 +80,84 @@ public class DAW {
     }
 
     // MODIFIES: this
-    // EFFECTS: Loads a sample song, 4 tracks (2 percussive, 2 instrumental) into the timeline
-    @SuppressWarnings("methodlength")
-    private void loadSampleSpooky() {
-        if (timeline.getAvaliableChannels().size() < 2) {
-            System.out.println("Not enough instrumental tracks avaliable, press enter to continue");
+    // EFFECTS: prompts user to select a project to load by index
+    private void load() throws MidiUnavailableException {
+        clearConsole();
+        File projectsDirectory = new File("./data/projects");
+        File[] projectFiles = projectsDirectory.listFiles();
+        int i = 1;
+
+        if (projectFiles.length == 0) {
+            System.out.println("No projects to load!\nPress enter to continue");
             sc.nextLine();
             return;
         }
-
-        MidiTrack melody = timeline.createMidiTrack("synth pad", 89, false);
-        MidiTrack drums = timeline.createMidiTrack("bass drum", 35, true);
-        MidiTrack bass = timeline.createMidiTrack("bass", 38, false);
-        MidiTrack hiHat = timeline.createMidiTrack("hi-hat", 42, true);
-
-        melody.setVolume(127);
-        drums.setVolume(110);
-        bass.setVolume(110);
-
-        final int beatTicks = timeline.beatsToTicks(1);
-
-        Block melodyBlock = new Block(0);
-        Block drumsBlock = new Block(0);
-        Block bassBlock = new Block(beatTicks * 3);
-        Block hiHatBlock = new Block(beatTicks * 4);
-
-        melody.addBlock(melodyBlock);
-        drums.addBlock(drumsBlock);
-        bass.addBlock(bassBlock);
-        hiHat.addBlock(hiHatBlock);
-
-        for (int beat = 0; beat < 20; beat++) {
-            drumsBlock.addNote(new Note(0, 127, beatTicks * beat, beatTicks));
+        
+        for (File projectFile : projectFiles) {
+            String projectName = projectFile.getName();
+            reader = new JsonReader("./data/projects/" + projectName);
+            System.out.printf("[%d] %s%n", i++, projectName);
         }
 
-        for (int beat = 0; beat < 14; beat++) {
-            int velocity = beat % 4 == 0 ? 127 : 76; // louder first hit-hat of measure
-            hiHatBlock.addNote(new Note(0, velocity, beat * beatTicks + beatTicks / 2, beatTicks / 2));
+        System.out.println("Select an index to load");
+        int index = getNumericalInput(1, projectFiles.length) - 1;
+
+        reader = new JsonReader(projectFiles[index].getPath());
+        try {
+            System.out.println("Loading...");
+            timeline = reader.read();
+        } catch (IOException e) {
+            System.out.println("Something went terribly wrong, unable to load project");
+        } catch (InvalidMidiDataException e) {
+            System.out.println("The project had invalid MIDI data! Unable to load project");
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: saves timeline to file
+    private void save() {
+        clearConsole();
+        if (timeline.getProjectName().equals("New project")) {
+            saveNewProject();
+            return;
         }
 
-        melodyBlock.addNote(new Note(60, 127, beatTicks * 4, beatTicks * 2));
-        melodyBlock.addNote(new Note(62, 127, beatTicks * 6, beatTicks));
-        melodyBlock.addNote(new Note(56, 127, beatTicks * 7, beatTicks * 4));
+        System.out.printf("Would you like to save this project under a name other than %s?%n",
+                timeline.getProjectName());
+        System.out.printf("y/n: ");
+        String response = getStringInput(new String[] { "y", "n" }, false);
 
-        melodyBlock.addNote(new Note(60, 127, beatTicks * 12, beatTicks * 2));
-        melodyBlock.addNote(new Note(62, 127, beatTicks * 14, beatTicks));
-        melodyBlock.addNote(new Note(66, 127, beatTicks * 15, beatTicks * 4));
+        if (response.equals("y")) {
+            timeline.setProjectName("New project");
+            save();
+        } else {
+            try {
+                writer.open();
+            } catch (FileNotFoundException e) {
+                System.out.println("Unable to save");
+                return;
+            }
+            writer.write(timeline);
+            writer.close();
+        }
+    }
 
-        bassBlock.addNote(new Note(32, 100, beatTicks, beatTicks / 2));
-        bassBlock.addNote(new Note(32, 100, (int) (beatTicks * (double) 1.5), beatTicks / 2));
+    private void saveNewProject() {
+        System.out.println("Name this project\nIf the project name already exists it will be overwritten");
+        String name = getStringInput(null, true);
+        timeline.setProjectName(name);
 
-        bassBlock.addNote(new Note(32, 100, beatTicks * 4, beatTicks / 2));
-        bassBlock.addNote(new Note(32, 100, (int) (beatTicks * (double) 4.5), beatTicks / 2));
-
-        Block bassBlock2 = bassBlock.clone();
-        bassBlock2.setStartTick(beatTicks * 11);
-        bass.addBlock(bassBlock2);
+        writer = new JsonWriter("./data/projects/" + name + ".json");
+        try {
+            writer.open();
+            writer.write(timeline);
+            writer.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to save file, the name must not have invalid characters\n"
+                    + "Press enter to continue");
+            
+            timeline.setProjectName("New project");
+        }
     }
 
     // MODIFIES: this
@@ -184,9 +219,11 @@ public class DAW {
 
         System.out.println("Play the project!                  [p]");
         System.out.println("Track options                      [t]");
+        System.out.println("Save project                       [s]");
+        System.out.println("Load project                       [l]");
         System.out.println("Change timeline position (seconds) [c]");
         System.out.println("Change timeline position (beat)    [b]");
-        System.out.println("Change timeline BPM                [s]");
+        System.out.println("Change timeline BPM                [y]");
         System.out.println("Quit                               [q]");
     }
 
@@ -198,7 +235,7 @@ public class DAW {
     // EFFECTS: Prompts user for options to modify track array
     private void handleTrackOptions() {
         String input;
-        String[] validStrings = new String[] { "n", "n", "r", "d", "s" };
+        String[] validStrings = new String[] { "n", "n", "r", "d", };
 
         if (timeline.getTracks().size() > 0) {
             validStrings[0] = "e";
@@ -214,9 +251,6 @@ public class DAW {
                 break;
             case "n":
                 editTrack(createNewTrack());
-                break;
-            case "s":
-                loadSampleSpooky();
                 break;
             case "r":
                 return;
