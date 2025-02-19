@@ -235,11 +235,12 @@ public class DAW {
     private void displayTimelineOptions() {
         clearConsole();
         System.out.println("Welcome to the project timeline!");
-        System.out.printf("Length  : %.2f seconds, %.2f beats%n",
+        System.out.printf("Project Name: %s%n", timeline.getProjectName());
+        System.out.printf("Length      : %.2f seconds, %.2f beats%n",
                 timeline.getLengthMs() / 1000, timeline.getLengthBeats());
-        System.out.printf("Position: %.2f seconds, on beat %.2f%n",
+        System.out.printf("Position    : %.2f seconds, on beat %.2f%n",
                 timeline.getPositionMs() / 1000, timeline.getPositionOnBeat());
-        System.out.printf("BPM: %.2f%n%n", timeline.getBPM());
+        System.out.printf("BPM         : %.2f%n%n", timeline.getBPM());
 
         System.out.println("Play the project!                  [p]");
         System.out.println("Track options                      [t]");
