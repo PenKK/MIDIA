@@ -285,6 +285,7 @@ public class DAW {
     private void displayTrackOptions() {
         int instrumentalTracks = 15 - timeline.getAvaliableChannels().size();
         clearConsole();
+        System.out.printf("Project: %s%n", timeline.getProjectName());
         System.out.printf("Instrumental tracks: %d/15%nPercussion tracks  : %d%nTotal tracks       : %d%n%n",
                 instrumentalTracks, timeline.getTracks().size() - instrumentalTracks,
                 timeline.getTracks().size());
