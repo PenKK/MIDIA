@@ -108,13 +108,13 @@ public class DAW {
     private void timelineOptions() throws MidiUnavailableException {
         while (true) {
             displayTimelineOptions();
-            String input = getStringInput(new String[] { "p", "t", "c", "b", "y", "r" }, false);
+            String input = getStringInput(new String[] { "p", "t", "s", "b", "y", "r" }, false);
 
             switch (input) {
                 case "p":
                     play();
                     break;
-                case "c":
+                case "s":
                     changeTimelinePositionSeconds();
                     break;
                 case "t":
@@ -271,7 +271,7 @@ public class DAW {
 
         System.out.println("Play the project!                  [p]");
         System.out.println("Track options                      [t]");
-        System.out.println("Change timeline position (seconds) [c]");
+        System.out.println("Change timeline position (seconds) [s]");
         System.out.println("Change timeline position (beat)    [b]");
         System.out.println("Change timeline BPM                [y]");
         System.out.println("Return to menu                     [r]");
