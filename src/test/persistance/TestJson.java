@@ -9,6 +9,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
+// Code adapted from src/test/persistance/JsonTest
+//     at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class TestJson {
     protected void checkTimeline(Timeline timeline1, Timeline timeline2) {
         assertEquals(timeline1.getProjectName(), timeline2.getProjectName());

@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import model.Timeline;
 
+// Code adapted from src/test/persistance/JsonReaderTest
+//     at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class TestJsonReader extends TestJson {
 
     JsonReader reader;

@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 
 import model.Timeline;
 
+// Code adapted from src/test/persistance/JsonWriterTest
+//     at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class TestJsonWriter extends TestJson {
 
     JsonWriter jsonWriter;
