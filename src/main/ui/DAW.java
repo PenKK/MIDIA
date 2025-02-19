@@ -45,10 +45,10 @@ public class DAW {
 
     // EFFECTS: displays and handles user intereaction with program 
     @SuppressWarnings("methodlength")
-    private void appLoop() throws MidiUnavailableException {
+    private void appLoop() throws MidiUnavailableException, InvalidMidiDataException {
         while (true) {
             displayMenuOptions();
-            String[] validInputs = new String[] { "s", "l", "q", "t" };
+            String[] validInputs = new String[] { "s", "l", "q", "t", "n", "d" };
             String input = getStringInput(validInputs, false);
 
             switch (input) {
@@ -62,19 +62,46 @@ public class DAW {
                     load();
                     timelineOptions();
                     break;
+                case "n":
+                    timeline = new Timeline("New project");
+                    timelineOptions();
+                    break;
                 case "t":
                     timelineOptions();
+                    break;
+                case "d":
+                    deleteProject();
+                    break;
             }
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: prompts user to delete a project by index
+    private void deleteProject() {
+        File projectsDirectory = new File("./data/projects");
+        File[] projectFiles = projectsDirectory.listFiles();
+        displayProjects(projectFiles);
+
+        System.out.println("Enter the index of the project to delete, enter a non number to cancel");
+        int index = getNumericalInput(1, projectFiles.length, true) - 1;
+        if (index == -2) {
+            return;
+        }
+
+        projectFiles[index].delete();
     }
 
     // EFFECTS: prints possible menu options and additional data
     private void displayMenuOptions() {
         clearConsole();
         System.out.printf("Project: %s%n", timeline.getProjectName());
-        System.out.println("Open timeline   [t]");
-        System.out.println("Save project    [s]");
-        System.out.println("Load project    [l]");
+        System.out.println("Open timeline          [t]");
+        System.out.println("New project            [n]");
+        System.out.println("Save project           [s]");
+        System.out.println("Load project           [l]");
+        System.out.println("Delete a saved project [d]");
+        System.out.println("Quit                   [q]");
     }
 
     // EFFECTS: displays and handles user interaction with timeline
@@ -115,7 +142,7 @@ public class DAW {
         displayProjects(projectFiles);
 
         System.out.println("Select an index to load");
-        int index = getNumericalInput(1, projectFiles.length) - 1;
+        int index = getNumericalInput(1, projectFiles.length, false) - 1;
 
         reader = new JsonReader(projectFiles[index].getPath());
         try {
@@ -133,7 +160,7 @@ public class DAW {
         int i = 1;
         for (File projectFile : projectFiles) {
             String projectName = projectFile.getName();
-            System.out.printf("[%d] %s%n", i++, projectName.substring(0,projectName.length() - 5));
+            System.out.printf("[%d] %s%n", i++, projectName.substring(0, projectName.length() - 5));
         }
     }
 
@@ -301,7 +328,7 @@ public class DAW {
     private void selectTrack() {
         displayTracks();
         System.out.println("Enter the index of the track to edit");
-        editTrack(getNumericalInput(1, timeline.getTracks().size()) - 1);
+        editTrack(getNumericalInput(1, timeline.getTracks().size(), false) - 1);
     }
 
     // MODIFIES: this
@@ -323,7 +350,7 @@ public class DAW {
 
         System.out.println(
                 "What instrument does this track play?\n(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
-        int instrument = percussive ? getNumericalInput(35, 81) : (getNumericalInput(1, 128) - 1);
+        int instrument = percussive ? getNumericalInput(35, 81, false) : (getNumericalInput(1, 128, false) - 1);
         MidiTrack newMidiTrack = timeline.createMidiTrack(name, instrument, percussive);
         return timeline.getTracks().indexOf(newMidiTrack);
     }
@@ -375,7 +402,7 @@ public class DAW {
     // EFFECTS: prompts user for new volume in 0 to 100 and applies to to selectedTrack
     private void changeTrackVolume(MidiTrack selectedTrack) {
         System.out.println("Enter new volume");
-        int volume = getNumericalInput(0, 100);
+        int volume = getNumericalInput(0, 100, false);
         int volumeScaled = (int) Math.round(volume * 1.27);
         selectedTrack.setVolume(volumeScaled);
     }
@@ -394,7 +421,7 @@ public class DAW {
         System.out.printf("What is the new instrument for track %s?%n", midiTrack.getName());
         System.out.println("(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
 
-        int instrument = midiTrack.isPercussive() ? getNumericalInput(35, 81) : getNumericalInput(1, 128) - 1;
+        int instrument = midiTrack.isPercussive() ? getNumericalInput(35, 81, false) : getNumericalInput(1, 128, false) - 1;
         midiTrack.setInstrument(instrument);
     }
 
@@ -402,7 +429,7 @@ public class DAW {
     private void chooseBlock(MidiTrack selectedTrack) {
         displayBlocks(selectedTrack);
         System.out.println("Select an index");
-        editBlock(getNumericalInput(1, selectedTrack.getBlocks().size()) - 1, selectedTrack);
+        editBlock(getNumericalInput(1, selectedTrack.getBlocks().size(), false) - 1, selectedTrack);
     }
 
     // EFFECTS: prints possible options for user to edit a track and other track info
@@ -501,7 +528,7 @@ public class DAW {
     private void chooseNoteToEdit(Block selectedBlock, boolean percussive) {
         displayNotes(selectedBlock.getNotes(), percussive);
         System.out.println("Enter an index");
-        int displayIndex = getNumericalInput(1, selectedBlock.getNotes().size());
+        int displayIndex = getNumericalInput(1, selectedBlock.getNotes().size(), false);
         editNote(selectedBlock, displayIndex, percussive);
     }
 
@@ -522,10 +549,10 @@ public class DAW {
 
         switch (input) {
             case "p":
-                note.setPitch(getNumericalInput(0, 127));
+                note.setPitch(getNumericalInput(0, 127, false));
                 break;
             case "v":
-                note.setVelocity(getNumericalInput(0, 127));
+                note.setVelocity(getNumericalInput(0, 127, false));
                 break;
             case "o":
                 note.setStartTick(timeline.beatsToTicks(getNumericalInput(1, Double.MAX_VALUE) - 1));
@@ -617,11 +644,11 @@ public class DAW {
         if (!percussive) {
             System.out.println("Whats the note pitch?");
             System.out.println("(See note table on https://studiocode.dev/resources/midi-middle-c/)");
-            pitch = getNumericalInput(0, 127);
+            pitch = getNumericalInput(0, 127, false);
         }
 
         System.out.println("Whats the note velocity?");
-        int velocity = getNumericalInput(0, 127);
+        int velocity = getNumericalInput(0, 127, false);
 
         System.out.println("What beat does the note start on? (relative to this block)");
         double startBeat = getNumericalInput(1, Double.MAX_VALUE) - 1;
@@ -645,8 +672,9 @@ public class DAW {
     }
 
     // REQUIRES: min <= max
-    // EFFECTS: prompts the user for integer input in a range and returns it
-    private int getNumericalInput(int min, int max) {
+    // EFFECTS: prompts the user for integer input in a range and returns it.
+    //          if returnFail is true then -1 will be returned on a non numeric input instead of reprompting
+    private int getNumericalInput(int min, int max, boolean returnFail) {
         while (true) {
             int input;
             System.out.printf("Input in range [%d, %d]: ", min, max);
@@ -654,8 +682,12 @@ public class DAW {
             try {
                 input = sc.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("Enter an integer!");
                 sc.nextLine();
+                if (returnFail) {
+                    return -1;
+                }
+
+                System.out.println("Enter an integer!");
                 continue;
             }
 
