@@ -1,1 +1,3 @@
 *.class
+data/projects/*
+!data/Spooky beat.json
