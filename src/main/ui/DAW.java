@@ -133,7 +133,7 @@ public class DAW {
         int i = 1;
         for (File projectFile : projectFiles) {
             String projectName = projectFile.getName();
-            System.out.printf("[%d] %s%n", i++, projectName);
+            System.out.printf("[%d] %s%n", i++, projectName.substring(0,projectName.length() - 5));
         }
     }
 
@@ -293,7 +293,6 @@ public class DAW {
             System.out.println("Edit a track       [e]");
         }
         System.out.println("Create a new track [n]");
-        System.out.println("Load sample song   [s]");
         System.out.println("Return to timeline [r]");
     }
 
