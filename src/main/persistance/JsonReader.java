@@ -101,7 +101,7 @@ public class JsonReader {
 
     // MOFIES: midiTrack
     // EFFECTS: parses blocks and adds them to midiTrack
-    private void addBlocks(MidiTrack midiTrack ,JSONArray blocksJsonArray) {
+    private void addBlocks(MidiTrack midiTrack, JSONArray blocksJsonArray) {
         for (Object blockJson : blocksJsonArray) {
             JSONObject blockData = (JSONObject) blockJson;
 
