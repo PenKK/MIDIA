@@ -19,7 +19,7 @@ public class TestJsonReader extends TestJson {
     void testReaderNonExistentFile() throws MidiUnavailableException {
         reader = new JsonReader("./data/test/noSuchFile.json");
         try {
-            Timeline timeline = reader.read();
+            reader.read();
             fail("IOException expected");
         } catch (InvalidMidiDataException e) {
             fail("InvalidMidiDataException should not be thrown");
