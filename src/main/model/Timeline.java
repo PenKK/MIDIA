@@ -301,6 +301,7 @@ public class Timeline implements Writable {
         return timelineJson;
     }
 
+    // EFFECTS: returns JSON Array representation of midiTracks array
     private JSONArray midiTracksToJson() {
         JSONArray midiTracksJson = new JSONArray();
 
