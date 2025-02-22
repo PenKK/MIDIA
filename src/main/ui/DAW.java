@@ -185,12 +185,12 @@ public class DAW {
             try {
                 writer = new JsonWriter("./data/projects/" + timeline.getProjectName() + ".json");
                 writer.open();
+                writer.write(timeline);
+                writer.close();
             } catch (FileNotFoundException e) {
                 System.out.println("Unable to save");
                 return;
             }
-            writer.write(timeline);
-            writer.close();
         }
     }
 
@@ -539,7 +539,7 @@ public class DAW {
     private void editNote(Block block, int displayIndex, boolean percussive) {
         Note note = block.getNotes().get(displayIndex - 1);
         displayEditNoteOptions(note, displayIndex, percussive);
-        String[] validStrings = new String[] { "p", "v", "o", "d", "r" };
+        String[] validStrings = new String[] { "p", "v", "o", "d", "r", "b"};
 
         if (percussive) {
             validStrings[0] = "v";
