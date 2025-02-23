@@ -184,6 +184,7 @@ public class MidiTrack implements Writable {
         return midiTrackJson;
     }
 
+    // EFFECTS: returns JSON Array representation of blocks in this midiTrack
     private JSONArray blocksToJson() {
         JSONArray blocksJson = new JSONArray();
 

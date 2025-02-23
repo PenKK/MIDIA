@@ -85,6 +85,7 @@ public class Block implements Writable {
         return blockJson;
     }
 
+    // EFFECTS: returns a JSON Array representation of the notes in this block
     private JSONArray notesToJson() {
         JSONArray notesJson = new JSONArray();
 
