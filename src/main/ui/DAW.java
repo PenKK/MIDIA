@@ -95,7 +95,7 @@ public class DAW {
     // EFFECTS: prints possible menu options and additional data
     private void displayMenuOptions() {
         clearConsole();
-        System.out.printf("Project: %s%n", timeline.getProjectName());
+        System.out.printf("Project: %s%n%n", timeline.getProjectName());
         System.out.println("Open timeline          [t]");
         System.out.println("New project            [n]");
         System.out.println("Save project           [s]");
