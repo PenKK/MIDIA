@@ -63,8 +63,7 @@ public class DAW {
                     timelineOptions();
                     break;
                 case "n":
-                    timeline = new Timeline("New project");
-                    timelineOptions();
+                    configureNewProject();
                     break;
                 case "t":
                     timelineOptions();
@@ -74,6 +73,16 @@ public class DAW {
                     break;
             }
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: closes old project and opens a new one
+    private void configureNewProject() throws MidiUnavailableException, InvalidMidiDataException {
+        if (timeline != null) {
+            timeline.getSequencer().close();
+        }
+        timeline = new Timeline("New project");
+        timelineOptions();
     }
 
     // MODIFIES: this
@@ -145,13 +154,21 @@ public class DAW {
         int index = getNumericalInput(1, projectFiles.length, false) - 1;
 
         reader = new JsonReader(projectFiles[index].getPath());
+        Timeline oldTimeline = timeline;
         try {
             System.out.println("Loading...");
             timeline = reader.read();
+
+            if (oldTimeline != null) {
+                oldTimeline.getSequencer().close();
+            }
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("Something went terribly wrong, unable to load project");
+            timeline = oldTimeline;
         } catch (InvalidMidiDataException e) {
             System.out.println("The project had invalid MIDI data! Unable to load project");
+            timeline = oldTimeline;
         }
     }
 
@@ -421,7 +438,8 @@ public class DAW {
         System.out.printf("What is the new instrument for track %s?%n", midiTrack.getName());
         System.out.println("(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
 
-        int instrument = midiTrack.isPercussive() ? getNumericalInput(35, 81, false) : getNumericalInput(1, 128, false) - 1;
+        int instrument = midiTrack.isPercussive() ? getNumericalInput(35, 81, false) 
+                                                  : getNumericalInput(1, 128, false) - 1;
         midiTrack.setInstrument(instrument);
     }
 
