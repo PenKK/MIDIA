@@ -4,5 +4,6 @@
     "java.project.referencedLibraries": ["lib/**/*.jar"],
     "java.checkstyle.configuration": "${workspaceFolder}/checkstyle.xml",
     "java.checkstyle.version": "10.2",
-    "java.debug.settings.onBuildFailureProceed": true
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.dependency.packagePresentation": "hierarchical"
 }
