@@ -266,6 +266,7 @@ public class DAW {
         clearConsole();
         System.out.println("Playing... press enter to stop and exit");
         try {
+            timeline.getSequencer().setTickPosition(0);
             timeline.play();
         } catch (InvalidMidiDataException e) {
             System.out.println("Invalid MIDI data found in sequence, playback may not work");
