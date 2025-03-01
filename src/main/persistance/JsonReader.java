@@ -29,7 +29,7 @@ public class JsonReader {
         this.sourcePath = source;
     }
 
-    // EFFECTS: reads workroom from file and returns it;
+    // EFFECTS: reads timeline from json file and returns it;
     // throws IOException if an error occurs reading data from file
     public Timeline read() throws IOException, MidiUnavailableException, InvalidMidiDataException {
         String jsonData = readFile(sourcePath);
@@ -48,7 +48,7 @@ public class JsonReader {
         return contentBuilder.toString();
     }
 
-    // EFFECTS: parses workroom from JSON object and returns it
+    // EFFECTS: parses timeline from JSON object and returns it
     private Timeline parseTimeline(JSONObject jsonObject) throws MidiUnavailableException, InvalidMidiDataException {
         String projectName = jsonObject.getString("projectName");
         Timeline timeline = new Timeline(projectName);
