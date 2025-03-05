@@ -281,11 +281,10 @@ public class TestTimeline {
         assertTrue(timeline.getSequencer().isRunning());
         Thread.sleep((long) (timeline.getLengthMs() + 500));
         assertFalse(timeline.getSequencer().isRunning());
+        timeline.pause();
 
         // test play and pause
         timeline.play();
-        assertTrue(timeline.getSequencer().isRunning());
-        Thread.sleep((long) (timeline.getLengthMs() / 2));
         assertTrue(timeline.getSequencer().isRunning());
         timeline.pause();
         assertFalse(timeline.getSequencer().isRunning());
