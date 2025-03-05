@@ -211,6 +211,8 @@ public class DAW {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: prompts user for a name to save a previously never saved project
     private void saveNewProject() {
         System.out.println("Name this project\nIf the project name already exists it will be overwritten");
         String name = getStringInput(null, true);
