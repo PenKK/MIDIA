@@ -89,9 +89,13 @@ public class FileMenu extends JMenu implements Menu, ActionListener {
         JsonWriter writer = new JsonWriter(path);
 
         try {
+            Timeline instance = Timeline.getInstance();
+            instance.setProjectName(fileChooser.getSelectedFile().getName());
+            
             writer.open();
-            writer.write(Timeline.getInstance());
+            writer.write(instance);
             writer.close();
+
         } catch (FileNotFoundException e) {
             System.out.println("Invalid path in Project Save");
         }
