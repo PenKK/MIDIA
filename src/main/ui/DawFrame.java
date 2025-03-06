@@ -39,7 +39,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
         
-        if (propertyName.equals("timeline")) {
+        if (propertyName.equals("timeline") || propertyName.equals("projectName")) {
             updateTitle();
         }
     }
