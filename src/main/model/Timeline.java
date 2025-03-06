@@ -1,5 +1,7 @@
 package model;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -21,6 +23,7 @@ import persistance.Writable;
 public class Timeline implements Writable {
 
     private static Timeline instance;
+    private static PropertyChangeSupport pcs = new PropertyChangeSupport(Timeline.class);
 
     private String projectName;
     private Sequencer sequencer;
@@ -62,11 +65,35 @@ public class Timeline implements Writable {
 
     // MODIFIES: this
     // EFFECTS: Initializes the singeton instance
-    public static Timeline getInstance() throws MidiUnavailableException, InvalidMidiDataException {
+    public static Timeline getInstance() {
         if (instance == null) {
-            instance = new Timeline("New Project");
+            try {
+                instance = new Timeline("New Project");
+            } catch(MidiUnavailableException | InvalidMidiDataException e) {
+                System.out.println("Unable to create new instance, likely that no MIDI device was found");
+            }
         }
         return instance;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Replaces instance and fires property change for all who need to reflect changes
+    public static void setInstance(Timeline newInstance) {
+        Timeline oldInstance = instance;
+        instance = newInstance;
+        pcs.firePropertyChange("timeline", oldInstance, newInstance);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: adds the specified observer as a listener of property changes
+    public static void addObserver(PropertyChangeListener observer) {
+        pcs.addPropertyChangeListener(observer);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: removes the specified observer as a listener of property changes
+    public static void removeObserver(PropertyChangeListener observer) {
+        pcs.removePropertyChangeListener(observer);
     }
 
     // REQUIRES: avaliableChannels.size() >= 0
@@ -298,6 +325,10 @@ public class Timeline implements Writable {
     // EFFECTS: adds midiTrack to the list of tracks
     public void addMidiTrack(MidiTrack midiTrack) {
         midiTracks.add(midiTrack);
+    }
+
+    public static PropertyChangeSupport getPropertyChangeSupport() {
+        return pcs;
     }
 
     // EFFECTS: returns JSON object representation of the timeline
