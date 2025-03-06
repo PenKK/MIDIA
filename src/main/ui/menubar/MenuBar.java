@@ -2,10 +2,13 @@ package ui.menubar;
 
 import javax.swing.JMenuBar;
 
-import ui.DawController;
-
 // The Menu bar at the top of the UI, holds many dropdown Menu's
 public class MenuBar extends JMenuBar {
     FileMenu fileMenu;
 
+    // EFFECTS: Initializes all file menus and adds them to the menu bar
+    public MenuBar() {
+        fileMenu = new FileMenu();
+        this.add(fileMenu);
+    }
 }
