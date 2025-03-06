@@ -82,6 +82,7 @@ public class Timeline implements Writable {
         Timeline oldInstance = instance;
         instance = newInstance;
         pcs.firePropertyChange("timeline", oldInstance, newInstance);
+        oldInstance.getSequencer().close();
     }
 
     // MODIFIES: this
