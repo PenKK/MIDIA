@@ -29,7 +29,7 @@ public class Timeline implements Writable {
     private Sequencer sequencer;
     private Sequence sequence;
     private ArrayList<MidiTrack> midiTracks;
-    private float beatsPerMinute;
+    private float bpm;
     private int positionTick;
     private ArrayList<Integer> avaliableChannels;
 
@@ -48,7 +48,7 @@ public class Timeline implements Writable {
         sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
         sequencer.open();
 
-        beatsPerMinute = DEFAULT_BPM;
+        bpm = DEFAULT_BPM;
         midiTracks = new ArrayList<>();
         positionTick = 0;
 
@@ -107,7 +107,11 @@ public class Timeline implements Writable {
 
         MidiTrack newMidiTrack = new MidiTrack(name, instrument,
                 percussive ? 9 : avaliableChannels.remove(0));
+
+        ArrayList<MidiTrack> oldTracks = new ArrayList<>(midiTracks);
         midiTracks.add(newMidiTrack);
+        pcs.firePropertyChange("midiTracks", oldTracks, new ArrayList<>(midiTracks));
+
         return newMidiTrack;
     }
 
@@ -117,11 +121,16 @@ public class Timeline implements Writable {
     //          channel to avaliable channels if the MidiTrack is not percussive, and then
     //          returns the MidiTrack
     public MidiTrack removeMidiTrack(int index) {
-        MidiTrack toRemove = midiTracks.get(index);
-        if (!toRemove.isPercussive()) {
-            avaliableChannels.add(toRemove.getChannel());
+        ArrayList<MidiTrack> oldTracks = new ArrayList<>(midiTracks);
+        MidiTrack removed = midiTracks.remove(index);
+
+        if (!removed.isPercussive()) {
+            avaliableChannels.add(removed.getChannel());
         }
-        return midiTracks.remove(index);
+
+        pcs.firePropertyChange("midiTracks", oldTracks, new ArrayList<>(midiTracks));
+
+        return removed;
     }
 
     // MODIFIES: this
@@ -156,7 +165,7 @@ public class Timeline implements Writable {
     //          midi data is found during the sequence update (handled by UI)
     public void play() throws InvalidMidiDataException {
         updateSequence();
-        sequencer.setTempoInBPM(beatsPerMinute);
+        sequencer.setTempoInBPM(bpm);
         sequencer.start();
     }
 
@@ -178,27 +187,40 @@ public class Timeline implements Writable {
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback given ticks
     public void setPositionTick(int newPositionTick) {
+        int oldPositionTick = positionTick;
         this.positionTick = newPositionTick;
+
+        pcs.firePropertyChange("positionTick", oldPositionTick, newPositionTick);
     }
 
     // REQUIRES: newPositionMs >= 0
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback at the given milliseconds
     public void setPositionMs(double newPositionMs) {
-        this.positionTick = msToTicks(newPositionMs);
+        setPositionTick(msToTicks(newPositionMs));
     }
 
     // REQUIRES: newPositionBeat >= 1
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback given the beat to start at
     public void setPositionBeat(double newPositionBeat) {
-        this.positionTick = beatsToTicks(newPositionBeat - 1);
+        setPositionTick(beatsToTicks(newPositionBeat - 1));
     }
 
     // REQUIRES: bpm >= 1
     // EFFECTS: changes the BPM
     public void setBPM(float bpm) {
-        this.beatsPerMinute = bpm;
+        float oldBpm = bpm;
+        this.bpm = bpm;
+
+        pcs.firePropertyChange("bpm", oldBpm, bpm);
+    }
+
+    public void setProjectName(String newProjectName) {
+        String oldProjectName = projectName;
+        this.projectName = newProjectName;
+
+        pcs.firePropertyChange("projectName", oldProjectName, newProjectName);
     }
 
     // EFFECTS: returns the calculation of the sequence length in milliseconds
@@ -216,7 +238,7 @@ public class Timeline implements Writable {
     public double ticksToMs(int ticks) {
         double durationInQuarterNotes = (double) ticks / (double) sequence.getResolution();
         ;
-        double durationInMinutes = durationInQuarterNotes / beatsPerMinute;
+        double durationInMinutes = durationInQuarterNotes / bpm;
         double durationInMS = durationInMinutes * 60000;
         return durationInMS;
     }
@@ -225,7 +247,7 @@ public class Timeline implements Writable {
     // EFFECTS: converts milliseconds to ticks (reverse of above)
     public int msToTicks(double ms) {
         double durationInMinutes = ms / (double) 60000;
-        double durationInQuarterNotes = beatsPerMinute * durationInMinutes;
+        double durationInQuarterNotes = bpm * durationInMinutes;
         double ticks = durationInQuarterNotes * sequence.getResolution();
         ;
         return (int) Math.round(ticks);
@@ -295,7 +317,7 @@ public class Timeline implements Writable {
     }
 
     public float getBPM() {
-        return beatsPerMinute;
+        return bpm;
     }
 
     public Sequence getSequence() {
@@ -318,10 +340,6 @@ public class Timeline implements Writable {
         return projectName;
     }
 
-    public void setProjectName(String newProjectName) {
-        this.projectName = newProjectName;
-    }
-
     // MODIFIES: this
     // EFFECTS: adds midiTrack to the list of tracks
     public void addMidiTrack(MidiTrack midiTrack) {
@@ -338,7 +356,7 @@ public class Timeline implements Writable {
         JSONObject timelineJson = new JSONObject();
 
         timelineJson.put("projectName", projectName);
-        timelineJson.put("beatsPerMinute", beatsPerMinute);
+        timelineJson.put("beatsPerMinute", bpm);
         timelineJson.put("positionTick", positionTick);
         timelineJson.put("avaliableChannels", new JSONArray(avaliableChannels));
         timelineJson.put("midiTracks", midiTracksToJson());
