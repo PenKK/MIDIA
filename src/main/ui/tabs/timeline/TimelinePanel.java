@@ -1,5 +1,6 @@
 package ui.tabs.timeline;
 
+import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -19,23 +20,36 @@ public class TimelinePanel extends JPanel implements PropertyChangeListener {
     // EFFECTS: initializes the timeline 
     public TimelinePanel() {
         this.setName("Timeline");
-        timeline = Timeline.getInstance();
+        this.setLayout(new GridLayout(4, 1));
+
         midiTrackPanels = new ArrayList<>();
         Timeline.addObserver(this);
-
-        if (timeline == null) {
-            System.err.println("Timeline instance returned null, MIDI device may be unavliable");
-            return;
-        }
-
-        populateRows();
+        updateMidiTrackPanels();
     }
 
     // EFFECTS: clears all MidiTrackPanels and then populates according to current Timeline
-    private void populateRows() {
-        midiTrackPanels.clear();
+    private void updateMidiTrackPanels() {
+        Timeline timeline = Timeline.getInstance();
+
+        if (timeline == null) {
+            System.err.println("Timeline instance returned null, unable to populate rows");
+            return;
+        }
+
+        clearPanels();
         for (MidiTrack track : timeline.getTracks()) {
-            midiTrackPanels.add(new MidiTrackPanel(track));
+            MidiTrackPanel currentPanel = new MidiTrackPanel(track);
+            midiTrackPanels.add(currentPanel);
+            this.add(currentPanel);
+        }
+
+        revalidate();
+        repaint();
+    }
+
+    private void clearPanels() {
+        for (MidiTrackPanel currentMidiTrackPanel : midiTrackPanels) {
+            this.remove(currentMidiTrackPanel);
         }
     }
 
@@ -43,9 +57,15 @@ public class TimelinePanel extends JPanel implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
 
-        if (propertyName.equals("timeline")) {
-            timeline = Timeline.getInstance();
-            populateRows();
+        switch (propertyName) {
+            case "timeline":
+                updateMidiTrackPanels();
+                break;
+            case "midiTracks":
+                updateMidiTrackPanels();
+                break;
+            default:
+                break;
         }
     }
 }
