@@ -6,6 +6,8 @@ import persistance.TestJson;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -440,6 +442,37 @@ public class TestTimeline extends TestJson {
         checkTimeline(timelineInstance, timeline);
         timelineInstance = Timeline.getInstance();
         checkTimeline(timelineInstance, timeline);
+    }
 
+    @Test
+    void testObserverPattern() throws MidiUnavailableException, InvalidMidiDataException {
+        class TestObserver implements PropertyChangeListener {
+            private int value = 0;
+        
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("timeline")) {
+                    value++;
+                }
+            }
+        
+            public int getValue() {
+                return value;
+            }
+        }
+
+        TestObserver testObserver = new TestObserver();
+        
+        Timeline.addObserver(testObserver);
+        assertEquals(Timeline.getPropertyChangeSupport().getPropertyChangeListeners().length, 1);
+
+        Timeline.setInstance(new Timeline("joe"));
+
+        assertEquals(testObserver.getValue(), 1);
+
+        Timeline.removeObserver(testObserver);
+        Timeline.setInstance(timeline);
+
+        assertEquals(testObserver.getValue(), 1);
     }
 }
