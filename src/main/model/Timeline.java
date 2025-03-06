@@ -20,6 +20,8 @@ import persistance.Writable;
 // Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
 public class Timeline implements Writable {
 
+    private static Timeline instance;
+
     private String projectName;
     private Sequencer sequencer;
     private Sequence sequence;
@@ -56,6 +58,15 @@ public class Timeline implements Writable {
                 }
             }
         };
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Initializes the singeton instance
+    public static Timeline getInstance() throws MidiUnavailableException, InvalidMidiDataException {
+        if (instance == null) {
+            instance = new Timeline("New Project");
+        }
+        return instance;
     }
 
     // REQUIRES: avaliableChannels.size() >= 0
@@ -111,6 +122,7 @@ public class Timeline implements Writable {
         }
     }
 
+    // MODIFIES: this
     // EFFECTS: Begins playback at the current tick position and with tempo according to 
     //          beatsPerMinute. Can throw InvalidMidiDataException if invalid
     //          midi data is found during the sequence update (handled by UI)
@@ -120,9 +132,11 @@ public class Timeline implements Writable {
         sequencer.start();
     }
 
+    // MODIFIES: this
     // EFFECTS: Pauses playback
     public void pause() {
         sequencer.stop();
+        setPositionTick((int) sequencer.getTickPosition());
     }
 
     // MODIFIES: this

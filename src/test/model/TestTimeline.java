@@ -2,6 +2,8 @@ package model;
 
 import org.junit.jupiter.api.Test;
 
+import persistance.TestJson;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
@@ -18,7 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 // See https://midi.org/expanded-midi-1-0-messages-list 
 // to understand the checking of bytes in MidiEvents in tests
-public class TestTimeline {
+public class TestTimeline extends TestJson {
     Timeline timeline;
     ArrayList<Integer> expectedChannels;
 
@@ -423,5 +425,21 @@ public class TestTimeline {
         assertEquals(timeline.getProjectName(), "cool song");
         timeline.setProjectName("cooler song");
         assertEquals(timeline.getProjectName(), "cooler song");
+    }
+
+    @Test
+    void testSingletonInstance() throws MidiUnavailableException, InvalidMidiDataException {
+        Timeline timelineInstance = Timeline.getInstance();
+        Timeline timeline = new Timeline("New Project");
+
+        checkTimeline(timelineInstance, timeline);
+
+        timeline.setProjectName("joe");
+        timelineInstance.setProjectName("joe");
+
+        checkTimeline(timelineInstance, timeline);
+        timelineInstance = Timeline.getInstance();
+        checkTimeline(timelineInstance, timeline);
+
     }
 }
