@@ -30,6 +30,17 @@ public class TestJsonWriter extends TestJson {
     }
 
     @Test
+    void testWriteValidPathNoExtension() {
+        jsonWriter = new JsonWriter("./data/test/testFile");
+        try {
+            jsonWriter.open();
+            // pass
+        } catch (IOException e) {
+            fail("Did not expect an exception due to invalid file path");
+        }
+    }
+
+    @Test
     void testWriteInvalidPath() {
         jsonWriter = new JsonWriter("./data/test/\0fil:e.json");
         try {
