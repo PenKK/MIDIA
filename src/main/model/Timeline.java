@@ -69,7 +69,7 @@ public class Timeline implements Writable {
         if (instance == null) {
             try {
                 instance = new Timeline("New Project");
-            } catch(MidiUnavailableException | InvalidMidiDataException e) {
+            } catch (MidiUnavailableException | InvalidMidiDataException e) {
                 System.out.println("Unable to create new instance, likely that no MIDI device was found");
             }
         }
