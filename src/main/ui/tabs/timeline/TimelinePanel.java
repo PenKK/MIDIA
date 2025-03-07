@@ -1,26 +1,30 @@
 package ui.tabs.timeline;
 
-import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
-
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import model.MidiTrack;
 import model.Timeline;
 
 // JPanel that holds the interactable view of the timeline, rendered using graphics
-public class TimelinePanel extends JPanel implements PropertyChangeListener {
+public class TimelinePanel extends JScrollPane implements PropertyChangeListener {
 
     ArrayList<MidiTrackPanel> midiTrackPanels;
     Timeline timeline;
+    JPanel container;
 
     // EFFECTS: initializes the timeline 
     public TimelinePanel() {
+        container = new JPanel();
         this.setName("Timeline");
-        this.setLayout(new GridLayout(4, 1));
+        this.setViewportView(container);
+        this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
         midiTrackPanels = new ArrayList<>();
         Timeline.addObserver(this);
@@ -40,7 +44,7 @@ public class TimelinePanel extends JPanel implements PropertyChangeListener {
         for (MidiTrack track : timeline.getTracks()) {
             MidiTrackPanel currentPanel = new MidiTrackPanel(track);
             midiTrackPanels.add(currentPanel);
-            this.add(currentPanel);
+            container.add(currentPanel);
         }
 
         revalidate();
@@ -49,7 +53,7 @@ public class TimelinePanel extends JPanel implements PropertyChangeListener {
 
     private void clearPanels() {
         for (MidiTrackPanel currentMidiTrackPanel : midiTrackPanels) {
-            this.remove(currentMidiTrackPanel);
+            container.remove(currentMidiTrackPanel);
         }
     }
 

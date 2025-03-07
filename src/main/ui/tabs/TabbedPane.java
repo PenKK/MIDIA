@@ -15,6 +15,7 @@ public class TabbedPane extends JTabbedPane {
     public TabbedPane() {
         timelinePanel = new TimelinePanel();
         pianoRollPanel = new PianoRollPanel();
+        
         this.add(timelinePanel);
         this.add(pianoRollPanel);
     }
