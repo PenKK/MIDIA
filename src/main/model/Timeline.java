@@ -22,19 +22,21 @@ import persistance.Writable;
 // Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
 public class Timeline implements Writable {
 
-    private static Timeline instance;
+    private static final int PULSES_PER_QUARTER_NOTE = 960;
+    private static final float DEFAULT_BPM = 120;
+
+    private static Timeline instance; // singleton 
     private static PropertyChangeSupport pcs = new PropertyChangeSupport(Timeline.class);
 
-    private String projectName;
     private Sequencer sequencer;
     private Sequence sequence;
+
+    private String projectName;
     private ArrayList<MidiTrack> midiTracks;
     private float bpm;
     private int positionTick;
     private ArrayList<Integer> avaliableChannels;
 
-    private static final int PULSES_PER_QUARTER_NOTE = 960;
-    private static final float DEFAULT_BPM = 120;
 
     // EFFECTS: Creates a timeline with a single sequence with no tracks and the positon 
     //          tick at 0, and a BPM of 120.
@@ -64,13 +66,14 @@ public class Timeline implements Writable {
     }
 
     // MODIFIES: this
-    // EFFECTS: Initializes the singeton instance
+    // EFFECTS: Initializes the singeton instance and returns it. 
+    //          Returns null if no MidiDevice is unavaliable
     public static Timeline getInstance() {
         if (instance == null) {
             try {
                 instance = new Timeline("New Project");
             } catch (MidiUnavailableException | InvalidMidiDataException e) {
-                System.out.println("Unable to create new instance, likely that no MIDI device was found");
+                return null;
             }
         }
         return instance;
