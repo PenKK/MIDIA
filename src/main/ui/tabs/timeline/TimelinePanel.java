@@ -10,6 +10,7 @@ import javax.swing.ScrollPaneConstants;
 
 import model.MidiTrack;
 import model.Timeline;
+import ui.tabs.timeline.midi.MidiTrackPanel;
 
 // JPanel that holds the interactable view of the timeline, rendered using graphics
 public class TimelinePanel extends JScrollPane implements PropertyChangeListener {
