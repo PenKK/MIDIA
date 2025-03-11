@@ -16,6 +16,7 @@ public class MainGUI {
                 new DawFrame();
             } catch (Exception e) {
                 System.out.println("Unable to start program, MIDI device likely unavaliable");
+                e.printStackTrace();
             }
         });
     }
