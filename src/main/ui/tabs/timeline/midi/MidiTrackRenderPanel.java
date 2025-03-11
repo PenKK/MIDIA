@@ -1,4 +1,4 @@
-package ui.tabs.timeline;
+package ui.tabs.timeline.midi;
 
 import javax.swing.JPanel;
 
