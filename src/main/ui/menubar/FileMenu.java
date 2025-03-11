@@ -2,15 +2,14 @@ package ui.menubar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.swing.JFileChooser;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -19,14 +18,19 @@ import persistance.JsonReader;
 import persistance.JsonWriter;
 
 // The File dropdown Menu, responsible for saving and loading and other file settings
-public class FileMenu extends JMenu implements Menu, ActionListener {
-    JMenuItem open;
-    JMenuItem save;
+public class FileMenu extends Menu implements ActionListener {
 
-    JFileChooser fileChooser;
+    private static final String PROJECTS_DIRECTORY = "data/projects";
+
+    private JMenuItem open;
+    private JMenuItem save;
+
+    private JFileChooser fileChooser;
+
 
     // EFFECTS: creates file JMenu, its file chooser, its JMenuItems, and apppriate action listeners
     FileMenu() {
+        super();
         this.setText("File");
 
         open = new JMenuItem("Open Project");
@@ -37,9 +41,10 @@ public class FileMenu extends JMenu implements Menu, ActionListener {
         open.addActionListener(this);
         save.addActionListener(this);
 
-        fileChooser = new JFileChooser();
-        fileChooser.setCurrentDirectory(new File("data/projects"));
         FileFilter jsonFilter = new FileNameExtensionFilter("JSON file","json");
+
+        UIManager.put("FileChooser.readOnly", Boolean.TRUE);  
+        fileChooser = new JFileChooser(PROJECTS_DIRECTORY);
         fileChooser.setFileFilter(jsonFilter);
         fileChooser.setAcceptAllFileFilterUsed(false);
     }
