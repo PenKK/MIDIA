@@ -132,4 +132,31 @@ public class TestBlock {
         assertEquals(block.getNotesTimeline().size(), cloneBlock.getNotesTimeline().size());
         assertEquals(block.getStartTick(), cloneBlock.getStartTick());
     }
+
+    @Test
+    void testGetDuration() {
+        block.setStartTick(0);
+        Note note = new Note(22, 20, 88, 900);
+        Note note2 = new Note(42, 60, 22, 100);
+
+        block.addNote(note);
+        assertEquals(block.getDurationTicks(), 900 + 88);
+        block.addNote(note2);
+        assertEquals(block.getDurationTicks(), 900 + 88);
+        block.removeNote(0);
+        assertEquals(block.getDurationTicks(), 100 + 22);
+        block.removeNote(0);
+        assertEquals(block.getDurationTicks(), 0);
+
+        block.setStartTick(100);
+
+        block.addNote(note);
+        assertEquals(block.getDurationTicks(), 900 + 88);
+        block.addNote(note2);
+        assertEquals(block.getDurationTicks(), 900 + 88);
+        block.removeNote(0);
+        assertEquals(block.getDurationTicks(), 100 + 22);
+        block.removeNote(0);
+        assertEquals(block.getDurationTicks(), 0);
+    }
 }
