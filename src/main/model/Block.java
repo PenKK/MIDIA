@@ -95,4 +95,16 @@ public class Block implements Writable {
 
         return notesJson;
     }
+
+    // EFFECTS: returns the length of ticks that the block has an active note
+    public int getDurationTicks() {
+        int duration = 0;
+        for (Note note : notes) {
+            int noteEnd = note.getDurationTicks() + note.getStartTick();
+            if (noteEnd > duration) {
+                duration = noteEnd;
+            }
+        }
+        return duration;
+    }
 }
