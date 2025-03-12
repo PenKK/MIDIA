@@ -1,5 +1,6 @@
 package ui.tabs.timeline.ruler;
 
+import java.awt.Color;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
@@ -10,6 +11,7 @@ public class RulerCanvas extends JPanel {
     // EFFECTS: Sets null border for zero padding, borders will be drawn via Graphics
     RulerCanvas() {
         this.setBorder(null);
+        this.setBackground(Color.GRAY);
     }
 
     
@@ -17,6 +19,7 @@ public class RulerCanvas extends JPanel {
     // EFFECTS: Paints the ruler
     @Override
     public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         g.drawRect(0, 0, 100, 100); // place holder
     }
 

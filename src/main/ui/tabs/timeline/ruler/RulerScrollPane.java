@@ -15,6 +15,10 @@ import ui.tabs.timeline.midi.MidiTrackPanel;
 // Panel that shows the tickmarks above timeline to indicate beat marks and other timely infomration
 public class RulerScrollPane extends JScrollPane implements PropertyChangeListener {
 
+    public static final int BEAT_WIDTH = 25;
+    public static final int RULER_HEIGHT = MidiTrackPanel.HEIGHT / 4;
+    public static final int DEFAULT_RULER_HEIGHT = 800;
+
     RulerCanvas container;
     Timeline timeline;
 
@@ -23,19 +27,31 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
         timeline = Timeline.getInstance();
         container = new RulerCanvas();
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
+
         Menu.addRepaintListener(this);
-        int quarterHeight = MidiTrackPanel.HEIGHT / 4;
+        Timeline.addObserver(this);
+
+        this.setPreferredSize(new Dimension(DEFAULT_RULER_HEIGHT, RULER_HEIGHT));
+        this.setMaximumSize(new Dimension(Integer.MAX_VALUE, RULER_HEIGHT));
+        this.setMinimumSize(new Dimension(DEFAULT_RULER_HEIGHT, RULER_HEIGHT));
 
         this.setBorder(null);
-        this.setPreferredSize(new Dimension(800, quarterHeight));
-        this.setMaximumSize(new Dimension(Integer.MAX_VALUE, quarterHeight));
-        this.setMinimumSize(new Dimension(800, quarterHeight));
 
         this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
-        
+
         this.setViewportView(container);
         this.setAlignmentX(Component.LEFT_ALIGNMENT);
+    }
+
+    public void updateLength(int midiTrackWidth) {
+        System.out.println(midiTrackWidth);
+        container.setPreferredSize(new Dimension(midiTrackWidth, RULER_HEIGHT));
+        container.setMinimumSize(new Dimension(midiTrackWidth, RULER_HEIGHT));
+        container.setMaximumSize(new Dimension(midiTrackWidth, RULER_HEIGHT));
+
+        revalidate();
+        repaint();
     }
 
     // MODIFIES: this
@@ -54,6 +70,8 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
         }
     }
 
-    
+    public RulerCanvas getCanvas() {
+        return container;
+    }
 
 }

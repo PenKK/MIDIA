@@ -2,67 +2,78 @@ package ui.tabs.timeline;
 
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 
+import model.Timeline;
 import ui.tabs.timeline.midi.MidiTrackPanel;
 import ui.tabs.timeline.midi.MidiTrackScrollPane;
 import ui.tabs.timeline.ruler.RulerScrollPane;
 
 // Holds the timeline view, and a ruler at the top
-public class TimelineViewPanel extends JPanel implements AdjustmentListener, ComponentListener {
+public class TimelineViewPanel extends JPanel implements PropertyChangeListener, AdjustmentListener {
 
-    MidiTrackScrollPane timelineScrollPane;
+    MidiTrackScrollPane midiTrackScrollPane;
     RulerScrollPane ruler;
 
     // EFFECTS: Creates timeline view container, and initializes sub components
     public TimelineViewPanel() {
-        timelineScrollPane = new MidiTrackScrollPane();
+        midiTrackScrollPane = new MidiTrackScrollPane();
         ruler = new RulerScrollPane();
 
-        timelineScrollPane.addComponentListener(this);
-        timelineScrollPane.getHorizontalScrollBar().addAdjustmentListener(this);
+        Timeline.addObserver(this);
+
+        syncHorizontalScrollBars();
 
         this.setName("Timeline");
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(MidiTrackPanel.BORDER);
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.add(ruler);
-        this.add(timelineScrollPane);
+        this.add(midiTrackScrollPane);
+
+        revalidate();
+        repaint();
     }
 
-    // TODO
-    // private void syncHorizontalBar() {
-    //     JScrollBar timelineHBar = timelineScrollPane.getHorizontalScrollBar();
-    //     JScrollBar rulerHBar = timelineScrollPane.getHorizontalScrollBar();
-    //     rulerHBar.setModel(timelineHBar.getModel());
-    // }
+
+    private void syncHorizontalScrollBars() {
+        JScrollBar tracksBar = midiTrackScrollPane.getHorizontalScrollBar();
+        tracksBar.addAdjustmentListener(this);
+    }
+
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+        
+        switch (propertyName) {
+            case "timeline":
+                ruler.updateLength(midiTrackScrollPane.getWidth() + 50);
+                break;
+        
+            default:
+                break;
+        }
+    }
+
 
     @Override
     public void adjustmentValueChanged(AdjustmentEvent e) {
-        // ruler.getHorizontalScrollBar().setValue(e.getValue());
+        JScrollBar rulerBar = ruler.getHorizontalScrollBar();
+        rulerBar.setValue(e.getValue());
+
+        // RulerCanvas canvas = ruler.getCanvas();
+
+        // SwingUtilities.invokeLater(() -> {
+        //     canvas.getParent().revalidate();
+        //     canvas.getParent().repaint();
+        // });
     }
 
-    @Override
-    public void componentResized(ComponentEvent e) {
-        ruler.setSize(e.getComponent().getWidth(), ruler.getHeight());
-    }
 
-    @Override
-    public void componentMoved(ComponentEvent e) {
-
-    }
-
-    @Override
-    public void componentShown(ComponentEvent e) {
-
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent e) {
-
-    }
 }
