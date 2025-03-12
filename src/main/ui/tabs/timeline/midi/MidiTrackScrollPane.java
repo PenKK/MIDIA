@@ -39,7 +39,7 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
     // EFFECTS: clears all MidiTrackPanels and then populates according to current Timeline
     private void updateMidiTrackPanels() {
         Timeline timeline = Timeline.getInstance();
-
+        
         if (timeline == null) {
             System.err.println("Timeline instance returned null, unable to update rows");
             return;

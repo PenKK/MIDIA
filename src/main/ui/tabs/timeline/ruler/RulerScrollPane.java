@@ -52,6 +52,9 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
 
         revalidate();
         repaint();
+
+        container.revalidate();
+        container.repaint();
     }
 
     // MODIFIES: this

@@ -26,7 +26,7 @@ public class MidiTrackPanel extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        this.setPreferredSize(new Dimension(800, HEIGHT));
+        this.setPreferredSize(new Dimension(750, HEIGHT));
         this.setMaximumSize(new Dimension(Integer.MAX_VALUE, HEIGHT));
 
         labelPanel = new MidiTrackLabelPanel(midiTrack);

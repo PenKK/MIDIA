@@ -35,9 +35,6 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.add(ruler);
         this.add(midiTrackScrollPane);
-
-        revalidate();
-        repaint();
     }
 
 
@@ -53,9 +50,8 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
         
         switch (propertyName) {
             case "timeline":
-                ruler.updateLength(midiTrackScrollPane.getWidth() + 50);
+                ruler.updateLength(midiTrackScrollPane.getWidth());
                 break;
-        
             default:
                 break;
         }
