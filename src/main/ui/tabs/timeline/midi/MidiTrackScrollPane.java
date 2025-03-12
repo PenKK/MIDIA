@@ -1,4 +1,4 @@
-package ui.tabs.timeline;
+package ui.tabs.timeline.midi;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -11,17 +11,16 @@ import javax.swing.ScrollPaneConstants;
 
 import model.MidiTrack;
 import model.Timeline;
-import ui.tabs.timeline.midi.MidiTrackPanel;
 
 // JPanel that holds the interactable view of the timeline, rendered using graphics
-public class TimelineScrollPane extends JScrollPane implements PropertyChangeListener {
+public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeListener {
 
     ArrayList<MidiTrackPanel> midiTrackPanels;
     Timeline timeline;
     JPanel container;
 
     // EFFECTS: initializes the timeline 
-    public TimelineScrollPane() {
+    public MidiTrackScrollPane() {
         container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 

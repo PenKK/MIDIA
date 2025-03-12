@@ -9,17 +9,18 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import ui.tabs.timeline.midi.MidiTrackPanel;
+import ui.tabs.timeline.midi.MidiTrackScrollPane;
 import ui.tabs.timeline.ruler.RulerScrollPane;
 
 // Holds the timeline view, and a ruler at the top
 public class TimelineViewPanel extends JPanel implements AdjustmentListener, ComponentListener {
 
-    TimelineScrollPane timelineScrollPane;
+    MidiTrackScrollPane timelineScrollPane;
     RulerScrollPane ruler;
 
     // EFFECTS: Creates timeline view container, and initializes sub components
     public TimelineViewPanel() {
-        timelineScrollPane = new TimelineScrollPane();
+        timelineScrollPane = new MidiTrackScrollPane();
         ruler = new RulerScrollPane();
 
         timelineScrollPane.addComponentListener(this);
