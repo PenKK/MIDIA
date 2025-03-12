@@ -1,8 +1,5 @@
 package ui;
 
-import java.io.IOException;
-
-import javax.sound.midi.MidiUnavailableException;
 import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
