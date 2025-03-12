@@ -7,9 +7,11 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 
 import model.Timeline;
 import ui.menubar.Menu;
+import ui.tabs.timeline.midi.MidiTrackLabelPanel;
 import ui.tabs.timeline.midi.MidiTrackPanel;
 
 // Panel that shows the tickmarks above timeline to indicate beat marks and other timely infomration
@@ -44,17 +46,22 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
         this.setAlignmentX(Component.LEFT_ALIGNMENT);
     }
 
-    public void updateLength(int midiTrackWidth) {
-        System.out.println(midiTrackWidth);
-        container.setPreferredSize(new Dimension(midiTrackWidth, RULER_HEIGHT));
-        container.setMinimumSize(new Dimension(midiTrackWidth, RULER_HEIGHT));
-        container.setMaximumSize(new Dimension(midiTrackWidth, RULER_HEIGHT));
+    // EFFECTS: adjusts the width of the ruler to match the MidiTrackPanel rows
+    public void updateWidth(int midiTrackWidth) {
+        int adjustedWidth = midiTrackWidth + MidiTrackLabelPanel.LABEL_BOX_WIDTH;
+        SwingUtilities.invokeLater(() -> {
+            container.revalidate();
+            container.repaint();
+            container.setPreferredSize(new Dimension(adjustedWidth, RULER_HEIGHT));
+            container.setMinimumSize(new Dimension(adjustedWidth, RULER_HEIGHT));
+            container.setMaximumSize(new Dimension(adjustedWidth, RULER_HEIGHT));
 
-        revalidate();
-        repaint();
+            revalidate();
+            repaint();
 
-        container.revalidate();
-        container.repaint();
+            container.revalidate();
+            container.repaint();
+        });
     }
 
     // MODIFIES: this

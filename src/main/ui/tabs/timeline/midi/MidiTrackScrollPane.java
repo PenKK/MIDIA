@@ -34,6 +34,7 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
         Timeline.addObserver(this);
 
         updateMidiTrackPanels();
+
     }
 
     // EFFECTS: clears all MidiTrackPanels and then populates according to current Timeline
@@ -49,6 +50,7 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
         for (MidiTrack track : timeline.getTracks()) {
             MidiTrackPanel currentPanel = new MidiTrackPanel(track);
             midiTrackPanels.add(currentPanel);
+
             container.add(currentPanel);
         }
 
@@ -80,5 +82,17 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
             default:
                 break;
         }
+    }
+
+    // EFFECTS: returns the widest panel width (scaled) in midiTrackPanels, with a minimum of 500
+    public int getScaledWidth() {
+        int maxWidth = 0;
+        for (MidiTrackPanel midiTrack : midiTrackPanels) {
+            int width = midiTrack.getScaledWidth();
+            if (width > maxWidth) {
+                maxWidth = width;
+            }
+        }
+        return maxWidth;
     }
 }

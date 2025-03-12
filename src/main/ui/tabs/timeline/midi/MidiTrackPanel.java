@@ -17,6 +17,7 @@ public class MidiTrackPanel extends JPanel {
 
     public static final MatteBorder BORDER = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK);
     public static final int HEIGHT = 100;
+    public static final int MINIMUM_WIDTH = 500;
 
     MidiTrackLabelPanel labelPanel;
     MidiTrackRenderPanel renderPanel;
@@ -30,13 +31,18 @@ public class MidiTrackPanel extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        this.setMinimumSize(new Dimension(renderPanel.getEndPixel(), HEIGHT));
-        System.out.println(renderPanel.getEndPixel());
-        this.setPreferredSize(new Dimension(renderPanel.getEndPixel(), HEIGHT));
+        int panelWidth = renderPanel.getScaledWidth() + MINIMUM_WIDTH;
+
+        this.setMinimumSize(new Dimension(panelWidth, HEIGHT));
+        this.setPreferredSize(new Dimension(panelWidth, HEIGHT));
         this.setMaximumSize(new Dimension(Integer.MAX_VALUE, HEIGHT));
 
         this.add(labelPanel);
         this.add(renderPanel);
+    }
+
+    public int getScaledWidth() {
+        return renderPanel.getScaledWidth();
     }
 
 }

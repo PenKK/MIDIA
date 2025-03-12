@@ -5,6 +5,9 @@ import java.awt.Graphics;
 
 import javax.swing.JPanel;
 
+import ui.tabs.timeline.midi.MidiTrackLabelPanel;
+import ui.tabs.timeline.midi.MidiTrackPanel;
+
 // The canvas (but is a JPanel) for Graphics to draw on to show Ruler ticks
 public class RulerCanvas extends JPanel {
 
@@ -20,7 +23,7 @@ public class RulerCanvas extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawRect(0, 0, 100, 100); // place holder
+        g.drawLine(MidiTrackLabelPanel.LABEL_BOX_WIDTH, 0, MidiTrackLabelPanel.LABEL_BOX_WIDTH, MidiTrackPanel.HEIGHT); // place holder
     }
 
 
