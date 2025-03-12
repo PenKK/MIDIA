@@ -21,18 +21,22 @@ public class MidiTrackPanel extends JPanel {
     MidiTrackLabelPanel labelPanel;
     MidiTrackRenderPanel renderPanel;
 
+    // Creates sub panels, adjusts width according to render panel length, and then adds it to this
     public MidiTrackPanel(MidiTrack midiTrack) {
+        labelPanel = new MidiTrackLabelPanel(midiTrack);
+        renderPanel = new MidiTrackRenderPanel(midiTrack);
+
         this.setBorder(BORDER);
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        this.setPreferredSize(new Dimension(750, HEIGHT));
+        this.setMinimumSize(new Dimension(renderPanel.getEndPixel(), HEIGHT));
+        System.out.println(renderPanel.getEndPixel());
+        this.setPreferredSize(new Dimension(renderPanel.getEndPixel(), HEIGHT));
         this.setMaximumSize(new Dimension(Integer.MAX_VALUE, HEIGHT));
-
-        labelPanel = new MidiTrackLabelPanel(midiTrack);
-        renderPanel = new MidiTrackRenderPanel(midiTrack);
 
         this.add(labelPanel);
         this.add(renderPanel);
     }
+
 }
