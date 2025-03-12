@@ -26,7 +26,6 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
         ruler = new RulerScrollPane();
 
         Timeline.addObserver(this);
-
         syncHorizontalScrollBars();
 
         this.setName("Timeline");
@@ -37,13 +36,15 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
         this.add(midiTrackScrollPane);
     }
 
-
+    // MODIFIES: this
+    // EFFECTS: triggers adjustment listener for when the midiTrackScrollPane is scrolled
     private void syncHorizontalScrollBars() {
         JScrollBar tracksBar = midiTrackScrollPane.getHorizontalScrollBar();
         tracksBar.addAdjustmentListener(this);
     }
 
-
+    // MODFIES: this
+    // EFFECTS: listens for changes in the timeline and executes methods accordingly
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
@@ -58,17 +59,14 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
     }
 
 
+    // MODIFIES: this
+    // EFFECTS: adjusts the (invisible) scrollBar of the ruler to copy the midiTrackScrollPane scrollbar
     @Override
     public void adjustmentValueChanged(AdjustmentEvent e) {
-        JScrollBar rulerBar = ruler.getHorizontalScrollBar();
-        rulerBar.setValue(e.getValue());
-
-        // RulerCanvas canvas = ruler.getCanvas();
-
-        // SwingUtilities.invokeLater(() -> {
-        //     canvas.getParent().revalidate();
-        //     canvas.getParent().repaint();
-        // });
+        if (e.getSource().equals(midiTrackScrollPane.getHorizontalScrollBar())) {
+            JScrollBar rulerBar = ruler.getHorizontalScrollBar();
+            rulerBar.setValue(e.getValue());
+        }
     }
 
 
