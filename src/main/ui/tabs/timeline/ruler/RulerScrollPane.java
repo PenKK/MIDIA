@@ -19,7 +19,7 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
 
     public static final int BEAT_WIDTH = 25;
     public static final int RULER_HEIGHT = MidiTrackPanel.HEIGHT / 4;
-    public static final int DEFAULT_RULER_HEIGHT = 800;
+    public static final int DEFAULT_RULER_WIDTH = 800;
 
     RulerCanvas container;
     Timeline timeline;
@@ -32,13 +32,13 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
 
         Timeline.addObserver(this);
 
-        this.setPreferredSize(new Dimension(DEFAULT_RULER_HEIGHT, RULER_HEIGHT));
+        this.setPreferredSize(new Dimension(DEFAULT_RULER_WIDTH, RULER_HEIGHT));
         this.setMaximumSize(new Dimension(Integer.MAX_VALUE, RULER_HEIGHT));
-        this.setMinimumSize(new Dimension(DEFAULT_RULER_HEIGHT, RULER_HEIGHT));
+        this.setMinimumSize(new Dimension(DEFAULT_RULER_WIDTH, RULER_HEIGHT));
 
         this.setBorder(null);
 
-        this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
         this.setViewportView(container);
@@ -48,16 +48,12 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
     // EFFECTS: adjusts the width of the ruler to match the MidiTrackPanel rows
     public void updateWidth(int midiTrackWidth) {
         int adjustedWidth = midiTrackWidth + MidiTrackLabelPanel.LABEL_BOX_WIDTH;
+        System.out.println(adjustedWidth);
         SwingUtilities.invokeLater(() -> {
-            container.revalidate();
-            container.repaint();
             container.setPreferredSize(new Dimension(adjustedWidth, RULER_HEIGHT));
             container.setMinimumSize(new Dimension(adjustedWidth, RULER_HEIGHT));
             container.setMaximumSize(new Dimension(adjustedWidth, RULER_HEIGHT));
-
-            revalidate();
-            repaint();
-
+            
             container.revalidate();
             container.repaint();
         });
@@ -71,8 +67,7 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
 
         switch (propertyName) {
             case "timeline":
-                revalidate();
-                repaint();
+
                 break;
             default:
                 break;

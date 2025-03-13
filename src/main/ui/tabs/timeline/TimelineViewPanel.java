@@ -44,6 +44,12 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
     }
 
     // MODFIES: this
+    // EFFECTS: resizes the ruler's width to match the midiTrackScrollPane's width
+    private void updateRulerDimensions() {
+        ruler.updateWidth(midiTrackScrollPane.getScaledWidth());
+    }
+
+    // MODFIES: this
     // EFFECTS: listens for changes in the timeline and executes methods accordingly
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -51,7 +57,7 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
 
         switch (propertyName) {
             case "timeline":
-                ruler.updateWidth(midiTrackScrollPane.getScaledWidth());
+            updateRulerDimensions();
                 break;
             default:
                 break;
@@ -66,6 +72,6 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
             JScrollBar rulerBar = ruler.getHorizontalScrollBar();
             rulerBar.setValue(e.getValue());
         }
-    }
 
+    }
 }
