@@ -30,9 +30,7 @@ public class FileMenu extends Menu implements ActionListener {
 
     // EFFECTS: creates file JMenu, its file chooser, its JMenuItems, and apppriate action listeners
     FileMenu() {
-        super();
-        this.setText("File");
-
+        super("File");
         open = new JMenuItem("Open Project");
         save = new JMenuItem("Save Project");
 

@@ -30,7 +30,6 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
         container = new RulerCanvas();
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
 
-        Menu.addRepaintListener(this);
         Timeline.addObserver(this);
 
         this.setPreferredSize(new Dimension(DEFAULT_RULER_HEIGHT, RULER_HEIGHT));
