@@ -27,19 +27,20 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         Timeline.addObserver(this);
 
         this.setIconImage(ImageIO.read(new File("lib/images/logo.png")));
-
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setTitle("Digital Audio Workstation");
         this.setBounds(new Rectangle(800, 600));
 
         this.setJMenuBar(menuBar);
         this.add(tabbedPane);
 
+        updateTitle();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
     }
 
+    // MOFIES: this
+    // EFFECTS: listens for certain property updates and runs methods accordingly
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
@@ -49,6 +50,8 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         }
     }
 
+    // MODIFIES: this
+    // EFFECTS: updates the title of the JFrame to timeline instance name
     private void updateTitle() {
         String newTitle = Timeline.getInstance().getProjectName().concat(" - Digital Audio Workstation");
         this.setTitle(newTitle);
