@@ -22,7 +22,7 @@ import persistance.Writable;
 // Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
 public class Timeline implements Writable {
 
-    private static final int PULSES_PER_QUARTER_NOTE = 960;
+    public static final int PULSES_PER_QUARTER_NOTE = 960;
     private static final float DEFAULT_BPM = 120;
 
     private static Timeline instance; // singleton 

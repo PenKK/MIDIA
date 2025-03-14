@@ -62,7 +62,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     }
 
     // EFFECTS: returns the value scaled by a factor of RENDER_SCALE, rounded to the nearest integer
-    private int scalePixelsRender(int value) {
+    public static int scalePixelsRender(int value) {
         return (int) Math.round(value * RENDER_SCALE);
     }
 
