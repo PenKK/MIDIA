@@ -37,7 +37,7 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
 
         this.setBorder(null);
 
-        this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
         this.setViewportView(container);
