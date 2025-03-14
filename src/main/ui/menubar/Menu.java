@@ -1,9 +1,11 @@
 package ui.menubar;
 
+import java.awt.event.ActionListener;
+
 import javax.swing.JMenu;
 
 // Represents a Menu in the MenuBar
-public class Menu extends JMenu {
+public abstract class Menu extends JMenu implements ActionListener {
 
     // EFFECTS: Creates menu with the specified name
     Menu(String labelText) {

@@ -1,14 +1,12 @@
 package ui.menubar;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.swing.JFileChooser;
-import javax.swing.JMenuItem;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -18,30 +16,26 @@ import persistance.JsonReader;
 import persistance.JsonWriter;
 
 // The File dropdown Menu, responsible for saving and loading and other file settings
-public class FileMenu extends Menu implements ActionListener {
+public class FileMenu extends Menu {
 
     private static final String PROJECTS_DIRECTORY = "data/projects";
 
-    private JMenuItem open;
-    private JMenuItem save;
+    private MenuItem open;
+    private MenuItem save;
+    private MenuItem delete;
 
     private JFileChooser fileChooser;
-
 
     // EFFECTS: creates file JMenu, its file chooser, its JMenuItems, and apppriate action listeners
     FileMenu() {
         super("File");
-        open = new JMenuItem("Open Project");
-        save = new JMenuItem("Save Project");
+        open = new MenuItem("Open Project", this);
+        save = new MenuItem("Save Project", this);
+        delete = new MenuItem("Delete a Project", this);
 
-        this.add(open);
-        this.add(save);
-        open.addActionListener(this);
-        save.addActionListener(this);
+        FileFilter jsonFilter = new FileNameExtensionFilter("JSON file", "json");
 
-        FileFilter jsonFilter = new FileNameExtensionFilter("JSON file","json");
-
-        UIManager.put("FileChooser.readOnly", Boolean.TRUE);  
+        UIManager.put("FileChooser.readOnly", Boolean.TRUE);
         fileChooser = new JFileChooser(PROJECTS_DIRECTORY);
         fileChooser.setFileFilter(jsonFilter);
         fileChooser.setAcceptAllFileFilterUsed(false);
@@ -50,10 +44,12 @@ public class FileMenu extends Menu implements ActionListener {
     // EFFECTS: Assigns actions to methods
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == open) {
+        if (e.getSource().equals(open)) {
             openProject();
-        } else if (e.getSource() == save) {
+        } else if (e.getSource().equals(save)) {
             saveProject();
+        } else if (e.getSource().equals(delete)) {
+            deleteProject();
         }
     }
 
@@ -68,7 +64,7 @@ public class FileMenu extends Menu implements ActionListener {
 
         String path = fileChooser.getSelectedFile().getPath();
         JsonReader reader = new JsonReader(path);
-        
+
         try {
             Timeline newTimeline = reader.read();
             Timeline.setInstance(newTimeline);
@@ -83,7 +79,7 @@ public class FileMenu extends Menu implements ActionListener {
     // EFFECTS: saves current project instance to a prompted path
     public void saveProject() {
         int result = fileChooser.showSaveDialog(this);
-        
+
         if (result == JFileChooser.CANCEL_OPTION || result == JFileChooser.ERROR_OPTION) {
             return;
         }
@@ -94,7 +90,7 @@ public class FileMenu extends Menu implements ActionListener {
         try {
             Timeline instance = Timeline.getInstance();
             instance.setProjectName(fileChooser.getSelectedFile().getName());
-            
+
             writer.open();
             writer.write(instance);
             writer.close();
@@ -102,6 +98,27 @@ public class FileMenu extends Menu implements ActionListener {
         } catch (FileNotFoundException e) {
             System.out.println("Invalid path in Project Save");
         }
+    }
 
+    // MODIFIES: Timeline instance, projects folder
+    // EFFECTS: prompts user to delete a project with JFileChooser
+    private void deleteProject() {
+        int result = fileChooser.showDialog(this, "Delete Project");
+
+        if (result == JFileChooser.CANCEL_OPTION || result == JFileChooser.ERROR_OPTION) {
+            return;
+        }
+
+        fileChooser.getSelectedFile().delete();
+
+        try {
+            Timeline.setInstance(new Timeline("New Project"));
+        } catch (MidiUnavailableException e) {
+            System.out.println("MIDI device unavaliable");
+            e.printStackTrace();
+        } catch (InvalidMidiDataException e) {
+            System.out.println("Unable to create new timeline, invalid MIDI data found");
+            e.printStackTrace();
+        }
     }
 }
