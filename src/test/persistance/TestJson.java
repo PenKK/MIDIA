@@ -16,6 +16,9 @@ public class TestJson {
         assertEquals(timeline1.getProjectName(), timeline2.getProjectName());
         assertEquals(timeline1.getBPM(), timeline2.getBPM());
         assertEquals(timeline1.getPositionTick(), timeline2.getPositionTick());
+        assertEquals(timeline1.getBeatDivision(), timeline2.getBeatDivision());
+        assertEquals(timeline1.getBeatsPerMeasure(), timeline2.getBeatsPerMeasure());
+
         assertEquals(timeline1.getAvaliableChannels(),
                 timeline2.getAvaliableChannels());
 

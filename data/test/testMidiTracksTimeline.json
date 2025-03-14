@@ -1,5 +1,6 @@
 {
     "positionTick": 0,
+    "beatsPerMeasure": 4,
     "avaliableChannels": [
         2,
         3,
@@ -16,6 +17,7 @@
         15
     ],
     "beatsPerMinute": 160,
+    "beatDivision": 4,
     "projectName": "joe",
     "midiTracks": [
         {

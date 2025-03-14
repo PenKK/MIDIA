@@ -14,7 +14,7 @@ import model.MidiTrack;
 public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     private MidiTrack midiTrack;
-    public static final double RENDER_SCALE = 0.05;
+    public static final double RENDER_SCALE = 0.1;
     public static final Color BLOCK_BACKGROUND_COLOR = new Color(0, 162, 240);
     public static final int HEIGHT_MARGIN_PIXELS = 5;
     public static final int CORNER_ROUNDING = 10;

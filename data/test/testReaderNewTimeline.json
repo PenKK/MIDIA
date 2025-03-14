@@ -18,6 +18,8 @@
         14,
         15
     ],
+    "beatDivision": 4,
+    "beatsPerMeasure": 4,
     "projectName": "New project",
     "midiTracks": []
 }

@@ -24,6 +24,8 @@ public class Timeline implements Writable {
 
     public static final int PULSES_PER_QUARTER_NOTE = 960;
     private static final float DEFAULT_BPM = 120;
+    private static final int DEFAULT_BEAT_DIVISON = 4;
+    private static final int DEFAULT_BEATS_PER_MEASURE = 4;
 
     private static Timeline instance; // singleton 
     private static PropertyChangeSupport pcs = new PropertyChangeSupport(Timeline.class);
@@ -36,6 +38,9 @@ public class Timeline implements Writable {
     private float bpm;
     private int positionTick;
     private ArrayList<Integer> avaliableChannels;
+
+    private int beatDivision;
+    private int beatsPerMeasure;
 
 
     // EFFECTS: Creates a timeline with a single sequence with no tracks and the positon 
@@ -53,6 +58,9 @@ public class Timeline implements Writable {
         bpm = DEFAULT_BPM;
         midiTracks = new ArrayList<>();
         positionTick = 0;
+
+        beatDivision = DEFAULT_BEAT_DIVISON;
+        beatsPerMeasure = DEFAULT_BEATS_PER_MEASURE;
 
         avaliableChannels = new ArrayList<>() {
             {
@@ -226,6 +234,18 @@ public class Timeline implements Writable {
         pcs.firePropertyChange("projectName", oldProjectName, newProjectName);
     }
 
+    public void setBeatDivision(int newBeatDivision) {
+        int oldBeatDivision = this.beatDivision;
+        this.beatDivision = newBeatDivision;
+        pcs.firePropertyChange("beatDivision", oldBeatDivision, newBeatDivision);
+    }
+
+    public void setBeatsPerMeasure(int newBeatsPerMeasure) {
+        int oldBeatsPerMeasure = this.beatsPerMeasure;
+        this.beatsPerMeasure = newBeatsPerMeasure;
+        pcs.firePropertyChange("beatsPerMeasure", oldBeatsPerMeasure, newBeatsPerMeasure);
+    }
+
     // EFFECTS: returns the calculation of the sequence length in milliseconds
     public double getLengthMs() {
         return ticksToMs(getLengthTicks());
@@ -343,6 +363,15 @@ public class Timeline implements Writable {
         return projectName;
     }
 
+    
+    public int getBeatsPerMeasure() {
+        return beatsPerMeasure;
+    }
+
+    public int getBeatDivision() {
+        return beatDivision;
+    }
+
     // MODIFIES: this
     // EFFECTS: adds midiTrack to the list of tracks
     public void addMidiTrack(MidiTrack midiTrack) {
@@ -362,6 +391,8 @@ public class Timeline implements Writable {
         timelineJson.put("beatsPerMinute", bpm);
         timelineJson.put("positionTick", positionTick);
         timelineJson.put("avaliableChannels", new JSONArray(avaliableChannels));
+        timelineJson.put("beatDivision", beatDivision);
+        timelineJson.put("beatsPerMeasure", beatsPerMeasure);
         timelineJson.put("midiTracks", midiTracksToJson());
 
         return timelineJson;
