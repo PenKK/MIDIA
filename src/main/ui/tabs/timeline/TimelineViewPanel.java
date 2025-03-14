@@ -18,12 +18,12 @@ import ui.tabs.timeline.ruler.RulerScrollPane;
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener, AdjustmentListener {
 
     MidiTrackScrollPane midiTrackScrollPane;
-    RulerScrollPane ruler;
+    RulerScrollPane rulerScrollPane;
 
     // EFFECTS: Creates timeline view container, and initializes sub components
     public TimelineViewPanel() {
         midiTrackScrollPane = new MidiTrackScrollPane();
-        ruler = new RulerScrollPane();
+        rulerScrollPane = new RulerScrollPane();
 
         Timeline.addObserver(this);
         syncHorizontalScrollBars();
@@ -32,7 +32,7 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(MidiTrackPanel.BORDER);
         this.setAlignmentX(LEFT_ALIGNMENT);
-        this.add(ruler);
+        this.add(rulerScrollPane);
         this.add(midiTrackScrollPane);
     }
 
@@ -46,7 +46,7 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
     // MODFIES: this
     // EFFECTS: resizes the ruler's width to match the midiTrackScrollPane's width
     private void updateRulerDimensions() {
-        ruler.updateWidth(midiTrackScrollPane.getScaledWidth());
+        rulerScrollPane.updateWidth(midiTrackScrollPane.getContainerWidth());
     }
 
     // MODFIES: this
@@ -69,7 +69,7 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
     @Override
     public void adjustmentValueChanged(AdjustmentEvent e) {
         if (e.getSource().equals(midiTrackScrollPane.getHorizontalScrollBar())) {
-            JScrollBar rulerBar = ruler.getHorizontalScrollBar();
+            JScrollBar rulerBar = rulerScrollPane.getHorizontalScrollBar();
             rulerBar.setValue(e.getValue());
         }
 

@@ -19,7 +19,7 @@ public class MidiTrackLabelPanel extends JPanel {
         this.midiTrack = midiTrack;
         this.add(new JLabel(midiTrack.getName()));
         this.setBackground(Color.GRAY);
-
+        
         this.setPreferredSize(new Dimension(LABEL_BOX_WIDTH, MidiTrackPanel.HEIGHT));
         this.setMaximumSize(new Dimension(LABEL_BOX_WIDTH, MidiTrackPanel.HEIGHT));
         this.setMinimumSize(new Dimension(LABEL_BOX_WIDTH, MidiTrackPanel.HEIGHT));

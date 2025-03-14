@@ -8,10 +8,9 @@ import java.beans.PropertyChangeListener;
 import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import model.Timeline;
-import ui.menubar.Menu;
-import ui.tabs.timeline.midi.MidiTrackLabelPanel;
 import ui.tabs.timeline.midi.MidiTrackPanel;
 
 // Panel that shows the tickmarks above timeline to indicate beat marks and other timely infomration
@@ -46,16 +45,13 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
     }
 
     // EFFECTS: adjusts the width of the ruler to match the MidiTrackPanel rows
-    public void updateWidth(int midiTrackWidth) {
-        int adjustedWidth = midiTrackWidth + MidiTrackLabelPanel.LABEL_BOX_WIDTH;
-        System.out.println(adjustedWidth);
+    public void updateWidth(int width) {
         SwingUtilities.invokeLater(() -> {
-            container.setPreferredSize(new Dimension(adjustedWidth, RULER_HEIGHT));
-            container.setMinimumSize(new Dimension(adjustedWidth, RULER_HEIGHT));
-            container.setMaximumSize(new Dimension(adjustedWidth, RULER_HEIGHT));
-            
+            int widthScrollBoxAdjusted = width + (int) UIManager.get("ScrollBar.width");
+            container.setPreferredSize(new Dimension(widthScrollBoxAdjusted, RULER_HEIGHT));
             container.revalidate();
-            container.repaint();
+            revalidate(); // Ensure the scroll pane updates its viewport
+            repaint();
         });
     }
 

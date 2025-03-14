@@ -84,15 +84,8 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
         }
     }
 
-    // EFFECTS: returns the widest panel width (scaled) in midiTrackPanels, with a minimum of 500
-    public int getScaledWidth() {
-        int maxWidth = 0;
-        for (MidiTrackPanel midiTrack : midiTrackPanels) {
-            int width = midiTrack.getScaledWidth();
-            if (width > maxWidth) {
-                maxWidth = width;
-            }
-        }
-        return maxWidth;
+    // EFFECTS: returns width of the scrollPanes container
+    public int getContainerWidth() {
+        return container.getPreferredSize().width;
     }
 }
