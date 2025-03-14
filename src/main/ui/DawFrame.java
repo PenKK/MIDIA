@@ -3,8 +3,10 @@ package ui;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.sound.midi.MidiUnavailableException;
 import javax.swing.JFrame;
 
@@ -24,6 +26,8 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         menuBar = new MenuBar();
         Timeline.addObserver(this);
 
+        this.setIconImage(ImageIO.read(new File("lib/images/logo.png")));
+
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("Digital Audio Workstation");
         this.setBounds(new Rectangle(800, 600));
@@ -33,12 +37,13 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
 
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
-        
+
         if (propertyName.equals("timeline") || propertyName.equals("projectName")) {
             updateTitle();
         }
