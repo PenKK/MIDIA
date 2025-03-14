@@ -9,15 +9,16 @@ import javax.swing.JPanel;
 
 import model.Block;
 import model.MidiTrack;
+import ui.tabs.timeline.TimelineViewPanel;
 
 // Interactable render of the MidiTrack's blocks and notes
 public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
-    private MidiTrack midiTrack;
-    public static final double RENDER_SCALE = 0.1;
     public static final Color BLOCK_BACKGROUND_COLOR = new Color(0, 162, 240);
     public static final int HEIGHT_MARGIN_PIXELS = 5;
     public static final int CORNER_ROUNDING = 10;
+    
+    private MidiTrack midiTrack;
 
     // EFFECTS: recieves the specified midiTrack, and listens for mouse events
     public MidiTrackRenderPanel(MidiTrack midiTrack) {
@@ -63,7 +64,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     // EFFECTS: returns the value scaled by a factor of RENDER_SCALE, rounded to the nearest integer
     public static int scalePixelsRender(int value) {
-        return (int) Math.round(value * RENDER_SCALE);
+        return (int) Math.round(value * TimelineViewPanel.RENDER_SCALE);
     }
 
     @Override

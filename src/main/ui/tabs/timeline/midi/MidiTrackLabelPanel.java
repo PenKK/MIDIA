@@ -10,9 +10,10 @@ import model.MidiTrack;
 
 // Interactable display of the general information of a MidiTrack
 public class MidiTrackLabelPanel extends JPanel {
-    MidiTrack midiTrack;
-
+    
     public final static int LABEL_BOX_WIDTH = 100;
+
+    private MidiTrack midiTrack;
 
     // EFFECTS: Creates the label panel which contains information about the MidiTrack for that row
     public MidiTrackLabelPanel(MidiTrack midiTrack) {

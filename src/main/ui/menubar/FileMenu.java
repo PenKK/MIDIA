@@ -22,6 +22,7 @@ public class FileMenu extends Menu {
 
     private MenuItem open;
     private MenuItem save;
+    private MenuItem newProject;
     private MenuItem delete;
 
     private JFileChooser fileChooser;
@@ -31,6 +32,7 @@ public class FileMenu extends Menu {
         super("File");
         open = new MenuItem("Open Project", this);
         save = new MenuItem("Save Project", this);
+        newProject = new MenuItem("New Project", this);
         delete = new MenuItem("Delete a Project", this);
 
         FileFilter jsonFilter = new FileNameExtensionFilter("JSON file", "json");
@@ -44,7 +46,9 @@ public class FileMenu extends Menu {
     // EFFECTS: Assigns actions to methods
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(open)) {
+        if (e.getSource().equals(newProject)) {
+            newProject();
+        } else if (e.getSource().equals(open)) {
             openProject();
         } else if (e.getSource().equals(save)) {
             saveProject();
@@ -53,9 +57,18 @@ public class FileMenu extends Menu {
         }
     }
 
+    private void newProject() {
+        try {
+            Timeline.setInstance(new Timeline("New Project"));
+        } catch (MidiUnavailableException | InvalidMidiDataException e) {
+            System.out.println("Unable to create and set new Timline instance");
+            e.printStackTrace();
+        }
+    }
+
     // MODIFIES: Timeline (singleton instance)
     // EFFECTS: Prompts user to pick a project json file to load
-    public void openProject() {
+    private void openProject() {
         int result = fileChooser.showOpenDialog(this);
 
         if (result == JFileChooser.CANCEL_OPTION || result == JFileChooser.ERROR_OPTION) {
@@ -77,7 +90,7 @@ public class FileMenu extends Menu {
 
     // MODIFIES: projects folder
     // EFFECTS: saves current project instance to a prompted path
-    public void saveProject() {
+    private void saveProject() {
         int result = fileChooser.showSaveDialog(this);
 
         if (result == JFileChooser.CANCEL_OPTION || result == JFileChooser.ERROR_OPTION) {

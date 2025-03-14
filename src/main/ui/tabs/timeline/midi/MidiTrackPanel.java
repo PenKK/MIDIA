@@ -19,8 +19,8 @@ public class MidiTrackPanel extends JPanel {
     public static final int HEIGHT = 100;
     public static final int MINIMUM_WIDTH = 500;
 
-    MidiTrackLabelPanel labelPanel;
-    MidiTrackRenderPanel renderPanel;
+    private MidiTrackLabelPanel labelPanel;
+    private MidiTrackRenderPanel renderPanel;
 
     // Creates sub panels, adjusts width according to render panel length, and then adds it to this
     public MidiTrackPanel(MidiTrack midiTrack) {

@@ -10,26 +10,20 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import model.Timeline;
 import ui.tabs.timeline.midi.MidiTrackPanel;
 
 // Panel that shows the tickmarks above timeline to indicate beat marks and other timely infomration
-public class RulerScrollPane extends JScrollPane implements PropertyChangeListener {
+public class RulerScrollPane extends JScrollPane {
 
     public static final int BEAT_WIDTH = 25;
     public static final int RULER_HEIGHT = MidiTrackPanel.HEIGHT / 4;
     public static final int DEFAULT_RULER_WIDTH = 800;
 
-    RulerCanvas container;
-    Timeline timeline;
-
+    private RulerCanvas container;
     // EFFECTS: Constructs the pane, setting dimensions and appropirate listeners and viewports
     public RulerScrollPane() {
-        timeline = Timeline.getInstance();
         container = new RulerCanvas();
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
-
-        Timeline.addObserver(this);
 
         this.setPreferredSize(new Dimension(DEFAULT_RULER_WIDTH, RULER_HEIGHT));
         this.setMaximumSize(new Dimension(Integer.MAX_VALUE, RULER_HEIGHT));
@@ -53,21 +47,6 @@ public class RulerScrollPane extends JScrollPane implements PropertyChangeListen
             revalidate(); // Ensure the scroll pane updates its viewport
             repaint();
         });
-    }
-
-    // MODIFIES: this
-    // EFFECTS: listens for property changes and executes appropriate methods
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        String propertyName = evt.getPropertyName();
-
-        switch (propertyName) {
-            case "timeline":
-
-                break;
-            default:
-                break;
-        }
     }
 
     public RulerCanvas getCanvas() {

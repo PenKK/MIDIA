@@ -15,9 +15,8 @@ import model.Timeline;
 // JPanel that holds the interactable view of the timeline, rendered using graphics
 public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeListener {
 
-    ArrayList<MidiTrackPanel> midiTrackPanels;
-    Timeline timeline;
-    JPanel container;
+    private ArrayList<MidiTrackPanel> midiTrackPanels;
+    private JPanel container;
 
     // EFFECTS: initializes the timeline 
     public MidiTrackScrollPane() {
