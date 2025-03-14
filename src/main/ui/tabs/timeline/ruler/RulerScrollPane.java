@@ -2,8 +2,6 @@ package ui.tabs.timeline.ruler;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;

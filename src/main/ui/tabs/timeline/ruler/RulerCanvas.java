@@ -51,12 +51,12 @@ public class RulerCanvas extends JPanel implements PropertyChangeListener {
         updateMeasurements();
         for (int i = MidiTrackLabelPanel.LABEL_BOX_WIDTH; i < getWidth(); i += pixelWidthTick) {
             int height = TICK_HEIGHT;
-            int x = (i - MidiTrackLabelPanel.LABEL_BOX_WIDTH);
+            int beatPixelWidth = pixelWidthTick * beatDivisions;
+            int x = i - MidiTrackLabelPanel.LABEL_BOX_WIDTH;
 
-            if (x % (pixelWidthTick * beatsPerMeasure * beatDivisions) == 0) {
+            if (x % (beatPixelWidth * beatsPerMeasure) == 0) {
                 height = RulerScrollPane.RULER_HEIGHT; // One measure
-            } else 
-            if (x % (pixelWidthTick * beatDivisions) == 0) {
+            } else if (x % beatPixelWidth == 0) {
                 height = BEAT_TICK_HEIGHT; // One beat
             }
 
