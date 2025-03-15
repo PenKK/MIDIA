@@ -36,7 +36,6 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         updateTitle();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-
     }
 
     // MOFIES: this
