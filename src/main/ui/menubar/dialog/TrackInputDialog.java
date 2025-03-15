@@ -38,7 +38,7 @@ public class TrackInputDialog extends JDialog implements ActionListener {
         this.setLayout(new GridLayout(0, 2, 10, 10));
         this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
 
-        nameField = new JTextField("hi");
+        nameField = new JTextField();
         percussiveCheckBox = new JCheckBox();
         instrumentComboBox = new JComboBox<>(InstrumentalInstrument.values());
         create = new JButton("Create");
@@ -73,6 +73,11 @@ public class TrackInputDialog extends JDialog implements ActionListener {
     private void submit() {
         Instrument instrument = (Instrument) instrumentComboBox.getSelectedItem();
         name = nameField.getText();
+
+        if (name.equals("")) {
+            return;
+        }
+
         percussive = percussiveCheckBox.isSelected();
         programNumber = instrument.getProgramNumber();
         dispose();
