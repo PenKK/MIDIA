@@ -4,11 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 import model.Block;
 import model.MidiTrack;
+import model.Note;
 import ui.tabs.timeline.TimelineViewPanel;
 
 // Interactable render of the MidiTrack's blocks and notes
@@ -16,8 +18,12 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     public static final Color BLOCK_BACKGROUND_COLOR = new Color(0, 162, 240);
     public static final int HEIGHT_MARGIN_PIXELS = 5;
-    public static final int CORNER_ROUNDING = 10;
-    
+    public static final int CORNER_ROUNDING_BLOCK = 10;
+    public static final int CORNER_ROUNDING_NOTE = 4;
+    public static final int NOTE_BORDER_WIDTH = 4;
+    public static final int NOTE_RANGE_PADDING = 4;
+    public static final int MIN_NOTE_RANGE = 8;
+
     private MidiTrack midiTrack;
 
     // EFFECTS: recieves the specified midiTrack, and listens for mouse events
@@ -31,9 +37,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        for (Block block : midiTrack.getBlocks()) {
-            drawBlock(block, g);
-        }
+        drawBlocks(midiTrack.getBlocks(), g);
     }
 
     // EFFECTS: draws the specified block with scaling.
@@ -46,8 +50,68 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
         int y1 = HEIGHT_MARGIN_PIXELS / 2;
         int height = MidiTrackPanel.HEIGHT - HEIGHT_MARGIN_PIXELS;
 
-        g.fillRoundRect(x1, y1, width, height, 10, 10);
+        g.fillRoundRect(x1, y1, width, height, CORNER_ROUNDING_BLOCK, CORNER_ROUNDING_BLOCK);
+
         g.setColor(tempColor);
+    }
+
+    // EFFECTS: returns the pitch range of the notes within the given block
+    private int[] determineRange(ArrayList<Block> blocks) {
+        if (blocks.isEmpty()) {
+            return new int[] {0, 0};
+        }
+        int minPitch = blocks.get(0).getNotes().get(0).getPitch();
+        int maxPitch = minPitch;
+
+        for (Block b : blocks) {
+            if (!midiTrack.isPercussive()) {
+                for (Note n : b.getNotes()) {
+                    int pitchN = n.getPitch();
+                    if (pitchN > maxPitch) {
+                        maxPitch = pitchN;
+                    }
+
+                    if (pitchN < minPitch) {
+                        minPitch = pitchN;
+                    }
+                }
+            }
+        }
+
+        return new int[] {minPitch, maxPitch};
+    }
+
+    // MODIFIES: this
+    // EFFECTS: draws the notes of  the specified block into the Track with 
+    //          note height relative to the other drawn notes
+    private void drawBlocks(ArrayList<Block> blocks, Graphics g) {
+        int[] pitchRange = determineRange(blocks);
+        int minPitch = pitchRange[0];
+        int maxPitch = pitchRange[1];
+
+        int trackHeight = MidiTrackPanel.HEIGHT - HEIGHT_MARGIN_PIXELS;
+        int range = Math.max(Math.abs(minPitch - maxPitch), MIN_NOTE_RANGE);
+        int height = trackHeight / (range + NOTE_RANGE_PADDING);
+        int borderHeight = height + NOTE_BORDER_WIDTH;
+
+        for (Block b : blocks) {
+            drawBlock(b, g);
+            for (Note n : b.getNotesTimeline()) {
+                int x = scalePixelsRender(n.getStartTick());
+                int y = trackHeight - (n.getPitch() - minPitch + NOTE_RANGE_PADDING / 2) * height;
+                int width = scalePixelsRender(n.getDurationTicks());
+
+                int borderX = x - NOTE_BORDER_WIDTH / 2;
+                int borderY = y - NOTE_BORDER_WIDTH / 2;
+                int widthBorder = width + NOTE_BORDER_WIDTH;
+                g.setColor(Color.BLACK);
+                g.fillRoundRect(borderX, borderY, widthBorder, borderHeight, CORNER_ROUNDING_NOTE,
+                        CORNER_ROUNDING_NOTE);
+
+                g.setColor(new Color(199, 167, 223));
+                g.fillRoundRect(x, y, width, height, CORNER_ROUNDING_NOTE, CORNER_ROUNDING_NOTE);
+            }
+        }
     }
 
     // EFFECTS: returns the last horizontal pixel that is drawn from blocks (scaled)

@@ -16,7 +16,7 @@ public class RulerCanvas extends JPanel implements PropertyChangeListener {
 
     public static final int TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.3);
     public static final int BEAT_TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.6);
-    private int pixelWidthTick;
+    private int tickPixelWidth;
     private int beatDivisions;
     private int beatsPerMeasure;
 
@@ -42,16 +42,16 @@ public class RulerCanvas extends JPanel implements PropertyChangeListener {
         Timeline timeline = Timeline.getInstance();
         beatDivisions = timeline.getBeatDivision();
         beatsPerMeasure = timeline.getBeatsPerMeasure();
-        pixelWidthTick = MidiTrackRenderPanel.scalePixelsRender(Timeline.PULSES_PER_QUARTER_NOTE / beatDivisions);
+        tickPixelWidth = MidiTrackRenderPanel.scalePixelsRender(Timeline.PULSES_PER_QUARTER_NOTE / beatDivisions);
     }
 
     // MODIFIES: this
     // EFFECTS: Draws the ticks marks of measures, beats, and divisions, according to timeline instance
     private void drawAllTickMarks(Graphics g) {
         updateMeasurements();
-        for (int i = MidiTrackLabelPanel.LABEL_BOX_WIDTH; i < getWidth(); i += pixelWidthTick) {
+        for (int i = MidiTrackLabelPanel.LABEL_BOX_WIDTH; i < getWidth(); i += tickPixelWidth) {
             int height = TICK_HEIGHT;
-            int beatPixelWidth = pixelWidthTick * beatDivisions;
+            int beatPixelWidth = tickPixelWidth * beatDivisions;
             int x = i - MidiTrackLabelPanel.LABEL_BOX_WIDTH;
 
             if (x % (beatPixelWidth * beatsPerMeasure) == 0) {
