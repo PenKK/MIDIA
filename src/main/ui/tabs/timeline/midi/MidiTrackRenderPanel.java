@@ -82,8 +82,8 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: draws the notes of  the specified block into the Track with 
-    //          note height relative to the other drawn notes
+    // EFFECTS: draws the specified blocks and their notes. the height of notes is 
+    //          drawn relative to all other notes in the blocks
     private void drawBlocks(ArrayList<Block> blocks, Graphics g) {
         int[] pitchRange = determineRange(blocks);
         int minPitch = pitchRange[0];
