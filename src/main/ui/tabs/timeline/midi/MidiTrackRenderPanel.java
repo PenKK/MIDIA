@@ -16,13 +16,14 @@ import ui.tabs.timeline.TimelineViewPanel;
 // Interactable render of the MidiTrack's blocks and notes
 public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
-    public static final Color BLOCK_BACKGROUND_COLOR = new Color(0, 162, 240);
-    public static final int HEIGHT_MARGIN_PIXELS = 6;
-    public static final int CORNER_ROUNDING_BLOCK = 2;
-    public static final int NOTE_BORDER_WIDTH = 4;
-    public static final int NOTE_RANGE_PADDING = 4;
-    public static final int MIN_NOTE_RANGE = 8;
-    public static final int SMALL_RANGE_NOTE_Y = 5;
+    private static final Color NOTE_COLOR = new Color(199, 167, 223);
+    private static final Color BLOCK_BACKGROUND_COLOR = new Color(0, 162, 240);
+    private static final int HEIGHT_MARGIN_PIXELS = 6;
+    private static final int CORNER_ROUNDING_BLOCK = 2;
+    private static final int NOTE_BORDER_WIDTH = 4;
+    private static final int NOTE_RANGE_PADDING = 2;
+    private static final int MIN_NOTE_RANGE = 8;
+    private static final int SMALL_RANGE_NOTE_Y = 5;
 
     private MidiTrack midiTrack;
 
@@ -98,11 +99,12 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
         for (Block b : blocks) {
             drawBlock(b, g);
             for (Note n : b.getNotesTimeline()) {
-                int noteY = n.getPitch() - minPitch - (range == MIN_NOTE_RANGE ? -SMALL_RANGE_NOTE_Y : NOTE_RANGE_PADDING / 2);
+                int noteY = n.getPitch() - minPitch
+                        - (range == MIN_NOTE_RANGE ? -SMALL_RANGE_NOTE_Y : NOTE_RANGE_PADDING / 2);
 
                 int x = scalePixelsRender(n.getStartTick());
                 int y = trackHeight - (int) Math.round(noteY * heightDouble - HEIGHT_MARGIN_PIXELS / 2);
-                int height = (int) Math.round(heightDouble);   
+                int height = (int) Math.round(heightDouble);
                 int width = scalePixelsRender(n.getDurationTicks());
 
                 int borderX = x - NOTE_BORDER_WIDTH / 2;
@@ -111,7 +113,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
                 g.setColor(Color.BLACK);
                 g.fillRoundRect(borderX, borderY, widthBorder, borderHeight, noteCornerRounding, noteCornerRounding);
 
-                g.setColor(new Color(199, 167, 223));
+                g.setColor(NOTE_COLOR);
                 g.fillRoundRect(x, y, width, height, noteCornerRounding, noteCornerRounding);
             }
         }
