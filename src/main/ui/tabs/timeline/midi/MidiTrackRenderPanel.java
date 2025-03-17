@@ -17,12 +17,12 @@ import ui.tabs.timeline.TimelineViewPanel;
 public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     public static final Color BLOCK_BACKGROUND_COLOR = new Color(0, 162, 240);
-    public static final int HEIGHT_MARGIN_PIXELS = 5;
-    public static final int CORNER_ROUNDING_BLOCK = 10;
-    public static final int CORNER_ROUNDING_NOTE = 4;
+    public static final int HEIGHT_MARGIN_PIXELS = 6;
+    public static final int CORNER_ROUNDING_BLOCK = 2;
     public static final int NOTE_BORDER_WIDTH = 4;
     public static final int NOTE_RANGE_PADDING = 4;
     public static final int MIN_NOTE_RANGE = 8;
+    public static final int SMALL_RANGE_NOTE_Y = 5;
 
     private MidiTrack midiTrack;
 
@@ -58,7 +58,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     // EFFECTS: returns the pitch range of the notes within the given block
     private int[] determineRange(ArrayList<Block> blocks) {
         if (blocks.isEmpty()) {
-            return new int[] {0, 0};
+            return new int[] { 0, 0 };
         }
         int minPitch = blocks.get(0).getNotes().get(0).getPitch();
         int maxPitch = minPitch;
@@ -78,7 +78,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
             }
         }
 
-        return new int[] {minPitch, maxPitch};
+        return new int[] { minPitch, maxPitch };
     }
 
     // MODIFIES: this
@@ -91,25 +91,28 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
         int trackHeight = MidiTrackPanel.HEIGHT - HEIGHT_MARGIN_PIXELS;
         int range = Math.max(Math.abs(minPitch - maxPitch), MIN_NOTE_RANGE);
-        int height = trackHeight / (range + NOTE_RANGE_PADDING);
-        int borderHeight = height + NOTE_BORDER_WIDTH;
+        double heightDouble = trackHeight / (double) (range + NOTE_RANGE_PADDING);
+        int borderHeight = (int) Math.round(heightDouble + NOTE_BORDER_WIDTH);
+        int noteCornerRounding = (int) Math.round(heightDouble * 0.3);
 
         for (Block b : blocks) {
             drawBlock(b, g);
             for (Note n : b.getNotesTimeline()) {
+                int noteY = n.getPitch() - minPitch - (range == MIN_NOTE_RANGE ? -SMALL_RANGE_NOTE_Y : NOTE_RANGE_PADDING / 2);
+
                 int x = scalePixelsRender(n.getStartTick());
-                int y = trackHeight - (n.getPitch() - minPitch + NOTE_RANGE_PADDING / 2) * height;
+                int y = trackHeight - (int) Math.round(noteY * heightDouble - HEIGHT_MARGIN_PIXELS / 2);
+                int height = (int) Math.round(heightDouble);   
                 int width = scalePixelsRender(n.getDurationTicks());
 
                 int borderX = x - NOTE_BORDER_WIDTH / 2;
                 int borderY = y - NOTE_BORDER_WIDTH / 2;
                 int widthBorder = width + NOTE_BORDER_WIDTH;
                 g.setColor(Color.BLACK);
-                g.fillRoundRect(borderX, borderY, widthBorder, borderHeight, CORNER_ROUNDING_NOTE,
-                        CORNER_ROUNDING_NOTE);
+                g.fillRoundRect(borderX, borderY, widthBorder, borderHeight, noteCornerRounding, noteCornerRounding);
 
                 g.setColor(new Color(199, 167, 223));
-                g.fillRoundRect(x, y, width, height, CORNER_ROUNDING_NOTE, CORNER_ROUNDING_NOTE);
+                g.fillRoundRect(x, y, width, height, noteCornerRounding, noteCornerRounding);
             }
         }
     }
