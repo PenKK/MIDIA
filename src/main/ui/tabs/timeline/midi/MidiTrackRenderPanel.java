@@ -22,7 +22,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     private static final int CORNER_ROUNDING_BLOCK = 2;
     private static final int NOTE_BORDER_WIDTH = 4;
     private static final int NOTE_RANGE_PADDING = 2;
-    private static final int MIN_NOTE_RANGE = 8;
+    private static final int MIN_NOTE_RANGE = 16;
     private static final int SMALL_RANGE_NOTE_Y = 5;
 
     private MidiTrack midiTrack;
@@ -99,11 +99,11 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
         for (Block b : blocks) {
             drawBlock(b, g);
             for (Note n : b.getNotesTimeline()) {
-                int noteY = n.getPitch() - minPitch
-                        - (range == MIN_NOTE_RANGE ? -SMALL_RANGE_NOTE_Y : NOTE_RANGE_PADDING / 2);
-
+                int relativePitch = n.getPitch() - minPitch
+                        - (range == MIN_NOTE_RANGE ? -SMALL_RANGE_NOTE_Y : -NOTE_RANGE_PADDING / 2);
+                System.out.println(relativePitch);
                 int x = scalePixelsRender(n.getStartTick());
-                int y = trackHeight - (int) Math.round(noteY * heightDouble - HEIGHT_MARGIN_PIXELS / 2);
+                int y = trackHeight - (int) Math.round(relativePitch * heightDouble - HEIGHT_MARGIN_PIXELS / 2);
                 int height = (int) Math.round(heightDouble);
                 int width = scalePixelsRender(n.getDurationTicks());
 
