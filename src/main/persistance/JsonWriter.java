@@ -19,6 +19,7 @@ public class JsonWriter {
 
     // EFFECTS: constructs writer that writes at the specified path
     public JsonWriter(String path) {
+        path = path.trim();
         if (!path.endsWith(".json")) {
             path = path.concat(".json");
         }
