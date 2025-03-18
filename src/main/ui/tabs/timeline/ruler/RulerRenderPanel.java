@@ -12,7 +12,7 @@ import ui.tabs.timeline.midi.MidiTrackLabelPanel;
 import ui.tabs.timeline.midi.MidiTrackRenderPanel;
 
 // The canvas (but is a JPanel) for Graphics to draw on to show Ruler ticks
-public class RulerCanvas extends JPanel implements PropertyChangeListener {
+public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
 
     public static final int TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.3);
     public static final int BEAT_TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.6);
@@ -21,7 +21,7 @@ public class RulerCanvas extends JPanel implements PropertyChangeListener {
     private int beatsPerMeasure;
 
     // EFFECTS: Sets null border for zero padding, borders will be drawn via Graphics
-    RulerCanvas() {
+    RulerRenderPanel() {
         this.setBorder(null);
         this.setBackground(Color.GRAY);
         Timeline.addObserver(this);

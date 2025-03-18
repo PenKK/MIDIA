@@ -17,10 +17,10 @@ public class RulerScrollPane extends JScrollPane {
     public static final int RULER_HEIGHT = MidiTrackPanel.HEIGHT / 4;
     public static final int DEFAULT_RULER_WIDTH = 800;
 
-    private RulerCanvas container;
+    private RulerRenderPanel container;
     // EFFECTS: Constructs the pane, setting dimensions and appropirate listeners and viewports
     public RulerScrollPane() {
-        container = new RulerCanvas();
+        container = new RulerRenderPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
 
         this.setPreferredSize(new Dimension(DEFAULT_RULER_WIDTH, RULER_HEIGHT));
@@ -47,7 +47,7 @@ public class RulerScrollPane extends JScrollPane {
         });
     }
 
-    public RulerCanvas getCanvas() {
+    public RulerRenderPanel getCanvas() {
         return container;
     }
 

@@ -39,7 +39,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        drawBlocks(midiTrack.getBlocks(), g);
+        drawTrack(midiTrack.getBlocks(), g);
     }
 
     // EFFECTS: draws the specified block with scaling.
@@ -86,7 +86,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     // MODIFIES: this
     // EFFECTS: draws the specified blocks and their notes. the height of notes is 
     //          drawn relative to all other notes in the blocks
-    private void drawBlocks(ArrayList<Block> blocks, Graphics g) {
+    private void drawTrack(ArrayList<Block> blocks, Graphics g) {
         int[] pitchRange = determineRange(blocks);
 
         int minPitch = pitchRange[0];
