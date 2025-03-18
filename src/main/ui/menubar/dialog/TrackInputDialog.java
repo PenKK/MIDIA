@@ -72,7 +72,7 @@ public class TrackInputDialog extends JDialog implements ActionListener {
     // EFFECTS: stores values in the fields and then closes the dialog
     private void submit() {
         Instrument instrument = (Instrument) instrumentComboBox.getSelectedItem();
-        name = nameField.getText();
+        name = nameField.getText().trim();
 
         if (name.equals("")) {
             return;
