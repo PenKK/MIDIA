@@ -16,14 +16,15 @@ import ui.tabs.timeline.TimelineViewPanel;
 // Interactable render of the MidiTrack's blocks and notes
 public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
-    private static final Color NOTE_COLOR = new Color(199, 167, 223);
-    private static final Color BLOCK_BACKGROUND_COLOR = new Color(0, 162, 240);
-    private static final int HEIGHT_MARGIN_PIXELS = 6;
+    private static final Color NOTE_COLOR = Color.WHITE;
+    private static final Color BLOCK_BACKGROUND_COLOR = new Color(30, 162, 240, 200);
+
     private static final int CORNER_ROUNDING_BLOCK = 2;
-    private static final int NOTE_BORDER_WIDTH = 4;
-    private static final int NOTE_RANGE_PADDING = 2;
+    private static final int BLOCK_HEIGHT_MARGIN = 6;
+
     private static final int MIN_NOTE_RANGE = 16;
-    private static final int SMALL_RANGE_NOTE_Y = 5;
+    private static final int     NOTE_RANGE_PADDING = 2;
+    private static final double  NOTE_CORNER_RADIUS = 0.3;
 
     private MidiTrack midiTrack;
 
@@ -48,8 +49,8 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
         int width = scalePixelsRender(Math.max(block.getDurationTicks(), 50));
         int x1 = scalePixelsRender(block.getStartTick());
-        int y1 = HEIGHT_MARGIN_PIXELS / 2;
-        int height = MidiTrackPanel.HEIGHT - HEIGHT_MARGIN_PIXELS;
+        int y1 = BLOCK_HEIGHT_MARGIN / 2;
+        int height = MidiTrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
 
         g.fillRoundRect(x1, y1, width, height, CORNER_ROUNDING_BLOCK, CORNER_ROUNDING_BLOCK);
 
@@ -86,35 +87,31 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     // EFFECTS: draws the specified blocks and their notes. the height of notes is 
     //          drawn relative to all other notes in the blocks
     private void drawBlocks(ArrayList<Block> blocks, Graphics g) {
-        int[] pitchRange = determineRange(blocks);
+        int[] pitchRange = midiTrack.isPercussive() ? new int[] { 0, 0 } : determineRange(blocks);
+
         int minPitch = pitchRange[0];
         int maxPitch = pitchRange[1];
 
-        int trackHeight = MidiTrackPanel.HEIGHT - HEIGHT_MARGIN_PIXELS;
-        int range = Math.max(Math.abs(minPitch - maxPitch), MIN_NOTE_RANGE);
-        double heightDouble = trackHeight / (double) (range + NOTE_RANGE_PADDING);
-        int borderHeight = (int) Math.round(heightDouble + NOTE_BORDER_WIDTH);
-        int noteCornerRounding = (int) Math.round(heightDouble * 0.3);
+        int trackHeight = MidiTrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
+        int range = Math.abs(minPitch - maxPitch);
+        int rangeAdjusted = Math.max(range, MIN_NOTE_RANGE);
+        double heightDouble = trackHeight / (double) (rangeAdjusted + NOTE_RANGE_PADDING);
+        int noteRounding = (int) Math.round(heightDouble * NOTE_CORNER_RADIUS);
 
         for (Block b : blocks) {
             drawBlock(b, g);
             for (Note n : b.getNotesTimeline()) {
-                int relativePitch = n.getPitch() - minPitch
-                        - (range == MIN_NOTE_RANGE ? -SMALL_RANGE_NOTE_Y : -NOTE_RANGE_PADDING / 2);
+                int pitchOffset = minPitch - (range == 0 ? (MIN_NOTE_RANGE / 2) : 0);
+                int relativePitch = n.getPitch() - pitchOffset + (NOTE_RANGE_PADDING / 2);
+
                 System.out.println(relativePitch);
                 int x = scalePixelsRender(n.getStartTick());
-                int y = trackHeight - (int) Math.round(relativePitch * heightDouble - HEIGHT_MARGIN_PIXELS / 2);
+                int y = trackHeight - (int) Math.round(relativePitch * heightDouble - BLOCK_HEIGHT_MARGIN / 2);
                 int height = (int) Math.round(heightDouble);
                 int width = scalePixelsRender(n.getDurationTicks());
-
-                int borderX = x - NOTE_BORDER_WIDTH / 2;
-                int borderY = y - NOTE_BORDER_WIDTH / 2;
-                int widthBorder = width + NOTE_BORDER_WIDTH;
-                g.setColor(Color.BLACK);
-                g.fillRoundRect(borderX, borderY, widthBorder, borderHeight, noteCornerRounding, noteCornerRounding);
-
+                
                 g.setColor(NOTE_COLOR);
-                g.fillRoundRect(x, y, width, height, noteCornerRounding, noteCornerRounding);
+                g.fillRoundRect(x, y, width, height, noteRounding, noteRounding);
             }
         }
     }
