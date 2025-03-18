@@ -59,7 +59,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     // EFFECTS: returns the pitch range of the notes within the given block
     private int[] determineRange(ArrayList<Block> blocks) {
-        if (blocks.isEmpty()) {
+        if (blocks.isEmpty() || midiTrack.isPercussive()) {
             return new int[] { 0, 0 };
         }
         int minPitch = blocks.get(0).getNotes().get(0).getPitch();
@@ -87,7 +87,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     // EFFECTS: draws the specified blocks and their notes. the height of notes is 
     //          drawn relative to all other notes in the blocks
     private void drawBlocks(ArrayList<Block> blocks, Graphics g) {
-        int[] pitchRange = midiTrack.isPercussive() ? new int[] { 0, 0 } : determineRange(blocks);
+        int[] pitchRange = determineRange(blocks);
 
         int minPitch = pitchRange[0];
         int maxPitch = pitchRange[1];
@@ -104,7 +104,6 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
                 int pitchOffset = minPitch - (range == 0 ? (MIN_NOTE_RANGE / 2) : 0);
                 int relativePitch = n.getPitch() - pitchOffset + (NOTE_RANGE_PADDING / 2);
 
-                System.out.println(relativePitch);
                 int x = scalePixelsRender(n.getStartTick());
                 int y = trackHeight - (int) Math.round(relativePitch * heightDouble - BLOCK_HEIGHT_MARGIN / 2);
                 int height = (int) Math.round(heightDouble);

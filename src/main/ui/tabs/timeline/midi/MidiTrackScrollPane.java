@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 
 import model.MidiTrack;
@@ -25,6 +26,7 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
 
         this.setBorder(null);
         this.setViewportView(container);
+        this.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
         this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         this.setAlignmentX(0);
