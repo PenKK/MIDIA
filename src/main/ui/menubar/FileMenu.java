@@ -3,6 +3,7 @@ package ui.menubar;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
@@ -81,7 +82,7 @@ public class FileMenu extends Menu {
         try {
             Timeline newTimeline = reader.read();
             Timeline.setInstance(newTimeline);
-        } catch (IOException | MidiUnavailableException e) {
+        } catch (IOException | MidiUnavailableException | InvalidPathException e) {
             System.out.println("Unable to load file");
         } catch (InvalidMidiDataException e) {
             System.out.println("The file had invalid MIDI data, cannot load");
