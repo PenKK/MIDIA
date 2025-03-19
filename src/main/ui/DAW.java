@@ -11,8 +11,11 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
 import model.Block;
+import model.Instrument;
+import model.InstrumentalInstrument;
 import model.MidiTrack;
 import model.Note;
+import model.PercussionInstrument;
 import model.Timeline;
 import persistance.JsonReader;
 import persistance.JsonWriter;
@@ -371,7 +374,16 @@ public class DAW {
         System.out.println(
                 "What instrument does this track play?\n(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
         int instrument = percussive ? getNumericalInput(35, 81, false) : (getNumericalInput(1, 128, false) - 1);
-        MidiTrack newMidiTrack = timeline.createMidiTrack(name, instrument, percussive);
+        Instrument instr = InstrumentalInstrument.ACOUSTIC_GRAND_PIANO;
+        Instrument[] allInstruments = percussive ? PercussionInstrument.values() : InstrumentalInstrument.values();
+        for (int i = percussive ? 35 : 0; i < 127; i++) {
+            Instrument check = allInstruments[i];
+            if (instrument == check.getProgramNumber()) {
+                instr = check;
+            }
+        }
+
+        MidiTrack newMidiTrack = timeline.createMidiTrack(name, instr, percussive);
         return timeline.getTracks().indexOf(newMidiTrack);
     }
 
@@ -443,7 +455,18 @@ public class DAW {
 
         int instrument = midiTrack.isPercussive() ? getNumericalInput(35, 81, false) 
                                                   : getNumericalInput(1, 128, false) - 1;
-        midiTrack.setInstrument(instrument);
+
+        Instrument instr = InstrumentalInstrument.ACOUSTIC_GRAND_PIANO;
+        Instrument[] allInstruments = midiTrack.isPercussive() ? PercussionInstrument.values() : 
+                                                                 InstrumentalInstrument.values();
+        for (int i = midiTrack.isPercussive() ? 35 : 0; i < 127; i++) {
+            Instrument check = allInstruments[i];
+            if (instrument == check.getProgramNumber()) {
+                instr = check;
+            }
+        }
+
+        midiTrack.setInstrument(instr);
     }
 
     // EFFECTS: prompts user to select a block by index to edit
@@ -460,7 +483,7 @@ public class DAW {
         System.out.printf("Track             %s%n", selectedTrack.getName());
         System.out.printf("Number of blocks  %d%n", selectedTrack.getBlocks().size());
         System.out.printf("Instrument        %d%s%n",
-                selectedTrack.getInstrument() + (selectedTrack.isPercussive() ? 0 : 1),
+                selectedTrack.getInstrument().getProgramNumber() + (selectedTrack.isPercussive() ? 0 : 1),
                 selectedTrack.isPercussive() ? " (Percussive)" : "");
         System.out.printf("Volume            %d%n", selectedTrack.getVolumeScaled());
         System.out.printf("Muted             %s%n%n", selectedTrack.isMuted() ? "Yes" : "No");
