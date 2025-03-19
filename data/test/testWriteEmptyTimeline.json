@@ -19,6 +19,7 @@
         15
     ],
     "beatsPerMinute": 120,
+    "horizontalScale": 0.3,
     "beatDivision": 4,
     "projectName": "bob",
     "midiTracks": []

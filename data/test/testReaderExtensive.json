@@ -18,6 +18,7 @@
     ],
     "beatsPerMinute": 160,
     "beatDivision": 4,
+    "horizontalScale": 0.3,
     "projectName": "aaaa",
     "midiTracks": [
         {

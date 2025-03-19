@@ -17,6 +17,7 @@
         15
     ],
     "beatsPerMinute": 160,
+    "horizontalScale": 0.3,
     "beatDivision": 4,
     "projectName": "joe",
     "midiTracks": [

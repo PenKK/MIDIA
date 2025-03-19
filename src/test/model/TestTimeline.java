@@ -55,6 +55,7 @@ public class TestTimeline extends TestJson {
         assertEquals(timeline.getPositionTick(), 0);
         assertEquals(timeline.getBeatDivision(), 4);
         assertEquals(timeline.getBeatsPerMeasure(), 4);
+        assertEquals(timeline.getHorizontalScale(), 0.3);
         assertEquals(timeline.getSequence().getResolution(), 960);
         assertEquals(timeline.getSequence().getDivisionType(), Sequence.PPQ);
         assertEquals(expectedChannels, timeline.getAvaliableChannels());

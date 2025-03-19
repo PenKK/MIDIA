@@ -20,6 +20,7 @@
     ],
     "beatDivision": 4,
     "beatsPerMeasure": 4,
+    "horizontalScale": 0.3,
     "projectName": "New project",
     "midiTracks": []
 }
