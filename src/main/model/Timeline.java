@@ -26,7 +26,7 @@ public class Timeline implements Writable {
     private static final float DEFAULT_BPM = 120;
     private static final int DEFAULT_BEAT_DIVISON = 4;
     private static final int DEFAULT_BEATS_PER_MEASURE = 4;
-    private static final double DEFAULT_HORIZONTAL_SCALE = 0.3;
+    private static final double DEFAULT_HORIZONTAL_SCALE = 0.1;
 
     private static Timeline instance; // singleton 
     private static PropertyChangeSupport pcs = new PropertyChangeSupport(Timeline.class);
