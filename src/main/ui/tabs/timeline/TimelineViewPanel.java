@@ -8,6 +8,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
+import javax.swing.SwingUtilities;
 
 import model.Timeline;
 import ui.tabs.timeline.midi.MidiTrackPanel;
@@ -17,7 +18,7 @@ import ui.tabs.timeline.ruler.RulerScrollPane;
 // Holds the timeline view, and a ruler at the top
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener, AdjustmentListener {
 
-    public static final double RENDER_SCALE = Timeline.getInstance().getHorizontalScale();
+    private static double renderScale = Timeline.getInstance().getHorizontalScale();
     private MidiTrackScrollPane midiTrackScrollPane;
     private RulerScrollPane rulerScrollPane;
 
@@ -47,7 +48,10 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
     // MODFIES: this
     // EFFECTS: resizes the ruler's width to match the midiTrackScrollPane's width
     private void updateRulerDimensions() {
-        rulerScrollPane.updateWidth(midiTrackScrollPane.getContainerWidth());
+        renderScale = Timeline.getInstance().getHorizontalScale();
+        SwingUtilities.invokeLater(() -> {
+            rulerScrollPane.updateWidth(midiTrackScrollPane.getContainerWidth());
+        });
     }
 
     // MODFIES: this
@@ -58,11 +62,15 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
 
         switch (propertyName) {
             case "timeline":
-            updateRulerDimensions();
+                updateRulerDimensions();
                 break;
             default:
                 break;
         }
+    }
+
+    public static double getRenderScale() {
+        return renderScale;
     }
 
     // MODIFIES: this

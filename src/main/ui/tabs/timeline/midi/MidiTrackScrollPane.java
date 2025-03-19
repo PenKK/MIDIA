@@ -47,7 +47,7 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
             return;
         }
 
-        clearPanels();
+        clearTrackPanels();
         for (MidiTrack track : timeline.getTracks()) {
             MidiTrackPanel currentPanel = new MidiTrackPanel(track);
             midiTrackPanels.add(currentPanel);
@@ -61,7 +61,7 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
 
     // MODFIES: this
     // EFFECTS: Removes MidiTrackPanels from the container
-    private void clearPanels() {
+    private void clearTrackPanels() {
         for (MidiTrackPanel currentMidiTrackPanel : midiTrackPanels) {
             container.remove(currentMidiTrackPanel);
         }
@@ -75,8 +75,6 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
 
         switch (propertyName) {
             case "timeline":
-                updateMidiTrackPanels();
-                break;
             case "midiTracks":
                 updateMidiTrackPanels();
                 break;
@@ -87,6 +85,7 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
 
     // EFFECTS: returns width of the scrollPanes container
     public int getContainerWidth() {
+        updateMidiTrackPanels(); // forces width update according to render scale, better solution one day maybe
         return container.getPreferredSize().width;
     }
 }

@@ -129,7 +129,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     // EFFECTS: returns the value scaled by a factor of RENDER_SCALE, rounded to the nearest integer
     public static int scalePixelsRender(int value) {
-        return (int) Math.round(value * TimelineViewPanel.RENDER_SCALE);
+        return (int) Math.round(value * TimelineViewPanel.getRenderScale());
     }
 
     @Override
@@ -144,7 +144,16 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        System.out.println(e.getClickCount());
+        if (e.getClickCount() == 2) {
+            int tick = (int) Math.round(e.getX() / TimelineViewPanel.getRenderScale());
+            
+            for (Block b : midiTrack.getBlocks()) {
+                if (b.getStartTick() <= tick && b.getStartTick() + b.getDurationTicks() >= tick) {
+                    
+                }
+            }
+            repaint();
+        }
     }
 
     @Override
