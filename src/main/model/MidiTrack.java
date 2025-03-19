@@ -59,7 +59,6 @@ public class MidiTrack implements Writable {
     //          Then converts each block from blocks to individual notes to MIDI events.    
     //          Creates one event for the note on event, and one for the end not event (per note).
     //          All created events are applied to the track.
-    //          Throws 
     public void applyToTrack(Track track) {
         ShortMessage programChangeMessage = new ShortMessage();
         ShortMessage volMessage = new ShortMessage();

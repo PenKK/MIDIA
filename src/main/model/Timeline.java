@@ -26,6 +26,7 @@ public class Timeline implements Writable {
     private static final float DEFAULT_BPM = 120;
     private static final int DEFAULT_BEAT_DIVISON = 4;
     private static final int DEFAULT_BEATS_PER_MEASURE = 4;
+    private static final double DEFAULT_HORIZONTAL_SCALE = 0.3;
 
     private static Timeline instance; // singleton 
     private static PropertyChangeSupport pcs = new PropertyChangeSupport(Timeline.class);
@@ -41,6 +42,7 @@ public class Timeline implements Writable {
 
     private int beatDivision;
     private int beatsPerMeasure;
+    private double horizontalScale;
 
 
     // EFFECTS: Creates a timeline with a single sequence with no tracks and the positon 
@@ -61,6 +63,7 @@ public class Timeline implements Writable {
 
         beatDivision = DEFAULT_BEAT_DIVISON;
         beatsPerMeasure = DEFAULT_BEATS_PER_MEASURE;
+        horizontalScale = DEFAULT_HORIZONTAL_SCALE;
 
         avaliableChannels = new ArrayList<>() {
             {
@@ -246,6 +249,12 @@ public class Timeline implements Writable {
         pcs.firePropertyChange("beatsPerMeasure", oldBeatsPerMeasure, newBeatsPerMeasure);
     }
 
+    public void setHorizontalScale(double newHorizontalScale) {
+        double oldHorizontalScale = this.horizontalScale;
+        this.horizontalScale = newHorizontalScale;
+        pcs.firePropertyChange("horizontalScale", oldHorizontalScale, newHorizontalScale);
+    }
+
     // EFFECTS: returns the calculation of the sequence length in milliseconds
     public double getLengthMs() {
         return ticksToMs(getLengthTicks());
@@ -363,6 +372,9 @@ public class Timeline implements Writable {
         return projectName;
     }
 
+    public double getHorizontalScale() {
+        return horizontalScale;
+    }
     
     public int getBeatsPerMeasure() {
         return beatsPerMeasure;
@@ -393,6 +405,7 @@ public class Timeline implements Writable {
         timelineJson.put("avaliableChannels", new JSONArray(avaliableChannels));
         timelineJson.put("beatDivision", beatDivision);
         timelineJson.put("beatsPerMeasure", beatsPerMeasure);
+        timelineJson.put("horizontalScale", horizontalScale);
         timelineJson.put("midiTracks", midiTracksToJson());
 
         return timelineJson;

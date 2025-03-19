@@ -57,6 +57,7 @@ public class JsonReader {
         int positionTick = jsonObject.getInt("positionTick");
         int beatDivision = jsonObject.getInt("beatDivision");
         int beatsPerMeasure = jsonObject.getInt("beatsPerMeasure");
+        double horizontalScale = jsonObject.getDouble("horizontalScale");
 
         JSONArray avaliableChannels = jsonObject.getJSONArray("avaliableChannels");
         ArrayList<Integer> avaliableChannelsList = parseIntegerArrayList(avaliableChannels);
@@ -68,6 +69,7 @@ public class JsonReader {
         timeline.setAvaliableChannels(avaliableChannelsList);
         timeline.setBeatDivision(beatDivision);
         timeline.setBeatsPerMeasure(beatsPerMeasure);
+        timeline.setHorizontalScale(horizontalScale);
         addMidiTracks(timeline, midiTracksJsonArray);
         return timeline;
     }
