@@ -4,7 +4,7 @@
     "beatsPerMinute": 120,
     "beatDivision": 4,
     "beatsPerMeasure": 4,
-    "horizontalScale": 0.3,
+    "horizontalScale": 0.1,
     "projectName": "Spooky Beat",
     "midiTracks": [
         {
@@ -54,7 +54,10 @@
             ],
             "channel": 0,
             "name": "spooky synth pad",
-            "instrument": 89
+            "instrument": {
+                "name": "PAD_2",
+                "className": "InstrumentalInstrument"
+            }
         },
         {
             "volume": 110,
@@ -187,7 +190,10 @@
             ],
             "channel": 9,
             "name": "bass drum",
-            "instrument": 35
+            "instrument": {
+                "name": "ACOUSTIC_BASS_DRUM",
+                "className": "PercussionInstrument"
+            }
         },
         {
             "volume": 110,
@@ -253,7 +259,10 @@
             ],
             "channel": 1,
             "name": "bass",
-            "instrument": 38
+            "instrument": {
+                "name": "ELECTRIC_BASS_FRETLESS",
+                "className": "InstrumentalInstrument"
+            }
         },
         {
             "volume": 100,
@@ -350,7 +359,10 @@
             ],
             "channel": 9,
             "name": "hi-hat",
-            "instrument": 42
+            "instrument": {
+                "name": "CLOSED_HI_HAT",
+                "className": "PercussionInstrument"
+            }
         }
     ]
 }
