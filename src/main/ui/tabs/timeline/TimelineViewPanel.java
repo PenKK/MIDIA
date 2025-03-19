@@ -17,7 +17,7 @@ import ui.tabs.timeline.ruler.RulerScrollPane;
 // Holds the timeline view, and a ruler at the top
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener, AdjustmentListener {
 
-    public static final double RENDER_SCALE = 0.1;
+    public static final double RENDER_SCALE = Timeline.getInstance().getHorizontalScale();
     private MidiTrackScrollPane midiTrackScrollPane;
     private RulerScrollPane rulerScrollPane;
 
