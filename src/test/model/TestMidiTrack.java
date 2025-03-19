@@ -19,26 +19,27 @@ import org.junit.jupiter.api.Test;
 public class TestMidiTrack {
 
     MidiTrack midiTrack;
+    Instrument instr = InstrumentalInstrument.ACOUSTIC_GRAND_PIANO;
 
     @BeforeEach
     void runBefore() {
-        midiTrack = new MidiTrack("Piano Melody", 0, 0);
+        midiTrack = new MidiTrack("Piano Melody", instr, 0);
     }
 
     @Test
     void testConstructor() {
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
-        assertEquals(midiTrack.getInstrument(), 0); // 0 is piano
+        assertEquals(midiTrack.getInstrument().getProgramNumber(), 0); // 0 is piano
         assertEquals(midiTrack.getVolume(), 100);
         assertEquals(midiTrack.getVolumeScaled(), 79); // 100 / 127
         assertEquals(midiTrack.getName(), "Piano Melody");
         assertEquals(midiTrack.getChannel(), 0);
 
-        midiTrack = new MidiTrack("Percussive drums", 35, 9);
+        midiTrack = new MidiTrack("Percussive drums", PercussionInstrument.ACOUSTIC_BASS_DRUM, 9);
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
-        assertEquals(midiTrack.getInstrument(), 35); // 35 is bass drum
+        assertEquals(midiTrack.getInstrument().getProgramNumber(), 35); // 35 is bass drum
         assertEquals(midiTrack.getVolume(), 100);
         assertEquals(midiTrack.getVolumeScaled(), 79);
         assertEquals(midiTrack.getName(), "Percussive drums");
@@ -47,17 +48,17 @@ public class TestMidiTrack {
 
     @Test
     void testConstructorOverload() {
-        midiTrack = new MidiTrack("Non Percussive", 25, 0); // 25 is acoustic guitar (nylon)
+        midiTrack = new MidiTrack("Non Percussive", InstrumentalInstrument.ACOUSTIC_GUITAR_NYLON, 0);
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
-        assertEquals(midiTrack.getInstrument(), 25);
+        assertEquals(midiTrack.getInstrument().getProgramNumber(), 24);
         assertEquals(midiTrack.getVolume(), 100);
         assertEquals(midiTrack.getName(), "Non Percussive");
 
-        midiTrack = new MidiTrack("Percussive", 38, 9); // 38 is acoustic snare
+        midiTrack = new MidiTrack("Percussive", PercussionInstrument.ACOUSTIC_SNARE, 9); // 38 is acoustic snare
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
-        assertEquals(midiTrack.getInstrument(), 38);
+        assertEquals(midiTrack.getInstrument().getProgramNumber(), 38);
         assertEquals(midiTrack.getVolume(), 100);
         assertEquals(midiTrack.getName(), "Percussive");
     }
@@ -181,15 +182,15 @@ public class TestMidiTrack {
     @Test
     void testSetInstrument() throws InvalidMidiDataException, MidiUnavailableException {
         Timeline timeline = new Timeline("test");
-        midiTrack = timeline.createMidiTrack("Piano melody", 0, false);
-        assertEquals(midiTrack.getInstrument(), 0);
-        midiTrack.setInstrument(4);
+        midiTrack = timeline.createMidiTrack("Piano melody", instr, false);
+        assertEquals(midiTrack.getInstrument().getProgramNumber(), 0);
+        midiTrack.setInstrument(InstrumentalInstrument.ELECTRIC_PIANO_1);
         timeline.updateSequence();
 
         Track t = timeline.getSequence().getTracks()[0];
         assertEquals(t.get(0).getMessage().getMessage()[1], 4);
 
-        midiTrack.setInstrument(8);
+        midiTrack.setInstrument(InstrumentalInstrument.CELESTA);
         timeline.updateSequence();
 
         t = timeline.getSequence().getTracks()[0];
@@ -272,7 +273,7 @@ public class TestMidiTrack {
         Sequence sequence = new Sequence(Sequence.PPQ, 960);
         Track track = sequence.createTrack();
 
-        midiTrack = new MidiTrack("percussive", 35, 9);
+        midiTrack = new MidiTrack("percussive", PercussionInstrument.ACOUSTIC_BASS_DRUM, 9);
         assertTrue(midiTrack.isPercussive());
         midiTrack.applyToTrack(track);
 
@@ -291,7 +292,7 @@ public class TestMidiTrack {
 
         block.addNote(note);
         midiTrack.addBlock(block);
-        midiTrack.setInstrument(40);
+        midiTrack.setInstrument(PercussionInstrument.ELECTRIC_SNARE);
         midiTrack.applyToTrack(track);
 
         byte[] noteOnData = track.get(1).getMessage().getMessage();
@@ -316,7 +317,9 @@ public class TestMidiTrack {
     @Test
     void testMidiInvalidDataException() throws InvalidMidiDataException {
         Sequence sequence = new Sequence(Sequence.PPQ, 960);
-        midiTrack.setInstrument(128); // instrument is [0, 127]
+        Block b = new Block(0);
+        b.addNote(new Note(10000, 54346462, -345435, -43));
+        midiTrack.addBlock(b);
 
         Track t = sequence.createTrack();
         try {
@@ -326,8 +329,7 @@ public class TestMidiTrack {
             // success
         }
 
-
-        midiTrack.setInstrument(0); // Will now not throw
+        b.removeNote(0); // Will now not throw
         midiTrack.applyToTrack(t); 
 
         Block blockWithInvalidNote = new Block(0);

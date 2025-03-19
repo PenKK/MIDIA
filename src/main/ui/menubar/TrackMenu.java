@@ -1,6 +1,8 @@
 package ui.menubar;
 
 import java.awt.event.ActionEvent;
+
+import model.Instrument;
 import model.Timeline;
 import ui.menubar.dialog.TrackInputDialog;
 
@@ -22,9 +24,14 @@ public class TrackMenu extends Menu {
 
         String trackName = input.getInputName();
         boolean percussive = input.isPercussive();
-        int programNumber = input.getProgramNumber();
+        Instrument instrument = input.getInstrument();
 
-        Timeline.getInstance().createMidiTrack(trackName, programNumber, percussive);
+    
+        if (trackName == null) {
+            return;
+        }
+
+        Timeline.getInstance().createMidiTrack(trackName, instrument, percussive);
     }
 
 

@@ -25,6 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 public class TestTimeline extends TestJson {
     Timeline timeline;
     ArrayList<Integer> expectedChannels;
+    Instrument instr = InstrumentalInstrument.ACOUSTIC_GRAND_PIANO;
 
     @BeforeEach
     void runBefore() throws MidiUnavailableException, InvalidMidiDataException {
@@ -65,7 +66,7 @@ public class TestTimeline extends TestJson {
     void testAddMidiTrack() {
         ArrayList<MidiTrack> expectedMidiTracks = new ArrayList<>();
 
-        MidiTrack midiTrack = timeline.createMidiTrack("cool track", 0, false);
+        MidiTrack midiTrack = timeline.createMidiTrack("cool track", instr, false);
         expectedMidiTracks.add(midiTrack);
         assertEquals(timeline.getTracks(), expectedMidiTracks);
         assertEquals(timeline.getTrack(0), expectedMidiTracks.get(0));
@@ -75,7 +76,7 @@ public class TestTimeline extends TestJson {
         expectedChannels.remove(0);
         assertEquals(expectedChannels, timeline.getAvaliableChannels());
 
-        MidiTrack anotherMidiTrack = timeline.createMidiTrack("sick violin", 0, false);
+        MidiTrack anotherMidiTrack = timeline.createMidiTrack("sick violin", instr, false);
         expectedMidiTracks.add(anotherMidiTrack);
         assertEquals(timeline.getTracks(), expectedMidiTracks);
         assertEquals(timeline.getTrack(1), expectedMidiTracks.get(1));
@@ -90,8 +91,8 @@ public class TestTimeline extends TestJson {
     @Test
     void testRemoveMidiTrack() {
         ArrayList<MidiTrack> expectedMidiTracks = new ArrayList<>();
-        MidiTrack midiTrack = timeline.createMidiTrack("cool track", 0, false);
-        MidiTrack anotherMidiTrack = timeline.createMidiTrack("sick violin", 0, false);
+        MidiTrack midiTrack = timeline.createMidiTrack("cool track", instr, false);
+        MidiTrack anotherMidiTrack = timeline.createMidiTrack("sick violin", instr, false);
 
         expectedMidiTracks.add(midiTrack);
         expectedMidiTracks.add(anotherMidiTrack);
@@ -115,15 +116,15 @@ public class TestTimeline extends TestJson {
     @Test
     void testAddRemoveMidiTrack() {
         ArrayList<MidiTrack> expectedMidiTracks = new ArrayList<>();
-        MidiTrack mt1 = timeline.createMidiTrack("cool track", 0, false);
+        MidiTrack mt1 = timeline.createMidiTrack("cool track", instr, false);
         expectedChannels.remove(0);
         assertEquals(expectedChannels, timeline.getAvaliableChannels());
 
-        MidiTrack mt2 = timeline.createMidiTrack("sick violin", 0, false);
+        MidiTrack mt2 = timeline.createMidiTrack("sick violin", instr, false);
         expectedChannels.remove(0);
         assertEquals(expectedChannels, timeline.getAvaliableChannels());
 
-        MidiTrack mt3 = timeline.createMidiTrack("bass drum", 0, true);
+        MidiTrack mt3 = timeline.createMidiTrack("bass drum", instr, true);
         // Do not remove any as the track is percussive
         assertEquals(expectedChannels, timeline.getAvaliableChannels());
 
@@ -152,22 +153,22 @@ public class TestTimeline extends TestJson {
         ArrayList<MidiTrack> midiTracks = new ArrayList<>();
 
         while (timeline.getAvaliableChannels().size() != 0) {
-            midiTracks.add(timeline.createMidiTrack("instrumental", 4, false));
+            midiTracks.add(timeline.createMidiTrack("instrumental", InstrumentalInstrument.ELECTRIC_PIANO_1, false));
         }
         assertTrue(midiTracks.size() == 15);
 
-        midiTracks.add(timeline.createMidiTrack("percussive", 0, true));
-        assertEquals(timeline.createMidiTrack("cant make more", 0, false), null);
+        midiTracks.add(timeline.createMidiTrack("percussive", instr, true));
+        assertEquals(timeline.createMidiTrack("cant make more", instr, false), null);
 
         timeline.removeMidiTrack(5);
         assertTrue(timeline.getAvaliableChannels().size() == 1);
-        assertEquals(timeline.createMidiTrack("space for 1 more", 6, false).getChannel(), 5);
-        assertEquals(timeline.createMidiTrack("cant make more", 0, false), null);
+        assertEquals(timeline.createMidiTrack("space for 1 more", InstrumentalInstrument.HARPSICHORD, false).getChannel(), 5);
+        assertEquals(timeline.createMidiTrack("cant make more", instr, false), null);
 
         assertTrue(timeline.getAvaliableChannels().isEmpty());
         timeline.removeMidiTrack(10);
         assertTrue(timeline.getAvaliableChannels().size() == 1);
-        assertEquals(timeline.createMidiTrack("space for 1 more", 6, false).getChannel(), 12);
+        assertEquals(timeline.createMidiTrack("space for 1 more", InstrumentalInstrument.HARPSICHORD, false).getChannel(), 12);
     }
 
     @Test
@@ -175,21 +176,21 @@ public class TestTimeline extends TestJson {
         ArrayList<MidiTrack> midiTracks = new ArrayList<>();
 
         while (timeline.getAvaliableChannels().size() != 0) {
-            midiTracks.add(timeline.createMidiTrack("instrumental", 4, false));
+            midiTracks.add(timeline.createMidiTrack("instrumental", InstrumentalInstrument.ELECTRIC_PIANO_1, false));
         }
         assertTrue(midiTracks.size() == 15);
 
-        MidiTrack instrumentalTrack = timeline.createMidiTrack("inst", 0, false);
-        MidiTrack percussionTrack = timeline.createMidiTrack("perc", 50, true);
+        MidiTrack instrumentalTrack = timeline.createMidiTrack("inst", instr, false);
+        MidiTrack percussionTrack = timeline.createMidiTrack("perc", PercussionInstrument.HIGH_TOM, true);
         assertNull(instrumentalTrack);
         assertNotNull(percussionTrack);
     }
 
     @Test
     void testUpdateSequence() throws InvalidMidiDataException {
-        MidiTrack mt1 = timeline.createMidiTrack("C notes", 0, false);
-        MidiTrack mt2 = timeline.createMidiTrack("cool notes", 4, false);
-        MidiTrack mt3 = timeline.createMidiTrack("basically muted", 50, false);
+        MidiTrack mt1 = timeline.createMidiTrack("C notes", instr, false);
+        MidiTrack mt2 = timeline.createMidiTrack("cool notes", InstrumentalInstrument.ELECTRIC_PIANO_1, false);
+        MidiTrack mt3 = timeline.createMidiTrack("basically muted", InstrumentalInstrument.SYNTH_STRINGS_1, false);
         mt3.setVolume(0);
         mt2.setVolume(50);
 
@@ -274,7 +275,7 @@ public class TestTimeline extends TestJson {
         Note n2 = new Note(64, 127, 960, 960);
         b.addNote(n);
         b.addNote(n2);
-        MidiTrack midiTrack = timeline.createMidiTrack("test", 0, false);
+        MidiTrack midiTrack = timeline.createMidiTrack("test", instr, false);
         midiTrack.addBlock(b);
 
         timeline.play();
@@ -339,10 +340,10 @@ public class TestTimeline extends TestJson {
 
     @Test
     void testMutedTrackUpdateTimeline() throws InvalidMidiDataException {
-        MidiTrack midiTrack1 = timeline.createMidiTrack("track", 0, false);
-        MidiTrack midiTrack2 = timeline.createMidiTrack("track", 0, true);
-        MidiTrack midiTrack3 = timeline.createMidiTrack("track", 0, true);
-        MidiTrack midiTrack4 = timeline.createMidiTrack("track", 0, true);
+        MidiTrack midiTrack1 = timeline.createMidiTrack("track", instr, false);
+        MidiTrack midiTrack2 = timeline.createMidiTrack("track", instr, true);
+        MidiTrack midiTrack3 = timeline.createMidiTrack("track", instr, true);
+        MidiTrack midiTrack4 = timeline.createMidiTrack("track", instr, true);
 
         midiTrack1.setMuted(true);
         midiTrack2.setMuted(true);
@@ -373,7 +374,7 @@ public class TestTimeline extends TestJson {
 
     @Test
     void testTempoChange() {
-        MidiTrack testTrack = timeline.createMidiTrack("track", 0, false);
+        MidiTrack testTrack = timeline.createMidiTrack("track", instr, false);
         Block testBlock = new Block(0);
         Note testNote = new Note(60, 100, 0, 960);
 
@@ -386,7 +387,7 @@ public class TestTimeline extends TestJson {
         assertEquals(timeline.getLengthMs(), 500);
         assertEquals(timeline.msToTicks(500), 960); // Check the reverse
         assertEquals(timeline.getLengthBeats(), 1); // 1 beat = 1 quarter note
-        MidiTrack testTrack2 = timeline.createMidiTrack("track2", 0, false);
+        MidiTrack testTrack2 = timeline.createMidiTrack("track2", instr, false);
         Block testBlock2 = new Block(960);
         Note testNote2 = new Note(60, 100, 0, 1920);
 

@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONObject;
+
 public enum PercussionInstrument implements Instrument {
 
     ACOUSTIC_BASS_DRUM(35, "Acoustic Bass Drum"),
@@ -64,6 +66,7 @@ public enum PercussionInstrument implements Instrument {
         return programNumber;
     }
 
+    @Override
     public String getName() {
         return name;
     }

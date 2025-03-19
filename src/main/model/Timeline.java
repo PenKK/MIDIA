@@ -114,7 +114,7 @@ public class Timeline implements Writable {
     // REQUIRES: avaliableChannels.size() >= 0
     // MODIFIES: this
     // EFFECTS: Creates a midiTrack, add its to the list of tracks and returns it
-    public MidiTrack createMidiTrack(String name, int instrument, boolean percussive) {
+    public MidiTrack createMidiTrack(String name, Instrument instrument, boolean percussive) {
         if (!percussive && avaliableChannels.size() <= 0) {
             return null;
         }

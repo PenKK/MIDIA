@@ -1,8 +1,10 @@
 package persistance;
 
 import model.Block;
+import model.InstrumentalInstrument;
 import model.MidiTrack;
 import model.Note;
+import model.PercussionInstrument;
 import model.Timeline;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -70,10 +72,10 @@ public class TestJson {
     }
 
     protected void addSampleSong(Timeline timeline) {
-        MidiTrack melody = timeline.createMidiTrack("synth pad", 89, false);
-        MidiTrack drums = timeline.createMidiTrack("bass drum", 35, true);
-        MidiTrack bass = timeline.createMidiTrack("bass", 38, false);
-        MidiTrack hiHat = timeline.createMidiTrack("hi-hat", 42, true);
+        MidiTrack melody = timeline.createMidiTrack("synth pad", InstrumentalInstrument.PAD_2, false);
+        MidiTrack drums = timeline.createMidiTrack("bass drum", PercussionInstrument.ACOUSTIC_BASS_DRUM, true);
+        MidiTrack bass = timeline.createMidiTrack("bass", InstrumentalInstrument.ELECTRIC_BASS_FRETLESS, false);
+        MidiTrack hiHat = timeline.createMidiTrack("hi-hat", PercussionInstrument.CLOSED_HI_HAT, true);
 
         melody.setVolume(127);
         drums.setVolume(110);

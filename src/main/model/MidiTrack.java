@@ -21,7 +21,7 @@ public class MidiTrack implements Writable {
     private static final int DEFAULT_VOLUME = 100;
 
     private boolean muted;
-    private int instrument; // 0 to 127 inclusive if not percussive, else 35 to 81 inclusive
+    private Instrument instrument; // 0 to 127 inclusive if not percussive, else 35 to 81 inclusive
     private int volume; // 0 to 127 inclusive
     private String name;
     private ArrayList<Block> blocks;
@@ -31,7 +31,7 @@ public class MidiTrack implements Writable {
     // EFFECTS: Creates a single track that initially: is not muted,
     //          has no blocks, set to a specified instrument, a default volume,
     //          percussive according to parameter, and a name.
-    public MidiTrack(String name, int instrument, int channel) {
+    public MidiTrack(String name, Instrument instrument, int channel) {
         this.muted = false;
         this.blocks = new ArrayList<Block>();
         this.instrument = instrument;
@@ -64,7 +64,7 @@ public class MidiTrack implements Writable {
         ShortMessage volMessage = new ShortMessage();
 
         try {
-            programChangeMessage.setMessage(ShortMessage.PROGRAM_CHANGE, getChannel(), instrument, 0);
+            programChangeMessage.setMessage(ShortMessage.PROGRAM_CHANGE, getChannel(), instrument.getProgramNumber(), 0);
             volMessage.setMessage(ShortMessage.CONTROL_CHANGE, getChannel(), 7, volume);
         } catch (InvalidMidiDataException e) {
             throw new RuntimeException("Failed to update sequence in track: " 
@@ -91,7 +91,7 @@ public class MidiTrack implements Writable {
             ShortMessage onMessage = new ShortMessage();
             ShortMessage offMessage = new ShortMessage();
             // Percussive tracks use data1 for the instrument as they have no pitch
-            int data1 = isPercussive() ? instrument : note.getPitch();
+            int data1 = isPercussive() ? instrument.getProgramNumber() : note.getPitch();
 
             onMessage.setMessage(ShortMessage.NOTE_ON, getChannel(), data1, note.getVelocity());
             offMessage.setMessage(ShortMessage.NOTE_OFF, getChannel(), data1, 0); 
@@ -127,7 +127,7 @@ public class MidiTrack implements Writable {
     }
 
     // REQUIRES: 0 <= instrument <= 127 if not percussive, else 35 <= instrument <= 81
-    public void setInstrument(int instrument) {
+    public void setInstrument(Instrument instrument) {
         this.instrument = instrument;
     }
 
@@ -156,7 +156,7 @@ public class MidiTrack implements Writable {
         return blocks;
     }
 
-    public int getInstrument() {
+    public Instrument getInstrument() {
         return instrument;
     }
 
@@ -175,7 +175,7 @@ public class MidiTrack implements Writable {
         JSONObject midiTrackJson = new JSONObject();
         
         midiTrackJson.put("channel", channel);
-        midiTrackJson.put("instrument", instrument);
+        midiTrackJson.put("instrument", instrument.toJson());
         midiTrackJson.put("volume", volume);
         midiTrackJson.put("name", name);
         midiTrackJson.put("blocks", blocksToJson());

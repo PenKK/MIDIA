@@ -14,8 +14,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import model.Block;
+import model.Instrument;
+import model.InstrumentalInstrument;
 import model.MidiTrack;
 import model.Note;
+import model.PercussionInstrument;
 import model.Timeline;
 
 // Represents a reader that reads Timeline from JSON data stored in file
@@ -92,7 +95,7 @@ public class JsonReader {
             JSONObject midiTrackData = (JSONObject) midiTrackJson;
             String name = midiTrackData.getString("name");
             int channel = midiTrackData.getInt("channel");
-            int instrument = midiTrackData.getInt("instrument");
+            Instrument instrument = parseInstrument(midiTrackData.getJSONObject("instrument"));
             int volume = midiTrackData.getInt("volume");
 
             MidiTrack currentMidiTrack = new MidiTrack(name, instrument, channel);
@@ -102,6 +105,17 @@ public class JsonReader {
             addBlocks(currentMidiTrack, blocksJsonArray);
 
             timeline.addMidiTrack(currentMidiTrack);
+        }
+    }
+
+    private Instrument parseInstrument(JSONObject instrumentJsonObject) {
+        String className = instrumentJsonObject.getString("className");
+        String name = instrumentJsonObject.getString("name");
+
+        if (className.equals("InstrumentalInstrument")) {
+            return InstrumentalInstrument.valueOf(name);
+        } else {
+            return PercussionInstrument.valueOf(name);
         }
     }
 

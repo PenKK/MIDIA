@@ -177,6 +177,7 @@ public enum InstrumentalInstrument implements Instrument {
         return programNumber;
     }
 
+    @Override
     public String getName() {
         return name;
     }

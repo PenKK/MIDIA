@@ -30,7 +30,7 @@ public class TrackInputDialog extends JDialog implements ActionListener {
 
     private String name;
     private boolean percussive;
-    private int programNumber;
+    private Instrument instrument;
 
     // EFFECTS: creates input dialog for creating a new track
     public TrackInputDialog(Component invoker, String title) {
@@ -70,8 +70,7 @@ public class TrackInputDialog extends JDialog implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: stores values in the fields and then closes the dialog
-    private void submit() {
-        Instrument instrument = (Instrument) instrumentComboBox.getSelectedItem();
+    private void submit() { 
         name = nameField.getText().trim();
 
         if (name.equals("")) {
@@ -79,7 +78,7 @@ public class TrackInputDialog extends JDialog implements ActionListener {
         }
 
         percussive = percussiveCheckBox.isSelected();
-        programNumber = instrument.getProgramNumber();
+        instrument = (Instrument) instrumentComboBox.getSelectedItem();
         dispose();
     }
 
@@ -103,7 +102,7 @@ public class TrackInputDialog extends JDialog implements ActionListener {
         return percussive;
     }
 
-    public int getProgramNumber() {
-        return programNumber;
+    public Instrument getInstrument() {
+        return instrument;
     }
 }
