@@ -59,17 +59,12 @@ public class MidiTrack implements Writable {
     //          Then converts each block from blocks to individual notes to MIDI events.    
     //          Creates one event for the note on event, and one for the end not event (per note).
     //          All created events are applied to the track.
-    public void applyToTrack(Track track) {
+    public void applyToTrack(Track track) throws InvalidMidiDataException {
         ShortMessage programChangeMessage = new ShortMessage();
         ShortMessage volMessage = new ShortMessage();
 
-        try {
-            programChangeMessage.setMessage(ShortMessage.PROGRAM_CHANGE, getChannel(), instrument.getProgramNumber(), 0);
-            volMessage.setMessage(ShortMessage.CONTROL_CHANGE, getChannel(), 7, volume);
-        } catch (InvalidMidiDataException e) {
-            throw new RuntimeException("Failed to update sequence in track: " 
-                                        + name + "due to invalid MidiData", e);
-        }
+        programChangeMessage.setMessage(ShortMessage.PROGRAM_CHANGE, getChannel(), instrument.getProgramNumber(),0);
+        volMessage.setMessage(ShortMessage.CONTROL_CHANGE, getChannel(), 7, volume);
 
         if (!isPercussive()) { // Tracks on channel 10 ignore program change
             track.add(new MidiEvent(programChangeMessage, 0));

@@ -23,7 +23,7 @@ public class MediaControlPanel extends JPanel implements ActionListener {
     private Timer pausePlayTimer;
     private Timer tickUpdateTimer;
 
-    private static final int POSITION_LINE_UPDATE_DELAY = 15;
+    private static final int POSITION_LINE_UPDATE_DELAY = 10;
 
     public MediaControlPanel() {
         this.setLayout(new FlowLayout(FlowLayout.RIGHT));
