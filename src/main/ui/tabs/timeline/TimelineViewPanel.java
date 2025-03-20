@@ -1,7 +1,5 @@
 package ui.tabs.timeline;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.beans.PropertyChangeEvent;
