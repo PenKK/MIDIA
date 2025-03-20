@@ -1,4 +1,4 @@
-package model;
+package model.instrument;
 
 // Constants for MIDI instruments with corresponding channel program numbers
 // Taken from https://en.wikipedia.org/wiki/General_MIDI

@@ -2,6 +2,9 @@ package model;
 
 import org.junit.jupiter.api.Test;
 
+import model.instrument.Instrument;
+import model.instrument.InstrumentalInstrument;
+import model.instrument.PercussionInstrument;
 import persistance.TestJson;
 
 import static org.junit.jupiter.api.Assertions.*;

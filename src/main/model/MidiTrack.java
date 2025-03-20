@@ -10,6 +10,7 @@ import javax.sound.midi.Track;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.instrument.Instrument;
 import persistance.Writable;
 
 // A high level representation of a track, which is a single layer/instrument of the project.

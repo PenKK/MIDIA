@@ -1,4 +1,4 @@
-package model;
+package model.instrument;
 
 import org.json.JSONObject;
 

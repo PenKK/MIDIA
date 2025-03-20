@@ -3,6 +3,10 @@ package model;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
+import model.instrument.Instrument;
+import model.instrument.InstrumentalInstrument;
+import model.instrument.PercussionInstrument;
+
 public class TestInstrument {
 
     @Test

@@ -4,9 +4,9 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.JOptionPane;
 
-import model.Instrument;
 import model.MidiTrack;
 import model.Timeline;
+import model.instrument.Instrument;
 import ui.menubar.dialog.TrackInputDialog;
 
 public class TrackMenu extends Menu {

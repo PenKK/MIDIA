@@ -16,9 +16,9 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import model.Instrument;
-import model.InstrumentalInstrument;
-import model.PercussionInstrument;
+import model.instrument.Instrument;
+import model.instrument.InstrumentalInstrument;
+import model.instrument.PercussionInstrument;
 
 // An InputDialog for creating new MidiTracks.
 public class TrackInputDialog extends JDialog implements ActionListener {

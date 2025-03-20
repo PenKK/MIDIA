@@ -11,12 +11,12 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
 import model.Block;
-import model.Instrument;
-import model.InstrumentalInstrument;
 import model.MidiTrack;
 import model.Note;
-import model.PercussionInstrument;
 import model.Timeline;
+import model.instrument.Instrument;
+import model.instrument.InstrumentalInstrument;
+import model.instrument.PercussionInstrument;
 import persistance.JsonReader;
 import persistance.JsonWriter;
 

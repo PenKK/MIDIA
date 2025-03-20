@@ -15,6 +15,10 @@ import javax.sound.midi.Track;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import model.instrument.Instrument;
+import model.instrument.InstrumentalInstrument;
+import model.instrument.PercussionInstrument;
+
 // Much of testing is done according to https://midi.org/spec-detail
 public class TestMidiTrack {
 

@@ -14,12 +14,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import model.Block;
-import model.Instrument;
-import model.InstrumentalInstrument;
 import model.MidiTrack;
 import model.Note;
-import model.PercussionInstrument;
 import model.Timeline;
+import model.instrument.Instrument;
+import model.instrument.InstrumentalInstrument;
+import model.instrument.PercussionInstrument;
 
 // Represents a reader that reads Timeline from JSON data stored in file
 // Code adapted from src/main/persistance/JsonReader

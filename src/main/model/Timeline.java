@@ -14,6 +14,7 @@ import javax.sound.midi.Track;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.instrument.Instrument;
 import persistance.Writable;
 
 // The orchestrator of the whole project.

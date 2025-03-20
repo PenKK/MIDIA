@@ -1,11 +1,11 @@
 package persistance;
 
 import model.Block;
-import model.InstrumentalInstrument;
 import model.MidiTrack;
 import model.Note;
-import model.PercussionInstrument;
 import model.Timeline;
+import model.instrument.InstrumentalInstrument;
+import model.instrument.PercussionInstrument;
 
 import static org.junit.jupiter.api.Assertions.*;
 

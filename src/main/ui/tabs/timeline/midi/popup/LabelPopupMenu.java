@@ -7,11 +7,11 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import model.Instrument;
-import model.InstrumentalInstrument;
 import model.MidiTrack;
-import model.PercussionInstrument;
 import model.Timeline;
+import model.instrument.Instrument;
+import model.instrument.InstrumentalInstrument;
+import model.instrument.PercussionInstrument;
 import ui.tabs.timeline.midi.MidiTrackLabelPanel;
 
 public class LabelPopupMenu extends JPopupMenu implements ActionListener {

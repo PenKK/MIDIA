@@ -1,4 +1,4 @@
-package model;
+package model.instrument;
 
 public enum PercussionInstrument implements Instrument {
 
