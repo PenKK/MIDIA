@@ -12,7 +12,6 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import model.Timeline;
@@ -21,12 +20,16 @@ public class MediaControlPanel extends JPanel implements ActionListener {
     private JButton play;
     private ImageIcon playImage = null;
     private ImageIcon pauseImage = null;
-    private Timer timer;
+    private Timer pausePlayTimer;
+    private Timer tickUpdateTimer;
+
+    private static final int POSITION_LINE_UPDATE_DELAY = 15;
 
     public MediaControlPanel() {
         this.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        timer = new Timer(0, this);
-        timer.setRepeats(false);
+        pausePlayTimer = new Timer(0, this);
+        tickUpdateTimer = new Timer(POSITION_LINE_UPDATE_DELAY, this);
+        pausePlayTimer.setRepeats(false);
 
         try {
             playImage = getImageIcon("lib/images/play.png");
@@ -43,22 +46,24 @@ public class MediaControlPanel extends JPanel implements ActionListener {
         this.add(play);
     }
 
-    public void play() {
+    public void togglePlay() {
         Timeline timeline = Timeline.getInstance();
         
         if (timeline.getSequencer().isRunning()) {
             timeline.pause();
-            timer.stop();
+            pausePlayTimer.stop();
+            tickUpdateTimer.stop();
             showIcon(playImage);
             return;
         }
 
         try {
             int delay = (int) (timeline.getLengthMs() - timeline.getPositionMs());
-            timer.setInitialDelay(delay);
-            timer.setDelay(delay);
-            timer.start();
+            pausePlayTimer.setInitialDelay(delay);
+            pausePlayTimer.setDelay(delay);
             timeline.play();
+            pausePlayTimer.start();
+            tickUpdateTimer.start();
             showIcon(pauseImage);
         } catch (InvalidMidiDataException e) {
             System.out.println("Invalid midi data found, unable to start playback");
@@ -83,14 +88,22 @@ public class MediaControlPanel extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source.equals(play)) {
-            play();
-        } else if (source.equals(timer)) {
+            togglePlay();
+        } else if (source.equals(pausePlayTimer)) {
             handleEnd();
+        } else if (source.equals(tickUpdateTimer)) {
+            updateTimelineTick();
         }
     }
 
     private void handleEnd() {
         showIcon(playImage);
+        tickUpdateTimer.stop();
         Timeline.getInstance().setPositionTick(0);
+    }
+
+    private void updateTimelineTick() {
+        Timeline timeline = Timeline.getInstance();
+        timeline.updatePositionTick();
     }
 }

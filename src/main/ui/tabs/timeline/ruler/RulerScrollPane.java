@@ -42,8 +42,6 @@ public class RulerScrollPane extends JScrollPane {
             int widthScrollBoxAdjusted = width + (int) UIManager.get("ScrollBar.width");
             container.setPreferredSize(new Dimension(widthScrollBoxAdjusted, RULER_HEIGHT));
             container.revalidate();
-            revalidate(); // Ensure the scroll pane updates its viewport
-            repaint();
         });
     }
 

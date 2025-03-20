@@ -1,13 +1,10 @@
 package ui.tabs.timeline.midi;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
@@ -19,11 +16,11 @@ import model.Timeline;
 public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeListener {
 
     private ArrayList<MidiTrackPanel> midiTrackPanels;
-    private JPanel container;
+    private LineContainerPanel container;
 
     // EFFECTS: initializes the timeline 
     public MidiTrackScrollPane() {
-        container = new JPanel();
+        container = new LineContainerPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
         this.setBorder(null);

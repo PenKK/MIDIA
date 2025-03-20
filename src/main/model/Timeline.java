@@ -188,6 +188,12 @@ public class Timeline implements Writable {
     // EFFECTS: Pauses playback
     public void pause() {
         sequencer.stop();
+        updatePositionTick();
+    }
+
+    // MODFIES: this
+    // EFFECTS: updates the position tick according to the current playback tick
+    public void updatePositionTick() {
         setPositionTick((int) sequencer.getTickPosition());
     }
 
