@@ -237,6 +237,8 @@ public class Timeline implements Writable {
         pcs.firePropertyChange("bpm", oldBpm, bpm);
     }
 
+    // MODIFIES: this
+    // EFFECTS: changes projectName and fires propertyChangeEvent
     public void setProjectName(String newProjectName) {
         String oldProjectName = projectName;
         this.projectName = newProjectName;
@@ -244,18 +246,24 @@ public class Timeline implements Writable {
         pcs.firePropertyChange("projectName", oldProjectName, newProjectName);
     }
 
+    // MODIFIES: this
+    // EFFECTS: changes beatDivision and fires propertyChangeEvent
     public void setBeatDivision(int newBeatDivision) {
         int oldBeatDivision = this.beatDivision;
         this.beatDivision = newBeatDivision;
         pcs.firePropertyChange("beatDivision", oldBeatDivision, newBeatDivision);
     }
 
+    // MODIFIES: this
+    // EFFECTS: changes beatsPerMeasure and fires propertyChangeEvent
     public void setBeatsPerMeasure(int newBeatsPerMeasure) {
         int oldBeatsPerMeasure = this.beatsPerMeasure;
         this.beatsPerMeasure = newBeatsPerMeasure;
         pcs.firePropertyChange("beatsPerMeasure", oldBeatsPerMeasure, newBeatsPerMeasure);
     }
 
+    // MODIFIES: this
+    // EFFECTS: changes horizontalScale and fires propertyChangeEvent
     public void setHorizontalScale(double newHorizontalScale) {
         double oldHorizontalScale = this.horizontalScale;
         this.horizontalScale = newHorizontalScale;
