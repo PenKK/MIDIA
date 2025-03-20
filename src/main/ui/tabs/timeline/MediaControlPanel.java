@@ -25,6 +25,7 @@ public class MediaControlPanel extends JPanel implements ActionListener {
 
     private static final int POSITION_LINE_UPDATE_DELAY = 10;
 
+    // EFFECTS: creates a MediaControlPanel with timers and initializes image icons and components
     public MediaControlPanel() {
         this.setLayout(new FlowLayout(FlowLayout.RIGHT));
         pausePlayTimer = new Timer(0, this);
@@ -46,6 +47,7 @@ public class MediaControlPanel extends JPanel implements ActionListener {
         this.add(play);
     }
 
+    // EFFECTS: toggles playback
     public void togglePlay() {
         Timeline timeline = Timeline.getInstance();
         
@@ -71,6 +73,7 @@ public class MediaControlPanel extends JPanel implements ActionListener {
         }
     }
 
+    // EFFECTS: returns the ImageIcon representation of the image at path
     private ImageIcon getImageIcon(String path) {
         try {
             return new ImageIcon(ImageIO.read(new File(path)).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
@@ -80,10 +83,13 @@ public class MediaControlPanel extends JPanel implements ActionListener {
         }
     }
 
+    // MODIFES: this
+    // EFFECTS: replaces play button icon with the specified icon
     private void showIcon(ImageIcon icon) {
         play.setIcon(icon);
     }
 
+    // EFFECTS: listens for timer and button actions and runs methods accordingly
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -96,14 +102,17 @@ public class MediaControlPanel extends JPanel implements ActionListener {
         }
     }
 
+    // MODIFIES: this, timeline singleton
+    // EFFECTS: handles behavior for when song ends: changes play icon, stops tickUpdateTimer, brings position to 0
     private void handleEnd() {
         showIcon(playImage);
-        tickUpdateTimer.stop();
         Timeline.getInstance().setPositionTick(0);
+        tickUpdateTimer.stop();
     }
 
+    // MODIFIES: timeline singleton
+    // EFFECTS: triggers an update to the positionTick field in the instance (and hence fires propertyChangeEvent)
     private void updateTimelineTick() {
-        Timeline timeline = Timeline.getInstance();
-        timeline.updatePositionTick();
+        Timeline.getInstance().updatePositionTick();
     }
 }

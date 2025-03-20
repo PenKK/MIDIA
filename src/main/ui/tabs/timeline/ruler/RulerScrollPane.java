@@ -18,6 +18,7 @@ public class RulerScrollPane extends JScrollPane {
     public static final int DEFAULT_RULER_WIDTH = 800;
 
     private RulerRenderPanel container;
+
     // EFFECTS: Constructs the pane, setting dimensions and appropirate listeners and viewports
     public RulerScrollPane() {
         container = new RulerRenderPanel();
@@ -45,7 +46,7 @@ public class RulerScrollPane extends JScrollPane {
         });
     }
 
-    public RulerRenderPanel getCanvas() {
+    public RulerRenderPanel getRenderPanel() {
         return container;
     }
 

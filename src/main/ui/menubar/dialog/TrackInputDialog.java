@@ -62,11 +62,11 @@ public class TrackInputDialog extends JDialog implements ActionListener {
     // EFFECTS: listens for actions and runs methods accordingly
     @Override
     public void actionPerformed(ActionEvent e) {
-       if (e.getSource().equals(percussiveCheckBox)) {
+        if (e.getSource().equals(percussiveCheckBox)) {
             updateInstrumentList((JCheckBox) e.getSource());
-       } else if (e.getSource().equals(create)) {
+        } else if (e.getSource().equals(create)) {
             submit();
-       }
+        }
     }
 
     // MODIFIES: this
@@ -87,10 +87,12 @@ public class TrackInputDialog extends JDialog implements ActionListener {
     // EFFECTS: updates the instrumentComboBox list of instrument options accoring to checkBox for percussion
     private void updateInstrumentList(JCheckBox checkBox) {
         if (checkBox.isSelected()) {
-            DefaultComboBoxModel<Instrument> items = new DefaultComboBoxModel<Instrument>(PercussionInstrument.values());
+            DefaultComboBoxModel<Instrument> items = 
+                    new DefaultComboBoxModel<Instrument>(PercussionInstrument.values());
             instrumentComboBox.setModel(items);
         } else {
-            DefaultComboBoxModel<Instrument> items = new DefaultComboBoxModel<Instrument>(InstrumentalInstrument.values());
+            DefaultComboBoxModel<Instrument> items = 
+                    new DefaultComboBoxModel<Instrument>(InstrumentalInstrument.values());
             instrumentComboBox.setModel(items);
         }
     }

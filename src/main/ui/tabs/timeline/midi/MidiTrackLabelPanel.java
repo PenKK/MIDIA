@@ -11,7 +11,7 @@ import ui.tabs.timeline.midi.popup.LabelPopupMenu;
 // Interactable display of the general information of a MidiTrack
 public class MidiTrackLabelPanel extends JPanel {
 
-    public final static int LABEL_BOX_WIDTH = 100;
+    public static final int LABEL_BOX_WIDTH = 100;
     private static final Color DEFAULT_BACKGROUND_COLOR = Color.GRAY;
 
     private MidiTrack midiTrack;

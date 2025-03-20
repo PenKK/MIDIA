@@ -149,7 +149,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
             
             for (Block b : midiTrack.getBlocks()) {
                 if (b.getStartTick() <= tick && b.getStartTick() + b.getDurationTicks() >= tick) {
-                    
+                    System.out.println("Block at startTick " + b.getStartTick() + "clicked!");
                 }
             }
             repaint();
