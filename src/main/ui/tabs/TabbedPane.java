@@ -13,6 +13,7 @@ public class TabbedPane extends JPanel {
     private JTabbedPane tabbedPane = new JTabbedPane();
     private MediaControlPanel mediaControlPanel = new MediaControlPanel();
 
+    // EFFECTS: creates a JPanel with media Controls at the top, and a JTabbedPane below
     public TabbedPane() {
         setLayout(new BorderLayout());
         mediaControlPanel = new MediaControlPanel();

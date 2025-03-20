@@ -58,6 +58,8 @@ public class FileMenu extends Menu {
         }
     }
 
+    // MODIFIES: timeline singleton
+    // EFFECTS: assigns the instance a new Timeline 
     private void newProject() {
         try {
             Timeline.setInstance(new Timeline("New Project"));

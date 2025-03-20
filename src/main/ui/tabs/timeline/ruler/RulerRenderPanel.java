@@ -64,6 +64,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
         }
     }
 
+    // EFFECTS: listens for property change events and runs methods accordingly
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();

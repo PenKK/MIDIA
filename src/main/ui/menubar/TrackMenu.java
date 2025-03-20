@@ -10,7 +10,6 @@ public class TrackMenu extends Menu {
 
     private MenuItem newTrack;
 
-
     // EFFECTS: creates a track menu and initializes menu items
     TrackMenu() {
         super("Track");

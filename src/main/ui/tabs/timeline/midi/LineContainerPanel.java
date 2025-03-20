@@ -11,20 +11,25 @@ import javax.swing.JPanel;
 import model.Timeline;
 
 public class LineContainerPanel extends JPanel implements PropertyChangeListener {
+
     private int lineX = MidiTrackLabelPanel.LABEL_BOX_WIDTH;
 
+    // EFFECTS: creates a LineContainerPanel that observs the timeline and has BoxLayout
     public LineContainerPanel() {
         super();
         Timeline.addObserver(this);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 
+    // MODIFIES: this
+    // EFFECTS: updates lineX value with the timeline positionTick (scaled) and repaints
     public void updateLineX() {
         this.lineX = MidiTrackRenderPanel.scalePixelsRender(Timeline.getInstance().getPositionTick()) 
                                                             + MidiTrackLabelPanel.LABEL_BOX_WIDTH;
         repaint(); 
     }
 
+    // EFFECTS: paints the position line at lineX
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -34,6 +39,7 @@ public class LineContainerPanel extends JPanel implements PropertyChangeListener
         }
     }
 
+    // EFFECTS: listens for property changes and runs methods accoringly 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
