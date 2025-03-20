@@ -2,7 +2,10 @@ package ui.menubar;
 
 import java.awt.event.ActionEvent;
 
+import javax.swing.JOptionPane;
+
 import model.Instrument;
+import model.MidiTrack;
 import model.Timeline;
 import ui.menubar.dialog.TrackInputDialog;
 
@@ -25,12 +28,16 @@ public class TrackMenu extends Menu {
         boolean percussive = input.isPercussive();
         Instrument instrument = input.getInstrument();
 
-    
         if (trackName == null) {
             return;
         }
 
-        Timeline.getInstance().createMidiTrack(trackName, instrument, percussive);
+        MidiTrack midiTrack = Timeline.getInstance().createMidiTrack(trackName, instrument, percussive);
+
+        if (midiTrack == null) {
+            JOptionPane.showMessageDialog(this, "You have already reached the maximum number of instrumental tracks," 
+                                              + "15.\n Track was not created", "Warning", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
 
