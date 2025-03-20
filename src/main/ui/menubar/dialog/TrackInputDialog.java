@@ -54,6 +54,7 @@ public class TrackInputDialog extends JDialog implements ActionListener {
         this.add(instrumentComboBox);
         this.add(create);
 
+        this.getRootPane().setDefaultButton(create);
         this.setBounds(new Rectangle(400, 300));
         this.setLocationRelativeTo(invoker);
     }

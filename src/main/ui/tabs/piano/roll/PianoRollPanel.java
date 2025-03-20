@@ -6,6 +6,6 @@ import javax.swing.JPanel;
 public class PianoRollPanel extends JPanel {
 
     public PianoRollPanel() {
-        this.setName("Piano Roll");
+        
     }
 }

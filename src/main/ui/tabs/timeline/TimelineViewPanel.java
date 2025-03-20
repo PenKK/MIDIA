@@ -1,5 +1,7 @@
 package ui.tabs.timeline;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.beans.PropertyChangeEvent;
@@ -30,7 +32,6 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
         Timeline.addObserver(this);
         syncHorizontalScrollBars();
 
-        this.setName("Timeline");
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(MidiTrackPanel.BORDER);
         this.setAlignmentX(LEFT_ALIGNMENT);
@@ -81,6 +82,5 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
             JScrollBar rulerBar = rulerScrollPane.getHorizontalScrollBar();
             rulerBar.setValue(e.getValue());
         }
-
     }
 }

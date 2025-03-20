@@ -1,5 +1,7 @@
 package ui.tabs.timeline.midi;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -35,7 +37,6 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
         Timeline.addObserver(this);
 
         updateMidiTrackPanels();
-
     }
 
     // EFFECTS: clears all MidiTrackPanels and then populates according to current Timeline

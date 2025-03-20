@@ -1,5 +1,8 @@
 package ui.menubar;
 
+import java.awt.Button;
+
+import javax.swing.Box;
 import javax.swing.JMenuBar;
 
 // The Menu bar at the top of the UI, holds many dropdown Menu's
@@ -12,6 +15,7 @@ public class MenuBar extends JMenuBar {
     public MenuBar() {
         fileMenu = new FileMenu();
         trackMenu = new TrackMenu();
+        
         this.add(fileMenu);
         this.add(trackMenu);
     }
