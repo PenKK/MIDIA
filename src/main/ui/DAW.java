@@ -270,8 +270,12 @@ public class DAW {
     private void play() {
         clearConsole();
         System.out.println("Playing... press enter to stop and exit");
-        try {
+
+        if (timeline.getLengthTicks() - timeline.getPositionTick() == 0) {
             timeline.getSequencer().setTickPosition(0);
+            timeline.updatePositionTick();
+        }
+        try {
             timeline.play();
         } catch (InvalidMidiDataException e) {
             System.out.println("Invalid MIDI data found in sequence, playback may not work");
@@ -279,6 +283,7 @@ public class DAW {
 
         sc.nextLine();
         timeline.pause();
+
     }
 
     // EFFECTS: displays timeline options
