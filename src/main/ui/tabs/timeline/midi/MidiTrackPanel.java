@@ -41,9 +41,4 @@ public class MidiTrackPanel extends JPanel {
         this.add(renderPanel);
     }
 
-    // EFFECTS: returns the horizontal pixel width (scaled) of the renderPanel
-    public int getScaledWidth() {
-        return renderPanel.getScaledWidth();
-    }
-
 }
