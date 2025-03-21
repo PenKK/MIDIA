@@ -416,6 +416,7 @@ public class TestTimeline extends TestJson {
         assertEquals(timeline.ticksToBeats(960 + 960 / 2), 1.5);
         assertEquals(timeline.ticksToBeats(960 / 4), 0.25);
         assertEquals(timeline.ticksToOnBeat(960 / 4), 0.25 + 1);
+        assertEquals(timeline.beatsToMs(1), 500);
 
         timeline.setBPM(100);
         // BPM does not change the converstion as beats = ticks / PPQN
