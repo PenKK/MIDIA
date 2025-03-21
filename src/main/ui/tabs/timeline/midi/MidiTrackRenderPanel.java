@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import model.Block;
 import model.MidiTrack;
@@ -48,11 +49,11 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
         g.setColor(BLOCK_BACKGROUND_COLOR);
 
         int width = scalePixelsRender(Math.max(block.getDurationTicks(), 50));
-        int x1 = scalePixelsRender(block.getStartTick());
-        int y1 = BLOCK_HEIGHT_MARGIN / 2;
+        int x = scalePixelsRender(block.getStartTick());
+        int y = BLOCK_HEIGHT_MARGIN / 2;
         int height = MidiTrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
 
-        g.fillRoundRect(x1, y1, width, height, CORNER_ROUNDING_BLOCK, CORNER_ROUNDING_BLOCK);
+        g.fillRoundRect(x, y, width, height, CORNER_ROUNDING_BLOCK, CORNER_ROUNDING_BLOCK);
 
         g.setColor(tempColor);
     }
@@ -144,16 +145,30 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (e.getClickCount() == 2) {
-            int tick = (int) Math.round(e.getX() / TimelineViewPanel.getRenderScale());
-            
-            for (Block b : midiTrack.getBlocks()) {
-                if (b.getStartTick() <= tick && b.getStartTick() + b.getDurationTicks() >= tick) {
-                    System.out.println("Block at startTick " + b.getStartTick() + "clicked!");
-                }
-            }
-            repaint();
+
+        if (SwingUtilities.isRightMouseButton(e)) {
+            rightClick(e);
+            return;
         }
+
+        if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
+            doubleClick(e);
+        }
+    }
+
+    private void rightClick(MouseEvent e) {
+
+    }
+
+    private void doubleClick(MouseEvent e) {
+        int tick = (int) Math.round(e.getX() / TimelineViewPanel.getRenderScale());
+            
+        for (Block b : midiTrack.getBlocks()) {
+            if (b.getStartTick() <= tick && b.getStartTick() + b.getDurationTicks() >= tick) {
+                System.out.println("Block at startTick " + b.getStartTick() + " clicked!");
+            }
+        }
+        repaint();
     }
 
     @Override
