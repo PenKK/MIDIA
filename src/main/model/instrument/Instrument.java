@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import persistance.Writable;
 
 // A playable instrument
-public abstract interface Instrument extends Writable {
+public interface Instrument extends Writable {
 
     public int getProgramNumber();
 
