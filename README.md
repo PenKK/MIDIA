@@ -38,3 +38,37 @@
 - As a user, I want to be able to control playback of my project so that I can start and stop where I want to on the timeline
 - As a user, I want to be able to save projects so that when my program closes I dont lose progress
 - As a user, I want to be able to load a project from a list so that I can continue working on any project I saved before
+
+
+## Instructions for End User
+
+### Create a track
+1. [First action] Use the Track menu at the top left to insert a new track
+2. Specify a name and instrument
+    - After submitting, an empty track should appear in the timeline tab
+
+### Modify a track
+1. Right click the label with the track name
+2. Can choose to change the name, instrument, or delete it
+    - Name updates will be reflected in the label text
+    - If a track is deleted, it will disappear from the timeline
+
+### Save the project
+
+1. Click the file menu at the top left and then save
+2. Specify the path and then save
+
+### Open a project
+
+1. Click the file menu at the top left and then load
+2. Select a project and then click open
+    - The project should be loaded into the timeline
+
+### Play the project
+
+The GUI does not yet support adding notes, but you can load projects that already had notes and then play them instead.
+
+1. Open the sample project "Spooky beat" using the file menu at the top left and then open.
+2. Press the play button at the top right to play the song
+    - The red line should follow the position of the audio
+3. You can play, pause, and resume the song. If the song finishes, the red line comes back to the start.
