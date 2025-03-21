@@ -300,6 +300,12 @@ public class Timeline implements Writable {
         ;
         return (int) Math.round(ticks);
     }
+    
+    // REQUIRES: beats >= 0
+    // EFFECTS: converts beats to ms
+    public int beatsToMs(double beats) {
+        return (int) Math.round(ticksToMs(beatsToTicks(beats)));
+    }
 
     // REQUIRES: beats >= 0
     // EFFECTS: calculates beats to ticks conversion
