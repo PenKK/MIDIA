@@ -58,7 +58,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
         g.setColor(tempColor);
     }
 
-    // EFFECTS: returns the pitch range of the notes within the given block
+    // EFFECTS: returns the pitch range of the notes within the blocks
     private int[] determineRange(ArrayList<Block> blocks) {
         if (blocks.isEmpty() || midiTrack.isPercussive()) {
             return new int[] { 0, 0 };
