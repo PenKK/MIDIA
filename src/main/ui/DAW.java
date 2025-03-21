@@ -458,12 +458,12 @@ public class DAW {
         System.out.printf("What is the new instrument for track %s?%n", midiTrack.getName());
         System.out.println("(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
 
-        int instrument = midiTrack.isPercussive() ? getNumericalInput(35, 81, false) 
+        int instrument = midiTrack.isPercussive() ? getNumericalInput(35, 81, false)
                                                   : getNumericalInput(1, 128, false) - 1;
 
         Instrument instr = InstrumentalInstrument.ACOUSTIC_GRAND_PIANO;
-        Instrument[] allInstruments = midiTrack.isPercussive() ? PercussionInstrument.values() : 
-                                                                 InstrumentalInstrument.values();
+        Instrument[] allInstruments = midiTrack.isPercussive() ? PercussionInstrument.values()
+                                                               : InstrumentalInstrument.values();
         for (int i = midiTrack.isPercussive() ? 35 : 0; i < 127; i++) {
             Instrument check = allInstruments[i];
             if (instrument == check.getProgramNumber()) {
@@ -588,7 +588,7 @@ public class DAW {
     private void editNote(Block block, int displayIndex, boolean percussive) {
         Note note = block.getNotes().get(displayIndex - 1);
         displayEditNoteOptions(note, displayIndex, percussive);
-        String[] validStrings = new String[] { "p", "v", "o", "d", "r", "b"};
+        String[] validStrings = new String[] { "p", "v", "o", "d", "r", "b" };
 
         if (percussive) {
             validStrings[0] = "v";
