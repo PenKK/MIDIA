@@ -285,10 +285,8 @@ public class Timeline implements Writable {
     // EFFECTS: converts ticks to milliseconds given the BPM
     public double ticksToMs(int ticks) {
         double durationInQuarterNotes = (double) ticks / (double) sequence.getResolution();
-        ;
         double durationInMinutes = durationInQuarterNotes / bpm;
-        double durationInMS = durationInMinutes * 60000;
-        return durationInMS;
+        return durationInMinutes * 60000;
     }
 
     // REQUIRES: ms >= 0
@@ -297,7 +295,6 @@ public class Timeline implements Writable {
         double durationInMinutes = ms / (double) 60000;
         double durationInQuarterNotes = bpm * durationInMinutes;
         double ticks = durationInQuarterNotes * sequence.getResolution();
-        ;
         return (int) Math.round(ticks);
     }
     
