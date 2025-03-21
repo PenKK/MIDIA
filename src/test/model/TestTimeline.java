@@ -165,13 +165,13 @@ public class TestTimeline extends TestJson {
 
         timeline.removeMidiTrack(5);
         assertTrue(timeline.getAvaliableChannels().size() == 1);
-        assertEquals(timeline.createMidiTrack("space for 1 more", InstrumentalInstrument.HARPSICHORD, false).getChannel(), 5);
+        assertEquals(timeline.createMidiTrack("1 more", InstrumentalInstrument.HARPSICHORD, false).getChannel(), 5);
         assertEquals(timeline.createMidiTrack("cant make more", instr, false), null);
 
         assertTrue(timeline.getAvaliableChannels().isEmpty());
         timeline.removeMidiTrack(10);
         assertTrue(timeline.getAvaliableChannels().size() == 1);
-        assertEquals(timeline.createMidiTrack("space for 1 more", InstrumentalInstrument.HARPSICHORD, false).getChannel(), 12);
+        assertEquals(timeline.createMidiTrack("1 more", InstrumentalInstrument.HARPSICHORD, false).getChannel(), 12);
     }
 
     @Test
@@ -455,21 +455,21 @@ public class TestTimeline extends TestJson {
     void testObserverPattern() throws MidiUnavailableException, InvalidMidiDataException {
         class TestObserver implements PropertyChangeListener {
             private int value = 0;
-        
+
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals("timeline")) {
                     value++;
                 }
             }
-        
+
             public int getValue() {
                 return value;
             }
         }
 
         TestObserver testObserver = new TestObserver();
-        
+
         Timeline.addObserver(testObserver);
         assertEquals(Timeline.getPropertyChangeSupport().getPropertyChangeListeners().length, 1);
 
