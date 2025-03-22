@@ -4,13 +4,13 @@ import org.json.JSONObject;
 
 import persistance.Writable;
 
-// A playable instrument
+// An instrument with with a name and program number
 public interface Instrument extends Writable {
 
     public int getProgramNumber();
 
     public String getName();
-    
+
     public String name();
 
     @Override

@@ -1,6 +1,6 @@
 package model.instrument;
 
-// Constants for MIDI instruments with corresponding channel program numbers
+// Constants for MIDI instrumental instruments with corresponding channel program numbers
 // Taken from https://en.wikipedia.org/wiki/General_MIDI
 public enum InstrumentalInstrument implements Instrument {
     // Piano

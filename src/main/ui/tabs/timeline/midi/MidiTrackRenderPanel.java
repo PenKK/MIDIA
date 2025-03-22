@@ -143,9 +143,9 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     }
 
+    // EFFECTS: listens for mouse events and runs methods accoringly
     @Override
     public void mouseReleased(MouseEvent e) {
-
         if (SwingUtilities.isRightMouseButton(e)) {
             rightClick(e);
             return;
@@ -160,6 +160,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     }
 
+    // EFFECTS: Handles double click behavior on the rendered track
     private void doubleClick(MouseEvent e) {
         int tick = (int) Math.round(e.getX() / TimelineViewPanel.getRenderScale());
             

@@ -14,6 +14,7 @@ import model.instrument.InstrumentalInstrument;
 import model.instrument.PercussionInstrument;
 import ui.tabs.timeline.midi.MidiTrackLabelPanel;
 
+// The popup menu for modifying a track
 public class LabelPopupMenu extends JPopupMenu implements ActionListener {
 
     MidiTrackLabelPanel parentPanel;
@@ -23,6 +24,7 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
 
     // EFFECTS: creates a popup menu for the specified parent midiTrackLabelPanel
     public LabelPopupMenu(MidiTrackLabelPanel parentPanel) {
+        
         super(parentPanel.getName());
         rename = new JMenuItem("Rename track");
         delete = new JMenuItem("Delete track");
@@ -40,6 +42,8 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
         this.parentPanel = parentPanel;
     }
 
+    // MODIFIES: this, parentPanel
+    // EFFECTS: prompts user for a new label for the invoking track
     private void rename() {
         String newName = JOptionPane.showInputDialog("Enter a new track name for " 
                                                     + parentPanel.getMidiTrack().getName());
@@ -51,6 +55,8 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
         parentPanel.getLabel().setText(newName);
     }
 
+    // MODIFIES: this, parentPanel
+    // EFFECTS: prompts user to choose a new instrument for the invoking track
     private void changeInstrument() {
         MidiTrack midiTrack = parentPanel.getMidiTrack();
         Instrument[] options = midiTrack.isPercussive() ? PercussionInstrument.values() : 
@@ -70,6 +76,7 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
         timeline.removeMidiTrack(index);
     }
 
+    // EFFECTS: listens for actions on the popup menu items and runs methods accordingly
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();

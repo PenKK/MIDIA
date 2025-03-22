@@ -11,7 +11,7 @@ import model.Timeline;
 import ui.tabs.timeline.midi.MidiTrackLabelPanel;
 import ui.tabs.timeline.midi.MidiTrackRenderPanel;
 
-// The canvas (but is a JPanel) for Graphics to draw on to show Ruler ticks
+// The panel for Graphics to draw on to show Ruler tick marks
 public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
 
     public static final int TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.3);

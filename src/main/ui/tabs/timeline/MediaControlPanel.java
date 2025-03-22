@@ -16,6 +16,7 @@ import javax.swing.Timer;
 
 import model.Timeline;
 
+// Panel containing UI elements related to playback
 public class MediaControlPanel extends JPanel implements ActionListener {
     private JButton play;
     private ImageIcon playImage = null;

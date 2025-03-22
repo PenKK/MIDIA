@@ -1,5 +1,7 @@
 package model.instrument;
 
+// Constants for MIDI percussion instruments with corresponding channel program numbers
+// Taken from https://en.wikipedia.org/wiki/General_MIDI
 public enum PercussionInstrument implements Instrument {
 
     ACOUSTIC_BASS_DRUM(35, "Acoustic Bass Drum"),

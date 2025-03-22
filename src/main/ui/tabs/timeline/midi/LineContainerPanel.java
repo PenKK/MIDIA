@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import model.Timeline;
 
+// A container to draw the line of the position tick indicator line over tracks
 public class LineContainerPanel extends JPanel implements PropertyChangeListener {
 
     private int lineX = MidiTrackLabelPanel.LABEL_BOX_WIDTH;

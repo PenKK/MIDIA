@@ -9,6 +9,7 @@ import model.Timeline;
 import model.instrument.Instrument;
 import ui.menubar.dialog.TrackInputDialog;
 
+// The track menu option in the menu bar
 public class TrackMenu extends Menu {
 
     private MenuItem newTrack;
