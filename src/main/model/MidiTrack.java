@@ -179,6 +179,11 @@ public class MidiTrack implements Writable {
         return midiTrackJson;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
+
     // EFFECTS: returns JSON Array representation of blocks in this midiTrack
     private JSONArray blocksToJson() {
         JSONArray blocksJson = new JSONArray();

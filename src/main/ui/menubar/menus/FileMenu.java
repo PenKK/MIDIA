@@ -1,4 +1,4 @@
-package ui.menubar;
+package ui.menubar.menus;
 
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
@@ -29,7 +29,7 @@ public class FileMenu extends Menu {
     private JFileChooser fileChooser;
 
     // EFFECTS: creates file JMenu, its file chooser, its JMenuItems, and apppriate action listeners
-    FileMenu() {
+    public FileMenu() {
         super("File");
         open = new MenuItem("Open Project", this);
         save = new MenuItem("Save Project", this);

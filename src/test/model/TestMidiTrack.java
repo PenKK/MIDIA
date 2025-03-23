@@ -39,6 +39,7 @@ public class TestMidiTrack {
         assertEquals(midiTrack.getVolumeScaled(), 79); // 100 / 127
         assertEquals(midiTrack.getName(), "Piano Melody");
         assertEquals(midiTrack.getChannel(), 0);
+        assertEquals(midiTrack.toString(), "Piano Melody");
 
         midiTrack = new MidiTrack("Percussive drums", PercussionInstrument.ACOUSTIC_BASS_DRUM, 9);
         assertFalse(midiTrack.isMuted());
@@ -48,6 +49,7 @@ public class TestMidiTrack {
         assertEquals(midiTrack.getVolumeScaled(), 79);
         assertEquals(midiTrack.getName(), "Percussive drums");
         assertEquals(midiTrack.getChannel(), 9);
+        assertEquals(midiTrack.toString(), "Percussive drums");
     }
 
     @Test

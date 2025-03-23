@@ -22,6 +22,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
 
     private static final int CORNER_ROUNDING_BLOCK = 2;
     private static final int BLOCK_HEIGHT_MARGIN = 6;
+    private static final int EMPTY_BLOCK_WIDTH = 100;
 
     private static final int MIN_NOTE_RANGE = 16;
     private static final int     NOTE_RANGE_PADDING = 2;
@@ -48,7 +49,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
         Color tempColor = g.getColor();
         g.setColor(BLOCK_BACKGROUND_COLOR);
 
-        int width = scalePixelsRender(Math.max(block.getDurationTicks(), 50));
+        int width = scalePixelsRender(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
         int x = scalePixelsRender(block.getStartTick());
         int y = BLOCK_HEIGHT_MARGIN / 2;
         int height = MidiTrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
@@ -63,12 +64,21 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
         if (blocks.isEmpty() || midiTrack.isPercussive()) {
             return new int[] { 0, 0 };
         }
-        int minPitch = blocks.get(0).getNotes().get(0).getPitch();
-        int maxPitch = minPitch;
+
+        int minPitch = -1;
+        int maxPitch = -1;
 
         for (Block b : blocks) {
             if (!midiTrack.isPercussive()) {
                 for (Note n : b.getNotes()) {
+                    if (minPitch == -1) {
+                        minPitch = n.getPitch();
+                    }
+
+                    if (maxPitch == -1) {
+                        maxPitch = n.getPitch();
+                    }
+
                     int pitchN = n.getPitch();
                     if (pitchN > maxPitch) {
                         maxPitch = pitchN;

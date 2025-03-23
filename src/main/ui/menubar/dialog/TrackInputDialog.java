@@ -33,8 +33,8 @@ public class TrackInputDialog extends JDialog implements ActionListener {
     private Instrument instrument;
 
     // EFFECTS: creates input dialog for creating a new track
-    public TrackInputDialog(Component invoker, String title) {
-        super((Frame) null, title, true);
+    public TrackInputDialog(Component invoker) {
+        super((Frame) null, "Create Track", true);
         this.setLayout(new GridLayout(0, 2, 10, 10));
         this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
 
@@ -57,6 +57,7 @@ public class TrackInputDialog extends JDialog implements ActionListener {
         this.getRootPane().setDefaultButton(create);
         this.setBounds(new Rectangle(400, 300));
         this.setLocationRelativeTo(invoker);
+        this.setVisible(true);
     }
 
     // EFFECTS: listens for actions and runs methods accordingly

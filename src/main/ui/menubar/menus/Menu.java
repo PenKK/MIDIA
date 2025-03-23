@@ -1,4 +1,4 @@
-package ui.menubar;
+package ui.menubar.menus;
 
 import java.awt.event.ActionListener;
 
