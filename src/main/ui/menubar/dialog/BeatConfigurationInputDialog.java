@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 
 import model.Timeline;
 
@@ -28,15 +30,14 @@ public class BeatConfigurationInputDialog extends InputDialog {
     @Override
     protected void initFields() {
         Timeline timeline = Timeline.getInstance();
+        SpinnerModel nonZeroBeatDivision = new SpinnerNumberModel(timeline.getBeatDivision(), 1, 128, 1);
+        SpinnerModel nonZeroBPM = new SpinnerNumberModel(timeline.getBeatsPerMeasure(), 1, 128, 1);
 
-        beatDivision = new JSpinner();
-        beatsPerMeasure = new JSpinner();
+        beatDivision = new JSpinner(nonZeroBeatDivision);
+        beatsPerMeasure = new JSpinner(nonZeroBPM);
         save = new JButton("Save");
 
         save.addActionListener(this);
-
-        beatDivision.setValue(timeline.getBeatDivision());
-        beatsPerMeasure.setValue(timeline.getBeatsPerMeasure());
 
         this.add(new JLabel("Beat division: "));
         this.add(beatDivision);
