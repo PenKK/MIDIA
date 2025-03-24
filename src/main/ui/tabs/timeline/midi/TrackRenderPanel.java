@@ -15,7 +15,7 @@ import model.Note;
 import ui.tabs.timeline.TimelineViewPanel;
 
 // Interactable render of the MidiTrack's blocks and notes
-public class MidiTrackRenderPanel extends JPanel implements MouseListener {
+public class TrackRenderPanel extends JPanel implements MouseListener {
 
     private static final Color NOTE_COLOR = Color.WHITE;
     private static final Color BLOCK_BACKGROUND_COLOR = new Color(30, 162, 240, 200);
@@ -25,13 +25,13 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     private static final int EMPTY_BLOCK_WIDTH = 100;
 
     private static final int MIN_NOTE_RANGE = 16;
-    private static final int     NOTE_RANGE_PADDING = 2;
-    private static final double  NOTE_CORNER_RADIUS = 0.3;
+    private static final int NOTE_RANGE_PADDING = 2;
+    private static final double NOTE_CORNER_RADIUS = 0.3;
 
     private MidiTrack midiTrack;
 
     // EFFECTS: recieves the specified midiTrack, and listens for mouse events
-    public MidiTrackRenderPanel(MidiTrack midiTrack) {
+    public TrackRenderPanel(MidiTrack midiTrack) {
         this.midiTrack = midiTrack;
         this.addMouseListener(this);
     }
@@ -52,7 +52,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
         int width = scalePixelsRender(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
         int x = scalePixelsRender(block.getStartTick());
         int y = BLOCK_HEIGHT_MARGIN / 2;
-        int height = MidiTrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
+        int height = TrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
 
         g.fillRoundRect(x, y, width, height, CORNER_ROUNDING_BLOCK, CORNER_ROUNDING_BLOCK);
 
@@ -69,24 +69,22 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
         int maxPitch = -1;
 
         for (Block b : blocks) {
-            if (!midiTrack.isPercussive()) {
-                for (Note n : b.getNotes()) {
-                    if (minPitch == -1) {
-                        minPitch = n.getPitch();
-                    }
+            for (Note n : b.getNotes()) {
+                if (minPitch == -1) {
+                    minPitch = n.getPitch();
+                }
 
-                    if (maxPitch == -1) {
-                        maxPitch = n.getPitch();
-                    }
+                if (maxPitch == -1) {
+                    maxPitch = n.getPitch();
+                }
 
-                    int pitchN = n.getPitch();
-                    if (pitchN > maxPitch) {
-                        maxPitch = pitchN;
-                    }
+                int pitchN = n.getPitch();
+                if (pitchN > maxPitch) {
+                    maxPitch = pitchN;
+                }
 
-                    if (pitchN < minPitch) {
-                        minPitch = pitchN;
-                    }
+                if (pitchN < minPitch) {
+                    minPitch = pitchN;
                 }
             }
         }
@@ -103,7 +101,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
         int minPitch = pitchRange[0];
         int maxPitch = pitchRange[1];
 
-        int trackHeight = MidiTrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
+        int trackHeight = TrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
         int range = Math.abs(minPitch - maxPitch);
         int rangeAdjusted = Math.max(range, MIN_NOTE_RANGE);
         double heightDouble = trackHeight / (double) (rangeAdjusted + NOTE_RANGE_PADDING);
@@ -119,7 +117,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
                 int y = trackHeight - (int) Math.round(relativePitch * heightDouble - BLOCK_HEIGHT_MARGIN / 2);
                 int height = (int) Math.round(heightDouble);
                 int width = scalePixelsRender(n.getDurationTicks());
-                
+
                 g.setColor(NOTE_COLOR);
                 g.fillRoundRect(x, y, width, height, noteRounding, noteRounding);
             }
@@ -173,7 +171,7 @@ public class MidiTrackRenderPanel extends JPanel implements MouseListener {
     // EFFECTS: Handles double click behavior on the rendered track
     private void doubleClick(MouseEvent e) {
         int tick = (int) Math.round(e.getX() / TimelineViewPanel.getRenderScale());
-            
+
         for (Block b : midiTrack.getBlocks()) {
             if (b.getStartTick() <= tick && b.getStartTick() + b.getDurationTicks() >= tick) {
                 System.out.println("Block at startTick " + b.getStartTick() + " clicked!");

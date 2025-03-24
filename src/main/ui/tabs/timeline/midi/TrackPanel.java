@@ -13,19 +13,19 @@ import model.MidiTrack;
 
 // Represents a single MidiTrack in the TinelinePanel UI.
 // Contains two sub Panels, MidiTrackLabelPanel and MidiTrackRenderPanel
-public class MidiTrackPanel extends JPanel {
+public class TrackPanel extends JPanel {
 
     public static final MatteBorder BORDER = BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK);
     public static final int HEIGHT = 100;
     public static final int MINIMUM_WIDTH = 500;
 
-    private MidiTrackLabelPanel labelPanel;
-    private MidiTrackRenderPanel renderPanel;
+    private TrackLabelPanel labelPanel;
+    private TrackRenderPanel renderPanel;
 
     // Creates sub panels, adjusts width according to render panel length, and then adds it to this
-    public MidiTrackPanel(MidiTrack midiTrack) {
-        labelPanel = new MidiTrackLabelPanel(midiTrack);
-        renderPanel = new MidiTrackRenderPanel(midiTrack);
+    public TrackPanel(MidiTrack midiTrack) {
+        labelPanel = new TrackLabelPanel(midiTrack);
+        renderPanel = new TrackRenderPanel(midiTrack);
 
         this.setBorder(BORDER);
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));

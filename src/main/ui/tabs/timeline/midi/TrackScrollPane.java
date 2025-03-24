@@ -13,13 +13,13 @@ import model.MidiTrack;
 import model.Timeline;
 
 // JPanel that holds the interactable view of the timeline, rendered using graphics
-public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeListener {
+public class TrackScrollPane extends JScrollPane implements PropertyChangeListener {
 
-    private ArrayList<MidiTrackPanel> midiTrackPanels;
+    private ArrayList<TrackPanel> midiTrackPanels;
     private LineContainerPanel container;
 
     // EFFECTS: initializes the timeline 
-    public MidiTrackScrollPane() {
+    public TrackScrollPane() {
         container = new LineContainerPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
@@ -47,7 +47,7 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
 
         clearTrackPanels();
         for (MidiTrack track : timeline.getTracks()) {
-            MidiTrackPanel currentPanel = new MidiTrackPanel(track);
+            TrackPanel currentPanel = new TrackPanel(track);
             midiTrackPanels.add(currentPanel);
 
             container.add(currentPanel);
@@ -60,7 +60,7 @@ public class MidiTrackScrollPane extends JScrollPane implements PropertyChangeLi
     // MODFIES: this
     // EFFECTS: Removes MidiTrackPanels from the container
     private void clearTrackPanels() {
-        for (MidiTrackPanel currentMidiTrackPanel : midiTrackPanels) {
+        for (TrackPanel currentMidiTrackPanel : midiTrackPanels) {
             container.remove(currentMidiTrackPanel);
         }
     }

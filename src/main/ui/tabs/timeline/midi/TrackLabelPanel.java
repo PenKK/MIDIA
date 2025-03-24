@@ -9,7 +9,7 @@ import model.MidiTrack;
 import ui.tabs.timeline.midi.popup.LabelPopupMenu;
 
 // Interactable display of the general information of a MidiTrack
-public class MidiTrackLabelPanel extends JPanel {
+public class TrackLabelPanel extends JPanel {
 
     public static final int LABEL_BOX_WIDTH = 100;
     private static final Color DEFAULT_BACKGROUND_COLOR = Color.GRAY;
@@ -19,7 +19,7 @@ public class MidiTrackLabelPanel extends JPanel {
     private JLabel nameLabel;
 
     // EFFECTS: Creates the label panel which contains information about the MidiTrack for that row
-    public MidiTrackLabelPanel(MidiTrack midiTrack) {
+    public TrackLabelPanel(MidiTrack midiTrack) {
         nameLabel = new JLabel(midiTrack.getName());
         labelPopupMenu = new LabelPopupMenu(this);
 
@@ -29,9 +29,9 @@ public class MidiTrackLabelPanel extends JPanel {
         this.add(nameLabel);
 
         this.setBackground(DEFAULT_BACKGROUND_COLOR);
-        this.setPreferredSize(new Dimension(LABEL_BOX_WIDTH, MidiTrackPanel.HEIGHT));
-        this.setMaximumSize(new Dimension(LABEL_BOX_WIDTH, MidiTrackPanel.HEIGHT));
-        this.setMinimumSize(new Dimension(LABEL_BOX_WIDTH, MidiTrackPanel.HEIGHT));
+        this.setPreferredSize(new Dimension(LABEL_BOX_WIDTH, TrackPanel.HEIGHT));
+        this.setMaximumSize(new Dimension(LABEL_BOX_WIDTH, TrackPanel.HEIGHT));
+        this.setMinimumSize(new Dimension(LABEL_BOX_WIDTH, TrackPanel.HEIGHT));
     }
 
     public MidiTrack getMidiTrack() {
