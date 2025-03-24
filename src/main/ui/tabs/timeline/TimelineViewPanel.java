@@ -8,7 +8,6 @@ import java.beans.PropertyChangeListener;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
-import javax.swing.SwingUtilities;
 
 import model.Timeline;
 import ui.ruler.RulerScrollPane;

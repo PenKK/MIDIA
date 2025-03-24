@@ -1,11 +1,12 @@
 package ui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -23,7 +24,7 @@ import javax.swing.event.ChangeListener;
 import model.Timeline;
 
 // Panel containing UI elements related to playback
-public class MediaControlPanel extends JPanel implements ActionListener, ChangeListener {
+public class MediaControlPanel extends JPanel implements ActionListener, ChangeListener, PropertyChangeListener {
 
     private static final int POSITION_LINE_UPDATE_DELAY = 10;
 
@@ -39,7 +40,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     // EFFECTS: creates a MediaControlPanel with timers and initializes image icons and components
     public MediaControlPanel() {
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-
+        Timeline.addObserver(this);
         initFields();
 
         this.add(leftAlignPanel);
@@ -58,9 +59,13 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         pausePlayTimer = new Timer(0, this);
         pausePlayTimer.setRepeats(false);
         tickUpdateTimer = new Timer(POSITION_LINE_UPDATE_DELAY, this);
+
+      
         scaleSlider = new JSlider();
         scaleSlider.addChangeListener(this);
         scaleSlider.setPreferredSize(new Dimension(100, scaleSlider.getPreferredSize().height));
+        copyTimelineScaleValue();
+
         play = new JButton();
         play.addActionListener(this);
 
@@ -68,8 +73,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
             playImage = getImageIcon("lib/images/play.png");
             pauseImage = getImageIcon("lib/images/pause.png");
         } catch (Exception e) {
-            System.out.println("Unable to load media icons");
-            e.printStackTrace();
+            System.out.println("Unable to load media icons: " + e.getMessage());
         }
 
         setPlayIcon(playImage);
@@ -101,6 +105,13 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
             System.out.println("Invalid midi data found, unable to start playback");
             e.printStackTrace();
         }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the render sliders value to that of the timeline render scale
+    private void copyTimelineScaleValue() {
+        int value = (int) (100 * Timeline.getInstance().getHorizontalScale() / Timeline.MAX_HORIZONTAL_SCALE);
+        scaleSlider.setValue(value);
     }
 
     // EFFECTS: returns the ImageIcon representation of the image at path
@@ -160,6 +171,18 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         Object source = e.getSource();
         if (source.equals(scaleSlider)) {
             updateScale();
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+        switch (propertyName) {
+            case "timeline":
+                copyTimelineScaleValue();
+                break;
+            default:
+                break;
         }
     }
 }
