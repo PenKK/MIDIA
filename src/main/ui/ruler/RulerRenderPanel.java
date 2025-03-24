@@ -85,6 +85,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
             case "beatDivsion":
             case "beatsPerMeasure":
             case "timeline":
+            case "horizontalScale":
                 updateMeasurements();
                 break;
             default:

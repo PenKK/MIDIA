@@ -74,6 +74,7 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
         switch (propertyName) {
             case "timeline":
             case "midiTracks":
+            case "horizontalScale":
                 updateMidiTrackPanels();
                 break;
             default:

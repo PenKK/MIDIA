@@ -18,7 +18,6 @@ import ui.tabs.timeline.midi.TrackScrollPane;
 // Holds the timeline view, and a ruler at the top
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener, AdjustmentListener {
 
-    private static double renderScale = Timeline.getInstance().getHorizontalScale();
     private TrackScrollPane midiTrackScrollPane;
     private RulerScrollPane rulerScrollPane;
 
@@ -47,10 +46,7 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
     // MODFIES: this
     // EFFECTS: resizes the ruler's width to match the midiTrackScrollPane's width
     private void updateRulerDimensions() {
-        renderScale = Timeline.getInstance().getHorizontalScale();
-        SwingUtilities.invokeLater(() -> {
-            rulerScrollPane.updateWidth(midiTrackScrollPane.getContainerWidth());
-        });
+        rulerScrollPane.updateWidth(midiTrackScrollPane.getContainerWidth());
     }
 
     // MODFIES: this
@@ -61,15 +57,11 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
 
         switch (propertyName) {
             case "timeline":
+            case "horizontalScale":
                 updateRulerDimensions();
-                break;
             default:
                 break;
         }
-    }
-
-    public static double getRenderScale() {
-        return renderScale;
     }
 
     // MODIFIES: this

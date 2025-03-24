@@ -12,7 +12,7 @@ import javax.swing.SwingUtilities;
 import model.Block;
 import model.MidiTrack;
 import model.Note;
-import ui.tabs.timeline.TimelineViewPanel;
+import model.Timeline;
 
 // Interactable render of the MidiTrack's blocks and notes
 public class TrackRenderPanel extends JPanel implements MouseListener {
@@ -138,7 +138,7 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
 
     // EFFECTS: returns the value scaled by a factor of RENDER_SCALE, rounded to the nearest integer
     public static int scalePixelsRender(int value) {
-        return (int) Math.round(value * TimelineViewPanel.getRenderScale());
+        return (int) Math.round(value * Timeline.getInstance().getHorizontalScale());
     }
 
     @Override
@@ -170,7 +170,7 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
 
     // EFFECTS: Handles double click behavior on the rendered track
     private void doubleClick(MouseEvent e) {
-        int tick = (int) Math.round(e.getX() / TimelineViewPanel.getRenderScale());
+        int tick = (int) Math.round(e.getX() / Timeline.getInstance().getHorizontalScale());
 
         for (Block b : midiTrack.getBlocks()) {
             if (b.getStartTick() <= tick && b.getStartTick() + b.getDurationTicks() >= tick) {
