@@ -470,17 +470,19 @@ public class TestTimeline extends TestJson {
         }
 
         TestObserver testObserver = new TestObserver();
+        assertEquals(testObserver.getValue(), 0);
 
         Timeline.addObserver(testObserver);
         assertEquals(Timeline.getPropertyChangeSupport().getPropertyChangeListeners().length, 1);
 
-        Timeline.setInstance(new Timeline("joe"));
-
+        Timeline.refresh();
         assertEquals(testObserver.getValue(), 1);
+
+        Timeline.setInstance(new Timeline("joe"));
+        assertEquals(testObserver.getValue(), 2);
 
         Timeline.removeObserver(testObserver);
-        Timeline.setInstance(timeline);
-
-        assertEquals(testObserver.getValue(), 1);
+        Timeline.refresh();
+        assertEquals(testObserver.getValue(), 2);
     }
 }
