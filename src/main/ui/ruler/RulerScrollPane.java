@@ -1,4 +1,4 @@
-package ui.tabs.timeline.ruler;
+package ui.ruler;
 
 import java.awt.Component;
 import java.awt.Dimension;

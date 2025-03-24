@@ -11,9 +11,9 @@ import javax.swing.JScrollBar;
 import javax.swing.SwingUtilities;
 
 import model.Timeline;
+import ui.ruler.RulerScrollPane;
 import ui.tabs.timeline.midi.TrackPanel;
 import ui.tabs.timeline.midi.TrackScrollPane;
-import ui.tabs.timeline.ruler.RulerScrollPane;
 
 // Holds the timeline view, and a ruler at the top
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener, AdjustmentListener {
