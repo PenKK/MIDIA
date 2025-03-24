@@ -11,27 +11,27 @@ import javax.swing.JScrollBar;
 import javax.swing.SwingUtilities;
 
 import model.Timeline;
-import ui.tabs.timeline.midi.MidiTrackPanel;
-import ui.tabs.timeline.midi.MidiTrackScrollPane;
+import ui.tabs.timeline.midi.TrackPanel;
+import ui.tabs.timeline.midi.TrackScrollPane;
 import ui.tabs.timeline.ruler.RulerScrollPane;
 
 // Holds the timeline view, and a ruler at the top
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener, AdjustmentListener {
 
     private static double renderScale = Timeline.getInstance().getHorizontalScale();
-    private MidiTrackScrollPane midiTrackScrollPane;
+    private TrackScrollPane midiTrackScrollPane;
     private RulerScrollPane rulerScrollPane;
 
     // EFFECTS: Creates timeline view container, and initializes sub components
     public TimelineViewPanel() {
-        midiTrackScrollPane = new MidiTrackScrollPane();
+        midiTrackScrollPane = new TrackScrollPane();
         rulerScrollPane = new RulerScrollPane();
 
         Timeline.addObserver(this);
         syncHorizontalScrollBars();
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBorder(MidiTrackPanel.BORDER);
+        this.setBorder(TrackPanel.BORDER);
         this.setAlignmentX(LEFT_ALIGNMENT);
         this.add(rulerScrollPane);
         this.add(midiTrackScrollPane);

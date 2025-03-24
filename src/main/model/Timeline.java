@@ -45,7 +45,6 @@ public class Timeline implements Writable {
     private int beatsPerMeasure;
     private double horizontalScale;
 
-
     // EFFECTS: Creates a timeline with a single sequence with no tracks and the positon 
     //          tick at 0, and a BPM of 120.
     //          Method throws MidiUnavailableException if the device has no MIDI sequencer
@@ -146,6 +145,11 @@ public class Timeline implements Writable {
         pcs.firePropertyChange("midiTracks", oldTracks, new ArrayList<>(midiTracks));
 
         return removed;
+    }
+
+    // EFFECTS: forces a timeline update (for rendering purposes one day better fix hopefuly)
+    public static void refresh() {
+        pcs.firePropertyChange("timeline", null, getInstance());
     }
 
     // MODIFIES: this
@@ -297,7 +301,7 @@ public class Timeline implements Writable {
         double ticks = durationInQuarterNotes * sequence.getResolution();
         return (int) Math.round(ticks);
     }
-    
+
     // REQUIRES: beats >= 0
     // EFFECTS: converts beats to ms
     public int beatsToMs(double beats) {
@@ -394,7 +398,7 @@ public class Timeline implements Writable {
     public double getHorizontalScale() {
         return horizontalScale;
     }
-    
+
     public int getBeatsPerMeasure() {
         return beatsPerMeasure;
     }

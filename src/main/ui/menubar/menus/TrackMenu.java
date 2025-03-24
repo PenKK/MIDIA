@@ -8,6 +8,7 @@ import model.MidiTrack;
 import model.Timeline;
 import model.instrument.Instrument;
 import ui.menubar.dialog.BlockInputDialog;
+import ui.menubar.dialog.NoteInputDialog;
 import ui.menubar.dialog.TrackInputDialog;
 
 // The track menu option in the menu bar
@@ -25,26 +26,22 @@ public class TrackMenu extends Menu {
         addNote = new MenuItem("Add note", this);
     }
 
-    // EFFECTS: Prompts user for track information and creates it on the timeline singleton instance
+    // EFFECTS: Prompts user to create a new track
     private void createTrack() {
-        TrackInputDialog input = new TrackInputDialog(getParent().getParent());
-
-        String trackName = input.getInputName();
-        boolean percussive = input.isPercussive();
-        Instrument instrument = input.getInstrument();
-
-        if (trackName == null) {
-            return;
-        }
-
-        MidiTrack midiTrack = Timeline.getInstance().createMidiTrack(trackName, instrument, percussive);
-
-        if (midiTrack == null) {
-            JOptionPane.showMessageDialog(this, "You have already reached the maximum number of instrumental tracks," 
-                                              + "15.\n Track was not created", "Warning", JOptionPane.WARNING_MESSAGE);
-        }
+        new TrackInputDialog(getParent().getParent());
     }
 
+    // EFFECTS: Prompts user to create a new block
+    private void addBlock() {
+        new BlockInputDialog(getParent().getParent());
+    }
+
+    // EFFECTS: Prompts user to create a new note
+    private void addNote() {
+        new NoteInputDialog(getParent().getParent());
+    }
+
+    
 
     // EFFECTS: listens for button actions on menu items and runs methods accordingly
     @Override
@@ -54,11 +51,9 @@ public class TrackMenu extends Menu {
             createTrack();
         } else if (source.equals(addBlock)) {
             addBlock();
+        } else if (source.equals(addNote)) {
+            addNote();
         }
-    }
-
-    private void addBlock() {
-        BlockInputDialog inputDialog = new BlockInputDialog(getParent().getParent());
     }
 
 }

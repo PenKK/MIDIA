@@ -14,8 +14,11 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import model.MidiTrack;
+import model.Timeline;
 import model.instrument.Instrument;
 import model.instrument.InstrumentalInstrument;
 import model.instrument.PercussionInstrument;
@@ -27,10 +30,6 @@ public class TrackInputDialog extends JDialog implements ActionListener {
     private JCheckBox percussiveCheckBox;
     private JComboBox<Instrument> instrumentComboBox;
     private JButton create;
-
-    private String name;
-    private boolean percussive;
-    private Instrument instrument;
 
     // EFFECTS: creates input dialog for creating a new track
     public TrackInputDialog(Component invoker) {
@@ -71,16 +70,22 @@ public class TrackInputDialog extends JDialog implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: stores values in the fields and then closes the dialog
+    // EFFECTS: creates a track on the the timeline with user input from fields
     private void submit() { 
-        name = nameField.getText().trim();
+        String name = nameField.getText().trim();;
+        boolean percussive = percussiveCheckBox.isSelected();;
+        Instrument instrument = (Instrument) instrumentComboBox.getSelectedItem();;
 
-        if (name.equals("")) {
+        if (name.equals("") || name == null) {
             return;
         }
 
-        percussive = percussiveCheckBox.isSelected();
-        instrument = (Instrument) instrumentComboBox.getSelectedItem();
+        MidiTrack midiTrack = Timeline.getInstance().createMidiTrack(name, instrument, percussive);
+
+        if (midiTrack == null) {
+            JOptionPane.showMessageDialog(this, "You have already reached the maximum number of instrumental tracks," 
+                                              + "15.\n Track was not created", "Warning", JOptionPane.WARNING_MESSAGE);
+        }
         dispose();
     }
 
@@ -96,17 +101,5 @@ public class TrackInputDialog extends JDialog implements ActionListener {
                     new DefaultComboBoxModel<Instrument>(InstrumentalInstrument.values());
             instrumentComboBox.setModel(items);
         }
-    }
-
-    public String getInputName() {
-        return name;
-    }
-
-    public boolean isPercussive() {
-        return percussive;
-    }
-
-    public Instrument getInstrument() {
-        return instrument;
     }
 }

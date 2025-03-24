@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Time;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -14,11 +15,11 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
 import model.Block;
 import model.MidiTrack;
 import model.Timeline;
-import model.instrument.Instrument;
 
 // A JDialog to get input for creating a new block in a specified track
 public class BlockInputDialog extends JDialog implements ActionListener {
@@ -27,6 +28,7 @@ public class BlockInputDialog extends JDialog implements ActionListener {
     private JSpinner startBeatSpinner;
     private JButton create;
 
+    // EFFECTS: Creates a JDialog that prompts user to select a track and start beat for a new block
     public BlockInputDialog(Component invoker) {
         super((Frame) null, "Add block", true);
         this.setLayout(new GridLayout(0, 2, 10, 10));
@@ -38,7 +40,11 @@ public class BlockInputDialog extends JDialog implements ActionListener {
         tracks = trackList.toArray(tracks);
 
         midiTracksComboBox = new JComboBox<>(tracks);
-        startBeatSpinner = new JSpinner();
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0.0, 0.0, Double.MAX_VALUE, 0.1);
+        startBeatSpinner = new JSpinner(spinnerModel);
+        JSpinner.NumberEditor editor = new JSpinner.NumberEditor(startBeatSpinner, "#.##");
+
+        startBeatSpinner.setEditor(editor);
         create = new JButton("Create block");
         create.addActionListener(this);
         
@@ -54,6 +60,7 @@ public class BlockInputDialog extends JDialog implements ActionListener {
         this.setVisible(true);
     }
 
+    // EFFECTS: Listens for button actions and runs methods accordingly
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(create)) {
@@ -61,10 +68,20 @@ public class BlockInputDialog extends JDialog implements ActionListener {
         }
     }
 
+    // MODIFIES: this (midiTrack from timeline singleton)
+    // EFFECTS: creates a new block in the selected midiTrack
     private void createBlock() {
         MidiTrack midiTrack = (MidiTrack) midiTracksComboBox.getSelectedItem();
-        int startTick = (Integer) startBeatSpinner.getValue();
+
+        if (midiTrack == null) {
+            return;
+        }
+        
+        double startTick = (double) startBeatSpinner.getValue();
         int startBeat = Timeline.getInstance().beatsToTicks(startTick);
         midiTrack.addBlock(new Block(startBeat));
+
+        Timeline.refresh();
+        dispose();
     }
 }

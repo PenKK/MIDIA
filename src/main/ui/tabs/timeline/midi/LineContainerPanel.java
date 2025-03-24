@@ -13,7 +13,7 @@ import model.Timeline;
 // A container to draw the line of the position tick indicator line over tracks
 public class LineContainerPanel extends JPanel implements PropertyChangeListener {
 
-    private int lineX = MidiTrackLabelPanel.LABEL_BOX_WIDTH;
+    private int lineX = TrackLabelPanel.LABEL_BOX_WIDTH;
 
     // EFFECTS: creates a LineContainerPanel that observs the timeline and has BoxLayout
     public LineContainerPanel() {
@@ -25,8 +25,8 @@ public class LineContainerPanel extends JPanel implements PropertyChangeListener
     // MODIFIES: this
     // EFFECTS: updates lineX value with the timeline positionTick (scaled) and repaints
     public void updateLineX() {
-        this.lineX = MidiTrackRenderPanel.scalePixelsRender(Timeline.getInstance().getPositionTick()) 
-                                                            + MidiTrackLabelPanel.LABEL_BOX_WIDTH;
+        this.lineX = TrackRenderPanel.scalePixelsRender(Timeline.getInstance().getPositionTick()) 
+                                                            + TrackLabelPanel.LABEL_BOX_WIDTH;
         repaint(); 
     }
 

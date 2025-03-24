@@ -8,13 +8,13 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import ui.tabs.timeline.midi.MidiTrackPanel;
+import ui.tabs.timeline.midi.TrackPanel;
 
 // Panel that shows the tickmarks above timeline to indicate beat marks and other timely infomration
 public class RulerScrollPane extends JScrollPane {
 
     public static final int BEAT_WIDTH = 25;
-    public static final int RULER_HEIGHT = MidiTrackPanel.HEIGHT / 4;
+    public static final int RULER_HEIGHT = TrackPanel.HEIGHT / 4;
     public static final int DEFAULT_RULER_WIDTH = 800;
 
     private RulerRenderPanel container;

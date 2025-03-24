@@ -12,18 +12,18 @@ import model.Timeline;
 import model.instrument.Instrument;
 import model.instrument.InstrumentalInstrument;
 import model.instrument.PercussionInstrument;
-import ui.tabs.timeline.midi.MidiTrackLabelPanel;
+import ui.tabs.timeline.midi.TrackLabelPanel;
 
 // The popup menu for modifying a track
 public class LabelPopupMenu extends JPopupMenu implements ActionListener {
 
-    MidiTrackLabelPanel parentPanel;
+    TrackLabelPanel parentPanel;
     JMenuItem rename;
     JMenuItem delete;
     JMenuItem changeInstrument;
 
     // EFFECTS: creates a popup menu for the specified parent midiTrackLabelPanel
-    public LabelPopupMenu(MidiTrackLabelPanel parentPanel) {
+    public LabelPopupMenu(TrackLabelPanel parentPanel) {
         
         super(parentPanel.getName());
         rename = new JMenuItem("Rename track");
