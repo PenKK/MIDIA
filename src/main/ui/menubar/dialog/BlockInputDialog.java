@@ -6,7 +6,6 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Time;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -76,7 +75,7 @@ public class BlockInputDialog extends JDialog implements ActionListener {
         if (midiTrack == null) {
             return;
         }
-        
+
         double startTick = (double) startBeatSpinner.getValue();
         int startBeat = Timeline.getInstance().beatsToTicks(startTick);
         midiTrack.addBlock(new Block(startBeat));

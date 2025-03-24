@@ -2,11 +2,6 @@ package ui.menubar.menus;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JOptionPane;
-
-import model.MidiTrack;
-import model.Timeline;
-import model.instrument.Instrument;
 import ui.menubar.dialog.BlockInputDialog;
 import ui.menubar.dialog.NoteInputDialog;
 import ui.menubar.dialog.TrackInputDialog;
