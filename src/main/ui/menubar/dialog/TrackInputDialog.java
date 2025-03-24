@@ -1,18 +1,13 @@
 package ui.menubar.dialog;
 
 import java.awt.Component;
-import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -24,7 +19,7 @@ import model.instrument.InstrumentalInstrument;
 import model.instrument.PercussionInstrument;
 
 // An InputDialog for creating new MidiTracks.
-public class TrackInputDialog extends JDialog implements ActionListener {
+public class TrackInputDialog extends InputDialog {
 
     private JTextField nameField;
     private JCheckBox percussiveCheckBox;
@@ -33,10 +28,16 @@ public class TrackInputDialog extends JDialog implements ActionListener {
 
     // EFFECTS: creates input dialog for creating a new track
     public TrackInputDialog(Component invoker) {
-        super((Frame) null, "Create Track", true);
-        this.setLayout(new GridLayout(0, 2, 10, 10));
-        this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+        super("Create Track");
 
+        this.getRootPane().setDefaultButton(create);
+        super.display(invoker, new Rectangle(400, 300));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes fields and adds them to this
+    @Override
+    protected void initFields() {
         nameField = new JTextField();
         percussiveCheckBox = new JCheckBox();
         instrumentComboBox = new JComboBox<>(InstrumentalInstrument.values());
@@ -52,11 +53,6 @@ public class TrackInputDialog extends JDialog implements ActionListener {
         this.add(new JLabel("Instrument: "));
         this.add(instrumentComboBox);
         this.add(create);
-
-        this.getRootPane().setDefaultButton(create);
-        this.setBounds(new Rectangle(400, 300));
-        this.setLocationRelativeTo(invoker);
-        this.setVisible(true);
     }
 
     // EFFECTS: listens for actions and runs methods accordingly
@@ -102,4 +98,6 @@ public class TrackInputDialog extends JDialog implements ActionListener {
             instrumentComboBox.setModel(items);
         }
     }
+
+
 }

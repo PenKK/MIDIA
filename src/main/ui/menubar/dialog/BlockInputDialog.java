@@ -1,17 +1,12 @@
 package ui.menubar.dialog;
 
 import java.awt.Component;
-import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -21,7 +16,7 @@ import model.MidiTrack;
 import model.Timeline;
 
 // A JDialog to get input for creating a new block in a specified track
-public class BlockInputDialog extends JDialog implements ActionListener {
+public class BlockInputDialog extends InputDialog {
 
     private JComboBox<MidiTrack> midiTracksComboBox;
     private JSpinner startBeatSpinner;
@@ -29,10 +24,19 @@ public class BlockInputDialog extends JDialog implements ActionListener {
 
     // EFFECTS: Creates a JDialog that prompts user to select a track and start beat for a new block
     public BlockInputDialog(Component invoker) {
-        super((Frame) null, "Add block", true);
-        this.setLayout(new GridLayout(0, 2, 10, 10));
-        this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+        super("Add Block");
 
+
+
+        this.setBounds(new Rectangle(300, 200));
+        this.getRootPane().setDefaultButton(create);
+        super.display(invoker, new Rectangle(300, 200));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes the midiTracksComboBox, spinner, and create button
+    @Override
+    protected void initFields() {
         Timeline timeline = Timeline.getInstance();
         ArrayList<MidiTrack> trackList = timeline.getTracks();
         MidiTrack[] tracks = new MidiTrack[trackList.size()];
@@ -52,11 +56,6 @@ public class BlockInputDialog extends JDialog implements ActionListener {
         this.add(new JLabel("Start beat: "));
         this.add(startBeatSpinner);
         this.add(create);
-
-        this.setBounds(new Rectangle(300, 200));
-        this.getRootPane().setDefaultButton(create);
-        this.setLocationRelativeTo(invoker);
-        this.setVisible(true);
     }
 
     // EFFECTS: Listens for button actions and runs methods accordingly

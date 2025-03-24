@@ -1,17 +1,12 @@
 package ui.menubar.dialog;
 
 import java.awt.Component;
-import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -22,7 +17,7 @@ import model.Note;
 import model.Timeline;
 
 // A JDialog for getting note input into a specified block in a specified track
-public class NoteInputDialog extends JDialog implements ActionListener {
+public class NoteInputDialog extends InputDialog {
 
     private JButton create;
     private JSpinner pitch;
@@ -35,21 +30,40 @@ public class NoteInputDialog extends JDialog implements ActionListener {
 
     // Creates and launches an input dialog for note information 
     public NoteInputDialog(Component invoker) {
-        super((Frame) null, "Add note", true);
-        this.setLayout(new GridLayout(0, 2, 10, 10));
-        this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
-
-        initComboBoxes();
-        initNumericalFields();
+        super("Add note");
 
         create = new JButton("Add note");
         create.addActionListener(this);
         this.add(create);
 
-        this.setBounds(new Rectangle(300, 400));
         this.getRootPane().setDefaultButton(create);
-        this.setLocationRelativeTo(invoker);
-        this.setVisible(true);
+        super.display(invoker, new Rectangle(300, 400));
+    }
+
+    // MODIFIES: this
+    // EFFECTS: initializes combo boxes and spinner fields and adds them to this
+    @Override
+    protected void initFields() {
+        initComboBoxes();
+
+        SpinnerNumberModel doubleModelStart = new SpinnerNumberModel(0.0, 0.0, Double.MAX_VALUE, 0.1);
+        SpinnerNumberModel doubleModelDuration = new SpinnerNumberModel(0.0, 0.0, Double.MAX_VALUE, 0.1);
+        SpinnerNumberModel byteModelPitch = new SpinnerNumberModel(0, 0, 127, 1);
+        SpinnerNumberModel byteModelVelocity = new SpinnerNumberModel(0, 0, 127, 1);
+
+        pitch = new JSpinner(byteModelPitch);
+        velocity = new JSpinner(byteModelVelocity);
+        startBeat = new JSpinner(doubleModelStart);
+        durationBeats = new JSpinner(doubleModelDuration);
+
+        this.add(new JLabel("Pitch: "));
+        this.add(pitch);
+        this.add(new JLabel("Velocity: "));
+        this.add(velocity);
+        this.add(new JLabel("Start beat: "));
+        this.add(startBeat);
+        this.add(new JLabel("Duration (in beats): "));
+        this.add(durationBeats);
     }
 
     // MODIFIES: this
@@ -71,29 +85,6 @@ public class NoteInputDialog extends JDialog implements ActionListener {
         this.add(midiTracksComboBox);
         this.add(new JLabel("Block index: "));
         this.add(blocksComboBox);
-    }
-
-    // MODIFIES: this
-    // EFFECTS: Initializes numerical fields
-    private void initNumericalFields() {
-        SpinnerNumberModel doubleModelStart = new SpinnerNumberModel(0.0, 0.0, Double.MAX_VALUE, 0.1);
-        SpinnerNumberModel doubleModelDuration = new SpinnerNumberModel(0.0, 0.0, Double.MAX_VALUE, 0.1);
-        SpinnerNumberModel byteModelPitch = new SpinnerNumberModel(0, 0, 127, 1);
-        SpinnerNumberModel byteModelVelocity = new SpinnerNumberModel(0, 0, 127, 1);
-
-        pitch = new JSpinner(byteModelPitch);
-        velocity = new JSpinner(byteModelVelocity);
-        startBeat = new JSpinner(doubleModelStart);
-        durationBeats = new JSpinner(doubleModelDuration);
-
-        this.add(new JLabel("Pitch: "));
-        this.add(pitch);
-        this.add(new JLabel("Velocity: "));
-        this.add(velocity);
-        this.add(new JLabel("Start beat: "));
-        this.add(startBeat);
-        this.add(new JLabel("Duration (in beats): "));
-        this.add(durationBeats);
     }
 
     // EFFECTS: listens for actions and runs methods accordingly

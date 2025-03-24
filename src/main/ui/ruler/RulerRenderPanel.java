@@ -48,6 +48,8 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
         beatDivisions = timeline.getBeatDivision();
         beatsPerMeasure = timeline.getBeatsPerMeasure();
         tickPixelWidth = TrackRenderPanel.scalePixelsRender(Timeline.PULSES_PER_QUARTER_NOTE / beatDivisions);
+
+        repaint();
     }
 
     // MODIFIES: this
