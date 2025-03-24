@@ -18,13 +18,14 @@ import model.Timeline;
 
 // Panel containing UI elements related to playback
 public class MediaControlPanel extends JPanel implements ActionListener {
+
+    private static final int POSITION_LINE_UPDATE_DELAY = 10;
+
     private JButton play;
     private ImageIcon playImage = null;
     private ImageIcon pauseImage = null;
     private Timer pausePlayTimer;
     private Timer tickUpdateTimer;
-
-    private static final int POSITION_LINE_UPDATE_DELAY = 10;
 
     // EFFECTS: creates a MediaControlPanel with timers and initializes image icons and components
     public MediaControlPanel() {

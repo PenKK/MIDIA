@@ -30,8 +30,8 @@ public class DAW {
 
     private Timeline timeline;
     private Scanner sc;
-    JsonReader reader;
-    JsonWriter writer;
+    private JsonReader reader;
+    private JsonWriter writer;
 
     // EFFECTS: initializes an empty timeline, sets up scanner, and runs the application
     public DAW() throws InvalidMidiDataException {
