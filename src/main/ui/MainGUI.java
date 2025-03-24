@@ -7,7 +7,10 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 // Launches the Daw UI, entry point of application
 public class MainGUI {
     public static void main(String[] args) throws Exception {
-        // FlatDarculaLaf.setup(); // Loads (nicer looking) look and feel
+        if (args.length != 0 && args[0].toUpperCase().trim().equals("TRUE")) {
+            FlatDarculaLaf.setup(); 
+        }
+
         SwingUtilities.invokeLater(() -> {
             try {
                 new DawFrame();
