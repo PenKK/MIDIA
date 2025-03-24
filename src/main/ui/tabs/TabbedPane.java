@@ -4,8 +4,8 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import ui.MediaControlPanel;
 import ui.tabs.piano.roll.PianoRollPanel;
-import ui.tabs.timeline.MediaControlPanel;
 import ui.tabs.timeline.TimelineViewPanel;
 
 // TabbedPane holds the tabs of the TimelinePanel and PianoRollPanel

@@ -12,13 +12,14 @@ import javax.swing.JDialog;
 public abstract class InputDialog extends JDialog implements ActionListener {
 
     // EFFECTS: creates an input dialog with the specified title
-    InputDialog(String frameTitle) {
+    InputDialog(String frameTitle, Component invoker, Rectangle r) {
         super((Frame) null, frameTitle, true);
 
         initFields();
 
         this.setLayout(new GridLayout(0, 2, 10, 10));
         this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+        display(invoker, r);
     }
 
     // MODIFIES: this

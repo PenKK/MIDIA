@@ -30,14 +30,7 @@ public class NoteInputDialog extends InputDialog {
 
     // Creates and launches an input dialog for note information 
     public NoteInputDialog(Component invoker) {
-        super("Add note");
-
-        create = new JButton("Add note");
-        create.addActionListener(this);
-        this.add(create);
-
-        this.getRootPane().setDefaultButton(create);
-        super.display(invoker, new Rectangle(300, 400));
+        super("Add note", invoker, new Rectangle(300, 400));
     }
 
     // MODIFIES: this
@@ -46,10 +39,10 @@ public class NoteInputDialog extends InputDialog {
     protected void initFields() {
         initComboBoxes();
 
-        SpinnerNumberModel doubleModelStart = new SpinnerNumberModel(0.0, 0.0, Double.MAX_VALUE, 0.1);
-        SpinnerNumberModel doubleModelDuration = new SpinnerNumberModel(0.0, 0.0, Double.MAX_VALUE, 0.1);
-        SpinnerNumberModel byteModelPitch = new SpinnerNumberModel(0, 0, 127, 1);
-        SpinnerNumberModel byteModelVelocity = new SpinnerNumberModel(0, 0, 127, 1);
+        SpinnerNumberModel doubleModelStart = new SpinnerNumberModel(1.0, 1.0, Double.MAX_VALUE, 0.5);
+        SpinnerNumberModel doubleModelDuration = new SpinnerNumberModel(1.0, 0.0, Double.MAX_VALUE, 0.5);
+        SpinnerNumberModel byteModelPitch = new SpinnerNumberModel(60, 0, 127, 1);
+        SpinnerNumberModel byteModelVelocity = new SpinnerNumberModel(80, 0, 127, 1);
 
         pitch = new JSpinner(byteModelPitch);
         velocity = new JSpinner(byteModelVelocity);
@@ -64,6 +57,11 @@ public class NoteInputDialog extends InputDialog {
         this.add(startBeat);
         this.add(new JLabel("Duration (in beats): "));
         this.add(durationBeats);
+
+        create = new JButton("Add note");
+        create.addActionListener(this);
+        this.getRootPane().setDefaultButton(create);
+        this.add(create);
     }
 
     // MODIFIES: this
@@ -128,7 +126,7 @@ public class NoteInputDialog extends InputDialog {
         Timeline timeline = Timeline.getInstance();
         int p = (int) pitch.getValue();
         int v = (int) velocity.getValue();
-        int startTick = timeline.beatsToTicks((double) startBeat.getValue());
+        int startTick = timeline.beatsToTicks((double) startBeat.getValue() - 1);
         int durationTicks = timeline.beatsToTicks((double) durationBeats.getValue());
 
         Note note = new Note(p, v, startTick, durationTicks);

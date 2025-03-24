@@ -21,8 +21,7 @@ public class BeatConfigurationInputDialog extends InputDialog {
 
     // EFFECTS: creates an input dialog and displays it
     public BeatConfigurationInputDialog(Component invoker) {
-        super("Beat Configuration");
-        super.display(invoker, new Rectangle(300, 200));
+        super("Beat Configuration", invoker, new Rectangle(300, 200));
     }
 
     // MODIFIES: this

@@ -28,10 +28,7 @@ public class TrackInputDialog extends InputDialog {
 
     // EFFECTS: creates input dialog for creating a new track
     public TrackInputDialog(Component invoker) {
-        super("Create Track");
-
-        this.getRootPane().setDefaultButton(create);
-        super.display(invoker, new Rectangle(400, 300));
+        super("Create Track", invoker, new Rectangle(400, 300));
     }
 
     // MODIFIES: this
@@ -53,6 +50,8 @@ public class TrackInputDialog extends InputDialog {
         this.add(new JLabel("Instrument: "));
         this.add(instrumentComboBox);
         this.add(create);
+        this.getRootPane().setDefaultButton(create);
+        
     }
 
     // EFFECTS: listens for actions and runs methods accordingly

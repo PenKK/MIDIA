@@ -24,13 +24,7 @@ public class BlockInputDialog extends InputDialog {
 
     // EFFECTS: Creates a JDialog that prompts user to select a track and start beat for a new block
     public BlockInputDialog(Component invoker) {
-        super("Add Block");
-
-
-
-        this.setBounds(new Rectangle(300, 200));
-        this.getRootPane().setDefaultButton(create);
-        super.display(invoker, new Rectangle(300, 200));
+        super("Add Block", invoker, new Rectangle(300, 200));
     }
 
     // MODIFIES: this
@@ -43,11 +37,9 @@ public class BlockInputDialog extends InputDialog {
         tracks = trackList.toArray(tracks);
 
         midiTracksComboBox = new JComboBox<>(tracks);
-        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(0.0, 0.0, Double.MAX_VALUE, 0.1);
+        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1.0, 1.0, Double.MAX_VALUE, 0.5);
         startBeatSpinner = new JSpinner(spinnerModel);
-        JSpinner.NumberEditor editor = new JSpinner.NumberEditor(startBeatSpinner, "#.##");
-
-        startBeatSpinner.setEditor(editor);
+        
         create = new JButton("Create block");
         create.addActionListener(this);
         
@@ -55,6 +47,7 @@ public class BlockInputDialog extends InputDialog {
         this.add(midiTracksComboBox);
         this.add(new JLabel("Start beat: "));
         this.add(startBeatSpinner);
+        this.getRootPane().setDefaultButton(create);
         this.add(create);
     }
 
@@ -75,7 +68,7 @@ public class BlockInputDialog extends InputDialog {
             return;
         }
 
-        double startTick = (double) startBeatSpinner.getValue();
+        double startTick = (double) startBeatSpinner.getValue() - 1;
         int startBeat = Timeline.getInstance().beatsToTicks(startTick);
         midiTrack.addBlock(new Block(startBeat));
 
