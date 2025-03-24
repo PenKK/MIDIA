@@ -126,15 +126,5 @@ public class FileMenu extends Menu {
         }
 
         fileChooser.getSelectedFile().delete();
-
-        try {
-            Timeline.setInstance(new Timeline("New Project"));
-        } catch (MidiUnavailableException e) {
-            System.out.println("MIDI device unavaliable");
-            e.printStackTrace();
-        } catch (InvalidMidiDataException e) {
-            System.out.println("Unable to create new timeline, invalid MIDI data found");
-            e.printStackTrace();
-        }
     }
 }
