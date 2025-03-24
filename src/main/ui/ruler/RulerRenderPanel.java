@@ -19,7 +19,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
     public static final int BEAT_TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.6);
     private static final Color TICK_COLOR = new Color(200,200,200);
     private static final int FONT_PADDING = 4;
-    private static final Font MEASURE_FONT = new Font("Dialog", Font.PLAIN, 16);
+    private static final Font MEASURE_FONT = new Font("Dialog", Font.PLAIN, 14);
 
     private int tickPixelWidth;
     private int beatDivisions;
@@ -66,7 +66,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
             
             if (x % (beatPixelWidth * beatsPerMeasure) == 0) { // One measure
                 height = RulerScrollPane.RULER_HEIGHT; 
-                String str = String.valueOf(x / (beatPixelWidth * beatsPerMeasure) + 1);
+                String str = String.valueOf(x / (beatPixelWidth * beatsPerMeasure) + 1).concat(".1");
                 g.drawString(str, i + FONT_PADDING, height - FONT_PADDING);
             } else if (x % beatPixelWidth == 0) { // One beat
                 height = BEAT_TICK_HEIGHT; 
