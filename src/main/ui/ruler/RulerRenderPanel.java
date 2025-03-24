@@ -1,6 +1,7 @@
 package ui.ruler;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -17,6 +18,9 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
     public static final int TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.3);
     public static final int BEAT_TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.6);
     private static final Color TICK_COLOR = new Color(200,200,200);
+    private static final int FONT_PADDING = 4;
+    private static final Font MEASURE_FONT = new Font("Dialog", Font.PLAIN, 16);
+
     private int tickPixelWidth;
     private int beatDivisions;
     private int beatsPerMeasure;
@@ -50,18 +54,22 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
     // EFFECTS: Draws the ticks marks of measures, beats, and divisions, according to timeline instance
     private void drawAllTickMarks(Graphics g) {
         updateMeasurements();
+        g.setColor(TICK_COLOR);
+        g.setFont(MEASURE_FONT);
+
         for (int i = TrackLabelPanel.LABEL_BOX_WIDTH; i < getWidth(); i += tickPixelWidth) {
             int height = TICK_HEIGHT;
             int beatPixelWidth = tickPixelWidth * beatDivisions;
             int x = i - TrackLabelPanel.LABEL_BOX_WIDTH;
-
-            if (x % (beatPixelWidth * beatsPerMeasure) == 0) {
-                height = RulerScrollPane.RULER_HEIGHT; // One measure
-            } else if (x % beatPixelWidth == 0) {
-                height = BEAT_TICK_HEIGHT; // One beat
+            
+            if (x % (beatPixelWidth * beatsPerMeasure) == 0) { // One measure
+                height = RulerScrollPane.RULER_HEIGHT; 
+                String str = String.valueOf(x / (beatPixelWidth * beatsPerMeasure) + 1);
+                g.drawString(str, i + FONT_PADDING, height - FONT_PADDING);
+            } else if (x % beatPixelWidth == 0) { // One beat
+                height = BEAT_TICK_HEIGHT; 
             }
 
-            g.setColor(TICK_COLOR);
             g.drawLine(i, 0, i, height);
         }
     }
@@ -75,7 +83,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
             case "beatDivsion":
             case "beatsPerMeasure":
             case "timeline":
-                drawAllTickMarks(getGraphics());
+                updateMeasurements();
                 break;
             default:
                 break;
