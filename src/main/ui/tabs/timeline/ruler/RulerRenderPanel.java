@@ -16,6 +16,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
 
     public static final int TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.3);
     public static final int BEAT_TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.6);
+    private static final Color TICK_COLOR = new Color(200,200,200);
     private int tickPixelWidth;
     private int beatDivisions;
     private int beatsPerMeasure;
@@ -60,6 +61,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
                 height = BEAT_TICK_HEIGHT; // One beat
             }
 
+            g.setColor(TICK_COLOR);
             g.drawLine(i, 0, i, height);
         }
     }
