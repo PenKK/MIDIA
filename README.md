@@ -53,6 +53,7 @@
 2. Use the Track menu to add a note
     - Specify pitch, velocity, the beat to start on, and the beat duration
     - The start beat is relative to the block start beat (it's the start beat within the block)
+    - Middle C is at pitch = 60, audible for most instruments
     - Pitch and velocity are [0, 127]
     - The note should appear on the timeline. If it does not, the duration was likely set to 0.
     
