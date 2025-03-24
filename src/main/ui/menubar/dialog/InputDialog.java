@@ -18,7 +18,7 @@ public abstract class InputDialog extends JDialog implements ActionListener {
         initFields();
 
         this.setLayout(new GridLayout(0, 2, 10, 10));
-        this.getRootPane().setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
+        this.getRootPane().setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
         display(invoker, r);
     }
 
