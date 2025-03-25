@@ -1,13 +1,11 @@
 package ui.tabs.timeline;
 
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 
 import model.Timeline;
 import ui.ruler.RulerScrollPane;
@@ -15,7 +13,7 @@ import ui.tabs.timeline.midi.TrackPanel;
 import ui.tabs.timeline.midi.TrackScrollPane;
 
 // Holds the timeline view, and a ruler at the top
-public class TimelineViewPanel extends JPanel implements PropertyChangeListener, AdjustmentListener {
+public class TimelineViewPanel extends JPanel implements PropertyChangeListener {
 
     private TrackScrollPane midiTrackScrollPane;
     private RulerScrollPane rulerScrollPane;
@@ -38,8 +36,8 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
     // MODIFIES: this
     // EFFECTS: triggers adjustment listener for when the midiTrackScrollPane is scrolled
     private void syncHorizontalScrollBars() {
-        JScrollBar tracksBar = midiTrackScrollPane.getHorizontalScrollBar();
-        tracksBar.addAdjustmentListener(this);
+        BoundedRangeModel tracksBar = midiTrackScrollPane.getHorizontalScrollBar().getModel();
+        rulerScrollPane.getHorizontalScrollBar().setModel(tracksBar);
     }
 
     // MODFIES: this
@@ -60,16 +58,6 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener,
                 updateRulerDimensions();
             default:
                 break;
-        }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: adjusts the (invisible) scrollBar of the ruler to copy the midiTrackScrollPane scrollbar
-    @Override
-    public void adjustmentValueChanged(AdjustmentEvent e) {
-        if (e.getSource().equals(midiTrackScrollPane.getHorizontalScrollBar())) {
-            JScrollBar rulerBar = rulerScrollPane.getHorizontalScrollBar();
-            rulerBar.setValue(e.getValue());
         }
     }
 }

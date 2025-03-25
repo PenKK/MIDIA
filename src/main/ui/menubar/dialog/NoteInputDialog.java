@@ -129,6 +129,10 @@ public class NoteInputDialog extends InputDialog {
         int startTick = timeline.beatsToTicks((double) startBeat.getValue() - 1);
         int durationTicks = timeline.beatsToTicks((double) durationBeats.getValue());
 
+        if (((MidiTrack) midiTracksComboBox.getSelectedItem()).isPercussive()) {
+            p = 0;
+        }
+
         Note note = new Note(p, v, startTick, durationTicks);
         selectedBlock.addNote(note);
         Timeline.refresh();
