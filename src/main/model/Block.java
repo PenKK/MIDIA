@@ -96,6 +96,12 @@ public class Block implements Writable {
         return notesJson;
     }
 
+    // EFFECTS: returns a string with start tick and note count
+    @Override
+    public String toString() {
+        return String.format("S: %d, N: %d", startTick, notes.size());
+    }
+
     // EFFECTS: returns the length of ticks that the block has an active note
     public int getDurationTicks() {
         int duration = 0;

@@ -19,6 +19,7 @@ public class TestBlock {
     void testConstructor() {
         assertEquals(new ArrayList<Note>(), block.getNotes());
         assertEquals(10, block.getStartTick());
+        assertEquals(block.toString(), "S: 10, N: 0");
     }
 
     @Test

@@ -81,7 +81,7 @@ public class NoteInputDialog extends InputDialog {
 
         this.add(new JLabel("Track: "));
         this.add(midiTracksComboBox);
-        this.add(new JLabel("Block index: "));
+        this.add(new JLabel("Block: "));
         this.add(blocksComboBox);
     }
 
