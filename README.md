@@ -79,3 +79,47 @@
 1. Click the file menu at the top left and then load
 2. Select a project and then click open
     - The project should be loaded into the timeline
+
+## Phase 4: Task 2
+
+Application launched
+
+``
+[Wed Mar 26 19:09:09 PDT 2025] A new timeline instance was created with project name: New Project
+``
+
+Created a new track
+
+``
+[Wed Mar 26 19:09:22 PDT 2025] Created new MidiTrack, instrument: Acoustic Grand Piano, channel: 0, percussive: false. Remaining instrumental channels: 14
+``
+
+Added a block in the previously made track (X in Y)
+
+``
+[Wed Mar 26 19:09:26 PDT 2025] Added Block with 0 notes to MidiTrack piano melody
+``
+
+Created a note inside of a block
+
+``
+[Wed Mar 26 19:09:35 PDT 2025] Added note: pitch: 63, velocity: 80, startTick: 0, durationTicks: 2880 to Block: Start tick: 960, current note count: 1
+``
+
+Created a second note inside of the same block
+
+``
+[Wed Mar 26 19:09:46 PDT 2025] Added note: pitch: 61, velocity: 80, startTick: 960, durationTicks: 1920 to Block: Start tick: 960, current note count: 2
+``
+
+Created another track (percussive)
+
+``
+[Wed Mar 26 19:10:06 PDT 2025] Created new MidiTrack, instrument: Acoustic Bass Drum, channel: 9, percussive: true. Remaining instrumental channels: 14
+``
+
+Deleted the track I just made
+
+``
+[Wed Mar 26 19:10:09 PDT 2025] Removed MidiTrack[1]: drums maybe. Remaining instrumental channels: 14
+``

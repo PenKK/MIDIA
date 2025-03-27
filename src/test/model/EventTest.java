@@ -3,11 +3,8 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-import javax.sound.midi.MidiSystem;
 
 import static org.junit.jupiter.api.Assertions.*;
 
