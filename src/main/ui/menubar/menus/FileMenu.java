@@ -27,6 +27,8 @@ public class FileMenu extends Menu {
     private MenuItem delete;
 
     private JFileChooser fileChooser;
+    private JsonReader reader;
+    private JsonWriter writer;
 
     // EFFECTS: creates file JMenu, its file chooser, its JMenuItems, and apppriate action listeners
     public FileMenu() {
@@ -79,7 +81,7 @@ public class FileMenu extends Menu {
         }
 
         String path = fileChooser.getSelectedFile().getPath();
-        JsonReader reader = new JsonReader(path);
+        reader = new JsonReader(path);
 
         try {
             Timeline newTimeline = reader.read();
@@ -101,7 +103,7 @@ public class FileMenu extends Menu {
         }
 
         String path = fileChooser.getSelectedFile().getPath();
-        JsonWriter writer = new JsonWriter(path);
+        writer = new JsonWriter(path);
 
         try {
             Timeline instance = Timeline.getInstance();
