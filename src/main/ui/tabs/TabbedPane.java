@@ -10,9 +10,15 @@ import ui.tabs.timeline.TimelineViewPanel;
 // TabbedPane holds the tabs of the TimelinePanel and PianoRollPanel
 public class TabbedPane extends JTabbedPane {
 
-    // EFFECTS: creates a JTabbedPane with a timeline and piano roll t ab
+    private TimelineViewPanel timelineViewPanel;
+    private PianoRollPanel pianoRollPanel;
+
+    // EFFECTS: creates a JTabbedPane with a timeline and piano roll tab
     public TabbedPane() {
-        this.addTab("Timeline", new TimelineViewPanel());
-        this.addTab("Piano Roll", new PianoRollPanel());
+        timelineViewPanel = new TimelineViewPanel();
+        pianoRollPanel = new PianoRollPanel();
+        
+        this.addTab("Timeline", timelineViewPanel);
+        this.addTab("Piano Roll", pianoRollPanel);
     }
 }
