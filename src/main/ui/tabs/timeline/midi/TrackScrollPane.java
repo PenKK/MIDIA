@@ -16,15 +16,15 @@ import model.Timeline;
 public class TrackScrollPane extends JScrollPane implements PropertyChangeListener {
 
     private ArrayList<TrackPanel> midiTrackPanels;
-    private LineContainerPanel container;
+    private LineContainerPanel lineContainer;
 
     // EFFECTS: initializes the timeline 
     public TrackScrollPane() {
-        container = new LineContainerPanel();
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+        lineContainer = new LineContainerPanel();
+        lineContainer.setLayout(new BoxLayout(lineContainer, BoxLayout.Y_AXIS));
 
         this.setBorder(null);
-        this.setViewportView(container);
+        this.setViewportView(lineContainer);
         this.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
         this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -50,7 +50,7 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
             TrackPanel currentPanel = new TrackPanel(track);
             midiTrackPanels.add(currentPanel);
 
-            container.add(currentPanel);
+            lineContainer.add(currentPanel);
         }
 
         revalidate();
@@ -61,7 +61,7 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
     // EFFECTS: Removes MidiTrackPanels from the container
     private void clearTrackPanels() {
         for (TrackPanel currentMidiTrackPanel : midiTrackPanels) {
-            container.remove(currentMidiTrackPanel);
+            lineContainer.remove(currentMidiTrackPanel);
         }
     }
 
@@ -85,6 +85,6 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
     // EFFECTS: returns width of the scrollPanes container
     public int getContainerWidth() {
         updateMidiTrackPanels(); // forces width update according to render scale, better solution one day maybe
-        return container.getPreferredSize().width;
+        return lineContainer.getPreferredSize().width;
     }
 }
