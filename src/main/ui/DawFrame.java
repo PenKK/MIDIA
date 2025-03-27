@@ -1,5 +1,6 @@
 package ui;
 
+import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -23,11 +24,14 @@ public class DawFrame extends JFrame implements PropertyChangeListener, WindowLi
 
     private MenuBar menuBar;
     private TabbedPane tabbedPane;
+    private MediaControlPanel mediaControlPanel;
 
     // EFFECTS: Creates the frame for the application and initializes the tabs and menu bar
     DawFrame() throws MidiUnavailableException, IOException {
+        this.setLayout(new BorderLayout());
         tabbedPane = new TabbedPane();
         menuBar = new MenuBar();
+        mediaControlPanel = new MediaControlPanel();
         Timeline.addObserver(this);
 
         this.setIconImage(ImageIO.read(new File("lib/images/logo.png")));
@@ -36,7 +40,8 @@ public class DawFrame extends JFrame implements PropertyChangeListener, WindowLi
         this.addWindowListener(this);
 
         this.setJMenuBar(menuBar);
-        this.add(tabbedPane);
+        this.add(mediaControlPanel, BorderLayout.NORTH);
+        this.add(tabbedPane, BorderLayout.CENTER);
 
         updateTitle();
         this.setLocationRelativeTo(null);
@@ -70,31 +75,31 @@ public class DawFrame extends JFrame implements PropertyChangeListener, WindowLi
 
     @Override
     public void windowClosed(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowIconified(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowActivated(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        
+
     }
 
     @Override
     public void windowOpened(WindowEvent e) {
-        
+
     }
 }
