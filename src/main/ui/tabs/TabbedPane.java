@@ -1,7 +1,5 @@
 package ui.tabs;
 
-import java.awt.BorderLayout;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import ui.tabs.piano.roll.PianoRollPanel;
