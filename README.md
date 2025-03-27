@@ -123,3 +123,9 @@ Deleted the track I just made
 ``
 [Wed Mar 26 19:10:09 PDT 2025] Removed MidiTrack[1]: drums maybe. Remaining instrumental channels: 14
 ``
+
+## Phase 4: Task 2
+
+A possible refactor that I have been thinking about is a lot is in my ``Timeline`` class. Currently, it has a lot of responsibility (12 fields) and while it all falls under the scope of a 'timeline,' I should be able  to refactor some code out. More specifically, there are numerical fields that fall under more of a  ``Settings`` category/class in a timeline such as ``beatDivision``, ``beatsPerMeasure``, ``horizontalScale``. These three are numeric fields that do not directly contribute to the functionality of a timeline but influence how it will be rendered in the UI. A reason that I have not yet refactored this as above is that these are simply numeric fields; their ``TimelineSettings`` class would be made of getters and setters and nothing else so I am not sure if such a change is warranted. 
+
+Another refactor that I believe should definitely be done is a dedicated ``MidiPlayer`` class that controls the playback functionality of the timeline. The fields ``sequencer`` and ``sequence`` from the Java sound library in the same ``Timeline`` class are responsible for playing my music/timeline abstraction and would fare well in their own class rather than cluttering my ``Timeline`` class. In my timeline I have methods for converting my MidiTracks/Blocks/Notes into lower level MidiEvents for these two fields to play which I could also move into the ``MidiPlayer`` class. There are also three other fields which could instead be moved to ``MidiPlayer``: ``bpm``, ``positionTick,`` and ``avaliableChannels`` as they are relevant to how the sequencer handles playback. This change would, in total, reduce my 12 fields to 8 fields (including the new ``MidiPlayer`` field).
