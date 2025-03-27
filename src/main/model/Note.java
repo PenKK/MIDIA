@@ -79,4 +79,11 @@ public class Note implements Writable {
         
         return noteJson;
     }
+
+    // EFFECTS: returns a more informative toString
+    @Override 
+    public String toString() {
+        return String.format("pitch: %d, velocity: %d, startTick: %d, durationTicks: %d", 
+                              pitch, velocity, startTick, durationTicks);
+    }
 }

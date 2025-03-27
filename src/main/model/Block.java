@@ -26,6 +26,10 @@ public class Block implements Writable {
     //          returns created notes index
     public int addNote(Note note) {
         notes.add(note);
+
+        Event e = new Event(String.format("Added note: %s to Block: %s", note, info()));
+        EventLog.getInstance().logEvent(e);
+
         return notes.size() - 1;
     }
 
@@ -33,7 +37,12 @@ public class Block implements Writable {
     // MODIFIES: this
     // EFFECTS: Removes the specified index note from notes and returns it
     public Note removeNote(int index) {
-        return notes.remove(index);
+        Note n = notes.remove(index);
+
+        Event e = new Event(String.format("Removed note: %s from Block: %s", n, info()));
+        EventLog.getInstance().logEvent(e);
+
+        return n;
     }
 
     // REQUIRES: newStartTick >= 0
@@ -96,12 +105,6 @@ public class Block implements Writable {
         return notesJson;
     }
 
-    // EFFECTS: returns a string with start tick and note count
-    @Override
-    public String toString() {
-        return String.format("S: %d, N: %d", startTick, notes.size());
-    }
-
     // EFFECTS: returns the length of ticks that the block has an active note
     public int getDurationTicks() {
         int duration = 0;
@@ -112,5 +115,16 @@ public class Block implements Writable {
             }
         }
         return duration;
+    }
+
+    // EFFECTS: returns a string with general information about the block
+    public String info() {
+        return String.format("Start tick: %d, current note count: %d", startTick, notes.size());
+    }
+
+    // EFFECTS: returns a string with start tick and note count
+    @Override
+    public String toString() {
+        return String.format("S: %d, N: %d", startTick, notes.size());
     }
 }

@@ -77,6 +77,10 @@ public class Timeline implements Writable {
                 }
             }
         };
+        
+        Event e = new Event(String.format("A new timeline instance was created with project name: %s", 
+                                          projectName));
+        EventLog.getInstance().logEvent(e);
     }
 
     // MODIFIES: this
@@ -100,6 +104,10 @@ public class Timeline implements Writable {
         instance = newInstance;
         pcs.firePropertyChange("timeline", oldInstance, newInstance);
         oldInstance.getSequencer().close();
+
+        Event e = new Event(String.format("Timeline singleton instance was replaced, old name: %s, new name: %s ", 
+                                          oldInstance.getProjectName(), newInstance.getProjectName()));
+        EventLog.getInstance().logEvent(e);
     }
 
     // MODIFIES: this
@@ -129,6 +137,12 @@ public class Timeline implements Writable {
         midiTracks.add(newMidiTrack);
         pcs.firePropertyChange("midiTracks", oldTracks, new ArrayList<>(midiTracks));
 
+        Event e = new Event(String.format("Created new MidiTrack, instrument: %s, channel: %d, percussive: %b. "
+                                        + "Remaining instrumental channels: %d",
+                                          instrument, newMidiTrack.getChannel(), 
+                                          newMidiTrack.isPercussive(), avaliableChannels.size()));
+        EventLog.getInstance().logEvent(e);
+
         return newMidiTrack;
     }
 
@@ -147,6 +161,10 @@ public class Timeline implements Writable {
 
         pcs.firePropertyChange("midiTracks", oldTracks, new ArrayList<>(midiTracks));
 
+        Event e = new Event(String.format("Removed MidiTrack[%d]: %s. Remaining instrumental channels: %d",
+                                        index, removed, avaliableChannels.size()));
+        EventLog.getInstance().logEvent(e);
+
         return removed;
     }
 
@@ -160,7 +178,7 @@ public class Timeline implements Writable {
     //          to a Java Track. Throws InvalidMidiDataException if invalid midi data
     //          is found when setting the sequence to the sequencer
     public void updateSequence() throws InvalidMidiDataException {
-        resetTracks();
+        resetSequenceTracks();
         for (MidiTrack currentMidiTrack : midiTracks) {
             if (currentMidiTrack.isMuted() || currentMidiTrack.getVolume() == 0) {
                 continue;
@@ -171,14 +189,20 @@ public class Timeline implements Writable {
         }
 
         sequencer.setSequence(sequence);
+
+        Event e = new Event(String.format("Playback sequence was updated in Timeline %s", projectName));
+        EventLog.getInstance().logEvent(e);
     }
 
     // MODIFIES: this
     // EFFECTS: deletes all Tracks from the sequence, essentially resetting playback
-    public void resetTracks() {
+    public void resetSequenceTracks() {
         for (Track track : sequence.getTracks()) {
             sequence.deleteTrack(track);
         }
+
+        Event e = new Event(String.format("Playback sequence cleared Timeline %s", projectName));
+        EventLog.getInstance().logEvent(e);
     }
 
     // MODIFIES: this
@@ -190,6 +214,10 @@ public class Timeline implements Writable {
         sequencer.setTickPosition(positionTick);
         sequencer.setTempoInBPM(bpm);
         sequencer.start();
+
+        Event e = new Event(String.format("Playback started in Timeline %s. Sequence length: %d ticks",
+                                           projectName, sequencer.getTickLength()));
+        EventLog.getInstance().logEvent(e);
     }
 
     // MODIFIES: this
@@ -197,6 +225,10 @@ public class Timeline implements Writable {
     public void pause() {
         sequencer.stop();
         updatePositionTick();
+
+        Event e = new Event(String.format("Playback paused in Timeline %s at tick: %d",
+                                           projectName, sequencer.getTickPosition()));
+        EventLog.getInstance().logEvent(e);
     }
 
     // MODFIES: this
@@ -414,6 +446,10 @@ public class Timeline implements Writable {
     // EFFECTS: adds midiTrack to the list of tracks
     public void addMidiTrack(MidiTrack midiTrack) {
         midiTracks.add(midiTrack);
+
+        Event e = new Event(String.format("A MidiTrack was added to timeline %s. New Length: %d ticks",
+                                          projectName, getLengthTicks()));
+        EventLog.getInstance().logEvent(e);
     }
 
     public static PropertyChangeSupport getPropertyChangeSupport() {

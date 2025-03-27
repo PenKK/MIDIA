@@ -45,6 +45,9 @@ public class MidiTrack implements Writable {
     // EFFECTS: Adds a block to the list of blocks, returns the index it was created it
     public int addBlock(Block block) {
         blocks.add(block);
+        Event e = new Event(String.format("Added Block with %d notes to MidiTrack %s", 
+                                          block.getNotes().size(), name));
+        EventLog.getInstance().logEvent(e);
         return blocks.size() - 1;
     }
 
@@ -52,7 +55,12 @@ public class MidiTrack implements Writable {
     // MODIFIES: this 
     // EFFECTS: removes the block at the given index in this track and returns it
     public Block removeBlock(int index) {
-        return blocks.remove(index);
+        Block b = blocks.remove(index);
+
+        Event e = new Event(String.format("Removed Block with %d notes in MidiTrack %s", 
+                                          b.getNotes().size(), name));
+        EventLog.getInstance().logEvent(e);
+        return b;
     }
 
     // MODIFIES: track
@@ -177,6 +185,12 @@ public class MidiTrack implements Writable {
         midiTrackJson.put("blocks", blocksToJson());
 
         return midiTrackJson;
+    }
+
+    // EFFECTS: returns a string with general info about the MidiTrack
+    public String info() {
+        return String.format("name: %s, channel: %d, instrument: %s, block count: %d",
+                              name, channel, instrument, blocks.size());
     }
 
     @Override

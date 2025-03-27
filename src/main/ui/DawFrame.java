@@ -1,6 +1,8 @@
 package ui;
 
 import java.awt.Rectangle;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -10,12 +12,14 @@ import javax.imageio.ImageIO;
 import javax.sound.midi.MidiUnavailableException;
 import javax.swing.JFrame;
 
+import model.Event;
+import model.EventLog;
 import model.Timeline;
 import ui.menubar.MenuBar;
 import ui.tabs.TabbedPane;
 
 // The frame of the graphical UI. Contains the entirety of the UI.
-public class DawFrame extends JFrame implements PropertyChangeListener {
+public class DawFrame extends JFrame implements PropertyChangeListener, WindowListener {
 
     private MenuBar menuBar;
     private TabbedPane tabbedPane;
@@ -29,6 +33,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         this.setIconImage(ImageIO.read(new File("lib/images/logo.png")));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setBounds(new Rectangle(800, 600));
+        this.addWindowListener(this);
 
         this.setJMenuBar(menuBar);
         this.add(tabbedPane);
@@ -54,5 +59,42 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
     private void updateTitle() {
         String newTitle = Timeline.getInstance().getProjectName().concat(" - Digital Audio Workstation");
         this.setTitle(newTitle);
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e) {
+        for (Event event : EventLog.getInstance()) {
+            System.out.printf("[%s] %s%n", event.getDate(), event.getDescription());
+        }
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        
     }
 }

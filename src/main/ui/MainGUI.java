@@ -4,6 +4,9 @@ import javax.swing.SwingUtilities;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 
+import model.Event;
+import model.EventLog;
+
 // Launches the Daw UI, entry point of application
 public class MainGUI {
     public static void main(String[] args) throws Exception {

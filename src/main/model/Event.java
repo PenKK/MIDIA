@@ -41,7 +41,6 @@ public class Event {
     public boolean equals(Object other) {
         if (other == null) {
             return false;
-
         }
 
         if (other.getClass() != this.getClass()) {

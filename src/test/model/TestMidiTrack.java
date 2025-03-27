@@ -40,6 +40,8 @@ public class TestMidiTrack {
         assertEquals(midiTrack.getName(), "Piano Melody");
         assertEquals(midiTrack.getChannel(), 0);
         assertEquals(midiTrack.toString(), "Piano Melody");
+        assertEquals(midiTrack.info(), 
+                    "name: Piano Melody, channel: 0, instrument: Acoustic Grand Piano, block count: 0");
 
         midiTrack = new MidiTrack("Percussive drums", PercussionInstrument.ACOUSTIC_BASS_DRUM, 9);
         assertFalse(midiTrack.isMuted());
@@ -331,7 +333,7 @@ public class TestMidiTrack {
         try {
             midiTrack.applyToTrack(t);
             fail("Invalid midi data was not detected");
-        } catch(RuntimeException e) {
+        } catch (RuntimeException e) {
             // success
         }
 
