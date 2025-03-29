@@ -17,6 +17,7 @@ import model.Event;
 import model.EventLog;
 import model.Timeline;
 import ui.menubar.MenuBar;
+import ui.menubar.menus.FileMenu;
 import ui.tabs.TabbedPane;
 
 // The frame of the graphical UI. Contains the entirety of the UI.
@@ -68,6 +69,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener, WindowLi
 
     @Override
     public void windowClosing(WindowEvent e) {
+        FileMenu.autoSave();
         for (Event event : EventLog.getInstance()) {
             System.out.printf("[%s] %s%n", event.getDate(), event.getDescription());
         }

@@ -19,7 +19,8 @@ import persistance.JsonWriter;
 // The File dropdown Menu, responsible for saving and loading and other file settings
 public class FileMenu extends Menu {
 
-    private static final String PROJECTS_DIRECTORY = "data/projects";
+    public static final String PROJECTS_DIRECTORY = "data/projects";
+    public static final String AUTO_SAVE_FILE_DIRECTORY = PROJECTS_DIRECTORY.concat("/autosave/");
 
     private MenuItem open;
     private MenuItem save;
@@ -128,5 +129,19 @@ public class FileMenu extends Menu {
         }
 
         fileChooser.getSelectedFile().delete();
+    }
+
+    // EFFECTS: auto saves the currently timeline into the auto save directory
+    public static void autoSave() {
+        Timeline t = Timeline.getInstance();
+
+        JsonWriter writer = new JsonWriter(AUTO_SAVE_FILE_DIRECTORY.concat(t.getProjectName()));
+        try {
+            writer.open();
+            writer.write(t);
+            writer.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to auto save, invalid path");
+        }
     }
 }
