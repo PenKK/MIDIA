@@ -29,55 +29,55 @@
                         "durationTicks": 960,
                         "startTick": 1920,
                         "pitch": 81,
-                        "velocity": 50
+                        "velocity": 35
                     },
                     {
                         "durationTicks": 960,
                         "startTick": 2880,
                         "pitch": 80,
-                        "velocity": 50
+                        "velocity": 35
                     },
                     {
                         "durationTicks": 3840,
                         "startTick": 3840,
                         "pitch": 79,
-                        "velocity": 50
+                        "velocity": 35
                     },
                     {
                         "durationTicks": 1920,
                         "startTick": 7680,
                         "pitch": 78,
-                        "velocity": 50
+                        "velocity": 35
                     },
                     {
                         "durationTicks": 960,
                         "startTick": 9600,
                         "pitch": 77,
-                        "velocity": 50
+                        "velocity": 35
                     },
                     {
                         "durationTicks": 960,
                         "startTick": 10560,
                         "pitch": 76,
-                        "velocity": 50
+                        "velocity": 35
                     },
                     {
                         "durationTicks": 1920,
                         "startTick": 11520,
                         "pitch": 75,
-                        "velocity": 50
+                        "velocity": 35
                     },
                     {
                         "durationTicks": 1920,
                         "startTick": 13440,
                         "pitch": 74,
-                        "velocity": 50
+                        "velocity": 35
                     },
                     {
                         "durationTicks": 1920,
                         "startTick": 15360,
                         "pitch": 73,
-                        "velocity": 50
+                        "velocity": 35
                     }
                 ],
                 "startTick": 0
