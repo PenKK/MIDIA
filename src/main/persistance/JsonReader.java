@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import model.Block;
 import model.MidiTrack;
 import model.Note;
+import model.Player;
 import model.Timeline;
 import model.instrument.Instrument;
 import model.instrument.InstrumentalInstrument;
@@ -56,25 +57,39 @@ public class JsonReader {
         String projectName = jsonObject.getString("projectName");
         Timeline timeline = new Timeline(projectName);
 
-        float beatsPerMinute = jsonObject.getFloat("beatsPerMinute");
-        int positionTick = jsonObject.getInt("positionTick");
         int beatDivision = jsonObject.getInt("beatDivision");
         int beatsPerMeasure = jsonObject.getInt("beatsPerMeasure");
         double horizontalScale = jsonObject.getDouble("horizontalScale");
 
-        JSONArray avaliableChannels = jsonObject.getJSONArray("avaliableChannels");
-        ArrayList<Integer> avaliableChannelsList = parseIntegerArrayList(avaliableChannels);
+        Player player = parsePlayer(jsonObject.getJSONObject("player"), timeline);
 
         JSONArray midiTracksJsonArray = jsonObject.getJSONArray("midiTracks");
         
-        timeline.setBPM(beatsPerMinute);
-        timeline.setPositionTick(positionTick);
-        timeline.setAvaliableChannels(avaliableChannelsList);
+        timeline.setPlayer(player);
         timeline.setBeatDivision(beatDivision);
         timeline.setBeatsPerMeasure(beatsPerMeasure);
         timeline.setHorizontalScale(horizontalScale);
         addMidiTracks(timeline, midiTracksJsonArray);
         return timeline;
+    }
+
+    private Player parsePlayer(JSONObject playerJSON, Timeline tl) {
+        try {
+            Player p = new Player(tl);
+            float beatsPerMinute = playerJSON.getFloat("beatsPerMinute");
+            int positionTick = playerJSON.getInt("positionTick");
+
+            JSONArray availableChannels = playerJSON.getJSONArray("availableChannels");
+            ArrayList<Integer> availableChannelsList = parseIntegerArrayList(availableChannels);
+
+            p.setBPM(beatsPerMinute);
+            p.setPositionTick(positionTick);
+            p.setAvailableChannels(availableChannelsList);
+
+            return p;
+        } catch (MidiUnavailableException | InvalidMidiDataException e) {
+            throw new RuntimeException("Midi available");
+        }
     }
 
     // EFFECTS: returns the JSONArray as an ArrayList
