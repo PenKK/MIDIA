@@ -193,15 +193,15 @@ public class TestMidiTrack {
         midiTrack = timeline.createMidiTrack("Piano melody", instr, false);
         assertEquals(midiTrack.getInstrument().getProgramNumber(), 0);
         midiTrack.setInstrument(InstrumentalInstrument.ELECTRIC_PIANO_1);
-        timeline.updateSequence();
+        timeline.updatePlayerSequence();
 
-        Track t = timeline.getSequence().getTracks()[0];
+        Track t = timeline.getPlayer().getSequence().getTracks()[0];
         assertEquals(t.get(0).getMessage().getMessage()[1], 4);
 
         midiTrack.setInstrument(InstrumentalInstrument.CELESTA);
-        timeline.updateSequence();
+        timeline.updatePlayerSequence();
 
-        t = timeline.getSequence().getTracks()[0];
+        t = timeline.getPlayer().getSequence().getTracks()[0];
         assertEquals(t.get(0).getMessage().getMessage()[1], 8);
     }
 

@@ -49,7 +49,7 @@ public class TestJsonReader extends TestJson {
         try {
             Timeline timeline = reader.read();
             Timeline timeline2 = new Timeline("aaaa");
-            timeline2.setBPM(160);
+            timeline2.getPlayer().setBPM(160);
 
             addSampleSong(timeline2);
             checkTimeline(timeline, timeline2);

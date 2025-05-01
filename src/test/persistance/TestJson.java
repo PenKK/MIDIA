@@ -3,6 +3,7 @@ package persistance;
 import model.Block;
 import model.MidiTrack;
 import model.Note;
+import model.Player;
 import model.Timeline;
 import model.instrument.InstrumentalInstrument;
 import model.instrument.PercussionInstrument;
@@ -16,16 +17,18 @@ import java.util.ArrayList;
 public class TestJson {
     protected void checkTimeline(Timeline timeline1, Timeline timeline2) {
         assertEquals(timeline1.getProjectName(), timeline2.getProjectName());
-        assertEquals(timeline1.getBPM(), timeline2.getBPM());
-        assertEquals(timeline1.getPositionTick(), timeline2.getPositionTick());
         assertEquals(timeline1.getBeatDivision(), timeline2.getBeatDivision());
         assertEquals(timeline1.getBeatsPerMeasure(), timeline2.getBeatsPerMeasure());
         assertEquals(timeline1.getHorizontalScale(), timeline2.getHorizontalScale());
-
-        assertEquals(timeline1.getAvaliableChannels(),
-                timeline2.getAvaliableChannels());
+        checkPlayers(timeline1.getPlayer(), timeline2.getPlayer());
 
         checkMidiTracks(timeline1.getTracks(), timeline2.getTracks());
+    }
+
+    protected void checkPlayers(Player p1, Player p2) {
+        assertEquals(p1.getBPM(), p2.getBPM());
+        assertEquals(p1.getPositionTick(), p2.getPositionTick());
+        assertEquals(p1.getAvailableChannels(), p2.getAvailableChannels());
     }
 
     protected void checkMidiTracks(ArrayList<MidiTrack> midiTracks1, ArrayList<MidiTrack> midiTracks2) {
@@ -81,7 +84,7 @@ public class TestJson {
         drums.setVolume(110);
         bass.setVolume(110);
 
-        final int beatTicks = timeline.beatsToTicks(1);
+        final int beatTicks = timeline.getPlayer().beatsToTicks(1);
 
         Block melodyBlock = new Block(0);
         Block drumsBlock = new Block(0);

@@ -1,26 +1,28 @@
 {
-    "positionTick": 0,
     "beatsPerMeasure": 4,
-    "avaliableChannels": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15
-    ],
-    "beatsPerMinute": 120,
     "horizontalScale": 0.1,
     "beatDivision": 4,
     "projectName": "bob",
-    "midiTracks": []
+    "midiTracks": [],
+    "player": {
+        "positionTick": 0,
+        "beatsPerMinute": 120,
+        "availableChannels": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+        ]
+    }
 }

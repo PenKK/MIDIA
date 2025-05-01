@@ -78,8 +78,8 @@ public class TestJsonWriter extends TestJson {
             String path = "./data/test/testModifiedTimeline.json";
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe");
-            timeline.setBPM(420);
-            timeline.setPositionTick(1000);
+            timeline.getPlayer().setBPM(420);
+            timeline.getPlayer().setPositionTick(1000);
 
             jsonWriter.open();
             jsonWriter.write(timeline);
@@ -101,8 +101,8 @@ public class TestJsonWriter extends TestJson {
             String path = "./data/test/testInvalidMidiDataTimeline.json";
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe");
-            timeline.setBPM(420);
-            timeline.setPositionTick(1000);
+            timeline.getPlayer().setBPM(420);
+            timeline.getPlayer().setPositionTick(1000);
 
             jsonWriter.open();
             jsonWriter.write(timeline);
@@ -125,7 +125,7 @@ public class TestJsonWriter extends TestJson {
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe");
             addSampleSong(timeline);
-            timeline.setBPM(160);
+            timeline.getPlayer().setBPM(160);
 
             jsonWriter.open();
             jsonWriter.write(timeline);

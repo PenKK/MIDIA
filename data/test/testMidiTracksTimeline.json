@@ -1,22 +1,5 @@
 {
-    "positionTick": 0,
     "beatsPerMeasure": 4,
-    "avaliableChannels": [
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15
-    ],
-    "beatsPerMinute": 160,
     "horizontalScale": 0.1,
     "beatDivision": 4,
     "projectName": "joe",
@@ -372,5 +355,24 @@
                 "className": "PercussionInstrument"
             }
         }
-    ]
+    ],
+    "player": {
+        "positionTick": 0,
+        "beatsPerMinute": 160,
+        "availableChannels": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+        ]
+    }
 }
