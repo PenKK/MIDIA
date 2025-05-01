@@ -184,7 +184,9 @@ public class Timeline implements Writable {
         return midiTracks;
     }
 
-
+    public void updatePlayerSequence() throws InvalidMidiDataException {
+        player.updateSequence();
+    }
 
     // EFFECTS: returns the track at the specified index from tracks array
     public MidiTrack getTrack(int index) {
