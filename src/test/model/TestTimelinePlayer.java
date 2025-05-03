@@ -55,7 +55,7 @@ public class TestTimelinePlayer extends TestJson {
     @Test
     void testConstructor() throws MidiUnavailableException {
         assertEquals(timeline.getProjectName(), "test");
-        assertEquals(timeline.getTracks(), new ArrayList<MidiTrack>());
+        assertEquals(timeline.getMidiTracks(), new ArrayList<MidiTrack>());
         assertEquals(timeline.getPlayer().getBPM(), 120);
         assertEquals(timeline.getPlayer().getPositionTick(), 0);
         assertEquals(timeline.getBeatDivision(), 4);
@@ -72,9 +72,9 @@ public class TestTimelinePlayer extends TestJson {
 
         MidiTrack midiTrack = timeline.createMidiTrack("cool track", instr, false);
         expectedMidiTracks.add(midiTrack);
-        assertEquals(timeline.getTracks(), expectedMidiTracks);
+        assertEquals(timeline.getMidiTracks(), expectedMidiTracks);
         assertEquals(timeline.getTrack(0), expectedMidiTracks.get(0));
-        assertEquals(timeline.getTracks().size(), 1);
+        assertEquals(timeline.getMidiTracks().size(), 1);
         assertEquals(midiTrack.getChannel(), 0);
 
         expectedChannels.remove(0);
@@ -82,10 +82,10 @@ public class TestTimelinePlayer extends TestJson {
 
         MidiTrack anotherMidiTrack = timeline.createMidiTrack("sick violin", instr, false);
         expectedMidiTracks.add(anotherMidiTrack);
-        assertEquals(timeline.getTracks(), expectedMidiTracks);
+        assertEquals(timeline.getMidiTracks(), expectedMidiTracks);
         assertEquals(timeline.getTrack(1), expectedMidiTracks.get(1));
         assertEquals(timeline.getTrack(0), expectedMidiTracks.get(0));
-        assertEquals(timeline.getTracks().size(), 2);
+        assertEquals(timeline.getMidiTracks().size(), 2);
         assertEquals(anotherMidiTrack.getChannel(), 1);
 
         expectedChannels.remove(0);
@@ -105,14 +105,14 @@ public class TestTimelinePlayer extends TestJson {
         expectedChannels.remove(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
 
-        assertEquals(timeline.getTracks().size(), 2);
+        assertEquals(timeline.getMidiTracks().size(), 2);
         assertEquals(timeline.removeMidiTrack(0), midiTrack);
         expectedChannels.add(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
 
-        assertEquals(timeline.getTracks().size(), 1);
+        assertEquals(timeline.getMidiTracks().size(), 1);
         assertEquals(timeline.removeMidiTrack(0), anotherMidiTrack);
-        assertEquals(timeline.getTracks().size(), 0);
+        assertEquals(timeline.getMidiTracks().size(), 0);
         expectedChannels.add(1);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
     }
@@ -136,20 +136,20 @@ public class TestTimelinePlayer extends TestJson {
         expectedMidiTracks.add(mt2);
         expectedMidiTracks.add(mt3);
 
-        assertEquals(timeline.getTracks().size(), 3);
+        assertEquals(timeline.getMidiTracks().size(), 3);
         assertEquals(timeline.removeMidiTrack(2), mt3);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
 
-        assertEquals(timeline.getTracks().size(), 2);
+        assertEquals(timeline.getMidiTracks().size(), 2);
         assertEquals(timeline.removeMidiTrack(0), mt1);
         expectedChannels.add(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
 
-        assertEquals(timeline.getTracks().size(), 1);
+        assertEquals(timeline.getMidiTracks().size(), 1);
         assertEquals(timeline.removeMidiTrack(0), mt2);
         expectedChannels.add(1);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
-        assertEquals(timeline.getTracks().size(), 0);
+        assertEquals(timeline.getMidiTracks().size(), 0);
     }
 
     @Test

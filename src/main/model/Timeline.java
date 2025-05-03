@@ -40,7 +40,8 @@ public class Timeline implements Writable {
     //          available, which is fatal and unrecoverable.
     //          Method throws InvalidMidiDataException if the Sequence has an invalid 
     //          divison type.
-    public Timeline(String projectName, PropertyChangeSupport pcs) throws MidiUnavailableException, InvalidMidiDataException  {
+    public Timeline(String projectName, PropertyChangeSupport pcs)
+            throws MidiUnavailableException, InvalidMidiDataException {
         this.projectName = projectName;
         this.pcs = pcs;
 
@@ -49,13 +50,11 @@ public class Timeline implements Writable {
         horizontalScale = DEFAULT_HORIZONTAL_SCALE;
         player = new Player(this);
         midiTracks = new ArrayList<>();
-        
-        Event e = new Event(String.format("A new timeline instance was created with project name: %s", 
-                                          projectName));
+
+        Event e = new Event(String.format("A new timeline instance was created with project name: %s",
+                projectName));
         EventLog.getInstance().logEvent(e);
     }
-
-
 
     // REQUIRES: player.getAvailableChannels().size() >= 0
     // MODIFIES: this
@@ -73,9 +72,9 @@ public class Timeline implements Writable {
         pcs.firePropertyChange("midiTracks", oldTracks, new ArrayList<>(midiTracks));
 
         Event e = new Event(String.format("Created new MidiTrack, instrument: %s, channel: %d, percussive: %b. "
-                                        + "Remaining instrumental channels: %d",
-                                          instrument, newMidiTrack.getChannel(), 
-                                          newMidiTrack.isPercussive(), player.getAvailableChannels().size()));
+                + "Remaining instrumental channels: %d",
+                instrument, newMidiTrack.getChannel(),
+                newMidiTrack.isPercussive(), player.getAvailableChannels().size()));
         EventLog.getInstance().logEvent(e);
 
         return newMidiTrack;
@@ -97,7 +96,7 @@ public class Timeline implements Writable {
         pcs.firePropertyChange("midiTracks", oldTracks, new ArrayList<>(midiTracks));
 
         Event e = new Event(String.format("Removed MidiTrack[%d]: %s. Remaining instrumental channels: %d",
-                                        index, removed, player.getAvailableChannels().size()));
+                index, removed, player.getAvailableChannels().size()));
         EventLog.getInstance().logEvent(e);
 
         return removed;
@@ -174,10 +173,14 @@ public class Timeline implements Writable {
         return (int) Math.round(value * horizontalScale);
     }
 
-    public ArrayList<MidiTrack> getTracks() {
+    public ArrayList<MidiTrack> getMidiTracks() {
         return midiTracks;
     }
 
+    public MidiTrack[] getMidiTracksArray() {
+        return midiTracks.toArray(new MidiTrack[0]);
+    }
+    
     public void updatePlayerSequence() throws InvalidMidiDataException {
         player.updateSequence();
     }
@@ -214,7 +217,6 @@ public class Timeline implements Writable {
     public double getLengthBeats() {
         return player.getLengthBeats();
     }
-    
 
     // MODIFIES: this
     // EFFECTS: adds midiTrack to the list of tracks
@@ -222,7 +224,7 @@ public class Timeline implements Writable {
         midiTracks.add(midiTrack);
 
         Event e = new Event(String.format("A MidiTrack was added to timeline %s. New Length: %d ticks",
-                                          projectName, getLengthTicks()));
+                projectName, getLengthTicks()));
         EventLog.getInstance().logEvent(e);
     }
 

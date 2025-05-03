@@ -48,12 +48,12 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
     // MODIFIES: this, parentPanel
     // EFFECTS: prompts user for a new label for the invoking track
     private void rename() {
-        String newName = JOptionPane.showInputDialog("Enter a new track name for " 
-                                                    + parentPanel.getMidiTrack().getName());
+        String newName = JOptionPane.showInputDialog("Enter a new track name for "
+                + parentPanel.getMidiTrack().getName());
         if (newName == null || newName.equals("")) {
             return;
         }
-        
+
         parentPanel.getMidiTrack().setName(newName);
         parentPanel.getLabel().setText(newName);
     }
@@ -62,12 +62,16 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
     // EFFECTS: prompts user to choose a new instrument for the invoking track
     private void changeInstrument() {
         MidiTrack midiTrack = parentPanel.getMidiTrack();
-        Instrument[] options = midiTrack.isPercussive() ? PercussionInstrument.values() : 
-                                                          InstrumentalInstrument.values();
+        Instrument[] options = midiTrack.isPercussive() ? PercussionInstrument.values()
+                : InstrumentalInstrument.values();
         Object choice = JOptionPane.showInputDialog(this, "Select a new Instrument", midiTrack.getName(),
-                                                    JOptionPane.PLAIN_MESSAGE, null, options, 
-                                                    midiTrack.getInstrument());
-        
+                JOptionPane.PLAIN_MESSAGE, null, options,
+                midiTrack.getInstrument());
+
+        if (choice == null) {
+            return;
+        }
+
         midiTrack.setInstrument((Instrument) choice);
     }
 
@@ -75,7 +79,7 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
     // EFFECTS: deletes this from the the miditrack list
     private void delete() {
         Timeline tl = timelineController.getTimeline();
-        int index = tl.getTracks().indexOf(parentPanel.getMidiTrack());
+        int index = tl.getMidiTracks().indexOf(parentPanel.getMidiTrack());
         tl.removeMidiTrack(index);
     }
 
@@ -91,6 +95,5 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
             changeInstrument();
         }
     }
-
 
 }

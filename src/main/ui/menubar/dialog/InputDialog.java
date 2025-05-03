@@ -1,30 +1,34 @@
 package ui.menubar.dialog;
 
 import java.awt.Component;
-import java.awt.Frame;
+import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 import model.TimelineController;
 
 public abstract class InputDialog extends JDialog implements ActionListener {
 
     protected TimelineController timelineController;
+    private Component invoker;
 
     // EFFECTS: creates an input dialog with the specified title
-    InputDialog(String frameTitle, Component invoker, Rectangle r, TimelineController timelineController) {
-        super((Frame) null, frameTitle, true);
+    InputDialog(String frameTitle, Component invoker, Dimension d, TimelineController timelineController) {
+        super((JFrame) SwingUtilities.getWindowAncestor(invoker), frameTitle, true);
 
         this.timelineController = timelineController;
+        this.invoker = invoker;
         initFields();
 
         this.setLayout(new GridLayout(0, 2, 10, 10));
         this.getRootPane().setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        display(invoker, r);
+        this.setPreferredSize(new Dimension(d));
+        this.pack();
     }
 
     // MODIFIES: this
@@ -33,9 +37,8 @@ public abstract class InputDialog extends JDialog implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: makes the dialog visible and relative to invoker
-    protected void display(Component invoker, Rectangle r) {
-        this.setBounds(r);
-        this.setLocationRelativeTo(invoker);
+    public void display() {
+        this.setLocationRelativeTo(SwingUtilities.getWindowAncestor(invoker));
         this.setVisible(true);
     }
 }

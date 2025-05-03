@@ -9,12 +9,14 @@ import ui.menubar.dialog.BeatConfigurationInputDialog;
 public class ViewMenu extends Menu {
 
     private MenuItem beatConfiguration;
-    private TimelineController timelineController;
+    private BeatConfigurationInputDialog beatConfigurationInputDialog;
 
     // EFFECTS: creates a view menu with a title and MenuItems
     public ViewMenu(TimelineController timelineController) {
-        super("View");
+        super("View", timelineController);
+        this.timelineController = timelineController;
         beatConfiguration = new MenuItem("Beat configuration", this);
+        beatConfigurationInputDialog = new BeatConfigurationInputDialog(this, timelineController);
     }
     
     // EFFECTS: listens for clicks on menu items and runs methods accordingly
@@ -27,7 +29,7 @@ public class ViewMenu extends Menu {
 
     // EFFECTS: creates a new BeatConfigurationInputDialog for user input in changing ruler variables 
     private void beatConfiguration() {
-        new BeatConfigurationInputDialog(getParent().getParent(), timelineController);
+        beatConfigurationInputDialog.display();
     }
 
 }

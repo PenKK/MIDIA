@@ -10,35 +10,41 @@ import ui.menubar.dialog.TrackInputDialog;
 // The track menu option in the menu bar
 public class TrackMenu extends Menu {
 
-    private TimelineController timelineController;
     private MenuItem newTrack;
     private MenuItem addBlock;
     private MenuItem addNote;
 
+    private TrackInputDialog trackInputDialog;
+    private BlockInputDialog blockInputDialog;
+    private NoteInputDialog noteInputDialog;
+
     // EFFECTS: creates a track menu and initializes menu items
     public TrackMenu(TimelineController timelineController) {
-        super("Track");
+        super("Track", timelineController);
+
         newTrack = new MenuItem("New Track", this);
         addBlock = new MenuItem("Add block", this);
         addNote = new MenuItem("Add note", this);
+
+        trackInputDialog = new TrackInputDialog(this, timelineController);
+        blockInputDialog = new BlockInputDialog(this, timelineController);
+        noteInputDialog = new NoteInputDialog(this, timelineController);
     }
 
     // EFFECTS: Prompts user to create a new track
     private void createTrack() {
-        new TrackInputDialog(getParent().getParent(), timelineController);
+        trackInputDialog.display();
     }
 
     // EFFECTS: Prompts user to create a new block
     private void addBlock() {
-        new BlockInputDialog(getParent().getParent(), timelineController);
+        blockInputDialog.display();
     }
 
     // EFFECTS: Prompts user to create a new note
     private void addNote() {
-        new NoteInputDialog(getParent().getParent(), timelineController);
+        noteInputDialog.display();
     }
-
-    
 
     // EFFECTS: listens for button actions on menu items and runs methods accordingly
     @Override

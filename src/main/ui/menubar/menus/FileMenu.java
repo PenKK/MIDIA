@@ -23,7 +23,6 @@ public class FileMenu extends Menu {
     public static final String PROJECTS_DIRECTORY = "data/projects";
     public static final String AUTO_SAVE_FILE_DIRECTORY = PROJECTS_DIRECTORY.concat("/autosave/");
 
-    private TimelineController timelineController;
     private MenuItem open;
     private MenuItem save;
     private MenuItem newProject;
@@ -35,7 +34,7 @@ public class FileMenu extends Menu {
 
     // EFFECTS: creates file JMenu, its file chooser, its JMenuItems, and apppriate action listeners
     public FileMenu(TimelineController timelineController) {
-        super("File");
+        super("File", timelineController);
 
         this.timelineController = timelineController;
         open = new MenuItem("Open Project", this);

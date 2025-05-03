@@ -1,7 +1,7 @@
 package ui.menubar.dialog;
 
 import java.awt.Component;
-import java.awt.Rectangle;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import javax.swing.DefaultComboBoxModel;
@@ -28,7 +28,7 @@ public class TrackInputDialog extends InputDialog {
 
     // EFFECTS: creates input dialog for creating a new track
     public TrackInputDialog(Component invoker, TimelineController timelineController) {
-        super("Create Track", invoker, new Rectangle(400, 300), timelineController);
+        super("Create Track", invoker, new Dimension(400, 300), timelineController);
     }
 
     // MODIFIES: this
@@ -66,10 +66,10 @@ public class TrackInputDialog extends InputDialog {
 
     // MODIFIES: this
     // EFFECTS: creates a track on the the timeline with user input from fields
-    private void submit() { 
-        String name = nameField.getText().trim();;
-        boolean percussive = percussiveCheckBox.isSelected();;
-        Instrument instrument = (Instrument) instrumentComboBox.getSelectedItem();;
+    private void submit() {
+        String name = nameField.getText().trim();
+        boolean percussive = percussiveCheckBox.isSelected();
+        Instrument instrument = (Instrument) instrumentComboBox.getSelectedItem();
 
         if (name.equals("") || name == null) {
             return;
@@ -81,7 +81,6 @@ public class TrackInputDialog extends InputDialog {
             JOptionPane.showMessageDialog(this, "You have already reached the maximum number of instrumental tracks," 
                                               + "15.\n Track was not created", "Warning", JOptionPane.WARNING_MESSAGE);
         }
-        dispose();
     }
 
     // MODIFIES: this

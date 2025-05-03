@@ -36,7 +36,6 @@ public class Player implements Writable {
         sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
         sequencer.open();
 
-
         availableChannels = new ArrayList<>() {
             {
                 for (int i = 0; i <= 15; i++) {
@@ -58,7 +57,7 @@ public class Player implements Writable {
     //          is found when setting the sequence to the sequencer
     public void updateSequence() throws InvalidMidiDataException {
         resetTracks();
-        for (MidiTrack currentMidiTrack : timeline.getTracks()) {
+        for (MidiTrack currentMidiTrack : timeline.getMidiTracks()) {
             if (currentMidiTrack.isMuted() || currentMidiTrack.getVolume() == 0) {
                 continue;
             }

@@ -41,7 +41,7 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
     // EFFECTS: clears all MidiTrackPanels and then populates according to current Timeline
     private void updateMidiTrackPanels() {
         clearTrackPanels();
-        for (MidiTrack track : timelineController.getTimeline().getTracks()) {
+        for (MidiTrack track : timelineController.getTimeline().getMidiTracks()) {
             TrackPanel currentPanel = new TrackPanel(track, timelineController);
             midiTrackPanels.add(currentPanel);
 

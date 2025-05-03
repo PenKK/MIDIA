@@ -22,7 +22,7 @@ public class TestJson {
         assertEquals(timeline1.getHorizontalScale(), timeline2.getHorizontalScale());
         checkPlayers(timeline1.getPlayer(), timeline2.getPlayer());
 
-        checkMidiTracks(timeline1.getTracks(), timeline2.getTracks());
+        checkMidiTracks(timeline1.getMidiTracks(), timeline2.getMidiTracks());
     }
 
     protected void checkPlayers(Player p1, Player p2) {

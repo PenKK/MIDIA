@@ -1,7 +1,7 @@
 package ui.menubar.dialog;
 
 import java.awt.Component;
-import java.awt.Rectangle;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
@@ -22,7 +22,7 @@ public class BeatConfigurationInputDialog extends InputDialog {
 
     // EFFECTS: creates an input dialog and displays it
     public BeatConfigurationInputDialog(Component invoker, TimelineController timelineController) {
-        super("Beat Configuration", invoker, new Rectangle(300, 200), timelineController);
+        super("Beat Configuration", invoker, new Dimension(300, 200), timelineController);
     }
 
     // MODIFIES: this

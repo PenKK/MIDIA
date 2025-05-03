@@ -1,7 +1,7 @@
 package ui.menubar.dialog;
 
 import java.awt.Component;
-import java.awt.Rectangle;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
@@ -31,7 +31,7 @@ public class NoteInputDialog extends InputDialog {
 
     // Creates and launches an input dialog for note information 
     public NoteInputDialog(Component invoker, TimelineController timelineController) {
-        super("Add note", invoker, new Rectangle(300, 400), timelineController);
+        super("Add note", invoker, new Dimension(300, 400), timelineController);
     }
 
     // MODIFIES: this
@@ -70,9 +70,7 @@ public class NoteInputDialog extends InputDialog {
     private void initComboBoxes() {
         Timeline timeline = timelineController.getTimeline();
 
-        ArrayList<MidiTrack> trackList = timeline.getTracks();
-        MidiTrack[] tracks = new MidiTrack[trackList.size()];
-        tracks = trackList.toArray(tracks);
+        MidiTrack[] tracks = timeline.getMidiTracksArray();
         midiTracksComboBox = new JComboBox<>(tracks);
 
         blocksComboBox = new JComboBox<>();
@@ -84,6 +82,14 @@ public class NoteInputDialog extends InputDialog {
         this.add(midiTracksComboBox);
         this.add(new JLabel("Block: "));
         this.add(blocksComboBox);
+    }
+
+    private void updateFields() {
+        midiTracksComboBox.removeAllItems();
+        for (MidiTrack midiTrack : timelineController.getTimeline().getMidiTracksArray()) {
+            midiTracksComboBox.addItem(midiTrack);
+        }
+        updateBlocks();
     }
 
     // EFFECTS: listens for actions and runs methods accordingly
@@ -137,7 +143,12 @@ public class NoteInputDialog extends InputDialog {
         Note note = new Note(p, v, startTick, durationTicks);
         selectedBlock.addNote(note);
         timelineController.refresh();
-        dispose();
+    }
+
+    @Override
+    public void display() {
+        updateFields();
+        super.display();
     }
 
 }
