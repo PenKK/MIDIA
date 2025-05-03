@@ -22,12 +22,14 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import model.Timeline;
+import model.TimelineController;
 
 // Panel containing UI elements related to playback
 public class MediaControlPanel extends JPanel implements ActionListener, ChangeListener, PropertyChangeListener {
 
     private static final int POSITION_LINE_UPDATE_DELAY = 10;
 
+    private TimelineController timelineController;
     private JButton play;
     private ImageIcon playImage = null;
     private ImageIcon pauseImage = null;
@@ -38,9 +40,10 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private JPanel rightAlignPanel;
 
     // EFFECTS: creates a MediaControlPanel with timers and initializes image icons and components
-    public MediaControlPanel() {
+    public MediaControlPanel(TimelineController timelineController) {
+        this.timelineController = timelineController;
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-        Timeline.addObserver(this);
+        timelineController.addObserver(this);
         initFields();
 
         this.add(leftAlignPanel);
@@ -83,9 +86,8 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
 
     // EFFECTS: toggles playback
     public void togglePlay() {
-        Timeline timeline = Timeline.getInstance();
-
-        if (timeline.getSequencer().isRunning()) {
+        Timeline timeline = timelineController.getTimeline();
+        if (timeline.getPlayer().getSequencer().isRunning()) {
             timeline.pause();
             pausePlayTimer.stop();
             tickUpdateTimer.stop();
@@ -94,7 +96,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         }
 
         try {
-            int delay = (int) (timeline.getLengthMs() - timeline.getPositionMs());
+            int delay = (int) (timeline.getLengthMs() - timeline.getPlayer().getPositionMs());
             pausePlayTimer.setInitialDelay(delay);
             pausePlayTimer.setDelay(delay);
             timeline.play();
@@ -110,7 +112,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     // MODIFIES: this
     // EFFECTS: sets the render sliders value to that of the timeline render scale
     private void copyTimelineScaleValue() {
-        int value = (int) (100 * Timeline.getInstance().getHorizontalScale() / Timeline.MAX_HORIZONTAL_SCALE);
+        int value = (int) (100 * timelineController.getTimeline().getHorizontalScale() / Timeline.MAX_HORIZONTAL_SCALE);
         scaleSlider.setValue(value);
     }
 
@@ -136,21 +138,21 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         double factor = (double) scaleSlider.getValue() / 100;
 
         double scale = Math.max(factor * Timeline.MAX_HORIZONTAL_SCALE, Timeline.MIN_HORIZONTAL_SCALE);
-        Timeline.getInstance().setHorizontalScale(scale);
+        timelineController.getTimeline().setHorizontalScale(scale);
     }
 
     // MODIFIES: this, timeline singleton
     // EFFECTS: handles behavior for when song ends: changes play icon, stops tickUpdateTimer, brings position to 0
     private void handleEnd() {
         setPlayIcon(playImage);
-        Timeline.getInstance().setPositionTick(0);
+        timelineController.getTimeline().getPlayer().setPositionTick(0);
         tickUpdateTimer.stop();
     }
 
     // MODIFIES: timeline singleton
     // EFFECTS: triggers an update to the positionTick field in the instance (and hence fires propertyChangeEvent)
     private void updateTimelineTick() {
-        Timeline.getInstance().updatePositionTick();
+        timelineController.getTimeline().getPlayer().updatePositionTick();
     }
 
     // EFFECTS: listens for timer and button actions and runs methods accordingly
@@ -178,7 +180,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
         switch (propertyName) {
-            case "timeline":
+            case "timelineReplaced":
                 copyTimelineScaleValue();
                 break;
             default:

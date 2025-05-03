@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import model.MidiTrack;
-import model.Timeline;
+import model.TimelineController;
 import model.instrument.Instrument;
 import model.instrument.InstrumentalInstrument;
 import model.instrument.PercussionInstrument;
@@ -27,8 +27,8 @@ public class TrackInputDialog extends InputDialog {
     private JButton create;
 
     // EFFECTS: creates input dialog for creating a new track
-    public TrackInputDialog(Component invoker) {
-        super("Create Track", invoker, new Rectangle(400, 300));
+    public TrackInputDialog(Component invoker, TimelineController timelineController) {
+        super("Create Track", invoker, new Rectangle(400, 300), timelineController);
     }
 
     // MODIFIES: this
@@ -75,7 +75,7 @@ public class TrackInputDialog extends InputDialog {
             return;
         }
 
-        MidiTrack midiTrack = Timeline.getInstance().createMidiTrack(name, instrument, percussive);
+        MidiTrack midiTrack = timelineController.getTimeline().createMidiTrack(name, instrument, percussive);
 
         if (midiTrack == null) {
             JOptionPane.showMessageDialog(this, "You have already reached the maximum number of instrumental tracks," 

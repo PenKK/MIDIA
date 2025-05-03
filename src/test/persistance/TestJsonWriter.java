@@ -2,6 +2,7 @@ package persistance;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -56,7 +57,7 @@ public class TestJsonWriter extends TestJson {
         try {
             String path = "./data/test/testWriteEmptyTimeline.json";
             jsonWriter = new JsonWriter(path);
-            Timeline timeline = new Timeline("bob");
+            Timeline timeline = new Timeline("bob", null);
 
             jsonWriter.open();
             jsonWriter.write(timeline);
@@ -77,7 +78,8 @@ public class TestJsonWriter extends TestJson {
         try {
             String path = "./data/test/testModifiedTimeline.json";
             jsonWriter = new JsonWriter(path);
-            Timeline timeline = new Timeline("joe");
+            Timeline timeline = new Timeline("joe", null);
+            timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
             timeline.getPlayer().setBPM(420);
             timeline.getPlayer().setPositionTick(1000);
 
@@ -100,7 +102,8 @@ public class TestJsonWriter extends TestJson {
         try {
             String path = "./data/test/testInvalidMidiDataTimeline.json";
             jsonWriter = new JsonWriter(path);
-            Timeline timeline = new Timeline("joe");
+            Timeline timeline = new Timeline("joe", null);
+            timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
             timeline.getPlayer().setBPM(420);
             timeline.getPlayer().setPositionTick(1000);
 
@@ -123,7 +126,8 @@ public class TestJsonWriter extends TestJson {
         try {
             String path = "./data/test/testMidiTracksTimeline.json";
             jsonWriter = new JsonWriter(path);
-            Timeline timeline = new Timeline("joe");
+            Timeline timeline = new Timeline("joe", null);
+            timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
             addSampleSong(timeline);
             timeline.getPlayer().setBPM(160);
 

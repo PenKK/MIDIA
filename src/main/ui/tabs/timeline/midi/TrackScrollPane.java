@@ -10,17 +10,19 @@ import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 
 import model.MidiTrack;
-import model.Timeline;
+import model.TimelineController;
 
 // JPanel that holds the interactable view of the timeline, rendered using graphics
 public class TrackScrollPane extends JScrollPane implements PropertyChangeListener {
 
+    private TimelineController timelineController;
     private ArrayList<TrackPanel> midiTrackPanels;
     private LineContainerPanel lineContainer;
 
     // EFFECTS: initializes the timeline 
-    public TrackScrollPane() {
-        lineContainer = new LineContainerPanel();
+    public TrackScrollPane(TimelineController timelineController) {
+        this.timelineController = timelineController;
+        lineContainer = new LineContainerPanel(timelineController);
         lineContainer.setLayout(new BoxLayout(lineContainer, BoxLayout.Y_AXIS));
 
         this.setBorder(null);
@@ -31,23 +33,16 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
         this.setAlignmentX(0);
 
         midiTrackPanels = new ArrayList<>();
-        Timeline.addObserver(this);
+        timelineController.addObserver(this);
 
         updateMidiTrackPanels();
     }
 
     // EFFECTS: clears all MidiTrackPanels and then populates according to current Timeline
     private void updateMidiTrackPanels() {
-        Timeline timeline = Timeline.getInstance();
-        
-        if (timeline == null) {
-            System.err.println("Timeline instance returned null, unable to update rows");
-            return;
-        }
-
         clearTrackPanels();
-        for (MidiTrack track : timeline.getTracks()) {
-            TrackPanel currentPanel = new TrackPanel(track);
+        for (MidiTrack track : timelineController.getTimeline().getTracks()) {
+            TrackPanel currentPanel = new TrackPanel(track, timelineController);
             midiTrackPanels.add(currentPanel);
 
             lineContainer.add(currentPanel);
@@ -72,7 +67,7 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
         String propertyName = evt.getPropertyName();
 
         switch (propertyName) {
-            case "timeline":
+            case "timelineReplaced":
             case "midiTracks":
             case "horizontalScale":
                 updateMidiTrackPanels();

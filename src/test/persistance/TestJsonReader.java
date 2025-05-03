@@ -2,6 +2,7 @@ package persistance;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -35,7 +36,7 @@ public class TestJsonReader extends TestJson {
         reader = new JsonReader("./data/test/testReaderNewTimeline.json");
         try {
             Timeline timeline = reader.read();
-            checkTimeline(timeline, new Timeline("New project"));
+            checkTimeline(timeline, new Timeline("New project", null));
         } catch (IOException e) {
             fail("Path should exist and be accessible");
         } catch (InvalidMidiDataException e) {
@@ -48,7 +49,8 @@ public class TestJsonReader extends TestJson {
         reader = new JsonReader("./data/test/testReaderExtensive.json");
         try {
             Timeline timeline = reader.read();
-            Timeline timeline2 = new Timeline("aaaa");
+            Timeline timeline2 = new Timeline("aaaa", null);
+            timeline2.setPropertyChangeSupport(new PropertyChangeSupport(timeline2));
             timeline2.getPlayer().setBPM(160);
 
             addSampleSong(timeline2);

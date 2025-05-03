@@ -9,6 +9,7 @@ import javax.swing.JPopupMenu;
 
 import model.MidiTrack;
 import model.Timeline;
+import model.TimelineController;
 import model.instrument.Instrument;
 import model.instrument.InstrumentalInstrument;
 import model.instrument.PercussionInstrument;
@@ -17,15 +18,17 @@ import ui.tabs.timeline.midi.TrackLabelPanel;
 // The popup menu for modifying a track
 public class LabelPopupMenu extends JPopupMenu implements ActionListener {
 
-    TrackLabelPanel parentPanel;
-    JMenuItem rename;
-    JMenuItem delete;
-    JMenuItem changeInstrument;
+    private TimelineController timelineController;
+    private TrackLabelPanel parentPanel;
+    private JMenuItem rename;
+    private JMenuItem delete;
+    private JMenuItem changeInstrument;
 
     // EFFECTS: creates a popup menu for the specified parent midiTrackLabelPanel
-    public LabelPopupMenu(TrackLabelPanel parentPanel) {
-        
+    public LabelPopupMenu(TrackLabelPanel parentPanel, TimelineController timelineController) {
         super(parentPanel.getName());
+
+        this.timelineController = timelineController;
         rename = new JMenuItem("Rename track");
         delete = new JMenuItem("Delete track");
         changeInstrument = new JMenuItem("Change instrument");
@@ -71,9 +74,9 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
     // MODIFIES: Timeline singleton
     // EFFECTS: deletes this from the the miditrack list
     private void delete() {
-        Timeline timeline = Timeline.getInstance();
-        int index = timeline.getTracks().indexOf(parentPanel.getMidiTrack());
-        timeline.removeMidiTrack(index);
+        Timeline tl = timelineController.getTimeline();
+        int index = tl.getTracks().indexOf(parentPanel.getMidiTrack());
+        tl.removeMidiTrack(index);
     }
 
     // EFFECTS: listens for actions on the popup menu items and runs methods accordingly

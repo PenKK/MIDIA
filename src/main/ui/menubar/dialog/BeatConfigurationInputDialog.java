@@ -11,6 +11,7 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 
 import model.Timeline;
+import model.TimelineController;
 
 // A JInputDialog for receiving integer inputs for ruler beats per measure and beat division
 public class BeatConfigurationInputDialog extends InputDialog {
@@ -20,15 +21,15 @@ public class BeatConfigurationInputDialog extends InputDialog {
     private JSpinner beatsPerMeasure;
 
     // EFFECTS: creates an input dialog and displays it
-    public BeatConfigurationInputDialog(Component invoker) {
-        super("Beat Configuration", invoker, new Rectangle(300, 200));
+    public BeatConfigurationInputDialog(Component invoker, TimelineController timelineController) {
+        super("Beat Configuration", invoker, new Rectangle(300, 200), timelineController);
     }
 
     // MODIFIES: this
     // EFFECTS: initializes input fields
     @Override
     protected void initFields() {
-        Timeline timeline = Timeline.getInstance();
+        Timeline timeline = timelineController.getTimeline();
         SpinnerModel nonZeroBeatDivision = new SpinnerNumberModel(timeline.getBeatDivision(), 1, 128, 1);
         SpinnerModel nonZeroBPM = new SpinnerNumberModel(timeline.getBeatsPerMeasure(), 1, 128, 1);
 
@@ -47,7 +48,7 @@ public class BeatConfigurationInputDialog extends InputDialog {
     
     // EFFECTS: updates the timeline ruler settings with the new beat configuration
     private void save() {
-        Timeline timeline = Timeline.getInstance();
+        Timeline timeline = timelineController.getTimeline();
         
         timeline.setBeatDivision((int) beatDivision.getValue());
         timeline.setBeatsPerMeasure((int) beatsPerMeasure.getValue());

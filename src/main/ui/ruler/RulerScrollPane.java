@@ -8,6 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import model.TimelineController;
 import ui.tabs.timeline.midi.TrackPanel;
 
 // Panel that shows the tickmarks above timeline to indicate beat marks and other timely infomration
@@ -20,8 +21,8 @@ public class RulerScrollPane extends JScrollPane {
     private RulerRenderPanel container;
 
     // EFFECTS: Constructs the pane, setting dimensions and appropirate listeners and viewports
-    public RulerScrollPane() {
-        container = new RulerRenderPanel();
+    public RulerScrollPane(TimelineController timelineController) {
+        container = new RulerRenderPanel(timelineController);
         container.setLayout(new BoxLayout(container, BoxLayout.X_AXIS));
 
         this.setPreferredSize(new Dimension(DEFAULT_RULER_WIDTH, RULER_HEIGHT));

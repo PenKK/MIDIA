@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -189,7 +190,8 @@ public class TestMidiTrack {
 
     @Test
     void testSetInstrument() throws InvalidMidiDataException, MidiUnavailableException {
-        Timeline timeline = new Timeline("test");
+        Timeline timeline = new Timeline("test", null);
+        timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
         midiTrack = timeline.createMidiTrack("Piano melody", instr, false);
         assertEquals(midiTrack.getInstrument().getProgramNumber(), 0);
         midiTrack.setInstrument(InstrumentalInstrument.ELECTRIC_PIANO_1);

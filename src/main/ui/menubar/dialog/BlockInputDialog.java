@@ -14,6 +14,7 @@ import javax.swing.SpinnerNumberModel;
 import model.Block;
 import model.MidiTrack;
 import model.Timeline;
+import model.TimelineController;
 
 // A JDialog to get input for creating a new block in a specified track
 public class BlockInputDialog extends InputDialog {
@@ -23,15 +24,15 @@ public class BlockInputDialog extends InputDialog {
     private JButton create;
 
     // EFFECTS: Creates a JDialog that prompts user to select a track and start beat for a new block
-    public BlockInputDialog(Component invoker) {
-        super("Add Block", invoker, new Rectangle(300, 200));
+    public BlockInputDialog(Component invoker, TimelineController timelineController) {
+        super("Add Block", invoker, new Rectangle(300, 200), timelineController);
     }
 
     // MODIFIES: this
     // EFFECTS: initializes the midiTracksComboBox, spinner, and create button
     @Override
     protected void initFields() {
-        Timeline timeline = Timeline.getInstance();
+        Timeline timeline = timelineController.getTimeline();
         ArrayList<MidiTrack> trackList = timeline.getTracks();
         MidiTrack[] tracks = new MidiTrack[trackList.size()];
         tracks = trackList.toArray(tracks);
@@ -69,10 +70,10 @@ public class BlockInputDialog extends InputDialog {
         }
 
         double startTick = (double) startBeatSpinner.getValue() - 1;
-        int startBeat = Timeline.getInstance().beatsToTicks(startTick);
+        int startBeat = timelineController.getTimeline().getPlayer().beatsToTicks(startTick);
         midiTrack.addBlock(new Block(startBeat));
 
-        Timeline.refresh();
+        timelineController.refresh();
         dispose();
     }
 }

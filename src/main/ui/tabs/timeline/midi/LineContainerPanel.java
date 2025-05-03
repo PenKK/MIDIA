@@ -9,23 +9,27 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import model.Timeline;
+import model.TimelineController;
 
 // A container to draw the line of the position tick indicator line over tracks
 public class LineContainerPanel extends JPanel implements PropertyChangeListener {
 
+    private TimelineController timelineController;
     private int lineX = TrackLabelPanel.LABEL_BOX_WIDTH;
 
     // EFFECTS: creates a LineContainerPanel that observs the timeline and has BoxLayout
-    public LineContainerPanel() {
+    public LineContainerPanel(TimelineController timelineController) {
         super();
-        Timeline.addObserver(this);
+        this.timelineController = timelineController;
+        timelineController.addObserver(this);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 
     // MODIFIES: this
     // EFFECTS: updates lineX value with the timeline positionTick (scaled) and repaints
     public void updateLineX() {
-        this.lineX = TrackRenderPanel.scalePixelsRender(Timeline.getInstance().getPositionTick()) 
+        Timeline timeline = timelineController.getTimeline();
+        this.lineX = timeline.scalePixelsRender(timeline.getPlayer().getPositionTick()) 
                                                             + TrackLabelPanel.LABEL_BOX_WIDTH;
         repaint(); 
     }

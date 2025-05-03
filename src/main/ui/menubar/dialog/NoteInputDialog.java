@@ -15,6 +15,7 @@ import model.Block;
 import model.MidiTrack;
 import model.Note;
 import model.Timeline;
+import model.TimelineController;
 
 // A JDialog for getting note input into a specified block in a specified track
 public class NoteInputDialog extends InputDialog {
@@ -29,8 +30,8 @@ public class NoteInputDialog extends InputDialog {
     JComboBox<Block> blocksComboBox;
 
     // Creates and launches an input dialog for note information 
-    public NoteInputDialog(Component invoker) {
-        super("Add note", invoker, new Rectangle(300, 400));
+    public NoteInputDialog(Component invoker, TimelineController timelineController) {
+        super("Add note", invoker, new Rectangle(300, 400), timelineController);
     }
 
     // MODIFIES: this
@@ -67,7 +68,7 @@ public class NoteInputDialog extends InputDialog {
     // MODIFIES: this
     // EFFECTS: Initializes ComboBox fields
     private void initComboBoxes() {
-        Timeline timeline = Timeline.getInstance();
+        Timeline timeline = timelineController.getTimeline();
 
         ArrayList<MidiTrack> trackList = timeline.getTracks();
         MidiTrack[] tracks = new MidiTrack[trackList.size()];
@@ -123,11 +124,11 @@ public class NoteInputDialog extends InputDialog {
             return;
         }
 
-        Timeline timeline = Timeline.getInstance();
+        Timeline timeline = timelineController.getTimeline();
         int p = (int) pitch.getValue();
         int v = (int) velocity.getValue();
-        int startTick = timeline.beatsToTicks((double) startBeat.getValue() - 1);
-        int durationTicks = timeline.beatsToTicks((double) durationBeats.getValue());
+        int startTick = timeline.getPlayer().beatsToTicks((double) startBeat.getValue() - 1);
+        int durationTicks = timeline.getPlayer().beatsToTicks((double) durationBeats.getValue());
 
         if (((MidiTrack) midiTracksComboBox.getSelectedItem()).isPercussive()) {
             p = 0;
@@ -135,7 +136,7 @@ public class NoteInputDialog extends InputDialog {
 
         Note note = new Note(p, v, startTick, durationTicks);
         selectedBlock.addNote(note);
-        Timeline.refresh();
+        timelineController.refresh();
         dispose();
     }
 

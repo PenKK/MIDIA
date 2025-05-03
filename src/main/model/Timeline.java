@@ -1,6 +1,5 @@
 package model;
 
-import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
@@ -26,11 +25,10 @@ public class Timeline implements Writable {
     private static final int DEFAULT_BEATS_PER_MEASURE = 4;
     private static final double DEFAULT_HORIZONTAL_SCALE = 0.1;
 
-    private PropertyChangeSupport pcs = new PropertyChangeSupport(Timeline.class);
-
     private String projectName;
     private ArrayList<MidiTrack> midiTracks;
     private Player player;
+    private PropertyChangeSupport pcs;
 
     private int beatDivision;
     private int beatsPerMeasure;
@@ -42,8 +40,10 @@ public class Timeline implements Writable {
     //          available, which is fatal and unrecoverable.
     //          Method throws InvalidMidiDataException if the Sequence has an invalid 
     //          divison type.
-    public Timeline(String projectName) throws MidiUnavailableException, InvalidMidiDataException  {
+    public Timeline(String projectName, PropertyChangeSupport pcs) throws MidiUnavailableException, InvalidMidiDataException  {
         this.projectName = projectName;
+        this.pcs = pcs;
+
         beatDivision = DEFAULT_BEAT_DIVISON;
         beatsPerMeasure = DEFAULT_BEATS_PER_MEASURE;
         horizontalScale = DEFAULT_HORIZONTAL_SCALE;
@@ -55,22 +55,7 @@ public class Timeline implements Writable {
         EventLog.getInstance().logEvent(e);
     }
 
-    // MODIFIES: this
-    // EFFECTS: adds the specified observer as a listener of property changes
-    public void addObserver(PropertyChangeListener observer) {
-        pcs.addPropertyChangeListener(observer);
-    }
 
-    // MODIFIES: this
-    // EFFECTS: removes the specified observer as a listener of property changes
-    public void removeObserver(PropertyChangeListener observer) {
-        pcs.removePropertyChangeListener(observer);
-    }
-
-    // EFFECTS: forces a timeline update (for rendering purposes one day better fix hopefuly)
-    public void refresh() {
-        pcs.firePropertyChange("timeline", null, this);
-    }
 
     // REQUIRES: player.getAvailableChannels().size() >= 0
     // MODIFIES: this
@@ -163,6 +148,10 @@ public class Timeline implements Writable {
         player = p;
     }
 
+    public void setMidiTracks(ArrayList<MidiTrack> midiTracks) {
+        this.midiTracks = midiTracks;
+    }
+
     // EFFECTS: calculates the tick at which the last note ends, this method
     //          is needed to calculate length ticks without first calling updateSequence()
     public int getLengthTicks() {
@@ -178,6 +167,11 @@ public class Timeline implements Writable {
             }
         }
         return lastNoteEndTick;
+    }
+
+    // EFFECTS: returns the value scaled by a factor, rounded to the nearest integer
+    public int scalePixelsRender(int value) {
+        return (int) Math.round(value * horizontalScale);
     }
 
     public ArrayList<MidiTrack> getTracks() {
@@ -234,6 +228,10 @@ public class Timeline implements Writable {
 
     public PropertyChangeSupport getPropertyChangeSupport() {
         return pcs;
+    }
+
+    public void setPropertyChangeSupport(PropertyChangeSupport pcs) {
+        this.pcs = pcs;
     }
 
     // EFFECTS: returns JSON object representation of the timeline

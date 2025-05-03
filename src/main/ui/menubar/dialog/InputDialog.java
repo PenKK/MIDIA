@@ -9,12 +9,17 @@ import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 
+import model.TimelineController;
+
 public abstract class InputDialog extends JDialog implements ActionListener {
 
+    protected TimelineController timelineController;
+
     // EFFECTS: creates an input dialog with the specified title
-    InputDialog(String frameTitle, Component invoker, Rectangle r) {
+    InputDialog(String frameTitle, Component invoker, Rectangle r, TimelineController timelineController) {
         super((Frame) null, frameTitle, true);
 
+        this.timelineController = timelineController;
         initFields();
 
         this.setLayout(new GridLayout(0, 2, 10, 10));

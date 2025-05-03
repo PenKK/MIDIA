@@ -8,9 +8,10 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JPanel;
 
+import model.Player;
 import model.Timeline;
+import model.TimelineController;
 import ui.tabs.timeline.midi.TrackLabelPanel;
-import ui.tabs.timeline.midi.TrackRenderPanel;
 
 // The panel for Graphics to draw on to show Ruler tick marks
 public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
@@ -21,15 +22,17 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
     private static final int FONT_PADDING = 4;
     private static final Font MEASURE_FONT = new Font("Dialog", Font.PLAIN, 14);
 
+    private TimelineController timelineController;
     private int tickPixelWidth;
     private int beatDivisions;
     private int beatsPerMeasure;
 
     // EFFECTS: Sets null border for zero padding, borders will be drawn via Graphics
-    RulerRenderPanel() {
+    RulerRenderPanel(TimelineController timelineController) {
+        this.timelineController = timelineController;
         this.setBorder(null);
         this.setBackground(Color.GRAY);
-        Timeline.addObserver(this);
+        timelineController.addObserver(this);
         updateMeasurements();
     }
 
@@ -44,10 +47,10 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
     // MODIFIES: this
     // EFFECTS: updates measurement values to the current timeline instance
     private void updateMeasurements() {
-        Timeline timeline = Timeline.getInstance();
+        Timeline timeline = timelineController.getTimeline();
         beatDivisions = timeline.getBeatDivision();
         beatsPerMeasure = timeline.getBeatsPerMeasure();
-        tickPixelWidth = TrackRenderPanel.scalePixelsRender(Timeline.PULSES_PER_QUARTER_NOTE / beatDivisions);
+        tickPixelWidth = timeline.scalePixelsRender(Player.PULSES_PER_QUARTER_NOTE / beatDivisions);
 
         repaint();
     }
@@ -84,7 +87,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
         switch (propertyName) {
             case "beatDivsion":
             case "beatsPerMeasure":
-            case "timeline":
+            case "timelineReplaced":
             case "horizontalScale":
                 updateMeasurements();
                 break;

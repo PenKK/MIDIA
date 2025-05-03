@@ -13,6 +13,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import model.Timeline;
+import model.TimelineController;
 import persistance.JsonReader;
 import persistance.JsonWriter;
 
@@ -22,6 +23,7 @@ public class FileMenu extends Menu {
     public static final String PROJECTS_DIRECTORY = "data/projects";
     public static final String AUTO_SAVE_FILE_DIRECTORY = PROJECTS_DIRECTORY.concat("/autosave/");
 
+    private TimelineController timelineController;
     private MenuItem open;
     private MenuItem save;
     private MenuItem newProject;
@@ -32,8 +34,10 @@ public class FileMenu extends Menu {
     private JsonWriter writer;
 
     // EFFECTS: creates file JMenu, its file chooser, its JMenuItems, and apppriate action listeners
-    public FileMenu() {
+    public FileMenu(TimelineController timelineController) {
         super("File");
+
+        this.timelineController = timelineController;
         open = new MenuItem("Open Project", this);
         save = new MenuItem("Save Project", this);
         newProject = new MenuItem("New Project", this);
@@ -65,14 +69,14 @@ public class FileMenu extends Menu {
     // EFFECTS: assigns the instance a new Timeline 
     private void newProject() {
         try {
-            Timeline.setInstance(new Timeline("New Project"));
+            timelineController.setInstance(new Timeline("New Project", timelineController.getPropertyChangeSupport()));
         } catch (MidiUnavailableException | InvalidMidiDataException e) {
             System.out.println("Unable to create and set new Timline instance");
             e.printStackTrace();
         }
     }
 
-    // MODIFIES: Timeline (singleton instance)
+    // MODIFIES: timelineController
     // EFFECTS: Prompts user to pick a project json file to load
     private void openProject() {
         int result = fileChooser.showOpenDialog(this);
@@ -86,7 +90,8 @@ public class FileMenu extends Menu {
 
         try {
             Timeline newTimeline = reader.read();
-            Timeline.setInstance(newTimeline);
+            newTimeline.setPropertyChangeSupport(timelineController.getPropertyChangeSupport());
+            timelineController.setInstance(newTimeline);
         } catch (IOException | MidiUnavailableException | InvalidPathException e) {
             System.out.println("Unable to load file");
         } catch (InvalidMidiDataException e) {
@@ -107,11 +112,11 @@ public class FileMenu extends Menu {
         writer = new JsonWriter(path);
 
         try {
-            Timeline instance = Timeline.getInstance();
-            instance.setProjectName(fileChooser.getSelectedFile().getName());
+            Timeline timeline = timelineController.getTimeline();
+            timeline.setProjectName(fileChooser.getSelectedFile().getName());
 
             writer.open();
-            writer.write(instance);
+            writer.write(timeline);
             writer.close();
 
         } catch (FileNotFoundException e) {
@@ -129,19 +134,5 @@ public class FileMenu extends Menu {
         }
 
         fileChooser.getSelectedFile().delete();
-    }
-
-    // EFFECTS: auto saves the currently timeline into the auto save directory
-    public static void autoSave() {
-        Timeline t = Timeline.getInstance();
-
-        JsonWriter writer = new JsonWriter(AUTO_SAVE_FILE_DIRECTORY.concat(t.getProjectName()));
-        try {
-            writer.open();
-            writer.write(t);
-            writer.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Unable to auto save, invalid path");
-        }
     }
 }

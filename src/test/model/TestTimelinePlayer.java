@@ -32,7 +32,8 @@ public class TestTimelinePlayer extends TestJson {
 
     @BeforeEach
     void runBefore() throws MidiUnavailableException, InvalidMidiDataException {
-        timeline = new Timeline("test");
+        timeline = new TimelineController().getTimeline();
+        timeline.setProjectName("test");
         expectedChannels = new ArrayList<>();
         expectedChannels.add(0);
         expectedChannels.add(1);
@@ -444,7 +445,7 @@ public class TestTimelinePlayer extends TestJson {
 
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals("timeline")) {
+                if (evt.getPropertyName().equals("timelineReplaced")) {
                     value++;
                 }
             }

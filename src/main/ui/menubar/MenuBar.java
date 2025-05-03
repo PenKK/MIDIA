@@ -2,6 +2,7 @@ package ui.menubar;
 
 import javax.swing.JMenuBar;
 
+import model.TimelineController;
 import ui.menubar.menus.FileMenu;
 import ui.menubar.menus.TrackMenu;
 import ui.menubar.menus.ViewMenu;
@@ -14,10 +15,10 @@ public class MenuBar extends JMenuBar {
     private ViewMenu viewMenu;
 
     // EFFECTS: Initializes all menus and adds them to the menu bar
-    public MenuBar() {
-        fileMenu = new FileMenu();
-        trackMenu = new TrackMenu();
-        viewMenu = new ViewMenu();
+    public MenuBar(TimelineController timelineController) {
+        fileMenu = new FileMenu(timelineController);
+        trackMenu = new TrackMenu(timelineController);
+        viewMenu = new ViewMenu(timelineController);
         
         this.add(fileMenu);
         this.add(trackMenu);

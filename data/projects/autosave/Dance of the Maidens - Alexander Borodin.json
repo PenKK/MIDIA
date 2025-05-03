@@ -1,23 +1,4 @@
 {
-    "player": {
-        "positionTick": 0,
-        "beatsPerMinute": 60,
-        "availableChannels": [
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15
-        ]
-    },
     "beatsPerMeasure": 4,
     "horizontalScale": 0.1,
     "beatDivision": 3,
@@ -225,5 +206,24 @@
                 "className": "InstrumentalInstrument"
             }
         }
-    ]
+    ],
+    "player": {
+        "positionTick": 0,
+        "beatsPerMinute": 60,
+        "availableChannels": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+        ]
+    }
 }

@@ -7,7 +7,7 @@ import javax.swing.BoundedRangeModel;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import model.Timeline;
+import model.TimelineController;
 import ui.ruler.RulerScrollPane;
 import ui.tabs.timeline.midi.TrackPanel;
 import ui.tabs.timeline.midi.TrackScrollPane;
@@ -19,11 +19,11 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
     private RulerScrollPane rulerScrollPane;
 
     // EFFECTS: Creates timeline view container, and initializes sub components
-    public TimelineViewPanel() {
-        midiTrackScrollPane = new TrackScrollPane();
-        rulerScrollPane = new RulerScrollPane();
+    public TimelineViewPanel(TimelineController timelineController) {
+        midiTrackScrollPane = new TrackScrollPane(timelineController);
+        rulerScrollPane = new RulerScrollPane(timelineController);
 
-        Timeline.addObserver(this);
+        timelineController.addObserver(this);
         syncHorizontalScrollBars();
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -53,7 +53,7 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
         String propertyName = evt.getPropertyName();
 
         switch (propertyName) {
-            case "timeline":
+            case "timelineReplaced":
             case "horizontalScale":
                 updateRulerDimensions();
             default:

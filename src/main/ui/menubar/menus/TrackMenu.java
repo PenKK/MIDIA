@@ -2,6 +2,7 @@ package ui.menubar.menus;
 
 import java.awt.event.ActionEvent;
 
+import model.TimelineController;
 import ui.menubar.dialog.BlockInputDialog;
 import ui.menubar.dialog.NoteInputDialog;
 import ui.menubar.dialog.TrackInputDialog;
@@ -9,12 +10,13 @@ import ui.menubar.dialog.TrackInputDialog;
 // The track menu option in the menu bar
 public class TrackMenu extends Menu {
 
+    private TimelineController timelineController;
     private MenuItem newTrack;
     private MenuItem addBlock;
     private MenuItem addNote;
 
     // EFFECTS: creates a track menu and initializes menu items
-    public TrackMenu() {
+    public TrackMenu(TimelineController timelineController) {
         super("Track");
         newTrack = new MenuItem("New Track", this);
         addBlock = new MenuItem("Add block", this);
@@ -23,17 +25,17 @@ public class TrackMenu extends Menu {
 
     // EFFECTS: Prompts user to create a new track
     private void createTrack() {
-        new TrackInputDialog(getParent().getParent());
+        new TrackInputDialog(getParent().getParent(), timelineController);
     }
 
     // EFFECTS: Prompts user to create a new block
     private void addBlock() {
-        new BlockInputDialog(getParent().getParent());
+        new BlockInputDialog(getParent().getParent(), timelineController);
     }
 
     // EFFECTS: Prompts user to create a new note
     private void addNote() {
-        new NoteInputDialog(getParent().getParent());
+        new NoteInputDialog(getParent().getParent(), timelineController);
     }
 
     

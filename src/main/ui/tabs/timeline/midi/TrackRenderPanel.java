@@ -13,6 +13,7 @@ import model.Block;
 import model.MidiTrack;
 import model.Note;
 import model.Timeline;
+import model.TimelineController;
 
 // Interactable render of the MidiTrack's blocks and notes
 public class TrackRenderPanel extends JPanel implements MouseListener {
@@ -29,9 +30,11 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
     private static final double NOTE_CORNER_RADIUS = 0.3;
 
     private MidiTrack midiTrack;
+    private TimelineController timelineController;
 
     // EFFECTS: recieves the specified midiTrack, and listens for mouse events
-    public TrackRenderPanel(MidiTrack midiTrack) {
+    public TrackRenderPanel(MidiTrack midiTrack, TimelineController timelineController) {
+        this.timelineController = timelineController;
         this.midiTrack = midiTrack;
         this.addMouseListener(this);
     }
@@ -49,8 +52,10 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
         Color tempColor = g.getColor();
         g.setColor(BLOCK_BACKGROUND_COLOR);
 
-        int width = scalePixelsRender(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
-        int x = scalePixelsRender(block.getStartTick());
+        Timeline timeline = timelineController.getTimeline();
+
+        int width = timeline.scalePixelsRender(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
+        int x = timeline.scalePixelsRender(block.getStartTick());
         int y = BLOCK_HEIGHT_MARGIN / 2;
         int height = TrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
 
@@ -96,6 +101,7 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
     // EFFECTS: draws the specified blocks and their notes. the height of notes is 
     //          drawn relative to all other notes in the blocks
     private void drawTrack(ArrayList<Block> blocks, Graphics g) {
+        Timeline timeline = timelineController.getTimeline();
         int[] pitchRange = determineRange(blocks);
 
         int minPitch = pitchRange[0];
@@ -113,10 +119,10 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
                 int pitchOffset = minPitch - (range == 0 ? (MIN_NOTE_RANGE / 2) : 0);
                 int relativePitch = n.getPitch() - pitchOffset + (NOTE_RANGE_PADDING / 2);
 
-                int x = scalePixelsRender(n.getStartTick());
+                int x = timeline.scalePixelsRender(n.getStartTick());
                 int y = trackHeight - (int) Math.round(relativePitch * heightDouble - BLOCK_HEIGHT_MARGIN / 2);
                 int height = (int) Math.round(heightDouble);
-                int width = scalePixelsRender(n.getDurationTicks());
+                int width = timeline.scalePixelsRender(n.getDurationTicks());
 
                 g.setColor(NOTE_COLOR);
                 g.fillRoundRect(x, y, width, height, noteRounding, noteRounding);
@@ -133,12 +139,7 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
                 endPixel = temp;
             }
         }
-        return scalePixelsRender(endPixel);
-    }
-
-    // EFFECTS: returns the value scaled by a factor of RENDER_SCALE, rounded to the nearest integer
-    public static int scalePixelsRender(int value) {
-        return (int) Math.round(value * Timeline.getInstance().getHorizontalScale());
+        return timelineController.getTimeline().scalePixelsRender(endPixel);
     }
 
     @Override
@@ -170,7 +171,7 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
 
     // EFFECTS: Handles double click behavior on the rendered track
     private void doubleClick(MouseEvent e) {
-        int tick = (int) Math.round(e.getX() / Timeline.getInstance().getHorizontalScale());
+        int tick = (int) Math.round(e.getX() / timelineController.getTimeline().getHorizontalScale());
 
         for (Block b : midiTrack.getBlocks()) {
             if (b.getStartTick() <= tick && b.getStartTick() + b.getDurationTicks() >= tick) {

@@ -1,5 +1,6 @@
 package persistance;
 
+import java.beans.PropertyChangeSupport;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -55,7 +56,7 @@ public class JsonReader {
     // EFFECTS: parses timeline from JSON object and returns it
     private Timeline parseTimeline(JSONObject jsonObject) throws MidiUnavailableException, InvalidMidiDataException {
         String projectName = jsonObject.getString("projectName");
-        Timeline timeline = new Timeline(projectName);
+        Timeline timeline = new Timeline(projectName, new PropertyChangeSupport(projectName));
 
         int beatDivision = jsonObject.getInt("beatDivision");
         int beatsPerMeasure = jsonObject.getInt("beatsPerMeasure");
@@ -70,6 +71,8 @@ public class JsonReader {
         timeline.setBeatsPerMeasure(beatsPerMeasure);
         timeline.setHorizontalScale(horizontalScale);
         addMidiTracks(timeline, midiTracksJsonArray);
+
+        timeline.setPropertyChangeSupport(null);
         return timeline;
     }
 

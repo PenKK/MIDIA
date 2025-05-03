@@ -2,6 +2,7 @@ package ui.tabs;
 
 import javax.swing.JTabbedPane;
 
+import model.TimelineController;
 import ui.tabs.piano.roll.PianoRollPanel;
 import ui.tabs.timeline.TimelineViewPanel;
 
@@ -12,9 +13,9 @@ public class TabbedPane extends JTabbedPane {
     private PianoRollPanel pianoRollPanel;
 
     // EFFECTS: creates a JTabbedPane with a timeline and piano roll tab
-    public TabbedPane() {
-        timelineViewPanel = new TimelineViewPanel();
-        pianoRollPanel = new PianoRollPanel();
+    public TabbedPane(TimelineController tc) {
+        timelineViewPanel = new TimelineViewPanel(tc);
+        pianoRollPanel = new PianoRollPanel(tc);
         
         this.addTab("Timeline", timelineViewPanel);
         this.addTab("Piano Roll", pianoRollPanel);

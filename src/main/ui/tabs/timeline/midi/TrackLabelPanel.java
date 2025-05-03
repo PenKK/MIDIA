@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import model.MidiTrack;
+import model.TimelineController;
 import ui.tabs.timeline.midi.popup.LabelPopupMenu;
 
 // Interactable display of the general information of a MidiTrack
@@ -19,9 +20,9 @@ public class TrackLabelPanel extends JPanel {
     private JLabel nameLabel;
 
     // EFFECTS: Creates the label panel which contains information about the MidiTrack for that row
-    public TrackLabelPanel(MidiTrack midiTrack) {
+    public TrackLabelPanel(MidiTrack midiTrack, TimelineController timelineController) {
         nameLabel = new JLabel(midiTrack.getName());
-        labelPopupMenu = new LabelPopupMenu(this);
+        labelPopupMenu = new LabelPopupMenu(this, timelineController);
 
         this.midiTrack = midiTrack;
         this.setComponentPopupMenu(labelPopupMenu);

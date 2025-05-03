@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.border.MatteBorder;
 
 import model.MidiTrack;
+import model.TimelineController;
 
 // Represents a single MidiTrack in the TinelinePanel UI.
 // Contains two sub Panels, MidiTrackLabelPanel and MidiTrackRenderPanel
@@ -23,9 +24,9 @@ public class TrackPanel extends JPanel {
     private TrackRenderPanel renderPanel;
 
     // Creates sub panels, adjusts width according to render panel length, and then adds it to this
-    public TrackPanel(MidiTrack midiTrack) {
-        labelPanel = new TrackLabelPanel(midiTrack);
-        renderPanel = new TrackRenderPanel(midiTrack);
+    public TrackPanel(MidiTrack midiTrack, TimelineController timelineController) {
+        labelPanel = new TrackLabelPanel(midiTrack, timelineController);
+        renderPanel = new TrackRenderPanel(midiTrack, timelineController);
 
         this.setBorder(BORDER);
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
