@@ -50,5 +50,4 @@ public class RulerScrollPane extends JScrollPane {
     public RulerRenderPanel getRenderPanel() {
         return container;
     }
-
 }

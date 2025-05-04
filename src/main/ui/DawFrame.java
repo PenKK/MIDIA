@@ -2,8 +2,8 @@ package ui;
 
 import java.awt.BorderLayout;
 import java.awt.Rectangle;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -25,7 +25,7 @@ import ui.menubar.menus.FileMenu;
 import ui.tabs.TabbedPane;
 
 // The frame of the graphical UI. Contains the entirety of the UI.
-public class DawFrame extends JFrame implements PropertyChangeListener, WindowListener {
+public class DawFrame extends JFrame implements PropertyChangeListener {
 
     private MenuBar menuBar;
     private TabbedPane tabbedPane;
@@ -44,7 +44,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener, WindowLi
         this.setIconImage(ImageIO.read(new File("lib/images/logo.png")));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setBounds(new Rectangle(800, 600));
-        this.addWindowListener(this);
+        this.addWindowListener(onCloseWindowAdapter());
 
         this.setJMenuBar(menuBar);
         this.add(mediaControlPanel, BorderLayout.NORTH);
@@ -53,6 +53,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener, WindowLi
         updateTitle();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
+
     }
 
     // MOFIES: this
@@ -73,6 +74,17 @@ public class DawFrame extends JFrame implements PropertyChangeListener, WindowLi
         this.setTitle(newTitle);
     }
 
+    private WindowAdapter onCloseWindowAdapter() {
+        return new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                autoSave();
+                for (Event event : EventLog.getInstance()) {
+                    System.out.printf("[%s] %s%n", event.getDate(), event.getDescription());
+                }
+            }
+        };
+    }
 
     // EFFECTS: auto saves the currently timeline into the auto save directory
     public void autoSave() {
@@ -86,43 +98,5 @@ public class DawFrame extends JFrame implements PropertyChangeListener, WindowLi
         } catch (FileNotFoundException e) {
             System.out.println("Unable to auto save, invalid path");
         }
-    }
-
-    @Override
-    public void windowClosing(WindowEvent e) {
-        autoSave();
-        for (Event event : EventLog.getInstance()) {
-            System.out.printf("[%s] %s%n", event.getDate(), event.getDescription());
-        }
-    }
-
-    @Override
-    public void windowClosed(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowIconified(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeiconified(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowActivated(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-
-    }
-
-    @Override
-    public void windowOpened(WindowEvent e) {
-
     }
 }

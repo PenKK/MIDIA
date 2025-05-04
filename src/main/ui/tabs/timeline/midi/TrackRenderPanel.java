@@ -2,8 +2,8 @@ package ui.tabs.timeline.midi;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -16,7 +16,7 @@ import model.Timeline;
 import model.TimelineController;
 
 // Interactable render of the MidiTrack's blocks and notes
-public class TrackRenderPanel extends JPanel implements MouseListener {
+public class TrackRenderPanel extends JPanel {
 
     private static final Color NOTE_COLOR = Color.WHITE;
     private static final Color BLOCK_BACKGROUND_COLOR = new Color(30, 162, 240, 200);
@@ -36,7 +36,7 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
     public TrackRenderPanel(MidiTrack midiTrack, TimelineController timelineController) {
         this.timelineController = timelineController;
         this.midiTrack = midiTrack;
-        this.addMouseListener(this);
+        this.addMouseListener(mouseAdapter());
     }
 
     // EFFECTS: Draws all blocks in the midiTrack
@@ -142,27 +142,21 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
         return timelineController.getTimeline().scalePixelsRender(endPixel);
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
+    private MouseAdapter mouseAdapter() {
+        return new MouseAdapter() {
+            // EFFECTS: listens for mouse events and runs methods accoringly
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    rightClick(e);
+                    return;
+                }
 
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    // EFFECTS: listens for mouse events and runs methods accoringly
-    @Override
-    public void mouseReleased(MouseEvent e) {
-        if (SwingUtilities.isRightMouseButton(e)) {
-            rightClick(e);
-            return;
-        }
-
-        if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
-            doubleClick(e);
-        }
+                if (e.getClickCount() == 2 && SwingUtilities.isLeftMouseButton(e)) {
+                    doubleClick(e);
+                }
+            }
+        };
     }
 
     private void rightClick(MouseEvent e) {
@@ -179,15 +173,5 @@ public class TrackRenderPanel extends JPanel implements MouseListener {
             }
         }
         repaint();
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
     }
 }
