@@ -6,6 +6,7 @@ import java.beans.PropertyChangeSupport;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 
+// A controller class responsible for managing a single Timeline instance
 public class TimelineController {
 
     private Timeline timeline;

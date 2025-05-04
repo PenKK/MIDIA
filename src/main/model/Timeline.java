@@ -178,9 +178,9 @@ public class Timeline implements Writable {
     }
 
     public MidiTrack[] getMidiTracksArray() {
-        return midiTracks.toArray(new MidiTrack[0]);
+        return midiTracks.toArray(new MidiTrack[midiTracks.size()]);
     }
-    
+
     public void updatePlayerSequence() throws InvalidMidiDataException {
         player.updateSequence();
     }
