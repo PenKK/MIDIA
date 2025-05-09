@@ -132,6 +132,10 @@ public class Player implements Writable {
         availableChannels = newChannels;
     }
 
+    public boolean isPlaying() {
+        return sequencer.isRunning();
+    }
+
     // REQUIRES: newPositionMs >= 0
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback at the given milliseconds

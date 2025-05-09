@@ -110,6 +110,10 @@ public class Timeline implements Writable {
         player.pause();
     }
 
+    public int durationRemainingMS() {
+        return (int) (getLengthMs() - player.getPositionMs());
+    }
+
     // MODIFIES: this
     // EFFECTS: changes projectName and fires propertyChangeEvent
     public void setProjectName(String newProjectName) {

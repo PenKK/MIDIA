@@ -1,8 +1,11 @@
 package ui.ruler;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -32,6 +35,8 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
         this.timelineController = timelineController;
         this.setBorder(null);
         this.setBackground(Color.GRAY);
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+        this.addMouseListener(mouseAdapter());
         timelineController.addObserver(this);
         updateMeasurements();
     }
@@ -77,6 +82,42 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
 
             g.drawLine(i, 0, i, height);
         }
+    }
+
+    private MouseAdapter mouseAdapter() {
+        return new MouseAdapter() {
+            
+            @Override
+            public void mouseClicked(MouseEvent e) {
+               
+            }
+        
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Timeline timeline = timelineController.getTimeline();
+
+                boolean resume = false;
+                int tick = (int) ((e.getX() - TrackLabelPanel.LABEL_BOX_WIDTH) 
+                                 / timelineController.getTimeline().getHorizontalScale());
+
+                if (timelineController.isRunning()) {
+                    timelineController.pauseTimeline();
+                    resume = true;
+                }
+
+                timeline.getPlayer().setPositionTick(tick);
+                System.out.println(timeline.durationRemainingMS());
+
+                if (resume) {
+                    timelineController.playTimeline();
+                }
+            }
+        
+            @Override
+            public void mouseReleased(MouseEvent e) {
+               
+            }
+        };
     }
 
     // EFFECTS: listens for property change events and runs methods accordingly
