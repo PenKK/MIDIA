@@ -171,6 +171,11 @@ public class Timeline implements Writable {
         return (int) Math.round(value * horizontalScale);
     }
 
+        // EFFECTS: returns the value scaled by a factor, rounded to the nearest integer
+    public long scalePixelsRender(long value) {
+        return Math.round(value * horizontalScale);
+    }
+
     public ArrayList<MidiTrack> getMidiTracks() {
         return midiTracks;
     }

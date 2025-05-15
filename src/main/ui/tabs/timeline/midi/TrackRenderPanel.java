@@ -54,8 +54,8 @@ public class TrackRenderPanel extends JPanel {
 
         Timeline timeline = timelineController.getTimeline();
 
-        int width = timeline.scalePixelsRender(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
-        int x = timeline.scalePixelsRender(block.getStartTick());
+        int width = (int) timeline.scalePixelsRender(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
+        int x = (int) timeline.scalePixelsRender(block.getStartTick());
         int y = BLOCK_HEIGHT_MARGIN / 2;
         int height = TrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
 
@@ -119,10 +119,10 @@ public class TrackRenderPanel extends JPanel {
                 int pitchOffset = minPitch - (range == 0 ? (MIN_NOTE_RANGE / 2) : 0);
                 int relativePitch = n.getPitch() - pitchOffset + (NOTE_RANGE_PADDING / 2);
 
-                int x = timeline.scalePixelsRender(n.getStartTick());
+                int x = (int) timeline.scalePixelsRender(n.getStartTick());
                 int y = trackHeight - (int) Math.round(relativePitch * heightDouble - BLOCK_HEIGHT_MARGIN / 2);
                 int height = (int) Math.round(heightDouble);
-                int width = timeline.scalePixelsRender(n.getDurationTicks());
+                int width = (int) timeline.scalePixelsRender(n.getDurationTicks());
 
                 g.setColor(NOTE_COLOR);
                 g.fillRoundRect(x, y, width, height, noteRounding, noteRounding);
@@ -132,14 +132,14 @@ public class TrackRenderPanel extends JPanel {
 
     // EFFECTS: returns the last horizontal pixel that is drawn from blocks (scaled)
     public int getScaledWidth() {
-        int endPixel = 0;
+        long endPixel = 0;
         for (Block b : midiTrack.getBlocks()) {
-            int temp = b.getStartTick() + b.getDurationTicks();
+            long temp = b.getStartTick() + b.getDurationTicks();
             if (temp > endPixel) {
                 endPixel = temp;
             }
         }
-        return timelineController.getTimeline().scalePixelsRender(endPixel);
+        return (int) timelineController.getTimeline().scalePixelsRender(endPixel);
     }
 
     private MouseAdapter mouseAdapter() {
