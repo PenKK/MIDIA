@@ -133,8 +133,8 @@ public class NoteInputDialog extends InputDialog {
         Timeline timeline = timelineController.getTimeline();
         int p = (int) pitch.getValue();
         int v = (int) velocity.getValue();
-        int startTick = timeline.getPlayer().beatsToTicks((double) startBeat.getValue() - 1);
-        int durationTicks = timeline.getPlayer().beatsToTicks((double) durationBeats.getValue());
+        long startTick = timeline.getPlayer().beatsToTicks((double) startBeat.getValue() - 1);
+        long durationTicks = timeline.getPlayer().beatsToTicks((double) durationBeats.getValue());
 
         if (((MidiTrack) midiTracksComboBox.getSelectedItem()).isPercussive()) {
             p = 0;

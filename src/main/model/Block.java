@@ -12,11 +12,11 @@ import persistance.Writable;
 public class Block implements Writable {
 
     private ArrayList<Note> notes;
-    private int startTick;
+    private long startTick;
 
     // REQUIRES: startTick >= 0
     // EFFECTS: Creates a block with no notes inside of it with a startTick
-    public Block(int startTick) {
+    public Block(long startTick) {
         this.notes = new ArrayList<>();
         this.startTick = startTick;
     }
@@ -48,7 +48,7 @@ public class Block implements Writable {
     // REQUIRES: newStartTick >= 0
     // MODIFIES: this
     // EFFECTS: Changes the position of the block on the time line
-    public void setStartTick(int newStartTick) {
+    public void setStartTick(long newStartTick) {
         startTick = newStartTick;
     }
 
@@ -69,7 +69,7 @@ public class Block implements Writable {
         return notes;
     }
 
-    public int getStartTick() {
+    public long getStartTick() {
         return startTick;
     }
 
@@ -106,10 +106,10 @@ public class Block implements Writable {
     }
 
     // EFFECTS: returns the length of ticks that the block has an active note
-    public int getDurationTicks() {
-        int duration = 0;
+    public long getDurationTicks() {
+        long duration = 0;
         for (Note note : notes) {
-            int noteEnd = note.getDurationTicks() + note.getStartTick();
+            long noteEnd = note.getDurationTicks() + note.getStartTick();
             if (noteEnd > duration) {
                 duration = noteEnd;
             }

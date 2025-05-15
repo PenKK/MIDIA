@@ -8,9 +8,6 @@ import model.instrument.PercussionInstrument;
 import persistance.TestJson;
 
 import static org.junit.jupiter.api.Assertions.*;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -53,6 +50,13 @@ public class TestTimelinePlayer extends TestJson {
     }
 
     @Test
+    void testScale() {
+        assertEquals(timeline.scalePixelsRender(50), 5);
+        timeline.setHorizontalScale(5);
+        assertEquals(timeline.scalePixelsRender(50), 250);
+    }
+
+    @Test
     void testConstructor() throws MidiUnavailableException {
         assertEquals(timeline.getProjectName(), "test");
         assertEquals(timeline.getMidiTracks(), new ArrayList<MidiTrack>());
@@ -70,12 +74,14 @@ public class TestTimelinePlayer extends TestJson {
     void testAddMidiTrack() {
         ArrayList<MidiTrack> expectedMidiTracks = new ArrayList<>();
 
+        assertEquals(0, timeline.getMidiTracksArray().length);
         MidiTrack midiTrack = timeline.createMidiTrack("cool track", instr, false);
         expectedMidiTracks.add(midiTrack);
         assertEquals(timeline.getMidiTracks(), expectedMidiTracks);
         assertEquals(timeline.getTrack(0), expectedMidiTracks.get(0));
         assertEquals(timeline.getMidiTracks().size(), 1);
         assertEquals(midiTrack.getChannel(), 0);
+        assertEquals(timeline.getMidiTracksArray()[0], (new MidiTrack[] {midiTrack})[0]);
 
         expectedChannels.remove(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
@@ -283,45 +289,52 @@ public class TestTimelinePlayer extends TestJson {
         midiTrack.addBlock(b);
 
         timeline.play();
-        assertTrue(timeline.getPlayer().getSequencer().isRunning());
+        assertTrue(timeline.getPlayer().isPlaying());
         Thread.sleep((long) (timeline.getLengthMs() + 500));
-        assertFalse(timeline.getPlayer().getSequencer().isRunning());
+        assertFalse(timeline.getPlayer().isPlaying());
 
         // test playback a second time
         b.removeNote(1);
         timeline.play();
-        assertTrue(timeline.getPlayer().getSequencer().isRunning());
+        assertTrue(timeline.getPlayer().isPlaying());
         Thread.sleep((long) (timeline.getLengthMs() + 500));
-        assertFalse(timeline.getPlayer().getSequencer().isRunning());
+        assertFalse(timeline.getPlayer().isPlaying());
         timeline.pause();
 
         // test play and pause
         timeline.play();
-        assertTrue(timeline.getPlayer().getSequencer().isRunning());
+        assertTrue(timeline.getPlayer().isPlaying());
         timeline.pause();
-        assertFalse(timeline.getPlayer().getSequencer().isRunning());
+        assertFalse(timeline.getPlayer().isPlaying());
         timeline.play();
-        assertTrue(timeline.getPlayer().getSequencer().isRunning());
+        assertTrue(timeline.getPlayer().isPlaying());
         Thread.sleep((long) (timeline.getLengthMs() / 2) + 500);
-        assertFalse(timeline.getPlayer().getSequencer().isRunning());
+        assertFalse(timeline.getPlayer().isPlaying());
     }
 
     @Test
     void testTimelinePosition() throws MidiUnavailableException {
         double roundingDelta = 0.01;
 
+        addSampleSong(timeline);
+
+        assertEquals(10000, timeline.getDurationRemainingMS());
+
         timeline.getPlayer().setPositionTick(30);
         assertEquals(timeline.getPlayer().getPositionTick(), 30);
+        assertEquals(9984, timeline.getDurationRemainingMS());
 
         assertEquals(timeline.getPlayer().getPositionMs(), 15.625, roundingDelta);
         assertEquals(timeline.getPlayer().getPositionBeats(), 0.03125, roundingDelta); // 30 ms is very short
         assertEquals(timeline.getPlayer().getPositionOnBeat(), 0.03125 + 1, roundingDelta);
         timeline.getPlayer().setPositionMs(15.625);
         assertEquals(timeline.getPlayer().getPositionTick(), 30);
+        assertEquals(9984, timeline.getDurationRemainingMS());
 
         timeline.getPlayer().setPositionTick(20);
         assertEquals(timeline.getPlayer().getPositionTick(), 20);
         assertEquals(timeline.getPlayer().getPositionMs(), 10.42, roundingDelta);
+        assertEquals(9989, timeline.getDurationRemainingMS());
 
         timeline.getPlayer().setBPM(240);
         timeline.getPlayer().setPositionTick(20);
@@ -329,17 +342,21 @@ public class TestTimelinePlayer extends TestJson {
         assertEquals(timeline.getPlayer().getPositionMs(), 5.2, roundingDelta);
         assertEquals(timeline.getPlayer().getPositionBeats(), 0.0208, roundingDelta);
         assertEquals(timeline.getPlayer().getPositionOnBeat(), 0.0208 + 1, roundingDelta);
+        assertEquals(4994, timeline.getDurationRemainingMS());
 
         timeline.getPlayer().setPositionTick(0);
         assertEquals(timeline.getPlayer().getPositionTick(), 0);
         assertEquals(timeline.getPlayer().getPositionBeats(), 0);
         assertEquals(timeline.getPlayer().getPositionOnBeat(), 1.0);
+        assertEquals(5000, timeline.getDurationRemainingMS());
 
         timeline.getPlayer().setPositionBeat(11);
         assertEquals(timeline.getPlayer().getPositionMs(), 2500);
+        assertEquals(2500, timeline.getDurationRemainingMS());
 
         timeline.getPlayer().setPositionBeat(1);
         assertEquals(timeline.getPlayer().getPositionMs(), 0);
+        assertEquals(5000, timeline.getDurationRemainingMS());
     }
 
     @Test
@@ -436,39 +453,5 @@ public class TestTimelinePlayer extends TestJson {
         assertEquals(timeline.getProjectName(), "cool song");
         timeline.setProjectName("cooler song");
         assertEquals(timeline.getProjectName(), "cooler song");
-    }
-
-    @Test
-    void testObserverPattern() throws MidiUnavailableException, InvalidMidiDataException {
-        class TestObserver implements PropertyChangeListener {
-            private int value = 0;
-
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if (evt.getPropertyName().equals("timelineReplaced")) {
-                    value++;
-                }
-            }
-
-            public int getValue() {
-                return value;
-            }
-        }
-
-        TestObserver testObserver = new TestObserver();
-        assertEquals(testObserver.getValue(), 0);
-
-        // Timeline.addObserver(testObserver);
-        // assertEquals(Timeline.getPropertyChangeSupport().getPropertyChangeListeners().length, 1);
-
-        // Timeline.refresh();
-        // assertEquals(testObserver.getValue(), 1);
-
-        // Timeline.setInstance(new Timeline("joe"));
-        // assertEquals(testObserver.getValue(), 2);
-
-        // Timeline.removeObserver(testObserver);
-        // Timeline.refresh();
-        // assertEquals(testObserver.getValue(), 2);
     }
 }

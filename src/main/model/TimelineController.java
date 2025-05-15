@@ -1,43 +1,34 @@
 package model;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
-import javax.swing.Timer;
+import javax.sound.midi.MetaEventListener;
+import javax.sound.midi.MetaMessage;
+import javax.sound.midi.Sequencer;
 
 // A controller class responsible for managing a single Timeline instance
-public class TimelineController implements ActionListener {
+public class TimelineController implements MetaEventListener {
 
     private Timeline timeline;
     private PropertyChangeSupport pcs;
-    private Timer playbackEndTimer;
 
-    public TimelineController() throws MidiUnavailableException, InvalidMidiDataException {
+    public TimelineController() {
         pcs = new PropertyChangeSupport(this);
-        playbackEndTimer = new Timer(0, this);
-        playbackEndTimer.setRepeats(false);
         timeline = new Timeline("New Project", pcs);
+        updateSequencerListener();
     }
 
     public Timeline getTimeline() {
         return timeline;
     }
 
+    private void updateSequencerListener() {
+        timeline.getPlayer().getSequencer().addMetaEventListener(this);
+    }
+
     public void playTimeline() {
-        int delay = (int) (timeline.getLengthMs() - timeline.getPlayer().getPositionMs());
-
-        if (delay < 0) {
-            return;
-        }
-        
-        playbackEndTimer.setInitialDelay(delay);
-        playbackEndTimer.setDelay(delay);
-        playbackEndTimer.start();
-
         try {
             timeline.play();
         } catch (InvalidMidiDataException e) {
@@ -45,24 +36,25 @@ public class TimelineController implements ActionListener {
         }
     }
 
-    public boolean isRunning() {
+    public boolean isPlaying() {
         return timeline.getPlayer().getSequencer().isRunning();
     }
 
     public void pauseTimeline() {
-        playbackEndTimer.stop();
         timeline.pause();
     }
-
 
     public void setInstance(Timeline newTimeline) {
         Timeline oldTimeline = this.timeline;
 
         if (oldTimeline != null) {
-            oldTimeline.getPlayer().getSequencer().close();
+            Sequencer seqr = oldTimeline.getPlayer().getSequencer();
+            seqr.removeMetaEventListener(this);
+            seqr.close();
         }
 
         this.timeline = newTimeline;
+        updateSequencerListener();
         pcs.firePropertyChange("timelineReplaced", oldTimeline, newTimeline);
     }
 
@@ -87,14 +79,9 @@ public class TimelineController implements ActionListener {
         return pcs;
     }
 
-    public Timer getPlaybackEndTimer() {
-        return playbackEndTimer;
-    }
-
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(playbackEndTimer)) {
-            System.out.println("ENDED");
+    public void meta(MetaMessage meta) {
+        if (meta.getType() == 47) {
             pcs.firePropertyChange("playbackEnded", null, null);
         }
     }

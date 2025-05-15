@@ -84,7 +84,7 @@ public class TestJson {
         drums.setVolume(110);
         bass.setVolume(110);
 
-        final int beatTicks = timeline.getPlayer().beatsToTicks(1);
+        final long beatTicks = timeline.getPlayer().beatsToTicks(1);
 
         Block melodyBlock = new Block(0);
         Block drumsBlock = new Block(0);

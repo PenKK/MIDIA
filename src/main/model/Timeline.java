@@ -4,7 +4,6 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 
 import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,8 +39,7 @@ public class Timeline implements Writable {
     //          available, which is fatal and unrecoverable.
     //          Method throws InvalidMidiDataException if the Sequence has an invalid 
     //          divison type.
-    public Timeline(String projectName, PropertyChangeSupport pcs)
-            throws MidiUnavailableException, InvalidMidiDataException {
+    public Timeline(String projectName, PropertyChangeSupport pcs) {
         this.projectName = projectName;
         this.pcs = pcs;
 
@@ -110,7 +108,7 @@ public class Timeline implements Writable {
         player.pause();
     }
 
-    public int durationRemainingMS() {
+    public int getDurationRemainingMS() {
         return (int) (getLengthMs() - player.getPositionMs());
     }
 
@@ -151,18 +149,14 @@ public class Timeline implements Writable {
         player = p;
     }
 
-    public void setMidiTracks(ArrayList<MidiTrack> midiTracks) {
-        this.midiTracks = midiTracks;
-    }
-
     // EFFECTS: calculates the tick at which the last note ends, this method
     //          is needed to calculate length ticks without first calling updateSequence()
-    public int getLengthTicks() {
-        int lastNoteEndTick = 0;
+    public long getLengthTicks() {
+        long lastNoteEndTick = 0;
         for (MidiTrack midiTrack : midiTracks) {
             for (Block block : midiTrack.getBlocks()) {
                 for (Note note : block.getNotesTimeline()) {
-                    int endTick = note.getStartTick() + note.getDurationTicks();
+                    long endTick = note.getStartTick() + note.getDurationTicks();
                     if (endTick > lastNoteEndTick) {
                         lastNoteEndTick = endTick;
                     }

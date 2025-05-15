@@ -24,17 +24,23 @@ public class Player implements Writable {
     private Timeline timeline;
 
     private float bpm;
-    private int positionTick;
+    private long positionTick;
     private ArrayList<Integer> availableChannels;
 
-    public Player(Timeline timeline) throws MidiUnavailableException, InvalidMidiDataException {
+    public Player(Timeline timeline) {
         bpm = DEFAULT_BPM;
         positionTick = 0;
         this.timeline = timeline;
 
-        sequencer = MidiSystem.getSequencer();
-        sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
-        sequencer.open();
+        try {
+            sequencer = MidiSystem.getSequencer();
+            sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
+            sequencer.open();
+        } catch (MidiUnavailableException e) {
+            throw new RuntimeException("MIDI device unavaliable, unable to initialize player", e);
+        } catch (InvalidMidiDataException e) {
+            throw new RuntimeException("Invalid MIDI data found during player initialization, PPQ may be invalid", e);
+        }
 
         availableChannels = new ArrayList<>() {
             {
@@ -112,14 +118,14 @@ public class Player implements Writable {
     // MODFIES: this
     // EFFECTS: updates the position tick according to the current playback tick
     public void updatePositionTick() {
-        setPositionTick((int) sequencer.getTickPosition());
+        setPositionTick(sequencer.getTickPosition());
     }
 
     // REQUIRES: newPositionTick >= 0
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback given ticks
-    public void setPositionTick(int newPositionTick) {
-        int oldPositionTick = positionTick;
+    public void setPositionTick(long newPositionTick) {
+        long oldPositionTick = positionTick;
         this.positionTick = newPositionTick;
 
         timeline.getPropertyChangeSupport().firePropertyChange("positionTick", oldPositionTick, newPositionTick);
@@ -161,7 +167,7 @@ public class Player implements Writable {
 
     // REQUIRES: ticks >= 0
     // EFFECTS: converts ticks to milliseconds given the BPM
-    public double ticksToMs(int ticks) {
+    public double ticksToMs(long ticks) {
         double durationInQuarterNotes = (double) ticks / (double) sequence.getResolution();
         double durationInMinutes = durationInQuarterNotes / bpm;
         return durationInMinutes * 60000;
@@ -169,29 +175,29 @@ public class Player implements Writable {
 
     // REQUIRES: ms >= 0
     // EFFECTS: converts milliseconds to ticks (reverse of above)
-    public int msToTicks(double ms) {
+    public long msToTicks(double ms) {
         double durationInMinutes = ms / (double) 60000;
         double durationInQuarterNotes = bpm * durationInMinutes;
         double ticks = durationInQuarterNotes * sequence.getResolution();
-        return (int) Math.round(ticks);
+        return Math.round(ticks);
     }
 
     // REQUIRES: beats >= 0
     // EFFECTS: converts beats to ms
-    public int beatsToMs(double beats) {
-        return (int) Math.round(beats / bpm * 60 * 1000);
+    public long beatsToMs(double beats) {
+        return Math.round(beats / bpm * 60 * 1000);
     }
 
     // REQUIRES: beats >= 0
     // EFFECTS: calculates beats to ticks conversion
-    public int beatsToTicks(double beats) {
+    public long beatsToTicks(double beats) {
         double ticks = beats * (double) sequence.getResolution();
-        return (int) Math.round(ticks);
+        return Math.round(ticks);
     }
 
     // REQUIRES: ticks >= 0
     // EFFECTS: calculates ticks to beats conversion (reverse of above)
-    public double ticksToBeats(int ticks) {
+    public double ticksToBeats(long ticks) {
         double beats = (double) ticks / (double) sequence.getResolution();
         return beats;
     }
@@ -212,7 +218,7 @@ public class Player implements Writable {
         return ticksToMs(timeline.getLengthTicks());
     }
 
-    public int getPositionTick() {
+    public long getPositionTick() {
         return positionTick;
     }
 
@@ -229,6 +235,10 @@ public class Player implements Writable {
     // EFFECTS: returns the beat on which the timeline position starts playback
     public double getPositionOnBeat() {
         return getPositionBeats() + 1;
+    }
+
+    public long getPositionTimeMs() {
+        return sequencer.getMicrosecondLength();
     }
 
     public float getBPM() {
@@ -253,5 +263,4 @@ public class Player implements Writable {
 
         return playerJson;
     }
-
 }

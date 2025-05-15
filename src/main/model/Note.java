@@ -11,14 +11,14 @@ public class Note implements Writable {
 
     private int pitch; // Notes in a percussive track do not utilize pitch
     private int velocity;
-    private int startTick;
-    private int durationTicks;
+    private long startTick;
+    private long durationTicks;
 
     // REQUIRES: pitch and velocity are in range [0, 127].
     //           durationTicks, startTick >= 0
     // EFFECTS: Creates a note with pitch, velocity, startTick, and durationTicks.
     //          Tick timings are kept relative to the block that they are in
-    public Note(int pitch, int velocity, int startTick, int durationTicks) {
+    public Note(int pitch, int velocity, long startTick, long durationTicks) {
         this.pitch = pitch;
         this.velocity = velocity;
         this.startTick = startTick;
@@ -33,11 +33,11 @@ public class Note implements Writable {
         return velocity;
     }
 
-    public int getDurationTicks() {
+    public long getDurationTicks() {
         return durationTicks;
     }
 
-    public int getStartTick() {
+    public long getStartTick() {
         return startTick;
     }
 
@@ -52,7 +52,7 @@ public class Note implements Writable {
     }
 
     // REQUIRES: newStartTick >= 0
-    public void setStartTick(int newStartTick) {
+    public void setStartTick(long newStartTick) {
         startTick = newStartTick;
     }
 

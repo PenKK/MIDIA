@@ -67,12 +67,7 @@ public class FileMenu extends Menu {
     // MODIFIES: timeline singleton
     // EFFECTS: assigns the instance a new Timeline 
     private void newProject() {
-        try {
-            timelineController.setInstance(new Timeline("New Project", timelineController.getPropertyChangeSupport()));
-        } catch (MidiUnavailableException | InvalidMidiDataException e) {
-            System.out.println("Unable to create and set new Timline instance");
-            e.printStackTrace();
-        }
+        timelineController.setInstance(new Timeline("New Project", timelineController.getPropertyChangeSupport()));
     }
 
     // MODIFIES: timelineController

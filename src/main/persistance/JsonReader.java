@@ -77,22 +77,18 @@ public class JsonReader {
     }
 
     private Player parsePlayer(JSONObject playerJSON, Timeline tl) {
-        try {
-            Player p = new Player(tl);
-            float beatsPerMinute = playerJSON.getFloat("beatsPerMinute");
-            int positionTick = playerJSON.getInt("positionTick");
+        Player p = new Player(tl);
+        float beatsPerMinute = playerJSON.getFloat("beatsPerMinute");
+        int positionTick = playerJSON.getInt("positionTick");
 
-            JSONArray availableChannels = playerJSON.getJSONArray("availableChannels");
-            ArrayList<Integer> availableChannelsList = parseIntegerArrayList(availableChannels);
+        JSONArray availableChannels = playerJSON.getJSONArray("availableChannels");
+        ArrayList<Integer> availableChannelsList = parseIntegerArrayList(availableChannels);
 
-            p.setBPM(beatsPerMinute);
-            p.setPositionTick(positionTick);
-            p.setAvailableChannels(availableChannelsList);
+        p.setBPM(beatsPerMinute);
+        p.setPositionTick(positionTick);
+        p.setAvailableChannels(availableChannelsList);
 
-            return p;
-        } catch (MidiUnavailableException | InvalidMidiDataException e) {
-            throw new RuntimeException("Midi available");
-        }
+        return p;
     }
 
     // EFFECTS: returns the JSONArray as an ArrayList
@@ -143,7 +139,7 @@ public class JsonReader {
         for (Object blockJson : blocksJsonArray) {
             JSONObject blockData = (JSONObject) blockJson;
 
-            int startTick = blockData.getInt("startTick");
+            long startTick = blockData.getLong("startTick");
             Block currentBlock = new Block(startTick);
 
             JSONArray notesJsonArray = blockData.getJSONArray("notes");
@@ -160,8 +156,8 @@ public class JsonReader {
 
             int pitch = noteData.getInt("pitch");
             int velocity = noteData.getInt("velocity");
-            int startTick = noteData.getInt("startTick");
-            int durationTicks = noteData.getInt("durationTicks");
+            long startTick = noteData.getLong("startTick");
+            long durationTicks = noteData.getLong("durationTicks");
 
             Note currentNote = new Note(pitch, velocity, startTick, durationTicks);
             block.addNote(currentNote);

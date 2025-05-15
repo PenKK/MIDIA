@@ -72,7 +72,7 @@ public class BlockInputDialog extends InputDialog {
         }
 
         double startTick = (double) startBeatSpinner.getValue() - 1;
-        int startBeat = timelineController.getTimeline().getPlayer().beatsToTicks(startTick);
+        long startBeat = timelineController.getTimeline().getPlayer().beatsToTicks(startTick);
         midiTrack.addBlock(new Block(startBeat));
 
         timelineController.refresh();

@@ -11,9 +11,11 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.Timer;
@@ -36,6 +38,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private JSlider scaleSlider;
     private JPanel leftAlignPanel;
     private JPanel rightAlignPanel;
+    private JLabel timeLabel;
 
     // EFFECTS: creates a MediaControlPanel with timers and initializes image icons and components
     public MediaControlPanel(TimelineController timelineController) {
@@ -67,6 +70,8 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         play = new JButton();
         play.addActionListener(this);
 
+        createTimeLabel();
+
         try {
             playImage = getImageIcon("lib/images/play.png");
             pauseImage = getImageIcon("lib/images/pause.png");
@@ -77,11 +82,19 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         setPlayIcon(playImage);
         leftAlignPanel.add(scaleSlider);
         rightAlignPanel.add(play);
+        rightAlignPanel.add(timeLabel);
+    }
+
+    private void createTimeLabel() {
+        timeLabel = new JLabel("00:00");
+        timeLabel.setOpaque(true);
+        timeLabel.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
+        timeLabel.putClientProperty("FlatLaf.style", "font: bold 14; background:rgb(77, 77, 77); arc: 6;");
     }
 
     // EFFECTS: toggles playback
     public void togglePlay() {
-        if (timelineController.isRunning()) {
+        if (timelineController.isPlaying()) {
             timelineController.pauseTimeline();
             tickUpdateTimer.stop();
             setPlayIcon(playImage);

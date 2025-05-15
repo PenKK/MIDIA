@@ -21,7 +21,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
 
     public static final int TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.3);
     public static final int BEAT_TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.6);
-    private static final Color TICK_COLOR = new Color(200,200,200);
+    private static final Color TICK_COLOR = new Color(200, 200, 200);
     private static final int FONT_PADDING = 4;
     private static final Font MEASURE_FONT = new Font("Dialog", Font.PLAIN, 14);
 
@@ -71,13 +71,13 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
             int height = TICK_HEIGHT;
             int beatPixelWidth = tickPixelWidth * beatDivisions;
             int x = i - TrackLabelPanel.LABEL_BOX_WIDTH;
-            
+
             if (x % (beatPixelWidth * beatsPerMeasure) == 0) { // One measure
-                height = RulerScrollPane.RULER_HEIGHT; 
+                height = RulerScrollPane.RULER_HEIGHT;
                 String str = String.valueOf(x / (beatPixelWidth * beatsPerMeasure) + 1).concat(".1");
                 g.drawString(str, i + FONT_PADDING, height - FONT_PADDING);
             } else if (x % beatPixelWidth == 0) { // One beat
-                height = BEAT_TICK_HEIGHT; 
+                height = BEAT_TICK_HEIGHT;
             }
 
             g.drawLine(i, 0, i, height);
@@ -86,36 +86,36 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
 
     private MouseAdapter mouseAdapter() {
         return new MouseAdapter() {
-            
+
             @Override
             public void mouseClicked(MouseEvent e) {
-               
+
             }
-        
+
             @Override
             public void mousePressed(MouseEvent e) {
                 Timeline timeline = timelineController.getTimeline();
 
                 boolean resume = false;
-                int tick = (int) ((e.getX() - TrackLabelPanel.LABEL_BOX_WIDTH) 
-                                 / timelineController.getTimeline().getHorizontalScale());
+                int tick = (int) ((e.getX() - TrackLabelPanel.LABEL_BOX_WIDTH)
+                        / timelineController.getTimeline().getHorizontalScale());
 
-                if (timelineController.isRunning()) {
+                if (timelineController.isPlaying()) {
                     timelineController.pauseTimeline();
                     resume = true;
                 }
 
                 timeline.getPlayer().setPositionTick(tick);
-                System.out.println(timeline.durationRemainingMS());
+                System.out.println(timeline.getDurationRemainingMS());
 
                 if (resume) {
                     timelineController.playTimeline();
                 }
             }
-        
+
             @Override
             public void mouseReleased(MouseEvent e) {
-               
+
             }
         };
     }
