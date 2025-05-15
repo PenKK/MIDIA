@@ -86,7 +86,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     }
 
     private void createTimeLabel() {
-        timeLabel = new JLabel("00:00");
+        timeLabel = new JLabel("00:00.00");
         timeLabel.setOpaque(true);
         timeLabel.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
         timeLabel.putClientProperty("FlatLaf.style", "font: bold 14; background:rgb(77, 77, 77); arc: 6;");
@@ -157,10 +157,10 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private void updateTimeDisplay() {
         double ms = timelineController.getTimeline().getPlayer().getPositionMs();
         double sec = ms / 1000;
-        int minuteDisplay = (int) (sec / 60);
-        double remainingSec = sec % 60;
+        int mm = (int) (sec / 60);
+        double ss = sec % 60;
 
-        String display = String.format("%02d:%05.2f", minuteDisplay, remainingSec);
+        String display = String.format("%02d:%05.2f", mm, ss);
         timeLabel.setText(display);
     }
 

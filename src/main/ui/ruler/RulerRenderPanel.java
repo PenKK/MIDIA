@@ -84,6 +84,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
         }
     }
 
+    @SuppressWarnings("methodlength")
     private MouseAdapter mouseAdapter() {
         return new MouseAdapter() {
 

@@ -10,6 +10,7 @@ import model.TimelineController;
 public abstract class Menu extends JMenu implements ActionListener {
 
     protected TimelineController timelineController;
+
     // EFFECTS: Creates menu with the specified name
     Menu(String labelText, TimelineController timelineController) {
         this.timelineController = timelineController;
