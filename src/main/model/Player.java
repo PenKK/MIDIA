@@ -237,10 +237,6 @@ public class Player implements Writable {
         return getPositionBeats() + 1;
     }
 
-    public long getPositionTimeMs() {
-        return sequencer.getMicrosecondLength();
-    }
-
     public float getBPM() {
         return bpm;
     }
