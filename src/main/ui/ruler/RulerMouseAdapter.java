@@ -16,28 +16,32 @@ public class RulerMouseAdapter extends MouseInputAdapter {
         this.timelineController = timelineController;
     }
 
-    @Override
-    public void mouseDragged(MouseEvent e) {
-        timelineController.startRulerDrag();
-        updateX(e);
+    private void updateX(MouseEvent e) {
+        Timeline timeline = timelineController.getTimeline();
+
+        int tick = (int) Math.max(0, ((e.getX() - TrackLabelPanel.LABEL_BOX_WIDTH)
+                   / timelineController.getTimeline().getHorizontalScale()));
+
+        tick = Math.max(tick, 0);
+        timeline.getPlayer().setPositionTick(tick);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        updateX(e);
         if (timelineController.isPlaying()) {
             timelineController.pauseTimeline();
             resume = true;
         }
+
+        if (!timelineController.isDraggingRuler()) {
+            timelineController.startRulerDrag();
+        }
+        updateX(e);
     }
 
-    private void updateX(MouseEvent e) {
-        Timeline timeline = timelineController.getTimeline();
-
-        int tick = (int) ((e.getX() - TrackLabelPanel.LABEL_BOX_WIDTH)
-                / timelineController.getTimeline().getHorizontalScale());
-
-        timeline.getPlayer().setPositionTick(tick);
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        updateX(e);
     }
 
     @Override
