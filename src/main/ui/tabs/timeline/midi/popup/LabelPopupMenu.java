@@ -79,8 +79,14 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
     // EFFECTS: deletes this from the the miditrack list
     private void delete() {
         Timeline tl = timelineController.getTimeline();
+
         int index = tl.getMidiTracks().indexOf(parentPanel.getMidiTrack());
         tl.removeMidiTrack(index);
+
+        if (timelineController.isPlaying()) {
+            timelineController.pauseTimeline();
+            timelineController.playTimeline();
+        }
     }
 
     // EFFECTS: listens for actions on the popup menu items and runs methods accordingly
