@@ -49,6 +49,7 @@ public class RulerMouseAdapter extends MouseInputAdapter {
         timelineController.stopRulerDrag();
         if (resume) {
             timelineController.playTimeline();
+            resume = false;
         }
     }
 }
