@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -32,11 +30,13 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
 
     // EFFECTS: Sets null border for zero padding, borders will be drawn via Graphics
     RulerRenderPanel(TimelineController timelineController) {
+        RulerMouseAdapter mouseAdapter = new RulerMouseAdapter(timelineController);
         this.timelineController = timelineController;
         this.setBorder(null);
         this.setBackground(Color.GRAY);
         this.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-        this.addMouseListener(mouseAdapter());
+        this.addMouseListener(mouseAdapter);
+        this.addMouseMotionListener(mouseAdapter);
         timelineController.addObserver(this);
         updateMeasurements();
     }
@@ -84,42 +84,6 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
         }
     }
 
-    @SuppressWarnings("methodlength")
-    private MouseAdapter mouseAdapter() {
-        return new MouseAdapter() {
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                Timeline timeline = timelineController.getTimeline();
-
-                boolean resume = false;
-                int tick = (int) ((e.getX() - TrackLabelPanel.LABEL_BOX_WIDTH)
-                        / timelineController.getTimeline().getHorizontalScale());
-
-                if (timelineController.isPlaying()) {
-                    timelineController.pauseTimeline();
-                    resume = true;
-                }
-
-                timeline.getPlayer().setPositionTick(tick);
-
-                if (resume) {
-                    timelineController.playTimeline();
-                }
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-
-            }
-        };
-    }
-
     // EFFECTS: listens for property change events and runs methods accordingly
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -131,8 +95,6 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
             case "timelineReplaced":
             case "horizontalScale":
                 updateMeasurements();
-                break;
-            default:
                 break;
         }
     }

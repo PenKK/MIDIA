@@ -28,7 +28,7 @@ import model.TimelineController;
 // Panel containing UI elements related to playback
 public class MediaControlPanel extends JPanel implements ActionListener, ChangeListener, PropertyChangeListener {
 
-    private static final int UI_UPDATE_DELAY = 10;
+    public static final int UI_UPDATE_DELAY = 10;
 
     private TimelineController timelineController;
     private JButton playButton;
@@ -142,6 +142,9 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     // MODIFIES: this
     // EFFECTS: triggers an update to the positionTick field in the instance (and hence fires propertyChangeEvent)
     private void updateTimelineTick() {
+        if (timelineController.isDraggingRuler()) {
+            return;
+        }
         timelineController.getTimeline().getPlayer().updatePositionTick();
     }
 
