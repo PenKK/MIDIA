@@ -31,7 +31,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private static final int UI_UPDATE_DELAY = 10;
 
     private TimelineController timelineController;
-    private JButton play;
+    private JButton playButton;
     private ImageIcon playImage = null;
     private ImageIcon pauseImage = null;
     private Timer playbackUpdateTimer;
@@ -67,8 +67,8 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         scaleSlider.setPreferredSize(new Dimension(100, scaleSlider.getPreferredSize().height));
         copyTimelineScaleValue();
 
-        play = new JButton();
-        play.addActionListener(this);
+        playButton = new JButton();
+        playButton.addActionListener(this);
 
         createTimeLabel();
 
@@ -79,9 +79,9 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
             System.out.println("Unable to load media icons: " + e.getMessage());
         }
 
-        setPlayIcon(playImage);
+        playButton.setIcon(playImage);
         leftAlignPanel.add(scaleSlider);
-        rightAlignPanel.add(play);
+        rightAlignPanel.add(playButton);
         rightAlignPanel.add(timeLabel);
     }
 
@@ -97,13 +97,13 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         if (timelineController.isPlaying()) {
             timelineController.pauseTimeline();
             playbackUpdateTimer.stop();
-            setPlayIcon(playImage);
+            playButton.setIcon(playImage);
             return;
         }
 
         timelineController.playTimeline();
         playbackUpdateTimer.start();
-        setPlayIcon(pauseImage);
+        playButton.setIcon(pauseImage);
     }
 
     // MODIFIES: this
@@ -123,12 +123,6 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         }
     }
 
-    // MODIFES: this
-    // EFFECTS: replaces play button icon with the specified icon
-    private void setPlayIcon(ImageIcon icon) {
-        play.setIcon(icon);
-    }
-
     // MODIFIES: timeline singleton
     // EFFECTS: updates render scale according to slider
     private void updateScale() {
@@ -138,15 +132,14 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         timelineController.getTimeline().setHorizontalScale(scale);
     }
 
-    // MODIFIES: this, timeline singleton
+    // MODIFIES: this
     // EFFECTS: handles behavior for when song ends: changes play icon, stops tickUpdateTimer, brings position to 0
     private void handleEnd() {
-        setPlayIcon(playImage);
-        timelineController.getTimeline().getPlayer().setPositionTick(0);
+        playButton.setIcon(playImage);
         playbackUpdateTimer.stop();
     }
 
-    // MODIFIES: timeline singleton
+    // MODIFIES: this
     // EFFECTS: triggers an update to the positionTick field in the instance (and hence fires propertyChangeEvent)
     private void updateTimelineTick() {
         timelineController.getTimeline().getPlayer().updatePositionTick();
@@ -164,11 +157,18 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         timeLabel.setText(display);
     }
 
+    // MODIFIES: this
+    // EFFECTS: resets icon and other media related states such as playback
+    private void reset() {
+        handleEnd();
+        updateTimeDisplay();
+    }
+
     // EFFECTS: listens for timer and button actions and runs methods accordingly
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source.equals(play)) {
+        if (source.equals(playButton)) {
             togglePlay();
         } else if (source.equals(playbackUpdateTimer)) {
             updateTimelineTick();
@@ -190,6 +190,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         switch (propertyName) {
             case "timelineReplaced":
                 copyTimelineScaleValue();
+                reset();
                 break;
             case "playbackEnded":
                 handleEnd();

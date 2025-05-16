@@ -107,7 +107,6 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
                 }
 
                 timeline.getPlayer().setPositionTick(tick);
-                System.out.println(timeline.getDurationRemainingMS());
 
                 if (resume) {
                     timelineController.playTimeline();

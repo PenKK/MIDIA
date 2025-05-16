@@ -49,8 +49,11 @@ public class LineContainerPanel extends JPanel implements PropertyChangeListener
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
 
-        if (propertyName.equals("positionTick")) {
-            updateLineX();
+        switch (propertyName) {
+            case "positionTick":
+            case "timelineReplaced":
+                updateLineX();
+                break;  
         }
     }
 }

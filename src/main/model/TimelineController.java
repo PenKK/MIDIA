@@ -47,6 +47,10 @@ public class TimelineController implements MetaEventListener {
     public void setInstance(Timeline newTimeline) {
         Timeline oldTimeline = this.timeline;
 
+        if (isPlaying()) {
+            pauseTimeline();
+        }
+
         if (oldTimeline != null) {
             Sequencer seqr = oldTimeline.getPlayer().getSequencer();
             seqr.removeMetaEventListener(this);
