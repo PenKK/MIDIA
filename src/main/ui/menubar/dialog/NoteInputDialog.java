@@ -26,6 +26,8 @@ public class NoteInputDialog extends InputDialog {
     private JSpinner startBeat;
     private JSpinner durationBeats;
 
+    private JLabel pitchLabel;
+
     JComboBox<MidiTrack> midiTracksComboBox;
     JComboBox<Block> blocksComboBox;
 
@@ -50,7 +52,9 @@ public class NoteInputDialog extends InputDialog {
         startBeat = new JSpinner(doubleModelStart);
         durationBeats = new JSpinner(doubleModelDuration);
 
-        this.add(new JLabel("Pitch: "));
+        pitchLabel = new JLabel("Pitch: ");
+
+        this.add(pitchLabel);
         this.add(pitch);
         this.add(new JLabel("Velocity: "));
         this.add(velocity);
@@ -74,7 +78,7 @@ public class NoteInputDialog extends InputDialog {
         midiTracksComboBox = new JComboBox<>(tracks);
 
         blocksComboBox = new JComboBox<>();
-        updateBlocks();
+        updateTrackSelectionUI();
 
         midiTracksComboBox.addActionListener(this);
 
@@ -89,7 +93,7 @@ public class NoteInputDialog extends InputDialog {
         for (MidiTrack midiTrack : timelineController.getTimeline().getMidiTracksArray()) {
             midiTracksComboBox.addItem(midiTrack);
         }
-        updateBlocks();
+        updateTrackSelectionUI();
     }
 
     // EFFECTS: listens for actions and runs methods accordingly
@@ -99,17 +103,29 @@ public class NoteInputDialog extends InputDialog {
         if (source.equals(create)) {
             createNote();
         } else if (source.equals(midiTracksComboBox)) {
-            updateBlocks();
+            updateTrackSelectionUI();
         }
     }
 
     // MODIFIES: this
-    // EFFECTS: updates the blocksComboBox list with the currently selected midiTrack
-    private void updateBlocks() {
+    // EFFECTS: updates the blocksComboBox list with the currently selected midiTrack decides visibility of
+    //          pitch option depending on track percussiveness
+    private void updateTrackSelectionUI() {
         MidiTrack midiTrack = (MidiTrack) midiTracksComboBox.getSelectedItem();
 
         if (midiTrack == null) {
             return;
+        }
+        
+        boolean pitchVisible = this.isAncestorOf(pitch);
+        boolean percussive = midiTrack.isPercussive();
+        
+        if (percussive && pitchVisible) {
+            this.remove(pitch);
+            this.remove(pitchLabel);
+        } else if (!percussive && !pitchVisible) {
+            this.add(pitch, 4);
+            this.add(pitchLabel, 4);
         }
 
         ArrayList<Block> blockList = midiTrack.getBlocks();
