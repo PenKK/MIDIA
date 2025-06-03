@@ -22,7 +22,8 @@ public class Timeline implements Writable {
 
     private static final int DEFAULT_BEAT_DIVISON = 4;
     private static final int DEFAULT_BEATS_PER_MEASURE = 4;
-    private static final double DEFAULT_HORIZONTAL_SCALE = 0.1;
+    private static final double DEFAULT_HORIZONTAL_SCALE = 1;
+    private static final double BASE_PIXELS_PER_BEAT = 100.0;
 
     private String projectName;
     private ArrayList<MidiTrack> midiTracks;
@@ -31,7 +32,7 @@ public class Timeline implements Writable {
 
     private int beatDivision;
     private int beatsPerMeasure;
-    private double horizontalScale;
+    private double horizontalScaleFactor;
 
     // EFFECTS: Creates a timeline with a single sequence with no tracks and the positon 
     //          tick at 0, and a BPM of 120.
@@ -45,7 +46,7 @@ public class Timeline implements Writable {
 
         beatDivision = DEFAULT_BEAT_DIVISON;
         beatsPerMeasure = DEFAULT_BEATS_PER_MEASURE;
-        horizontalScale = DEFAULT_HORIZONTAL_SCALE;
+        horizontalScaleFactor = DEFAULT_HORIZONTAL_SCALE;
         player = new Player(this);
         midiTracks = new ArrayList<>();
 
@@ -139,9 +140,9 @@ public class Timeline implements Writable {
 
     // MODIFIES: this
     // EFFECTS: changes horizontalScale and fires propertyChangeEvent
-    public void setHorizontalScale(double newHorizontalScale) {
-        double oldHorizontalScale = this.horizontalScale;
-        this.horizontalScale = newHorizontalScale;
+    public void setHorizontalScaleFactor(double newHorizontalScale) {
+        double oldHorizontalScale = this.horizontalScaleFactor;
+        this.horizontalScaleFactor = newHorizontalScale;
         pcs.firePropertyChange("horizontalScale", oldHorizontalScale, newHorizontalScale);
     }
 
@@ -166,14 +167,13 @@ public class Timeline implements Writable {
         return lastNoteEndTick;
     }
 
-    // EFFECTS: returns the value scaled by a factor, rounded to the nearest integer
-    public int scalePixelsRender(int value) {
-        return (int) Math.round(value * horizontalScale);
+    public double getPixelsPerTick() {
+        return (BASE_PIXELS_PER_BEAT / Player.PULSES_PER_QUARTER_NOTE) * horizontalScaleFactor;
     }
 
-        // EFFECTS: returns the value scaled by a factor, rounded to the nearest integer
-    public long scalePixelsRender(long value) {
-        return Math.round(value * horizontalScale);
+    // EFFECTS: returns the tick scaled for UI, rounded to the nearest integer
+    public long scalePixelsRender(long tick) {
+        return Math.round(tick * getPixelsPerTick());
     }
 
     public ArrayList<MidiTrack> getMidiTracks() {
@@ -197,8 +197,8 @@ public class Timeline implements Writable {
         return projectName;
     }
 
-    public double getHorizontalScale() {
-        return horizontalScale;
+    public double getHorizontalScaleFactor() {
+        return horizontalScaleFactor;
     }
 
     public int getBeatsPerMeasure() {
@@ -248,7 +248,7 @@ public class Timeline implements Writable {
         timelineJson.put("player", player.toJson());
         timelineJson.put("beatDivision", beatDivision);
         timelineJson.put("beatsPerMeasure", beatsPerMeasure);
-        timelineJson.put("horizontalScale", horizontalScale);
+        timelineJson.put("horizontalScale", horizontalScaleFactor);
         timelineJson.put("midiTracks", midiTracksToJson());
 
         return timelineJson;

@@ -19,7 +19,7 @@ public class TestJson {
         assertEquals(timeline1.getProjectName(), timeline2.getProjectName());
         assertEquals(timeline1.getBeatDivision(), timeline2.getBeatDivision());
         assertEquals(timeline1.getBeatsPerMeasure(), timeline2.getBeatsPerMeasure());
-        assertEquals(timeline1.getHorizontalScale(), timeline2.getHorizontalScale());
+        assertEquals(timeline1.getHorizontalScaleFactor(), timeline2.getHorizontalScaleFactor());
         checkPlayers(timeline1.getPlayer(), timeline2.getPlayer());
 
         checkMidiTracks(timeline1.getMidiTracks(), timeline2.getMidiTracks());

@@ -73,8 +73,8 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         createTimeLabel();
 
         try {
-            playImage = getImageIcon("lib/images/play.png");
-            pauseImage = getImageIcon("lib/images/pause.png");
+            playImage = getImageIcon("/resources/images/play.png");
+            pauseImage = getImageIcon("/resources/images/pause.png");
         } catch (Exception e) {
             System.out.println("Unable to load media icons: " + e.getMessage());
         }
@@ -109,14 +109,16 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     // MODIFIES: this
     // EFFECTS: sets the render sliders value to that of the timeline render scale
     private void copyTimelineScaleValue() {
-        int value = (int) (100 * timelineController.getTimeline().getHorizontalScale() / Timeline.MAX_HORIZONTAL_SCALE);
+        int value = (int) (100 * timelineController.getTimeline().getHorizontalScaleFactor()
+                / Timeline.MAX_HORIZONTAL_SCALE);
         scaleSlider.setValue(value);
     }
 
     // EFFECTS: returns the ImageIcon representation of the image at path
     private ImageIcon getImageIcon(String path) {
         try {
-            return new ImageIcon(ImageIO.read(new File(path)).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+            return new ImageIcon(
+                    ImageIO.read(getClass().getResource(path)).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         } catch (IOException e) {
             System.out.println("Couldnt load image at " + path);
             return null;
@@ -129,7 +131,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         double factor = (double) scaleSlider.getValue() / 100;
 
         double scale = Math.max(factor * Timeline.MAX_HORIZONTAL_SCALE, Timeline.MIN_HORIZONTAL_SCALE);
-        timelineController.getTimeline().setHorizontalScale(scale);
+        timelineController.getTimeline().setHorizontalScaleFactor(scale);
     }
 
     // MODIFIES: this

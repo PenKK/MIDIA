@@ -41,7 +41,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         timelineController.addObserver(this);
 
         this.setLayout(new BorderLayout());
-        this.setIconImage(ImageIO.read(new File("lib/images/logo.png")));
+        this.setIconImage(ImageIO.read(getClass().getResource("/resources/images/logo.png")));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setBounds(new Rectangle(800, 600));
         this.addWindowListener(onCloseWindowAdapter());
