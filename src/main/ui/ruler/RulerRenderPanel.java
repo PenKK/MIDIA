@@ -24,9 +24,6 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
     private static final Font MEASURE_FONT = new Font("Dialog", Font.PLAIN, 14);
 
     private TimelineController timelineController;
-    private int tickPixelWidth;
-    private int beatDivisions;
-    private int beatsPerMeasure;
 
     // EFFECTS: Sets null border for zero padding, borders will be drawn via Graphics
     RulerRenderPanel(TimelineController timelineController) {
@@ -38,7 +35,6 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
         this.addMouseListener(mouseAdapter);
         this.addMouseMotionListener(mouseAdapter);
         timelineController.addObserver(this);
-        updateMeasurements();
     }
 
     // MODIFIES: this
@@ -50,37 +46,38 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: updates measurement values to the current timeline instance
-    private void updateMeasurements() {
-        Timeline timeline = timelineController.getTimeline();
-        beatDivisions = timeline.getBeatDivision();
-        beatsPerMeasure = timeline.getBeatsPerMeasure();
-        tickPixelWidth = timeline.scalePixelsRender(Player.PULSES_PER_QUARTER_NOTE / beatDivisions);
-
-        repaint();
-    }
-
-    // MODIFIES: this
     // EFFECTS: Draws the ticks marks of measures, beats, and divisions, according to timeline instance
     private void drawAllTickMarks(Graphics g) {
-        updateMeasurements();
+        Timeline timeline = timelineController.getTimeline();
+
+        int beatDivisions = timeline.getBeatDivision();
+        int beatsPerMeasure = timeline.getBeatsPerMeasure();
+
         g.setColor(TICK_COLOR);
         g.setFont(MEASURE_FONT);
 
-        for (int i = TrackLabelPanel.LABEL_BOX_WIDTH; i < getWidth(); i += tickPixelWidth) {
-            int height = TICK_HEIGHT;
-            int beatPixelWidth = tickPixelWidth * beatDivisions;
-            int x = i - TrackLabelPanel.LABEL_BOX_WIDTH;
+        long divisionTickInterval = Player.PULSES_PER_QUARTER_NOTE / beatDivisions;
+        long measureTickInterval = (long) Player.PULSES_PER_QUARTER_NOTE * beatsPerMeasure;
+        long beatTickInterval = Player.PULSES_PER_QUARTER_NOTE;
 
-            if (x % (beatPixelWidth * beatsPerMeasure) == 0) { // One measure
+        long startOffset = TrackLabelPanel.LABEL_BOX_WIDTH;
+        long tick = (startOffset / divisionTickInterval) * divisionTickInterval;
+
+        while (tick <= getWidth() / timeline.getPixelsPerTick()) {
+            int height = TICK_HEIGHT;
+
+            int pixelPosition = (int) (timeline.scaleTickToPixel(tick) + startOffset);
+
+            if (tick % measureTickInterval == 0) { // One measure
                 height = RulerScrollPane.RULER_HEIGHT;
-                String str = String.valueOf(x / (beatPixelWidth * beatsPerMeasure) + 1).concat(".1");
-                g.drawString(str, i + FONT_PADDING, height - FONT_PADDING);
-            } else if (x % beatPixelWidth == 0) { // One beat
+                long measure = (tick / measureTickInterval) + 1;
+                g.drawString(String.valueOf(measure).concat(".1"), (int) tick + FONT_PADDING, height - FONT_PADDING);
+            } else if (tick % beatTickInterval == 0) { // One beat
                 height = BEAT_TICK_HEIGHT;
             }
 
-            g.drawLine(i, 0, i, height);
+            g.drawLine(pixelPosition, 0, pixelPosition, height);
+            tick += divisionTickInterval;
         }
     }
 
@@ -93,8 +90,8 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
             case "beatDivsion":
             case "beatsPerMeasure":
             case "timelineReplaced":
-            case "horizontalScale":
-                updateMeasurements();
+            case "horizontalScaleFactor":
+                repaint();
                 break;
         }
     }

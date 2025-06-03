@@ -1,7 +1,7 @@
 {
     "beatsPerMeasure": 4,
-    "horizontalScaleFactor": 0.21,
     "beatDivision": 4,
+    "horizontalScaleFactor": 0.66,
     "projectName": "Spooky Beat",
     "midiTracks": [
         {
@@ -357,7 +357,7 @@
         }
     ],
     "player": {
-        "positionTick": 19188,
+        "positionTick": 5813,
         "beatsPerMinute": 120,
         "availableChannels": [
             2,

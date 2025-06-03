@@ -19,7 +19,7 @@
         ]
     },
     "beatsPerMeasure": 4,
-    "horizontalScale": 0.1,
+    "horizontalScaleFactor": 0.1,
     "beatDivision": 3,
     "projectName": "Dance of the Maidens - Alexander Borodin.json",
     "midiTracks": [

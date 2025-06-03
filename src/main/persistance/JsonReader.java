@@ -60,7 +60,7 @@ public class JsonReader {
 
         int beatDivision = jsonObject.getInt("beatDivision");
         int beatsPerMeasure = jsonObject.getInt("beatsPerMeasure");
-        double horizontalScale = jsonObject.getDouble("horizontalScale");
+        double horizontalScale = jsonObject.getDouble("horizontalScaleFactor");
 
         Player player = parsePlayer(jsonObject.getJSONObject("player"), timeline);
 

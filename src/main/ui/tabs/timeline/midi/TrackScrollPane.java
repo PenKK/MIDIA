@@ -4,7 +4,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
-import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
@@ -23,7 +22,6 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
     public TrackScrollPane(TimelineController timelineController) {
         this.timelineController = timelineController;
         lineContainer = new LineContainerPanel(timelineController);
-        lineContainer.setLayout(new BoxLayout(lineContainer, BoxLayout.Y_AXIS));
 
         this.setBorder(null);
         this.setViewportView(lineContainer);
@@ -69,7 +67,7 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
         switch (propertyName) {
             case "timelineReplaced":
             case "midiTracks":
-            case "horizontalScale":
+            case "horizontalScaleFactor":
                 updateMidiTrackPanels();
                 break;
             default:

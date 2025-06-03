@@ -143,7 +143,7 @@ public class Timeline implements Writable {
     public void setHorizontalScaleFactor(double newHorizontalScale) {
         double oldHorizontalScale = this.horizontalScaleFactor;
         this.horizontalScaleFactor = newHorizontalScale;
-        pcs.firePropertyChange("horizontalScale", oldHorizontalScale, newHorizontalScale);
+        pcs.firePropertyChange("horizontalScaleFactor", oldHorizontalScale, newHorizontalScale);
     }
 
     public void setPlayer(Player p) {
@@ -172,8 +172,13 @@ public class Timeline implements Writable {
     }
 
     // EFFECTS: returns the tick scaled for UI, rounded to the nearest integer
-    public long scalePixelsRender(long tick) {
+    public long scaleTickToPixel(long tick) {
         return Math.round(tick * getPixelsPerTick());
+    }
+
+    // EFFECTS: returns the tick scaled for UI, rounded to the nearest integer
+    public long scalePixelToTick(int pixel) {
+        return Math.round(pixel / getPixelsPerTick());
     }
 
     public ArrayList<MidiTrack> getMidiTracks() {
@@ -248,7 +253,7 @@ public class Timeline implements Writable {
         timelineJson.put("player", player.toJson());
         timelineJson.put("beatDivision", beatDivision);
         timelineJson.put("beatsPerMeasure", beatsPerMeasure);
-        timelineJson.put("horizontalScale", horizontalScaleFactor);
+        timelineJson.put("horizontalScaleFactor", horizontalScaleFactor);
         timelineJson.put("midiTracks", midiTracksToJson());
 
         return timelineJson;

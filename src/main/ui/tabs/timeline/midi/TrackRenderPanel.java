@@ -54,8 +54,8 @@ public class TrackRenderPanel extends JPanel {
 
         Timeline timeline = timelineController.getTimeline();
 
-        int width = (int) timeline.scalePixelsRender(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
-        int x = (int) timeline.scalePixelsRender(block.getStartTick());
+        int width = (int) timeline.scaleTickToPixel(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
+        int x = (int) timeline.scaleTickToPixel(block.getStartTick());
         int y = BLOCK_HEIGHT_MARGIN / 2;
         int height = TrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
 
@@ -119,10 +119,10 @@ public class TrackRenderPanel extends JPanel {
                 int pitchOffset = minPitch - (range == 0 ? (MIN_NOTE_RANGE / 2) : 0);
                 int relativePitch = n.getPitch() - pitchOffset + (NOTE_RANGE_PADDING / 2);
 
-                int x = (int) timeline.scalePixelsRender(n.getStartTick());
+                int x = (int) timeline.scaleTickToPixel(n.getStartTick());
                 int y = trackHeight - (int) Math.round(relativePitch * heightDouble - BLOCK_HEIGHT_MARGIN / 2);
                 int height = (int) Math.round(heightDouble);
-                int width = (int) timeline.scalePixelsRender(n.getDurationTicks());
+                int width = (int) timeline.scaleTickToPixel(n.getDurationTicks());
 
                 g.setColor(NOTE_COLOR);
                 g.fillRoundRect(x, y, width, height, noteRounding, noteRounding);
@@ -139,7 +139,7 @@ public class TrackRenderPanel extends JPanel {
                 endPixel = temp;
             }
         }
-        return (int) timelineController.getTimeline().scalePixelsRender(endPixel);
+        return (int) timelineController.getTimeline().scaleTickToPixel(endPixel);
     }
 
     private MouseAdapter mouseAdapter() {
@@ -165,7 +165,7 @@ public class TrackRenderPanel extends JPanel {
 
     // EFFECTS: Handles double click behavior on the rendered track
     private void doubleClick(MouseEvent e) {
-        int tick = (int) Math.round(e.getX() / timelineController.getTimeline().getHorizontalScale());
+        int tick = (int) Math.round(e.getX() / timelineController.getTimeline().getHorizontalScaleFactor());
 
         for (Block b : midiTrack.getBlocks()) {
             if (b.getStartTick() <= tick && b.getStartTick() + b.getDurationTicks() >= tick) {

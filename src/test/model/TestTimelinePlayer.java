@@ -50,10 +50,15 @@ public class TestTimelinePlayer extends TestJson {
     }
 
     @Test
-    void testScale() {
-        assertEquals(timeline.scalePixelsRender(50), 5);
-        timeline.setHorizontalScale(5);
-        assertEquals(timeline.scalePixelsRender(50), 250);
+    void testPixelScaling() {
+        assertEquals(timeline.scaleTickToPixel(50), 5);
+        timeline.setHorizontalScaleFactor(5);
+        assertEquals(timeline.scaleTickToPixel(50), 26);
+
+        timeline.setHorizontalScaleFactor(1);
+        assertEquals(timeline.scalePixelToTick(5), 48);
+        timeline.setHorizontalScaleFactor(5);
+        assertEquals(timeline.scalePixelToTick(26), 50);
     }
 
     @Test
@@ -64,7 +69,7 @@ public class TestTimelinePlayer extends TestJson {
         assertEquals(timeline.getPlayer().getPositionTick(), 0);
         assertEquals(timeline.getBeatDivision(), 4);
         assertEquals(timeline.getBeatsPerMeasure(), 4);
-        assertEquals(timeline.getHorizontalScale(), 0.1);
+        assertEquals(timeline.getHorizontalScaleFactor(), 1);
         assertEquals(timeline.getPlayer().getSequence().getResolution(), 960);
         assertEquals(timeline.getPlayer().getSequence().getDivisionType(), Sequence.PPQ);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
@@ -81,7 +86,7 @@ public class TestTimelinePlayer extends TestJson {
         assertEquals(timeline.getTrack(0), expectedMidiTracks.get(0));
         assertEquals(timeline.getMidiTracks().size(), 1);
         assertEquals(midiTrack.getChannel(), 0);
-        assertEquals(timeline.getMidiTracksArray()[0], (new MidiTrack[] {midiTrack})[0]);
+        assertEquals(timeline.getMidiTracksArray()[0], (new MidiTrack[] { midiTrack })[0]);
 
         expectedChannels.remove(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());

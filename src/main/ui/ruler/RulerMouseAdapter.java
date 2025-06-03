@@ -19,8 +19,7 @@ public class RulerMouseAdapter extends MouseInputAdapter {
     private void updateX(MouseEvent e) {
         Timeline timeline = timelineController.getTimeline();
 
-        int tick = (int) Math.max(0, ((e.getX() - TrackLabelPanel.LABEL_BOX_WIDTH)
-                   / timelineController.getTimeline().getHorizontalScale()));
+        int tick = (int) Math.max(0, (timeline.scalePixelToTick(e.getX() - TrackLabelPanel.LABEL_BOX_WIDTH)));
 
         tick = Math.max(tick, 0);
         timeline.getPlayer().setPositionTick(tick);

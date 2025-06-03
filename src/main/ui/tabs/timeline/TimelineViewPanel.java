@@ -54,7 +54,7 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
 
         switch (propertyName) {
             case "timelineReplaced":
-            case "horizontalScale":
+            case "horizontalScaleFactor":
                 updateRulerDimensions();
             default:
                 break;

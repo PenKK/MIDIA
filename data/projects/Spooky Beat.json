@@ -6,7 +6,7 @@
     },
     "beatDivision": 4,
     "beatsPerMeasure": 4,
-    "horizontalScale": 0.1,
+    "horizontalScaleFactor": 0.1,
     "projectName": "Spooky Beat",
     "midiTracks": [
         {

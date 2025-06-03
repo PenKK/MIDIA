@@ -29,9 +29,9 @@ public class LineContainerPanel extends JPanel implements PropertyChangeListener
     // EFFECTS: updates lineX value with the timeline positionTick (scaled) and repaints
     public void updateLineX() {
         Timeline timeline = timelineController.getTimeline();
-        this.lineX = (int) timeline.scalePixelsRender(timeline.getPlayer().getPositionTick()) 
-                                                            + TrackLabelPanel.LABEL_BOX_WIDTH;
-        repaint(); 
+        this.lineX = (int) timeline.scaleTickToPixel(timeline.getPlayer().getPositionTick())
+                + TrackLabelPanel.LABEL_BOX_WIDTH;
+        repaint();
     }
 
     // EFFECTS: paints the position line at lineX
@@ -52,8 +52,9 @@ public class LineContainerPanel extends JPanel implements PropertyChangeListener
         switch (propertyName) {
             case "positionTick":
             case "timelineReplaced":
+            case "horizontalScaleFactor":
                 updateLineX();
-                break;  
+                break;
         }
     }
 }
