@@ -20,7 +20,7 @@
     },
     "beatsPerMeasure": 4,
     "beatDivision": 4,
-    "horizontalScale": 1,
+    "horizontalScaleFactor": 1,
     "projectName": "aaaa",
     "midiTracks": [
         {
