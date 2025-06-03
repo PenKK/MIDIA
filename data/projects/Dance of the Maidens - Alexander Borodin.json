@@ -1,26 +1,7 @@
 {
-    "player": {
-        "positionTick": 0,
-        "beatsPerMinute": 60,
-        "availableChannels": [
-            2,
-            3,
-            4,
-            5,
-            6,
-            7,
-            8,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15
-        ]
-    },
     "beatsPerMeasure": 4,
-    "horizontalScaleFactor": 0.1,
     "beatDivision": 3,
+    "horizontalScaleFactor": 0.54,
     "projectName": "Dance of the Maidens - Alexander Borodin.json",
     "midiTracks": [
         {
@@ -225,5 +206,24 @@
                 "className": "InstrumentalInstrument"
             }
         }
-    ]
+    ],
+    "player": {
+        "positionTick": 960,
+        "beatsPerMinute": 60,
+        "availableChannels": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+        ]
+    }
 }

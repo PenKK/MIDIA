@@ -18,8 +18,8 @@ import model.TimelineController;
 // Interactable render of the MidiTrack's blocks and notes
 public class TrackRenderPanel extends JPanel {
 
-    private static final Color NOTE_COLOR = Color.WHITE;
-    private static final Color BLOCK_BACKGROUND_COLOR = new Color(30, 162, 240, 200);
+    private static final Color NOTE_COLOR = Color.decode("#ECF0F1");
+    private static final Color BLOCK_BACKGROUND_COLOR = Color.decode("#34495E");
 
     private static final int CORNER_ROUNDING_BLOCK = 2;
     private static final int BLOCK_HEIGHT_MARGIN = 6;
@@ -125,9 +125,26 @@ public class TrackRenderPanel extends JPanel {
                 int width = (int) timeline.scaleTickToPixel(n.getDurationTicks());
 
                 g.setColor(NOTE_COLOR);
+                if (isNotePlaying(n)) {
+                    g.setColor(Color.BLACK);   
+                }
                 g.fillRoundRect(x, y, width, height, noteRounding, noteRounding);
             }
         }
+    }
+
+    private boolean isNotePlaying(Note n) {
+        if (!timelineController.isPlaying()) {
+            return false;
+        }
+
+        long tick = timelineController.getTimeline().getPlayer().getPositionTick();
+
+        if (n.getStartTick() <= tick && tick <= n.getStartTick() + n.getDurationTicks()) {
+            return true;
+        }
+
+        return false;
     }
 
     // EFFECTS: returns the last horizontal pixel that is drawn from blocks (scaled)
