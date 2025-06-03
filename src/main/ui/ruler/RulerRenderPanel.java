@@ -60,7 +60,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
         long measureTickInterval = (long) Player.PULSES_PER_QUARTER_NOTE * beatsPerMeasure;
         long beatTickInterval = Player.PULSES_PER_QUARTER_NOTE;
 
-        long startOffset = TrackLabelPanel.LABEL_BOX_WIDTH;
+        int startOffset = TrackLabelPanel.LABEL_BOX_WIDTH;
         long tick = (startOffset / divisionTickInterval) * divisionTickInterval;
 
         while (tick <= getWidth() / timeline.getPixelsPerTick()) {
@@ -71,7 +71,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
             if (tick % measureTickInterval == 0) { // One measure
                 height = RulerScrollPane.RULER_HEIGHT;
                 long measure = (tick / measureTickInterval) + 1;
-                g.drawString(String.valueOf(measure).concat(".1"), (int) tick + FONT_PADDING, height - FONT_PADDING);
+                g.drawString(String.valueOf(measure).concat(".1"), pixelPosition + FONT_PADDING, height - FONT_PADDING);
             } else if (tick % beatTickInterval == 0) { // One beat
                 height = BEAT_TICK_HEIGHT;
             }
