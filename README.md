@@ -1,46 +1,12 @@
-# My Personal Project 
+# A DAW (Digital Audio Workstation)
 
-## A DAW (Digital Audio Workstation)
-
-***What will the application do?***
-- Create music with layers of different sounds
-    - Have multiple toggable tracks (layers).
-    - Insert notes utilizing MIDI presets to make music.
-    - Adjust tempo of the project.
-    - Adjust pitch of audio.
-    - Create melodies via piano roll.
-- Playback of the project within the program.
-- Save and load progress
-- All of the above via a graphical user interface
-    - View and edit the timeline
-
-***Who will use it?***
-- Those looking to make music with either their own audio or some basic sounds the program provides.
-- The program can also be used for audio manipulation and does not have to be restricted to music.
-
-***Why is this project of interest to you?***
+***Why a DAW?***
 - I have made games before, but I wanted to make an actual piece of software that serves a specific purpose. 
-- Music has always been of great interest to me, I played the trombone throughout all of highschool. 
-- Although I honestly have never made music in a DAW before, I have some (very basic) understanding of how these programs work and music. 
-- The idea came to me from the `SimpleDrawingPlayer` repository, though that program is more of a playground than a DAW. I wanted to make a much more complete and formal version.
+- Music has always been of great interest to me, I started playing trombone in grade 7 and have continued since.
+- Although I honestly have never made music in a DAW before, I have some (very basic) understanding of how these programs work and music.
 - I thought that creating such a program would be a feasible challenge considering Java's built-in support for MIDI handling in the Sound library.
 
-**User Stories**
-- As a user, I want to be able to add a track to my project so that I can start creating music with different layers of sound.
-- As a user, I want to be able to view the list of tracks in my project so that I can see all the elements I've been working with.
-- As a user, I want to be able to add a Block to my track.
-- As a user, I want to be able to add MIDI notes to a block and specify the pitch, velocity, and duration so that I can create a sequence of sounds.
-- As a user, I want to be able to add MIDI notes using a piano roll.
-- As a user, I want to be able to move the position of a block so that I can change when the notes inside play.
-- As a user, I want to be able to modify an existing note on a block by changing its pitch, velocity, or timing so that I can make adjustments to my composition.
-- As a user, I want to be able to delete tracks, blocks, and notes from my project so that I can remove elements I no longer need.
-- As a user, I want to specify tempo so that I can change the speed of my project
-- As a user, I want to be able to control playback of my project so that I can start and stop where I want to on the timeline
-- As a user, I want to be able to save projects so that when my program closes I dont lose progress
-- As a user, I want to be able to load a project from a list so that I can continue working on any project I saved before
-
-
-## Instructions for End User
+## Usage
 
 ### Create a track
 1. Use the Track menu at the top left to insert a new track
@@ -79,53 +45,3 @@
 1. Click the file menu at the top left and then load
 2. Select a project and then click open
     - The project should be loaded into the timeline
-
-## Phase 4: Task 2
-
-Application launched
-
-``
-[Wed Mar 26 19:09:09 PDT 2025] A new timeline instance was created with project name: New Project
-``
-
-Created a new track
-
-``
-[Wed Mar 26 19:09:22 PDT 2025] Created new MidiTrack, instrument: Acoustic Grand Piano, channel: 0, percussive: false. Remaining instrumental channels: 14
-``
-
-Added a block in the previously made track (X in Y)
-
-``
-[Wed Mar 26 19:09:26 PDT 2025] Added Block with 0 notes to MidiTrack piano melody
-``
-
-Created a note inside of a block
-
-``
-[Wed Mar 26 19:09:35 PDT 2025] Added note: pitch: 63, velocity: 80, startTick: 0, durationTicks: 2880 to Block: Start tick: 960, current note count: 1
-``
-
-Created a second note inside of the same block
-
-``
-[Wed Mar 26 19:09:46 PDT 2025] Added note: pitch: 61, velocity: 80, startTick: 960, durationTicks: 1920 to Block: Start tick: 960, current note count: 2
-``
-
-Created another track (percussive)
-
-``
-[Wed Mar 26 19:10:06 PDT 2025] Created new MidiTrack, instrument: Acoustic Bass Drum, channel: 9, percussive: true. Remaining instrumental channels: 14
-``
-
-Deleted the track I just made
-
-``
-[Wed Mar 26 19:10:09 PDT 2025] Removed MidiTrack[1]: drums maybe. Remaining instrumental channels: 14
-``
-
-## Phase 4: Task 2
-
-A possible refactor that I have been thinking about is a lot is in my ``Timeline`` class. Currently, it has a lot of responsibility (12 fields) and while it all falls under the scope of a 'timeline,' I should be able  to refactor some code out. More specifically, there are numerical fields that fall under more of a  ``Settings`` category/class in a timeline such as ``beatDivision``, ``beatsPerMeasure``, ``horizontalScale``. These three are numeric fields that do not directly contribute to the functionality of a timeline but influence how it will be rendered in the UI. A reason that I have not yet refactored this as above is that these are simply numeric fields; their ``TimelineSettings`` class would be made of getters and setters and nothing else so I am not sure if such a change is warranted. 
-
-Another refactor that I believe should definitely be done is a dedicated ``MidiPlayer`` class that controls the playback functionality of the timeline. The fields ``sequencer`` and ``sequence`` from the Java sound library in the same ``Timeline`` class are responsible for playing my music/timeline abstraction and would fare well in their own class rather than cluttering my ``Timeline`` class. In my timeline I have methods for converting my MidiTracks/Blocks/Notes into lower level MidiEvents for these two fields to play which I could also move into the ``MidiPlayer`` class. There are also three other fields which could instead be moved to ``MidiPlayer``: ``bpm``, ``positionTick,`` and ``avaliableChannels`` as they are relevant to how the sequencer handles playback. This change would, in total, reduce my 12 fields to 8 fields (including the new ``MidiPlayer`` field).
