@@ -59,6 +59,8 @@ public class TimelineController implements MetaEventListener {
     public void setInstance(Timeline newTimeline) {
         Timeline oldTimeline = this.timeline;
 
+        pcs.firePropertyChange("timelineAboutToBeReplaced", oldTimeline, newTimeline);
+
         if (isPlaying()) {
             pauseTimeline();
         }

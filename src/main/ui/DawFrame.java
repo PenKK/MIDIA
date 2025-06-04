@@ -64,6 +64,10 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         if (propertyName.equals("timelineReplaced") || propertyName.equals("projectName")) {
             updateTitle();
         }
+
+        if (propertyName.equals("timelineAboutToBeReplaced")) {
+            autoSave();
+        }
     }
 
     // MODIFIES: this
