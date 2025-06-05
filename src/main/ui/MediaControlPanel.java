@@ -21,23 +21,30 @@ import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import model.Timeline;
 import model.TimelineController;
 
 // Panel containing UI elements related to playback
 public class MediaControlPanel extends JPanel implements ActionListener, ChangeListener, PropertyChangeListener {
 
     public static final int UI_UPDATE_DELAY = 10;
+    public static final double MAX_HORIZONTAL_SCALE = 5;
+    public static final double MIN_HORIZONTAL_SCALE = 0.3;
 
     private TimelineController timelineController;
-    private JButton playButton;
+
     private ImageIcon playImage = null;
     private ImageIcon pauseImage = null;
+
+    
     private Timer playbackUpdateTimer;
-    private JSlider scaleSlider;
+
     private JPanel leftAlignPanel;
     private JPanel rightAlignPanel;
+
     private JLabel timeLabel;
+    private JButton playButton;
+    private JSlider scaleSlider;
+    private JLabel bpmDisplay;
 
     // EFFECTS: creates a MediaControlPanel with timers and initializes image icons and components
     public MediaControlPanel(TimelineController timelineController) {
@@ -64,7 +71,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         scaleSlider = new JSlider();
         scaleSlider.addChangeListener(this);
         scaleSlider.setPreferredSize(new Dimension(100, scaleSlider.getPreferredSize().height));
-        copyTimelineScaleValue();
+        updateScaleSliderValue();
 
         playButton = new JButton();
         playButton.addActionListener(this);
@@ -106,10 +113,10 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     }
 
     // MODIFIES: this
-    // EFFECTS: sets the render sliders value to that of the timeline render scale
-    private void copyTimelineScaleValue() {
+    // EFFECTS: sets the render scale sliders value to that of the timeline render scale
+    private void updateScaleSliderValue() {
         int value = (int) (100 * timelineController.getTimeline().getHorizontalScaleFactor()
-                / Timeline.MAX_HORIZONTAL_SCALE);
+                           / MAX_HORIZONTAL_SCALE);
         scaleSlider.setValue(value);
     }
 
@@ -129,7 +136,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private void updateScale() {
         double factor = (double) scaleSlider.getValue() / 100;
 
-        double scale = Math.max(factor * Timeline.MAX_HORIZONTAL_SCALE, Timeline.MIN_HORIZONTAL_SCALE);
+        double scale = Math.max(factor * MAX_HORIZONTAL_SCALE, MIN_HORIZONTAL_SCALE);
         timelineController.getTimeline().setHorizontalScaleFactor(scale);
     }
 
@@ -193,7 +200,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         String propertyName = evt.getPropertyName();
         switch (propertyName) {
             case "timelineReplaced":
-                copyTimelineScaleValue();
+                updateScaleSliderValue();
                 reset();
                 break;
             case "playbackEnded":

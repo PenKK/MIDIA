@@ -17,9 +17,6 @@ import persistance.Writable;
 // Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
 public class Timeline implements Writable {
 
-    public static final double MAX_HORIZONTAL_SCALE = 1;
-    public static final double MIN_HORIZONTAL_SCALE = 0.02;
-
     private static final int DEFAULT_BEAT_DIVISON = 4;
     private static final int DEFAULT_BEATS_PER_MEASURE = 4;
     private static final double DEFAULT_HORIZONTAL_SCALE = 1;
