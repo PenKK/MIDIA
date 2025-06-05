@@ -3,6 +3,8 @@ package ui.menubar.dialog;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -14,7 +16,7 @@ import model.Timeline;
 import model.TimelineController;
 
 // A JInputDialog for receiving integer inputs for ruler beats per measure and beat division
-public class BeatConfigurationInputDialog extends InputDialog {
+public class BeatConfigurationInputDialog extends InputDialog implements PropertyChangeListener {
 
     private JButton save;
     private JSpinner beatDivision;
@@ -23,6 +25,7 @@ public class BeatConfigurationInputDialog extends InputDialog {
     // EFFECTS: creates an input dialog and displays it
     public BeatConfigurationInputDialog(Component invoker, TimelineController timelineController) {
         super("Beat Configuration", invoker, new Dimension(300, 200), timelineController);
+        timelineController.addObserver(this);
     }
 
     // MODIFIES: this
@@ -54,11 +57,28 @@ public class BeatConfigurationInputDialog extends InputDialog {
         timeline.setBeatsPerMeasure((int) beatsPerMeasure.getValue());
     }
 
+    private void updateValues() {
+        Timeline timeline = timelineController.getTimeline();
+        beatDivision.setValue(timeline.getBeatDivision());
+        beatsPerMeasure.setValue(timeline.getBeatsPerMeasure());
+    }
+
     // EFFECTS: listens for button clicks and runs methods accordingly
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(save)) {
             save();
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String property = evt.getPropertyName();
+
+        switch (property) {
+            case "timelineReplaced":
+                updateValues();
+                break;
         }
     }
 
