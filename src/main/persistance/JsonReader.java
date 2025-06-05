@@ -123,10 +123,10 @@ public class JsonReader {
     }
 
     private Instrument parseInstrument(JSONObject instrumentJsonObject) {
-        String className = instrumentJsonObject.getString("className");
+        String className = instrumentJsonObject.getString("type");
         String name = instrumentJsonObject.getString("name");
 
-        if (className.equals("TonalInstrument")) {
+        if (className.equals("tonal")) {
             return TonalInstrument.valueOf(name);
         } else {
             return PercussiveInstrument.valueOf(name);

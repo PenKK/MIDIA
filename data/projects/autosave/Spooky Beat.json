@@ -51,7 +51,7 @@
             "name": "spooky synth pad",
             "instrument": {
                 "name": "PAD_2",
-                "className": "InstrumentalInstrument"
+                "type": "tonal"
             }
         },
         {
@@ -185,7 +185,7 @@
             "name": "bass drum",
             "instrument": {
                 "name": "ACOUSTIC_BASS_DRUM",
-                "className": "PercussionInstrument"
+                "type": "percussive"
             }
         },
         {
@@ -254,7 +254,7 @@
             "name": "bass",
             "instrument": {
                 "name": "ELECTRIC_BASS_FRETLESS",
-                "className": "InstrumentalInstrument"
+                "type": "tonal"
             }
         },
         {
@@ -352,12 +352,12 @@
             "name": "hi-hat",
             "instrument": {
                 "name": "CLOSED_HI_HAT",
-                "className": "PercussionInstrument"
+                "type": "percussive"
             }
         }
     ],
     "player": {
-        "positionTick": 13734,
+        "positionTick": 1920,
         "beatsPerMinute": 120,
         "availableChannels": [
             2,

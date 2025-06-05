@@ -13,12 +13,14 @@ public interface Instrument extends Writable {
 
     public String name();
 
+    public String getType();
+
     @Override
     default JSONObject toJson() {
         JSONObject instrumentJson = new JSONObject();
 
         instrumentJson.put("name",this.name());
-        instrumentJson.put("className", this.getClass().getSimpleName());
+        instrumentJson.put("type", this.getType());
 
         return instrumentJson;
     }

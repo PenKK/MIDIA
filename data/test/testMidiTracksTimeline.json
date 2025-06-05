@@ -51,7 +51,7 @@
             "name": "synth pad",
             "instrument": {
                 "name": "PAD_2",
-                "className": "TonalInstrument"
+                "type": "tonal"
             }
         },
         {
@@ -185,7 +185,7 @@
             "name": "bass drum",
             "instrument": {
                 "name": "ACOUSTIC_BASS_DRUM",
-                "className": "PercussiveInstrument"
+                "type": "percussive"
             }
         },
         {
@@ -254,7 +254,7 @@
             "name": "bass",
             "instrument": {
                 "name": "ELECTRIC_BASS_FRETLESS",
-                "className": "TonalInstrument"
+                "type": "tonal"
             }
         },
         {
@@ -352,7 +352,7 @@
             "name": "hi-hat",
             "instrument": {
                 "name": "CLOSED_HI_HAT",
-                "className": "PercussiveInstrument"
+                "type": "percussive"
             }
         }
     ],

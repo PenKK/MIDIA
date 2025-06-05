@@ -69,7 +69,7 @@
             "name": "oboe",
             "instrument": {
                 "name": "OBOE",
-                "className": "InstrumentalInstrument"
+                "type": "tonal"
             }
         },
         {
@@ -203,12 +203,30 @@
             "name": "flute",
             "instrument": {
                 "name": "FLUTE",
-                "className": "InstrumentalInstrument"
+                "type": "tonal"
+            }
+        },
+        {
+            "volume": 100,
+            "blocks": [{
+                "notes": [{
+                    "durationTicks": 960,
+                    "startTick": 0,
+                    "pitch": 0,
+                    "velocity": 80
+                }],
+                "startTick": 0
+            }],
+            "channel": 9,
+            "name": "joe",
+            "instrument": {
+                "name": "ACOUSTIC_BASS_DRUM",
+                "type": "percussive"
             }
         }
     ],
     "player": {
-        "positionTick": 4219,
+        "positionTick": 643,
         "beatsPerMinute": 60,
         "availableChannels": [
             2,

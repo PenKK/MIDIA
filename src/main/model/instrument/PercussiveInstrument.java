@@ -66,13 +66,19 @@ public enum PercussiveInstrument implements Instrument {
         return programNumber;
     }
 
-    @Override
     public String getName() {
         return name;
+    }
+
+    
+    @Override
+    public String getType() {
+        return "percussive";
     }
 
     @Override
     public String toString() {
         return name;
     }
+
 }
