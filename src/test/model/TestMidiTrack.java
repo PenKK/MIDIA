@@ -17,14 +17,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import model.instrument.Instrument;
-import model.instrument.InstrumentalInstrument;
-import model.instrument.PercussionInstrument;
+import model.instrument.TonalInstrument;
+import model.instrument.PercussiveInstrument;
 
 // Much of testing is done according to https://midi.org/spec-detail
 public class TestMidiTrack {
 
     MidiTrack midiTrack;
-    Instrument instr = InstrumentalInstrument.ACOUSTIC_GRAND_PIANO;
+    Instrument instr = TonalInstrument.ACOUSTIC_GRAND_PIANO;
 
     @BeforeEach
     void runBefore() {
@@ -44,7 +44,7 @@ public class TestMidiTrack {
         assertEquals(midiTrack.info(), 
                     "name: Piano Melody, channel: 0, instrument: Acoustic Grand Piano, block count: 0");
 
-        midiTrack = new MidiTrack("Percussive drums", PercussionInstrument.ACOUSTIC_BASS_DRUM, 9);
+        midiTrack = new MidiTrack("Percussive drums", PercussiveInstrument.ACOUSTIC_BASS_DRUM, 9);
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
         assertEquals(midiTrack.getInstrument().getProgramNumber(), 35); // 35 is bass drum
@@ -57,14 +57,14 @@ public class TestMidiTrack {
 
     @Test
     void testConstructorOverload() {
-        midiTrack = new MidiTrack("Non Percussive", InstrumentalInstrument.ACOUSTIC_GUITAR_NYLON, 0);
+        midiTrack = new MidiTrack("Non Percussive", TonalInstrument.ACOUSTIC_GUITAR_NYLON, 0);
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
         assertEquals(midiTrack.getInstrument().getProgramNumber(), 24);
         assertEquals(midiTrack.getVolume(), 100);
         assertEquals(midiTrack.getName(), "Non Percussive");
 
-        midiTrack = new MidiTrack("Percussive", PercussionInstrument.ACOUSTIC_SNARE, 9); // 38 is acoustic snare
+        midiTrack = new MidiTrack("Percussive", PercussiveInstrument.ACOUSTIC_SNARE, 9); // 38 is acoustic snare
         assertFalse(midiTrack.isMuted());
         assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
         assertEquals(midiTrack.getInstrument().getProgramNumber(), 38);
@@ -192,15 +192,15 @@ public class TestMidiTrack {
     void testSetInstrument() throws InvalidMidiDataException, MidiUnavailableException {
         Timeline timeline = new Timeline("test", null);
         timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
-        midiTrack = timeline.createMidiTrack("Piano melody", instr, false);
+        midiTrack = timeline.createMidiTrack("Piano melody", instr);
         assertEquals(midiTrack.getInstrument().getProgramNumber(), 0);
-        midiTrack.setInstrument(InstrumentalInstrument.ELECTRIC_PIANO_1);
+        midiTrack.setInstrument(TonalInstrument.ELECTRIC_PIANO_1);
         timeline.updatePlayerSequence();
 
         Track t = timeline.getPlayer().getSequence().getTracks()[0];
         assertEquals(t.get(0).getMessage().getMessage()[1], 4);
 
-        midiTrack.setInstrument(InstrumentalInstrument.CELESTA);
+        midiTrack.setInstrument(TonalInstrument.CELESTA);
         timeline.updatePlayerSequence();
 
         t = timeline.getPlayer().getSequence().getTracks()[0];
@@ -283,7 +283,7 @@ public class TestMidiTrack {
         Sequence sequence = new Sequence(Sequence.PPQ, 960);
         Track track = sequence.createTrack();
 
-        midiTrack = new MidiTrack("percussive", PercussionInstrument.ACOUSTIC_BASS_DRUM, 9);
+        midiTrack = new MidiTrack("percussive", PercussiveInstrument.ACOUSTIC_BASS_DRUM, 9);
         assertTrue(midiTrack.isPercussive());
         midiTrack.applyToTrack(track);
 
@@ -302,7 +302,7 @@ public class TestMidiTrack {
 
         block.addNote(note);
         midiTrack.addBlock(block);
-        midiTrack.setInstrument(PercussionInstrument.ELECTRIC_SNARE);
+        midiTrack.setInstrument(PercussiveInstrument.ELECTRIC_SNARE);
         midiTrack.applyToTrack(track);
 
         byte[] noteOnData = track.get(1).getMessage().getMessage();

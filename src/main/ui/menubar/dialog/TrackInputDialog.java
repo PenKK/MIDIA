@@ -15,8 +15,8 @@ import javax.swing.JTextField;
 import model.MidiTrack;
 import model.TimelineController;
 import model.instrument.Instrument;
-import model.instrument.InstrumentalInstrument;
-import model.instrument.PercussionInstrument;
+import model.instrument.TonalInstrument;
+import model.instrument.PercussiveInstrument;
 
 // An InputDialog for creating new MidiTracks.
 public class TrackInputDialog extends InputDialog {
@@ -37,7 +37,7 @@ public class TrackInputDialog extends InputDialog {
     protected void initFields() {
         nameField = new JTextField();
         percussiveCheckBox = new JCheckBox();
-        instrumentComboBox = new JComboBox<>(InstrumentalInstrument.values());
+        instrumentComboBox = new JComboBox<>(TonalInstrument.values());
         create = new JButton("Create");
 
         percussiveCheckBox.addActionListener(this);
@@ -68,17 +68,16 @@ public class TrackInputDialog extends InputDialog {
     // EFFECTS: creates a track on the the timeline with user input from fields
     private void submit() {
         String name = nameField.getText().trim();
-        boolean percussive = percussiveCheckBox.isSelected();
         Instrument instrument = (Instrument) instrumentComboBox.getSelectedItem();
 
         if (name.equals("") || name == null) {
             return;
         }
 
-        MidiTrack midiTrack = timelineController.getTimeline().createMidiTrack(name, instrument, percussive);
+        MidiTrack midiTrack = timelineController.getTimeline().createMidiTrack(name, instrument);
 
         if (midiTrack == null) {
-            JOptionPane.showMessageDialog(this, "You have already reached the maximum number of instrumental tracks," 
+            JOptionPane.showMessageDialog(this, "You have already reached the maximum number of tonal tracks," 
                                               + "15.\n Track was not created", "Warning", JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -88,11 +87,11 @@ public class TrackInputDialog extends InputDialog {
     private void updateInstrumentList(JCheckBox checkBox) {
         if (checkBox.isSelected()) {
             DefaultComboBoxModel<Instrument> items = 
-                    new DefaultComboBoxModel<Instrument>(PercussionInstrument.values());
+                    new DefaultComboBoxModel<Instrument>(PercussiveInstrument.values());
             instrumentComboBox.setModel(items);
         } else {
             DefaultComboBoxModel<Instrument> items = 
-                    new DefaultComboBoxModel<Instrument>(InstrumentalInstrument.values());
+                    new DefaultComboBoxModel<Instrument>(TonalInstrument.values());
             instrumentComboBox.setModel(items);
         }
     }

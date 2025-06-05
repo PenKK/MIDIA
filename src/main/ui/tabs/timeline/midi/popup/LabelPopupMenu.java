@@ -11,8 +11,8 @@ import model.MidiTrack;
 import model.Timeline;
 import model.TimelineController;
 import model.instrument.Instrument;
-import model.instrument.InstrumentalInstrument;
-import model.instrument.PercussionInstrument;
+import model.instrument.TonalInstrument;
+import model.instrument.PercussiveInstrument;
 import ui.tabs.timeline.midi.TrackLabelPanel;
 
 // The popup menu for modifying a track
@@ -62,8 +62,8 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
     // EFFECTS: prompts user to choose a new instrument for the invoking track
     private void changeInstrument() {
         MidiTrack midiTrack = parentPanel.getMidiTrack();
-        Instrument[] options = midiTrack.isPercussive() ? PercussionInstrument.values()
-                : InstrumentalInstrument.values();
+        Instrument[] options = midiTrack.isPercussive() ? PercussiveInstrument.values()
+                : TonalInstrument.values();
         Object choice = JOptionPane.showInputDialog(this, "Select a new Instrument", midiTrack.getName(),
                 JOptionPane.PLAIN_MESSAGE, null, options,
                 midiTrack.getInstrument());

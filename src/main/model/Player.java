@@ -12,6 +12,8 @@ import javax.sound.midi.Track;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.event.Event;
+import model.event.EventLog;
 import persistance.Writable;
 
 public class Player implements Writable {

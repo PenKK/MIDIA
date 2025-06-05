@@ -23,13 +23,8 @@ public class ViewMenu extends Menu {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(beatConfiguration)) {
-            beatConfiguration();
+            beatConfigurationInputDialog.display();
         }
-    }
-
-    // EFFECTS: creates a new BeatConfigurationInputDialog for user input in changing ruler variables 
-    private void beatConfiguration() {
-        beatConfigurationInputDialog.display();
     }
 
 }

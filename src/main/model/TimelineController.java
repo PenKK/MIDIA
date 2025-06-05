@@ -103,7 +103,7 @@ public class TimelineController implements MetaEventListener {
 
     @Override
     public void meta(MetaMessage meta) {
-        if (meta.getType() == 47) {
+        if (meta.getType() == 47) { // 47 fires when the sequencer naturally reaches the end
             pcs.firePropertyChange("playbackEnded", null, null);
         }
     }

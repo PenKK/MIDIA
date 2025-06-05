@@ -10,6 +10,8 @@ import javax.sound.midi.Track;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.event.Event;
+import model.event.EventLog;
 import model.instrument.Instrument;
 import persistance.Writable;
 

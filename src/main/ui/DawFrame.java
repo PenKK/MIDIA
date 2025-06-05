@@ -14,10 +14,10 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
 import javax.swing.JFrame;
 
-import model.Event;
-import model.EventLog;
 import model.Timeline;
 import model.TimelineController;
+import model.event.Event;
+import model.event.EventLog;
 import persistance.JsonWriter;
 import ui.menubar.MenuBar;
 import ui.menubar.menus.FileMenu;

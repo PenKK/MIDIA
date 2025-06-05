@@ -8,6 +8,8 @@ import javax.sound.midi.InvalidMidiDataException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.event.Event;
+import model.event.EventLog;
 import model.instrument.Instrument;
 import persistance.Writable;
 
@@ -55,7 +57,9 @@ public class Timeline implements Writable {
     // REQUIRES: player.getAvailableChannels().size() >= 0
     // MODIFIES: this
     // EFFECTS: Creates a midiTrack, add its to the list of tracks and returns it
-    public MidiTrack createMidiTrack(String name, Instrument instrument, boolean percussive) {
+    public MidiTrack createMidiTrack(String name, Instrument instrument) {
+        boolean percussive = !instrument.getType().equals("tonal");
+        
         if (!percussive && player.getAvailableChannels().size() <= 0) {
             return null;
         }
