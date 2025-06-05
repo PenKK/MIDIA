@@ -93,7 +93,7 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
         String propertyName = evt.getPropertyName();
 
         switch (propertyName) {
-            case "beatDivsion":
+            case "beatDivision":
             case "beatsPerMeasure":
             case "timelineReplaced":
             case "horizontalScaleFactor":
