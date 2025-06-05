@@ -69,7 +69,7 @@
             "name": "oboe",
             "instrument": {
                 "name": "OBOE",
-                "className": "InstrumentalInstrument"
+                "className": "TonalInstrument"
             }
         },
         {
@@ -203,7 +203,7 @@
             "name": "flute",
             "instrument": {
                 "name": "FLUTE",
-                "className": "InstrumentalInstrument"
+                "className": "TonalInstrument"
             }
         }
     ],

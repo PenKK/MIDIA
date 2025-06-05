@@ -2,7 +2,7 @@ package model.instrument;
 
 // Constants for MIDI percussion instruments with corresponding channel program numbers
 // Taken from https://en.wikipedia.org/wiki/General_MIDI
-public enum PercussionInstrument implements Instrument {
+public enum PercussiveInstrument implements Instrument {
 
     ACOUSTIC_BASS_DRUM(35, "Acoustic Bass Drum"),
     ELECTRIC_BASS_DRUM(36, "Electric Bass Drum"),
@@ -56,7 +56,7 @@ public enum PercussionInstrument implements Instrument {
     private final String name;
 
     // EFFECTS: creates a percussive instrument enum with a programNumber and name
-    PercussionInstrument(int programNumber, String name) {
+    PercussiveInstrument(int programNumber, String name) {
         this.programNumber = programNumber;
         this.name = name;
     }

@@ -20,8 +20,8 @@ import model.Note;
 import model.Player;
 import model.Timeline;
 import model.instrument.Instrument;
-import model.instrument.InstrumentalInstrument;
-import model.instrument.PercussionInstrument;
+import model.instrument.TonalInstrument;
+import model.instrument.PercussiveInstrument;
 
 // Represents a reader that reads Timeline from JSON data stored in file
 // Code adapted from src/main/persistance/JsonReader
@@ -126,10 +126,10 @@ public class JsonReader {
         String className = instrumentJsonObject.getString("className");
         String name = instrumentJsonObject.getString("name");
 
-        if (className.equals("InstrumentalInstrument")) {
-            return InstrumentalInstrument.valueOf(name);
+        if (className.equals("TonalInstrument")) {
+            return TonalInstrument.valueOf(name);
         } else {
-            return PercussionInstrument.valueOf(name);
+            return PercussiveInstrument.valueOf(name);
         }
     }
 
