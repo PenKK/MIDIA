@@ -44,7 +44,6 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private JLabel timeLabel;
     private JButton playButton;
     private JSlider scaleSlider;
-    private JLabel bpmDisplay;
 
     // EFFECTS: creates a MediaControlPanel with timers and initializes image icons and components
     public MediaControlPanel(TimelineController timelineController) {
