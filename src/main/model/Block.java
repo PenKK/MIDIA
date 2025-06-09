@@ -8,8 +8,6 @@ import org.json.JSONObject;
 import model.event.Event;
 import model.event.EventLog;
 
-import model.event.Event;
-import model.event.EventLog;
 import model.util.Copyable;
 import model.util.Pastable;
 import persistance.Writable;
