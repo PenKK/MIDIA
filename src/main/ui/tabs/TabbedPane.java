@@ -4,6 +4,7 @@ import javax.swing.JTabbedPane;
 
 import model.TimelineController;
 import ui.tabs.piano.roll.PianoRollViewPanel;
+import ui.tabs.piano.roll.PianoRollViewPanel;
 import ui.tabs.timeline.TimelineViewPanel;
 import ui.util.DawClipboard;
 
