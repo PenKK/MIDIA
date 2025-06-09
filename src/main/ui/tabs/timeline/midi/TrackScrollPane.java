@@ -26,6 +26,8 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
         this.setBorder(null);
         this.setViewportView(lineContainer);
         this.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
+        this.getVerticalScrollBar().setUnitIncrement(16);
+        this.getHorizontalScrollBar().setUnitIncrement(16);
         this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         this.setAlignmentX(0);
