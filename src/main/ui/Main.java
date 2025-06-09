@@ -8,13 +8,6 @@ public class Main {
         // FlatLaf library for look and feel
         // https://www.formdev.com/flatlaf/
         FlatDarculaLaf.setup();
-
-        try {
-            new DawFrame();
-        } catch (Exception e) {
-            System.out.println("Unable to start program, MIDI device likely unavaliable");
-            e.printStackTrace();
-        }
-
+        new DawFrame();
     }
 }
