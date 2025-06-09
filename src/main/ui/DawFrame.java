@@ -22,6 +22,7 @@ import persistance.JsonWriter;
 import ui.menubar.MenuBar;
 import ui.menubar.menus.FileMenu;
 import ui.tabs.TabbedPane;
+import ui.util.DawClipboard;
 
 // The frame of the graphical UI. Contains the entirety of the UI.
 public class DawFrame extends JFrame implements PropertyChangeListener {
@@ -30,13 +31,15 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
     private TabbedPane tabbedPane;
     private MediaControlPanel mediaControlPanel;
     private TimelineController timelineController;
+    private DawClipboard dawClipboard;
 
     // EFFECTS: Creates the frame for the application and initializes the tabs and menu bar
     DawFrame() throws MidiUnavailableException, IOException, InvalidMidiDataException {
         timelineController = new TimelineController();
-        tabbedPane = new TabbedPane(timelineController);
+        tabbedPane = new TabbedPane(timelineController, dawClipboard);
         menuBar = new MenuBar(timelineController);
         mediaControlPanel = new MediaControlPanel(timelineController);
+        dawClipboard = new DawClipboard();
         timelineController.addObserver(this);
 
         this.setLayout(new BorderLayout());

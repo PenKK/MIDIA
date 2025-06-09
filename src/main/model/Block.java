@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.event.Event;
+import model.event.EventLog;
+import model.util.Copyable;
+import model.util.Pastable;
 import persistance.Writable;
 
 // A block exists in a track and is a group of notes.
 // The block can be moved on the timeline by changing the startTick.
-public class Block implements Writable {
+public class Block implements Writable, Copyable, Pastable {
 
     private ArrayList<Note> notes;
     private long startTick;
@@ -126,5 +130,18 @@ public class Block implements Writable {
     @Override
     public String toString() {
         return String.format("S: %d, N: %d", startTick, notes.size());
+    }
+
+    @Override
+    public void paste(Copyable[] copied) {
+
+        for (Copyable c : copied) {
+            if (!c.getClass().equals(Note.class)) { // Only notes may be pasted into a block
+                continue;
+            }
+
+            this.addNote((Note) c);
+        }
+        
     }
 }

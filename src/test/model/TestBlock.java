@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import model.util.Copyable;
+
 public class TestBlock {
     Block block;
 
@@ -160,5 +162,18 @@ public class TestBlock {
         assertEquals(block.getDurationTicks(), 100 + 22);
         block.removeNote(0);
         assertEquals(block.getDurationTicks(), 0);
+    }
+
+    @Test
+    void testPaste() {
+        Note n = new Note(0, 0, 0, 0);
+
+        assertEquals(block.getNotes().size(), 0);
+        block.paste(new Copyable[] {n.clone()});
+        assertEquals(block.getNotes().size(), 1);
+
+        n.setPitch(100);
+
+        assertEquals(block.getNotes().get(0).getPitch(), 0);
     }
 }
