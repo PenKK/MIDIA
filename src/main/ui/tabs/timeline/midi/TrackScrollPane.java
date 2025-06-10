@@ -2,7 +2,6 @@ package ui.tabs.timeline.midi;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
@@ -15,7 +14,6 @@ import model.TimelineController;
 public class TrackScrollPane extends JScrollPane implements PropertyChangeListener {
 
     private TimelineController timelineController;
-    private ArrayList<TrackPanel> midiTrackPanels;
     private LineContainerPanel lineContainer;
 
     // EFFECTS: initializes the timeline 
@@ -31,8 +29,6 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
         this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         this.setAlignmentX(0);
-
-        midiTrackPanels = new ArrayList<>();
         timelineController.addObserver(this);
 
         updateMidiTrackPanels();
@@ -43,8 +39,6 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
         clearTrackPanels();
         for (MidiTrack track : timelineController.getTimeline().getMidiTracks()) {
             TrackPanel currentPanel = new TrackPanel(track, timelineController);
-            midiTrackPanels.add(currentPanel);
-
             lineContainer.add(currentPanel);
         }
 
@@ -55,9 +49,7 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
     // MODFIES: this
     // EFFECTS: Removes MidiTrackPanels from the container
     private void clearTrackPanels() {
-        for (TrackPanel currentMidiTrackPanel : midiTrackPanels) {
-            lineContainer.remove(currentMidiTrackPanel);
-        }
+        lineContainer.removeAll();
     }
 
     // MODFIES: this
