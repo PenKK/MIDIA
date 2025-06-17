@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.event.Event;
+import model.event.EventLog;
 import persistance.Writable;
 
 // A block exists in a track and is a group of notes.
