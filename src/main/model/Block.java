@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -134,7 +135,7 @@ public class Block implements Writable, Copyable, Pastable {
     }
 
     @Override
-    public void paste(Copyable[] copied) {
+    public void paste(List<Copyable> copied, long position) {
 
         for (Copyable c : copied) {
             if (!c.getClass().equals(Note.class)) { // Only notes may be pasted into a block

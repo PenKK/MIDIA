@@ -3,6 +3,7 @@ package model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -169,7 +170,7 @@ public class TestBlock {
         Note n = new Note(0, 0, 0, 0);
 
         assertEquals(block.getNotes().size(), 0);
-        block.paste(new Copyable[] {n.clone()});
+        block.paste(Arrays.asList(n.clone()), 0);
         assertEquals(block.getNotes().size(), 1);
 
         n.setPitch(100);

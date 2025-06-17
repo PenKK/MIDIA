@@ -45,14 +45,14 @@ public class TestTimelineController extends TestJson {
         tc.addObserver(testObserver);
         assertEquals(tc.getPropertyChangeSupport().getPropertyChangeListeners().length, 1);
 
-        tc.refresh();
+        tc.refreshTrackLayout();
         assertEquals(testObserver.getValue(), 1);
 
         tc.setInstance(new Timeline("joe", tc.getPropertyChangeSupport()));
         assertEquals(testObserver.getValue(), 2);
 
         tc.removeObserver(testObserver);
-        tc.refresh();
+        tc.refreshTrackLayout();
         assertEquals(testObserver.getValue(), 2);
     }
 

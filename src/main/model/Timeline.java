@@ -182,6 +182,16 @@ public class Timeline implements Writable {
         return Math.round(pixel / getPixelsPerTick());
     }
 
+    public long snapTickNearest(long rawTick) {
+        long divisionTickInterval = Player.PULSES_PER_QUARTER_NOTE / beatDivision;
+        return Math.round((double) rawTick / divisionTickInterval) * divisionTickInterval;
+    }
+
+    public long snapTickLower(long rawTick) {
+        long divisionTickInterval = Player.PULSES_PER_QUARTER_NOTE / beatDivision;
+        return (rawTick / divisionTickInterval) * divisionTickInterval;
+    }
+
     public ArrayList<MidiTrack> getMidiTracks() {
         return midiTracks;
     }

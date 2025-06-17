@@ -12,30 +12,38 @@ import javax.swing.SwingUtilities;
 import model.Block;
 import model.MidiTrack;
 import model.Note;
+import model.Player;
 import model.Timeline;
 import model.TimelineController;
+import model.util.DawClipboard;
+import ui.tabs.timeline.midi.popup.BlockPopupMenu;
+import ui.tabs.timeline.midi.popup.TrackGapPopupMenu;
 
 // Interactable render of the MidiTrack's blocks and notes
 public class TrackRenderPanel extends JPanel {
 
-    private static final Color NOTE_COLOR = Color.decode("#ECF0F1");
-    private static final Color BLOCK_BACKGROUND_COLOR = Color.decode("#34495E");
+    private final Color NOTE_COLOR = Color.decode("#ECF0F1");
+    private final Color BLOCK_BACKGROUND_COLOR = Color.decode("#34495E");
+    private final Color LINE_COLOR = Color.decode("#333333");
 
-    private static final int CORNER_ROUNDING_BLOCK = 2;
-    private static final int BLOCK_HEIGHT_MARGIN = 6;
-    private static final int EMPTY_BLOCK_WIDTH = 100;
+    private final int CORNER_ROUNDING_BLOCK = 2;
+    private final int BLOCK_HEIGHT_MARGIN = 6;
+    private final int EMPTY_BLOCK_WIDTH = 100;
 
-    private static final int MIN_NOTE_RANGE = 16;
-    private static final int NOTE_RANGE_PADDING = 2;
-    private static final double NOTE_CORNER_RADIUS = 0.3;
+    private final int MIN_NOTE_RANGE = 16;
+    private final int NOTE_RANGE_PADDING = 2;
+    private final double NOTE_CORNER_RADIUS = 0.3;
 
     private MidiTrack midiTrack;
     private TimelineController timelineController;
+    private DawClipboard dawClipboard;
 
     // EFFECTS: recieves the specified midiTrack, and listens for mouse events
-    public TrackRenderPanel(MidiTrack midiTrack, TimelineController timelineController) {
+    public TrackRenderPanel(MidiTrack midiTrack, TimelineController timelineController, DawClipboard dawClipboard) {
+        this.dawClipboard = dawClipboard;
         this.timelineController = timelineController;
         this.midiTrack = midiTrack;
+
         this.addMouseListener(mouseAdapter());
     }
 
@@ -44,7 +52,31 @@ public class TrackRenderPanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        drawTrack(midiTrack.getBlocks(), g);
+        drawBlockBorders(midiTrack.getBlocks(), g);
+        drawLines(g);
+        drawBlockNotes(midiTrack.getBlocks(), g);
+
+    }
+
+    private void drawLines(Graphics g) {
+        Timeline timeline = timelineController.getTimeline();
+
+        int beatDivisions = timeline.getBeatDivision();
+        int beatsPerMeasure = timeline.getBeatsPerMeasure();
+
+        long divisionTickInterval = Player.PULSES_PER_QUARTER_NOTE / beatDivisions;
+        long measureTickInterval = (long) Player.PULSES_PER_QUARTER_NOTE * beatsPerMeasure;
+
+        for (long tick = 0; tick <= getWidth() / timeline.getPixelsPerTick(); tick += divisionTickInterval) {
+            g.setColor(LINE_COLOR);
+            int pixelPosition = (int) (timeline.scaleTickToPixel(tick));
+
+            if (tick % measureTickInterval == 0) { // One measure
+                g.setColor(g.getColor().darker());
+            }
+
+            g.drawLine(pixelPosition, 0, pixelPosition, getHeight());
+        }
     }
 
     // EFFECTS: draws the specified block with scaling.
@@ -62,6 +94,12 @@ public class TrackRenderPanel extends JPanel {
         g.fillRoundRect(x, y, width, height, CORNER_ROUNDING_BLOCK, CORNER_ROUNDING_BLOCK);
 
         g.setColor(tempColor);
+    }
+
+    private void drawBlockBorders(ArrayList<Block> blocks, Graphics g) {
+        for (Block b : blocks) {
+            drawBlock(b, g);
+        }
     }
 
     // EFFECTS: returns the pitch range of the notes within the blocks
@@ -100,7 +138,7 @@ public class TrackRenderPanel extends JPanel {
     // MODIFIES: this
     // EFFECTS: draws the specified blocks and their notes. the height of notes is 
     //          drawn relative to all other notes in the blocks
-    private void drawTrack(ArrayList<Block> blocks, Graphics g) {
+    private void drawBlockNotes(ArrayList<Block> blocks, Graphics g) {
         Timeline timeline = timelineController.getTimeline();
         int[] pitchRange = determineRange(blocks);
 
@@ -114,7 +152,6 @@ public class TrackRenderPanel extends JPanel {
         int noteRounding = (int) Math.round(heightDouble * NOTE_CORNER_RADIUS);
 
         for (Block b : blocks) {
-            drawBlock(b, g);
             for (Note n : b.getNotesTimeline()) {
                 int pitchOffset = minPitch - (range == 0 ? (MIN_NOTE_RANGE / 2) : 0);
                 int relativePitch = n.getPitch() - pitchOffset + (NOTE_RANGE_PADDING / 2);
@@ -126,7 +163,7 @@ public class TrackRenderPanel extends JPanel {
 
                 g.setColor(NOTE_COLOR);
                 if (isNotePlaying(n)) {
-                    g.setColor(Color.BLACK);   
+                    g.setColor(Color.BLACK);
                 }
                 g.fillRoundRect(x, y, width, height, noteRounding, noteRounding);
             }
@@ -177,18 +214,39 @@ public class TrackRenderPanel extends JPanel {
     }
 
     private void rightClick(MouseEvent e) {
+        long tick = timelineController.getTimeline().scalePixelToTick(e.getX());
 
+        Block block = getBlock(tick);
+
+        if (block == null) {
+            new TrackGapPopupMenu(this, timelineController, dawClipboard, e.getX()).show(this, e.getX(), e.getY());
+        } else {
+            new BlockPopupMenu(block, timelineController, dawClipboard).show(this, e.getX(), e.getY());
+        }
     }
 
     // EFFECTS: Handles double click behavior on the rendered track
     private void doubleClick(MouseEvent e) {
-        int tick = (int) Math.round(e.getX() / timelineController.getTimeline().getHorizontalScaleFactor());
+        long tick = timelineController.getTimeline().scalePixelToTick(e.getX());
 
+        Block b = getBlock(tick);
+
+        if (b != null) {
+            System.out.println("Block at startTick " + b.getStartTick() + " clicked!");
+        }
+    }
+
+    private Block getBlock(long tick) {
         for (Block b : midiTrack.getBlocks()) {
             if (b.getStartTick() <= tick && b.getStartTick() + b.getDurationTicks() >= tick) {
-                System.out.println("Block at startTick " + b.getStartTick() + " clicked!");
+                return b;
             }
         }
-        repaint();
+
+        return null;
+    }
+
+    public MidiTrack getMidiTrack() {
+        return midiTrack;
     }
 }
