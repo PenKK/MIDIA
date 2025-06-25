@@ -11,9 +11,9 @@ import javax.sound.midi.MidiUnavailableException;
 
 import org.junit.jupiter.api.*;
 
-import persistance.TestJson;
+import persistance.TestUtil;
 
-public class TestTimelineController extends TestJson {
+public class TestTimelineController extends TestUtil {
 
     private TimelineController tc;
 

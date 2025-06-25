@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import model.instrument.Instrument;
 import model.instrument.TonalInstrument;
 import model.instrument.PercussiveInstrument;
-import persistance.TestJson;
+import persistance.TestUtil;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 
 // See https://midi.org/expanded-midi-1-0-messages-list 
 // to understand the checking of bytes in MidiEvents in tests
-public class TestTimelinePlayer extends TestJson {
+public class TestTimelinePlayer extends TestUtil {
     Timeline timeline;
     ArrayList<Integer> expectedChannels;
     Instrument instr = TonalInstrument.ACOUSTIC_GRAND_PIANO;
@@ -209,8 +209,8 @@ public class TestTimelinePlayer extends TestJson {
         mt3.setVolume(0);
         mt2.setVolume(50);
 
-        Block b1 = new Block(0);
-        Block b2 = new Block(5);
+        Block b1 = new Block(0, 1000);
+        Block b2 = new Block(5, 1000);
         Note n1 = new Note(60, 60, 0, 5);
         Note n2 = new Note(60, 50, 4, 9);
         Note n3 = new Note(62, 90, 9, 17);
@@ -285,7 +285,7 @@ public class TestTimelinePlayer extends TestJson {
 
     @Test
     void testPlayBack() throws MidiUnavailableException, InvalidMidiDataException, InterruptedException {
-        Block b = new Block(0);
+        Block b = new Block(0, 3000);
         Note n = new Note(60, 100, 0, 960);
         Note n2 = new Note(64, 127, 960, 960);
         b.addNote(n);
@@ -401,7 +401,7 @@ public class TestTimelinePlayer extends TestJson {
     @Test
     void testTempoChange() {
         MidiTrack testTrack = timeline.createMidiTrack("track", instr);
-        Block testBlock = new Block(0);
+        Block testBlock = new Block(0, 1000);
         Note testNote = new Note(60, 100, 0, 960);
 
         testBlock.addNote(testNote);
@@ -414,10 +414,10 @@ public class TestTimelinePlayer extends TestJson {
         assertEquals(timeline.getPlayer().msToTicks(500), 960); // Check the reverse
         assertEquals(timeline.getLengthBeats(), 1); // 1 beat = 1 quarter note
         MidiTrack testTrack2 = timeline.createMidiTrack("track2", instr);
-        Block testBlock2 = new Block(960);
+        Block testBlock2 = new Block(960, 1920);
         Note testNote2 = new Note(60, 100, 0, 1920);
 
-        testBlock2.addNote(testNote2);
+        assertNotEquals(testBlock2.addNote(testNote2), -1);
         testTrack2.addBlock(testBlock2);
 
         assertEquals(timeline.getLengthMs(), 1500);

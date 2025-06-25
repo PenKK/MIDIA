@@ -140,7 +140,8 @@ public class JsonReader {
             JSONObject blockData = (JSONObject) blockJson;
 
             long startTick = blockData.getLong("startTick");
-            Block currentBlock = new Block(startTick);
+            long durationTicks = blockData.getLong("durationTicks");
+            Block currentBlock = new Block(startTick, durationTicks);
 
             JSONArray notesJsonArray = blockData.getJSONArray("notes");
             addNotes(currentBlock, notesJsonArray);

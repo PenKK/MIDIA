@@ -9,13 +9,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import model.util.Copyable;
+import persistance.TestUtil;
 
 public class TestBlock {
     Block block;
 
     @BeforeEach
     void runBefore() {
-        block = new Block(10);
+        block = new Block(10, 1000);
     }
 
     @Test
@@ -23,7 +24,8 @@ public class TestBlock {
         assertEquals(new ArrayList<Note>(), block.getNotes());
         assertEquals(10, block.getStartTick());
         assertEquals(block.toString(), "S: 10, N: 0");
-        assertEquals(block.info(), "Start tick: 10, current note count: 0");
+        assertEquals(block.getDurationTicks(), 1000);
+        assertEquals(block.info(), "Start tick: 10, duration: 1000, current note count: 0");
     }
 
     @Test
@@ -51,6 +53,44 @@ public class TestBlock {
         assertEquals(block.addNote(note1), 0);
         assertEquals(block.addNote(note2), 1);
         assertEquals(block.addNote(note3), 2);
+    }
+
+    @Test
+    void testAddNoteOutOfBounds() {
+        Note note1 = new Note(60, 60, 0, 5);
+        Note note11 = new Note(65, 90, 0, 999);
+        Note note2 = new Note(56, 50, 4, 9);
+        Note note22 = new Note(65, 90, 0, 1000);
+        Note note3 = new Note(65, 90, 9, 17);
+        Note note33 = new Note(65, 90, 0, 1001);
+        Note note44 = new Note(65, 90, 1, 1000);
+        ArrayList<Note> expectedNotes = new ArrayList<>();
+
+        assertEquals(block.addNote(note1), 0);
+        expectedNotes.add(note1);
+        assertEquals(block.getNotes(), expectedNotes);
+
+        assertEquals(block.addNote(note2), 1);
+        expectedNotes.add(note2);
+        assertEquals(block.getNotes(), expectedNotes);
+
+        assertEquals(block.addNote(note3), 2);
+        expectedNotes.add(note3);
+        assertEquals(block.getNotes(), expectedNotes);
+
+        block.getNotes().clear();
+        assertEquals(block.getNotes().size(), 0);
+
+        assertEquals(block.addNote(note1), 0);
+        assertEquals(block.addNote(note2), 1);
+        assertEquals(block.addNote(note3), 2);
+
+        assertEquals(block.addNote(note11), 3);
+        assertEquals(block.addNote(note22), 4);
+        assertEquals(block.addNote(note33), -1);
+        assertEquals(block.addNote(note44), -1);
+
+        assertEquals(block.getNotes().size(), 5);
     }
 
     @Test
@@ -131,38 +171,12 @@ public class TestBlock {
         block.addNote(new Note(42, 60, 22, 100));
         block.addNote(new Note(22, 20, 88, 900));
         Block cloneBlock = block.clone();
-        
+
         assertNotEquals(block, cloneBlock);
         assertEquals(block.getNotes().size(), cloneBlock.getNotes().size());
         assertEquals(block.getNotesTimeline().size(), cloneBlock.getNotesTimeline().size());
         assertEquals(block.getStartTick(), cloneBlock.getStartTick());
-    }
-
-    @Test
-    void testGetDuration() {
-        block.setStartTick(0);
-        Note note = new Note(22, 20, 88, 900);
-        Note note2 = new Note(42, 60, 22, 100);
-
-        block.addNote(note);
-        assertEquals(block.getDurationTicks(), 900 + 88);
-        block.addNote(note2);
-        assertEquals(block.getDurationTicks(), 900 + 88);
-        block.removeNote(0);
-        assertEquals(block.getDurationTicks(), 100 + 22);
-        block.removeNote(0);
-        assertEquals(block.getDurationTicks(), 0);
-
-        block.setStartTick(100);
-
-        block.addNote(note);
-        assertEquals(block.getDurationTicks(), 900 + 88);
-        block.addNote(note2);
-        assertEquals(block.getDurationTicks(), 900 + 88);
-        block.removeNote(0);
-        assertEquals(block.getDurationTicks(), 100 + 22);
-        block.removeNote(0);
-        assertEquals(block.getDurationTicks(), 0);
+        assertEquals(block.getDurationTicks(), cloneBlock.getDurationTicks());
     }
 
     @Test
@@ -176,5 +190,13 @@ public class TestBlock {
         n.setPitch(100);
 
         assertEquals(block.getNotes().get(0).getPitch(), 0);
+    }
+
+    @Test
+    void testOddPaste() {
+        Block copyBlock = block.clone();
+        Copyable c = new Block(0, 120);
+        block.paste(Arrays.asList(c), 0);
+        TestUtil.assertBlockEquals(block, copyBlock);
     }
 }

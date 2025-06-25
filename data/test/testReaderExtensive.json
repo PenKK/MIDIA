@@ -1,9 +1,4 @@
 {
-    "player": {
-        "positionTick": 0,
-        "beatsPerMinute": 160,
-        "availableChannels": [2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15]
-    },
     "beatsPerMeasure": 4,
     "beatDivision": 4,
     "horizontalScaleFactor": 1,
@@ -13,6 +8,7 @@
             "volume": 127,
             "blocks": [
                 {
+                    "durationTicks": 18240,
                     "notes": [
                         {
                             "durationTicks": 1920,
@@ -65,6 +61,7 @@
             "volume": 110,
             "blocks": [
                 {
+                    "durationTicks": 19200,
                     "notes": [
                         {
                             "durationTicks": 960,
@@ -201,6 +198,7 @@
             "volume": 110,
             "blocks": [
                 {
+                    "durationTicks": 4800,
                     "notes": [
                         {
                             "durationTicks": 480,
@@ -227,9 +225,10 @@
                             "velocity": 100
                         }
                     ],
-                    "startTick": 2880
+                    "startTick": 960
                 },
                 {
+                    "durationTicks": 4800,
                     "notes": [
                         {
                             "durationTicks": 480,
@@ -270,6 +269,7 @@
             "volume": 100,
             "blocks": [
                 {
+                    "durationTicks": 13440,
                     "notes": [
                         {
                             "durationTicks": 480,
@@ -366,5 +366,10 @@
                 "type": "percussive"
             }
         }
-    ]
+    ],
+    "player": {
+        "positionTick": 0,
+        "beatsPerMinute": 160,
+        "availableChannels": [2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15]
+    }
 }

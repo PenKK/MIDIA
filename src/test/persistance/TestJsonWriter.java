@@ -14,7 +14,7 @@ import model.Timeline;
 
 // Code adapted from src/test/persistance/JsonWriterTest
 //     at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-public class TestJsonWriter extends TestJson {
+public class TestJsonWriter {
 
     JsonWriter jsonWriter;
     JsonReader jsonReader;
@@ -65,7 +65,7 @@ public class TestJsonWriter extends TestJson {
 
             jsonReader = new JsonReader(path);
             Timeline timeline2 = jsonReader.read();
-            checkTimeline(timeline, timeline2);
+            TestUtil.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         } catch (InvalidMidiDataException e) {
@@ -89,7 +89,7 @@ public class TestJsonWriter extends TestJson {
 
             jsonReader = new JsonReader(path);
             Timeline timeline2 = jsonReader.read();
-            checkTimeline(timeline, timeline2);
+            TestUtil.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         } catch (InvalidMidiDataException e) {
@@ -113,7 +113,7 @@ public class TestJsonWriter extends TestJson {
 
             jsonReader = new JsonReader(path);
             Timeline timeline2 = jsonReader.read();
-            checkTimeline(timeline, timeline2);
+            TestUtil.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         } catch (InvalidMidiDataException e) {
@@ -128,7 +128,7 @@ public class TestJsonWriter extends TestJson {
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe", null);
             timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
-            addSampleSong(timeline);
+            TestUtil.addSampleSong(timeline);
             timeline.getPlayer().setBPM(160);
 
             jsonWriter.open();
@@ -137,7 +137,7 @@ public class TestJsonWriter extends TestJson {
 
             jsonReader = new JsonReader(path);
             Timeline timeline2 = jsonReader.read();
-            checkTimeline(timeline, timeline2);
+            TestUtil.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         } catch (InvalidMidiDataException e) {

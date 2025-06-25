@@ -12,6 +12,7 @@ import javax.swing.SpinnerNumberModel;
 
 import model.Block;
 import model.MidiTrack;
+import model.Player;
 import model.TimelineController;
 
 // A JDialog to get input for creating a new block in a specified track
@@ -19,6 +20,7 @@ public class BlockInputDialog extends InputDialog {
 
     private JComboBox<MidiTrack> midiTracksComboBox;
     private JSpinner startBeatSpinner;
+    private JSpinner durationBeatsSpinner;
     private JButton create;
 
     // EFFECTS: Creates a JDialog that prompts user to select a track and start beat for a new block
@@ -33,8 +35,11 @@ public class BlockInputDialog extends InputDialog {
         MidiTrack[] tracks = timelineController.getTimeline().getMidiTracksArray();
 
         midiTracksComboBox = new JComboBox<>(tracks);
-        SpinnerNumberModel spinnerModel = new SpinnerNumberModel(1.0, 1.0, Double.MAX_VALUE, 0.5);
-        startBeatSpinner = new JSpinner(spinnerModel);
+        SpinnerNumberModel startBeatSpinnerModel = new SpinnerNumberModel(1.0, 1.0, Double.MAX_VALUE, 0.5);
+        SpinnerNumberModel durationBeatsSpinnerModel = new SpinnerNumberModel(1.0, 0.0, Double.MAX_VALUE, 0.5);
+        
+        startBeatSpinner = new JSpinner(startBeatSpinnerModel);
+        durationBeatsSpinner = new JSpinner(durationBeatsSpinnerModel);
 
         create = new JButton("Create block");
         create.addActionListener(this);
@@ -43,6 +48,8 @@ public class BlockInputDialog extends InputDialog {
         this.add(midiTracksComboBox);
         this.add(new JLabel("Start beat: "));
         this.add(startBeatSpinner);
+        this.add(new JLabel("Duration (in beats): "));
+        this.add(durationBeatsSpinner);
         this.getRootPane().setDefaultButton(create);
         this.add(create);
     }
@@ -66,14 +73,17 @@ public class BlockInputDialog extends InputDialog {
     // EFFECTS: creates a new block in the selected midiTrack
     private void createBlock() {
         MidiTrack midiTrack = (MidiTrack) midiTracksComboBox.getSelectedItem();
+        Player p = timelineController.getTimeline().getPlayer();
 
         if (midiTrack == null) {
             return;
         }
 
-        double startTick = (double) startBeatSpinner.getValue() - 1;
-        long startBeat = timelineController.getTimeline().getPlayer().beatsToTicks(startTick);
-        midiTrack.addBlock(new Block(startBeat));
+        double startBeat = (double) startBeatSpinner.getValue() - 1;
+        double durationBeats = (double) durationBeatsSpinner.getValue();
+        long startTick = p.beatsToTicks(startBeat);
+        long durationTicks = p.beatsToTicks(durationBeats);
+        midiTrack.addBlock(new Block(startTick, durationTicks));
 
         timelineController.refreshTrackLayout();
     }

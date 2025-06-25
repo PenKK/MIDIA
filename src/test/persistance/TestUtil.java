@@ -14,34 +14,34 @@ import java.util.ArrayList;
 
 // Code adapted from src/test/persistance/JsonTest
 //     at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-public class TestJson {
-    protected void checkTimeline(Timeline timeline1, Timeline timeline2) {
+public class TestUtil {
+    public static void assertTimelineEquals(Timeline timeline1, Timeline timeline2) {
         assertEquals(timeline1.getProjectName(), timeline2.getProjectName());
         assertEquals(timeline1.getBeatDivision(), timeline2.getBeatDivision());
         assertEquals(timeline1.getBeatsPerMeasure(), timeline2.getBeatsPerMeasure());
         assertEquals(timeline1.getHorizontalScaleFactor(), timeline2.getHorizontalScaleFactor());
-        checkPlayers(timeline1.getPlayer(), timeline2.getPlayer());
+        assertPlayerEquals(timeline1.getPlayer(), timeline2.getPlayer());
 
-        checkMidiTracks(timeline1.getMidiTracks(), timeline2.getMidiTracks());
+        assertMidiTracksEquals(timeline1.getMidiTracks(), timeline2.getMidiTracks());
     }
 
-    protected void checkPlayers(Player p1, Player p2) {
+    public static void assertPlayerEquals(Player p1, Player p2) {
         assertEquals(p1.getBPM(), p2.getBPM());
         assertEquals(p1.getPositionTick(), p2.getPositionTick());
         assertEquals(p1.getAvailableChannels(), p2.getAvailableChannels());
     }
 
-    protected void checkMidiTracks(ArrayList<MidiTrack> midiTracks1, ArrayList<MidiTrack> midiTracks2) {
+    public static void assertMidiTracksEquals(ArrayList<MidiTrack> midiTracks1, ArrayList<MidiTrack> midiTracks2) {
         assertEquals(midiTracks1.size(), midiTracks2.size());
         for (int i = 0; i < midiTracks1.size(); i++) {
             MidiTrack mt1 = midiTracks1.get(i);
             MidiTrack mt2 = midiTracks2.get(i);
 
-            checkMidiTrack(mt1, mt2);
+            assertMidiTrackEquals(mt1, mt2);
         }
     }
 
-    protected void checkMidiTrack(MidiTrack midiTrack1, MidiTrack midiTrack2) {
+    public static void assertMidiTrackEquals(MidiTrack midiTrack1, MidiTrack midiTrack2) {
         assertEquals(midiTrack1.getChannel(), midiTrack2.getChannel());
         assertEquals(midiTrack1.getInstrument(), midiTrack2.getInstrument());
         assertEquals(midiTrack1.getVolume(), midiTrack2.getVolume());
@@ -51,12 +51,13 @@ public class TestJson {
         for (int i = 0; i < midiTrack1.getBlocks().size(); i++) {
             Block b1 = midiTrack1.getBlock(i);
             Block b2 = midiTrack2.getBlock(i);
-            checkBlock(b1, b2);
+            assertBlockEquals(b1, b2);
         }
     }
 
-    protected void checkBlock(Block block1, Block block2) {
+    public static void assertBlockEquals(Block block1, Block block2) {
         assertEquals(block1.getStartTick(), block2.getStartTick());
+        assertEquals(block1.getDurationTicks(), block2.getDurationTicks());
 
         assertEquals(block1.getNotes().size(), block2.getNotes().size());
         for (int i = 0; i < block1.getNotes().size(); i++) {
@@ -67,14 +68,14 @@ public class TestJson {
         }
     }
 
-    protected void checkNote(Note note1, Note note2) {
+    public static void checkNote(Note note1, Note note2) {
         assertEquals(note1.getPitch(), note2.getPitch());
         assertEquals(note1.getDurationTicks(), note2.getDurationTicks());
         assertEquals(note1.getStartTick(), note2.getStartTick());
         assertEquals(note1.getVelocity(), note2.getVelocity());
     }
 
-    protected void addSampleSong(Timeline timeline) {
+    public static void addSampleSong(Timeline timeline) {
         MidiTrack melody = timeline.createMidiTrack("synth pad", TonalInstrument.PAD_2);
         MidiTrack drums = timeline.createMidiTrack("bass drum", PercussiveInstrument.ACOUSTIC_BASS_DRUM);
         MidiTrack bass = timeline.createMidiTrack("bass", TonalInstrument.ELECTRIC_BASS_FRETLESS);
@@ -86,10 +87,10 @@ public class TestJson {
 
         final long beatTicks = timeline.getPlayer().beatsToTicks(1);
 
-        Block melodyBlock = new Block(0);
-        Block drumsBlock = new Block(0);
-        Block bassBlock = new Block(beatTicks * 3);
-        Block hiHatBlock = new Block(beatTicks * 4);
+        Block melodyBlock = new Block(0, beatTicks * 19);
+        Block drumsBlock = new Block(0, 20 * Player.PULSES_PER_QUARTER_NOTE);
+        Block bassBlock = new Block(beatTicks, (long) ((beatTicks * (double) 4.5) + (beatTicks / 2)));
+        Block hiHatBlock = new Block(beatTicks * 4, beatTicks * 14);
 
         melody.addBlock(melodyBlock);
         drums.addBlock(drumsBlock);

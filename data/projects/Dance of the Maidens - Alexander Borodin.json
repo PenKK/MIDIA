@@ -64,7 +64,8 @@
                             "velocity": 35
                         }
                     ],
-                    "startTick": 0
+                    "startTick": 0,
+                    "durationTicks": 17280
                 }
             ],
             "channel": 0,
@@ -200,7 +201,8 @@
                             "velocity": 50
                         }
                     ],
-                    "startTick": 0
+                    "startTick": 0,
+                    "durationTicks": 17280
                 }
             ],
             "channel": 1,
