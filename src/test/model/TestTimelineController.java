@@ -11,9 +11,9 @@ import javax.sound.midi.MidiUnavailableException;
 
 import org.junit.jupiter.api.*;
 
-import persistance.TestJson;
+import persistance.TestUtil;
 
-public class TestTimelineController extends TestJson {
+public class TestTimelineController extends TestUtil {
 
     private TimelineController tc;
 
@@ -45,14 +45,14 @@ public class TestTimelineController extends TestJson {
         tc.addObserver(testObserver);
         assertEquals(tc.getPropertyChangeSupport().getPropertyChangeListeners().length, 1);
 
-        tc.refresh();
+        tc.refreshTrackLayout();
         assertEquals(testObserver.getValue(), 1);
 
         tc.setInstance(new Timeline("joe", tc.getPropertyChangeSupport()));
         assertEquals(testObserver.getValue(), 2);
 
         tc.removeObserver(testObserver);
-        tc.refresh();
+        tc.refreshTrackLayout();
         assertEquals(testObserver.getValue(), 2);
     }
 

@@ -46,7 +46,8 @@
                             "velocity": 127
                         }
                     ],
-                    "startTick": 0
+                    "startTick": 0,
+                    "durationTicks": 18240
                 }
             ],
             "channel": 0,
@@ -182,7 +183,8 @@
                             "velocity": 127
                         }
                     ],
-                    "startTick": 0
+                    "startTick": 0,
+                    "durationTicks": 19200
                 }
             ],
             "channel": 9,
@@ -222,7 +224,8 @@
                             "velocity": 100
                         }
                     ],
-                    "startTick": 2880
+                    "startTick": 2880,
+                    "durationTicks": 4800
                 },
                 {
                     "notes": [
@@ -251,7 +254,8 @@
                             "velocity": 100
                         }
                     ],
-                    "startTick": 10560
+                    "startTick": 10560,
+                    "durationTicks": 4800
                 }
             ],
             "channel": 1,
@@ -351,7 +355,8 @@
                             "velocity": 76
                         }
                     ],
-                    "startTick": 3840
+                    "startTick": 3840,
+                    "durationTicks": 13440
                 }
             ],
             "channel": 9,

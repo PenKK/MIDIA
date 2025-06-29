@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
@@ -13,13 +14,15 @@ import org.json.JSONObject;
 import model.event.Event;
 import model.event.EventLog;
 import model.instrument.Instrument;
+import model.util.Copyable;
+import model.util.Pastable;
 import persistance.Writable;
 
 // A high level representation of a track, which is a single layer/instrument of the project.
 // For playback the MidiTrack will be converted to a javax.sound.midi.Track
 // See https://midi.org/expanded-midi-1-0-messages-list for midi message correspondence
 // See https://en.wikipedia.org/wiki/General_MIDI for more midi information
-public class MidiTrack implements Writable {
+public class MidiTrack implements Writable, Pastable {
 
     private static final int DEFAULT_VOLUME = 100;
 
@@ -209,5 +212,30 @@ public class MidiTrack implements Writable {
         }
 
         return blocksJson;
+    }
+
+    @Override
+    public void paste(List<Copyable> copiedItems, long position) {
+        System.out.println("pasted at tick " + position);
+
+        ArrayList<Block> blocksTemp = new ArrayList<>();
+        long minBlockStartTick = -1;
+
+        for (Copyable c : copiedItems) {
+            if (c.getClass().equals(Block.class)) {
+                Block block = ((Block) c).clone();
+                blocksTemp.add(block);
+                long startTick = block.getStartTick();
+
+                if (startTick < minBlockStartTick || minBlockStartTick == -1) {
+                    minBlockStartTick = startTick;
+                }
+            }
+        }
+
+        for (Block b : blocksTemp) {
+            b.setStartTick(b.getStartTick() - minBlockStartTick + position);
+            this.addBlock(b);
+        }
     }
 }

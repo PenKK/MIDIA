@@ -12,6 +12,8 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.json.JSONException;
+
 import model.Timeline;
 import model.TimelineController;
 import persistance.JsonReader;
@@ -86,6 +88,8 @@ public class FileMenu extends Menu {
             Timeline newTimeline = reader.read();
             newTimeline.setPropertyChangeSupport(timelineController.getPropertyChangeSupport());
             timelineController.setInstance(newTimeline);
+        } catch (JSONException e) {
+            System.out.printf("Invalid JSON data at path %s%n", path);
         } catch (IOException | MidiUnavailableException | InvalidPathException e) {
             System.out.println("Unable to load file");
         } catch (InvalidMidiDataException e) {

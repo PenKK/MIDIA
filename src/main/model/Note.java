@@ -2,12 +2,13 @@ package model;
 
 import org.json.JSONObject;
 
+import model.util.Copyable;
 import persistance.Writable;
 
 // A high level MIDI note abstraction.
 // On its own, this Note is just pure information, which will be converted
 // to a MIDIEvent object and applied to a Track object by the MidiTrack class (by the timeline).
-public class Note implements Writable {
+public class Note implements Writable, Copyable {
 
     private int pitch; // Notes in a percussive track do not utilize pitch
     private int velocity;

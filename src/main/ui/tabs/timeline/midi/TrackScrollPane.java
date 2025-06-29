@@ -9,16 +9,20 @@ import javax.swing.ScrollPaneConstants;
 
 import model.MidiTrack;
 import model.TimelineController;
+import model.util.DawClipboard;
 
 // JPanel that holds the interactable view of the timeline, rendered using graphics
 public class TrackScrollPane extends JScrollPane implements PropertyChangeListener {
 
     private TimelineController timelineController;
     private LineContainerPanel lineContainer;
+    private DawClipboard dawClipboard;
 
     // EFFECTS: initializes the timeline 
-    public TrackScrollPane(TimelineController timelineController) {
+    public TrackScrollPane(TimelineController timelineController, DawClipboard dawClipboard) {
         this.timelineController = timelineController;
+        this.dawClipboard = dawClipboard;
+        
         lineContainer = new LineContainerPanel(timelineController);
 
         this.setBorder(null);
@@ -38,7 +42,7 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
     private void updateMidiTrackPanels() {
         clearTrackPanels();
         for (MidiTrack track : timelineController.getTimeline().getMidiTracks()) {
-            TrackPanel currentPanel = new TrackPanel(track, timelineController);
+            TrackPanel currentPanel = new TrackPanel(track, timelineController, dawClipboard);
             lineContainer.add(currentPanel);
         }
 
@@ -71,7 +75,6 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
 
     // EFFECTS: returns width of the scrollPanes container
     public int getContainerWidth() {
-        updateMidiTrackPanels(); // forces width update according to render scale, better solution one day maybe
         return lineContainer.getPreferredSize().width;
     }
 }

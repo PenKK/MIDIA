@@ -1,4 +1,2 @@
 *.class
-data/projects/*
-!/data/projects/Dance of the Maidens - Alexander Borodin.json
-!/data/projects/Spooky Beat.json
+data/projects/autosave

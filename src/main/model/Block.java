@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -8,28 +9,37 @@ import org.json.JSONObject;
 import model.event.Event;
 import model.event.EventLog;
 
+import model.util.Copyable;
+import model.util.Pastable;
 import persistance.Writable;
 
 // A block exists in a track and is a group of notes.
 // The block can be moved on the timeline by changing the startTick.
-public class Block implements Writable {
+public class Block implements Writable, Copyable, Pastable {
 
     private ArrayList<Note> notes;
     private long startTick;
+    private long durationTicks;
 
     // REQUIRES: startTick >= 0
     // EFFECTS: Creates a block with no notes inside of it with a startTick
-    public Block(long startTick) {
+    public Block(long startTick, long durationTicks) {
         this.notes = new ArrayList<>();
         this.startTick = startTick;
+        this.durationTicks = durationTicks;
     }
     
     // MODIFIES: this
     // EFFECTS: Adds the note to the list of notes in this block and adjusts lengthTick if neccessary, 
     //          returns created notes index
     public int addNote(Note note) {
-        notes.add(note);
+        if (note.getStartTick() + note.getDurationTicks() > durationTicks) {
+            Event e = new Event(String.format("Unable to add note (out of bounds): %s to Block: %s", note, info()));
+            EventLog.getInstance().logEvent(e);
+            return -1;
+        }
 
+        notes.add(note);
         Event e = new Event(String.format("Added note: %s to Block: %s", note, info()));
         EventLog.getInstance().logEvent(e);
 
@@ -79,7 +89,7 @@ public class Block implements Writable {
     // EFFECTS: Returns a clone of this block with its own unique memory address
     @Override
     public Block clone() {
-        Block cloneBlock = new Block(startTick);
+        Block cloneBlock = new Block(startTick, durationTicks);
         for (Note note : notes) {
             cloneBlock.addNote(note.clone());
         }
@@ -91,6 +101,7 @@ public class Block implements Writable {
     public JSONObject toJson() {
         JSONObject blockJson = new JSONObject();
 
+        blockJson.put("durationTicks", durationTicks);
         blockJson.put("startTick", startTick);
         blockJson.put("notes", notesToJson());
         
@@ -108,26 +119,31 @@ public class Block implements Writable {
         return notesJson;
     }
 
-    // EFFECTS: returns the length of ticks that the block has an active note
     public long getDurationTicks() {
-        long duration = 0;
-        for (Note note : notes) {
-            long noteEnd = note.getDurationTicks() + note.getStartTick();
-            if (noteEnd > duration) {
-                duration = noteEnd;
-            }
-        }
-        return duration;
+        return durationTicks;
     }
 
     // EFFECTS: returns a string with general information about the block
     public String info() {
-        return String.format("Start tick: %d, current note count: %d", startTick, notes.size());
+        return String.format("Start tick: %d, duration: %d, current note count: %d", startTick, durationTicks, notes.size());
     }
 
     // EFFECTS: returns a string with start tick and note count
     @Override
     public String toString() {
         return String.format("S: %d, N: %d", startTick, notes.size());
+    }
+
+    @Override
+    public void paste(List<Copyable> copied, long position) {
+
+        for (Copyable c : copied) {
+            if (!c.getClass().equals(Note.class)) { // Only notes may be pasted into a block
+                continue;
+            }
+
+            this.addNote((Note) c);
+        }
+        
     }
 }

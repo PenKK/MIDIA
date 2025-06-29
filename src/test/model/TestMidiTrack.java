@@ -74,9 +74,9 @@ public class TestMidiTrack {
 
     @Test
     void testAddBlock() {
-        Block b1 = new Block(0);
-        Block b2 = new Block(30);
-        Block b3 = new Block(50);
+        Block b1 = new Block(0, 1000);
+        Block b2 = new Block(30, 1000);
+        Block b3 = new Block(50, 1000);
         ArrayList<Block> expectedBlocks = new ArrayList<>();
 
         assertEquals(0, midiTrack.addBlock(b1));
@@ -97,9 +97,9 @@ public class TestMidiTrack {
 
     @Test
     void testRemoveBlock() {
-        Block b1 = new Block(0);
-        Block b2 = new Block(30);
-        Block b3 = new Block(50);
+        Block b1 = new Block(0, 1000);
+        Block b2 = new Block(30, 1000);
+        Block b3 = new Block(50, 1000);
         ArrayList<Block> expectedBlocks = new ArrayList<>();
 
         midiTrack.addBlock(b1);
@@ -126,11 +126,11 @@ public class TestMidiTrack {
 
     @Test
     public void testAddRemoveBlock() {
-        Block b1 = new Block(0);
-        Block b2 = new Block(30);
-        Block b3 = new Block(50);
-        Block b4 = new Block(70);
-        Block b5 = new Block(100);
+        Block b1 = new Block(0, 1000);
+        Block b2 = new Block(30, 1000);
+        Block b3 = new Block(50, 1000);
+        Block b4 = new Block(70, 1000);
+        Block b5 = new Block(100, 1000);
         ArrayList<Block> expectedBlocks = new ArrayList<>();
 
         midiTrack.addBlock(b1);
@@ -162,7 +162,7 @@ public class TestMidiTrack {
         assertEquals(expectedBlocks, midiTrack.getBlocks());
         assertEquals(3, midiTrack.getBlocks().size());
 
-        midiTrack.addBlock(new Block(1000));
+        midiTrack.addBlock(new Block(1000, 1000));
         assertEquals(4, midiTrack.getBlocks().size());
     }
 
@@ -212,8 +212,8 @@ public class TestMidiTrack {
         Sequence sequence = new Sequence(Sequence.PPQ, 960);
         Track track = sequence.createTrack();
 
-        Block b1 = new Block(0);
-        Block b2 = new Block(5);
+        Block b1 = new Block(0, 1000);
+        Block b2 = new Block(5, 1000);
 
         Note n1 = new Note(60, 60, 0, 5);
         Note n2 = new Note(56, 50, 4, 9);
@@ -297,7 +297,7 @@ public class TestMidiTrack {
         sequence = new Sequence(Sequence.PPQ, 960);
         track = sequence.createTrack();
 
-        Block block = new Block(0);
+        Block block = new Block(0, 1000);
         Note note = new Note(0, 100, 0, 960);
 
         block.addNote(note);
@@ -327,7 +327,7 @@ public class TestMidiTrack {
     @Test
     void testMidiInvalidDataException() throws InvalidMidiDataException {
         Sequence sequence = new Sequence(Sequence.PPQ, 960);
-        Block b = new Block(0);
+        Block b = new Block(0, 1000);
         b.addNote(new Note(10000, 54346462, -345435, -43));
         midiTrack.addBlock(b);
 
@@ -342,7 +342,7 @@ public class TestMidiTrack {
         b.removeNote(0); // Will now not throw
         midiTrack.applyToTrack(t); 
 
-        Block blockWithInvalidNote = new Block(0);
+        Block blockWithInvalidNote = new Block(0, 1000);
         midiTrack.addBlock(blockWithInvalidNote);
         blockWithInvalidNote.addNote(new Note(128, 0, 0, 0)); // pitch is [0, 127]
 

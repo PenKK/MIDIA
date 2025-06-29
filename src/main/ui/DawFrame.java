@@ -18,6 +18,7 @@ import model.Timeline;
 import model.TimelineController;
 import model.event.Event;
 import model.event.EventLog;
+import model.util.DawClipboard;
 import persistance.JsonWriter;
 import ui.menubar.MenuBar;
 import ui.menubar.menus.FileMenu;
@@ -30,13 +31,16 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
     private TabbedPane tabbedPane;
     private MediaControlPanel mediaControlPanel;
     private TimelineController timelineController;
+    private DawClipboard dawClipboard;
 
     // EFFECTS: Creates the frame for the application and initializes the tabs and menu bar
     DawFrame() throws MidiUnavailableException, IOException, InvalidMidiDataException {
         timelineController = new TimelineController();
-        tabbedPane = new TabbedPane(timelineController);
         menuBar = new MenuBar(timelineController);
         mediaControlPanel = new MediaControlPanel(timelineController);
+        dawClipboard = new DawClipboard();
+        tabbedPane = new TabbedPane(timelineController, dawClipboard);
+        
         timelineController.addObserver(this);
 
         this.setLayout(new BorderLayout());

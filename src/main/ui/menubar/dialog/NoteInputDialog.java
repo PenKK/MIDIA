@@ -158,7 +158,7 @@ public class NoteInputDialog extends InputDialog {
 
         Note note = new Note(p, v, startTick, durationTicks);
         selectedBlock.addNote(note);
-        timelineController.refresh();
+        timelineController.refreshTrackLayout();
     }
 
     @Override

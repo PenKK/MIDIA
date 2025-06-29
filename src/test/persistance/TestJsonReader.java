@@ -14,7 +14,7 @@ import model.Timeline;
 
 // Code adapted from src/test/persistance/JsonReaderTest
 //     at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-public class TestJsonReader extends TestJson {
+public class TestJsonReader {
 
     JsonReader reader;
 
@@ -36,7 +36,7 @@ public class TestJsonReader extends TestJson {
         reader = new JsonReader("./data/test/testReaderNewTimeline.json");
         try {
             Timeline timeline = reader.read();
-            checkTimeline(timeline, new Timeline("New project", null));
+            TestUtil.assertTimelineEquals(timeline, new Timeline("New project", null));
         } catch (IOException e) {
             fail("Path should exist and be accessible");
         } catch (InvalidMidiDataException e) {
@@ -53,8 +53,8 @@ public class TestJsonReader extends TestJson {
             timeline2.setPropertyChangeSupport(new PropertyChangeSupport(timeline2));
             timeline2.getPlayer().setBPM(160);
 
-            addSampleSong(timeline2);
-            checkTimeline(timeline, timeline2);
+            TestUtil.addSampleSong(timeline2);
+            TestUtil.assertTimelineEquals(timeline, timeline2);
         } catch (InvalidMidiDataException e) {
             fail("InvalidMidiDataException should not be thrown");
         } catch (IOException e) {
