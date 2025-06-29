@@ -2,7 +2,6 @@ package ui.tabs.timeline.midi.popup;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JMenuItem;
@@ -15,14 +14,12 @@ import model.util.DawClipboard;
 public class BlockPopupMenu extends JPopupMenu implements ActionListener {
 
     private Block block;
-    private TimelineController timelineController;
     private DawClipboard dawClipboard;
 
     private JMenuItem copyMenuItem;
 
     public BlockPopupMenu(Block block, TimelineController timelineController, DawClipboard dawClipboard) {
         this.block = block;
-        this.timelineController = timelineController;
         this.dawClipboard = dawClipboard;
 
         copyMenuItem = new JMenuItem("Copy");
