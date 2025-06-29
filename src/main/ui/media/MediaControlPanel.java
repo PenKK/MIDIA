@@ -1,5 +1,6 @@
-package ui;
+package ui.media;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
@@ -20,6 +21,7 @@ import javax.swing.JSlider;
 import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.MouseInputAdapter;
 
 import model.TimelineController;
 
@@ -35,7 +37,6 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private ImageIcon playImage = null;
     private ImageIcon pauseImage = null;
 
-    
     private Timer playbackUpdateTimer;
 
     private JPanel leftAlignPanel;
@@ -44,6 +45,8 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private JLabel timeLabel;
     private JButton playButton;
     private JSlider scaleSlider;
+    private JLabel bpmDisplay;
+
 
     // EFFECTS: creates a MediaControlPanel with timers and initializes image icons and components
     public MediaControlPanel(TimelineController timelineController) {
@@ -76,6 +79,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         playButton.addActionListener(this);
 
         createTimeLabel();
+        createBpmLabel();
 
         try {
             playImage = getImageIcon("/resources/images/play.png");
@@ -86,9 +90,25 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
 
         playButton.setIcon(playImage);
         leftAlignPanel.add(scaleSlider);
+        rightAlignPanel.add(bpmDisplay);
         rightAlignPanel.add(playButton);
         rightAlignPanel.add(timeLabel);
     }
+
+    private void createBpmLabel() {
+        float bpm = timelineController.getTimeline().getPlayer().getBPM();
+        ImageIcon quaverIcon = getImageIcon("/resources/images/quaver.png");
+
+        bpmDisplay = new JLabel(String.format("%.2f", bpm), quaverIcon, JLabel.RIGHT);
+        bpmDisplay.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
+        bpmDisplay.putClientProperty("FlatLaf.style", "font: bold 14 Monospaced; background:rgb(77, 77, 77); arc: 6;");
+        bpmDisplay.setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
+
+        MouseInputAdapter bpmMouseAdapapter = new BpmMouseInputAdapter(timelineController, bpmDisplay);
+        bpmDisplay.addMouseListener(bpmMouseAdapapter);
+        bpmDisplay.addMouseMotionListener(bpmMouseAdapapter);
+    }
+
 
     private void createTimeLabel() {
         timeLabel = new JLabel("00:00.00");
@@ -115,7 +135,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     // EFFECTS: sets the render scale sliders value to that of the timeline render scale
     private void updateScaleSliderValue() {
         int value = (int) (100 * timelineController.getTimeline().getHorizontalScaleFactor()
-                           / MAX_HORIZONTAL_SCALE);
+                / MAX_HORIZONTAL_SCALE);
         scaleSlider.setValue(value);
     }
 
@@ -194,12 +214,21 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         }
     }
 
+    private void updateBpmValue() {
+        bpmDisplay.setText(String.format("%6.2f", timelineController.getTimeline().getPlayer().getBPM()));
+    }
+
+    private void updateMediaValues() {
+        updateScaleSliderValue();
+        updateBpmValue();
+    }
+
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
         switch (propertyName) {
             case "timelineReplaced":
-                updateScaleSliderValue();
+                updateMediaValues();
                 reset();
                 break;
             case "playbackEnded":

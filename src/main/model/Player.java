@@ -164,6 +164,15 @@ public class Player implements Writable {
         float oldBpm = bpm;
         this.bpm = bpm;
 
+        if (isPlaying()) {
+            pause();
+            try {
+                play();
+            } catch (InvalidMidiDataException e) {
+                throw new RuntimeException("InvalidMidiDataException whilst resuming in BPM change", e);
+            }
+        }
+
         timeline.getPropertyChangeSupport().firePropertyChange("bpm", oldBpm, bpm);
     }
 

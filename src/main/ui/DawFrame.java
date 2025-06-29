@@ -20,6 +20,7 @@ import model.event.Event;
 import model.event.EventLog;
 import model.util.DawClipboard;
 import persistance.JsonWriter;
+import ui.media.MediaControlPanel;
 import ui.menubar.MenuBar;
 import ui.menubar.menus.FileMenu;
 import ui.tabs.TabbedPane;
