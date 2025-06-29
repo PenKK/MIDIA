@@ -34,5 +34,4 @@ public class BlockPopupMenu extends JPopupMenu implements ActionListener {
             dawClipboard.copy(Arrays.asList(block));
         }
     }
-
 }
