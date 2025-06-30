@@ -165,12 +165,7 @@ public class Player implements Writable {
         this.bpm = bpm;
 
         if (isPlaying()) {
-            pause();
-            try {
-                play();
-            } catch (InvalidMidiDataException e) {
-                throw new RuntimeException("InvalidMidiDataException whilst resuming in BPM change", e);
-            }
+            sequencer.setTempoInBPM(bpm);
         }
 
         timeline.getPropertyChangeSupport().firePropertyChange("bpm", oldBpm, bpm);
