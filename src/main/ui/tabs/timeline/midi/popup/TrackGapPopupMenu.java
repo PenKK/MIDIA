@@ -7,7 +7,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import model.TimelineController;
-import model.util.DawClipboard;
+import model.editing.DawClipboard;
 import ui.tabs.timeline.midi.TrackRenderPanel;
 
 public class TrackGapPopupMenu extends JPopupMenu implements ActionListener {

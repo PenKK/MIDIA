@@ -15,7 +15,7 @@ import model.Note;
 import model.Player;
 import model.Timeline;
 import model.TimelineController;
-import model.util.DawClipboard;
+import model.editing.DawClipboard;
 import ui.tabs.timeline.midi.popup.BlockPopupMenu;
 import ui.tabs.timeline.midi.popup.TrackGapPopupMenu;
 

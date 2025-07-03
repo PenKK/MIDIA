@@ -11,7 +11,7 @@ import javax.swing.border.MatteBorder;
 
 import model.MidiTrack;
 import model.TimelineController;
-import model.util.DawClipboard;
+import model.editing.DawClipboard;
 
 // Represents a single MidiTrack in the TinelinePanel UI.
 // Contains two sub Panels, MidiTrackLabelPanel and MidiTrackRenderPanel

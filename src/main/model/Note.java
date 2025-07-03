@@ -2,7 +2,7 @@ package model;
 
 import org.json.JSONObject;
 
-import model.util.Copyable;
+import model.editing.Copyable;
 import persistance.Writable;
 
 // A high level MIDI note abstraction.

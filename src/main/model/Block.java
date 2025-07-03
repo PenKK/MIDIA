@@ -6,11 +6,10 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.editing.Copyable;
+import model.editing.Pastable;
 import model.event.Event;
 import model.event.EventLog;
-
-import model.util.Copyable;
-import model.util.Pastable;
 import persistance.Writable;
 
 // A block exists in a track and is a group of notes.

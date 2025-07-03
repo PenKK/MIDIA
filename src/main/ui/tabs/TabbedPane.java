@@ -3,7 +3,7 @@ package ui.tabs;
 import javax.swing.JTabbedPane;
 
 import model.TimelineController;
-import model.util.DawClipboard;
+import model.editing.DawClipboard;
 import ui.tabs.piano.roll.PianoRollViewPanel;
 import ui.tabs.timeline.TimelineViewPanel;
 

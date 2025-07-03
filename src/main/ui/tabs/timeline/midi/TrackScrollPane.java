@@ -9,7 +9,7 @@ import javax.swing.ScrollPaneConstants;
 
 import model.MidiTrack;
 import model.TimelineController;
-import model.util.DawClipboard;
+import model.editing.DawClipboard;
 
 // JPanel that holds the interactable view of the timeline, rendered using graphics
 public class TrackScrollPane extends JScrollPane implements PropertyChangeListener {

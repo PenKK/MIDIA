@@ -1,4 +1,4 @@
-package model.util;
+package model.editing;
 
 import java.util.ArrayList;
 import java.util.List;

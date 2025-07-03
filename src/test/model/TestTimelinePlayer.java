@@ -459,4 +459,19 @@ public class TestTimelinePlayer extends TestUtil {
         timeline.setProjectName("cooler song");
         assertEquals(timeline.getProjectName(), "cooler song");
     }
+
+    @Test
+    void testTickSnapping() {
+        assertEquals(timeline.snapTickLower(959), 720);
+        assertEquals(timeline.snapTickLower(960), 960);
+        assertEquals(timeline.snapTickLower(961), 960);
+        assertEquals(timeline.snapTickLower(960 + 960 / 4 - 1), 960);
+        assertEquals(timeline.snapTickLower(960 + 960 / 4 - 0), 1200);
+
+        assertEquals(timeline.snapTickNearest(959), 960);
+        assertEquals(timeline.snapTickNearest(960), 960);
+        assertEquals(timeline.snapTickNearest(961), 960);
+        assertEquals(timeline.snapTickNearest(960 + 960 / 8 - 1), 960);
+        assertEquals(timeline.snapTickNearest(960 + 960 / 8 - 0), 1200);
+    }
 }

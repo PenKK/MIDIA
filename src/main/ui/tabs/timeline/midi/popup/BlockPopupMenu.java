@@ -9,7 +9,7 @@ import javax.swing.JPopupMenu;
 
 import model.Block;
 import model.TimelineController;
-import model.util.DawClipboard;
+import model.editing.DawClipboard;
 
 public class BlockPopupMenu extends JPopupMenu implements ActionListener {
 

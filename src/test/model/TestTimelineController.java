@@ -60,6 +60,8 @@ public class TestTimelineController extends TestUtil {
     void testPlayback() throws InterruptedException {
         tc.playTimeline();
         tc.pauseTimeline();
+        tc.playTimeline();
+        Thread.sleep(100);
         addSampleSong(tc.getTimeline());
         assertFalse(tc.isPlaying());
         tc.playTimeline();
@@ -71,5 +73,34 @@ public class TestTimelineController extends TestUtil {
         assertFalse(tc.isPlaying());
         tc.playTimeline();
         assertTrue(tc.isPlaying());
+    }
+
+    @Test
+    void testRulerDrag() {
+        assertFalse(tc.isDraggingRuler());
+        tc.startRulerDrag();
+        assertTrue(tc.isDraggingRuler());
+        tc.stopRulerDrag();
+        assertFalse(tc.isDraggingRuler());
+    }
+
+    @Test
+    void testSetIntanceDuringPlayback() throws InterruptedException {
+        addSampleSong(tc.getTimeline());
+        assertFalse(tc.getTimeline().getPlayer().isPlaying());
+        tc.playTimeline();
+        assertTrue(tc.getTimeline().getPlayer().isPlaying());
+        tc.setInstance(new Timeline("new", tc.getPropertyChangeSupport()));
+        assertFalse(tc.getTimeline().getPlayer().isPlaying());
+    }
+
+    @Test
+    void testSetIntanceTimelineNull() throws InterruptedException {
+        try {
+            tc.setInstance(null);
+            fail();
+        } catch (NullPointerException e) {
+            // pass
+        }
     }
 }

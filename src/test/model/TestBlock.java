@@ -8,7 +8,8 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import model.util.Copyable;
+import model.editing.Copyable;
+import model.editing.DawClipboard;
 import persistance.TestUtil;
 
 public class TestBlock {
@@ -182,21 +183,26 @@ public class TestBlock {
     @Test
     void testPaste() {
         Note n = new Note(0, 0, 0, 0);
+        DawClipboard dawClipboard = new DawClipboard();
+        assertTrue(dawClipboard.isEmpty());
+        dawClipboard.copy(Arrays.asList(n));
+        assertFalse(dawClipboard.isEmpty());
 
         assertEquals(block.getNotes().size(), 0);
-        block.paste(Arrays.asList(n.clone()), 0);
+        block.paste(dawClipboard.getContents(), 0);
         assertEquals(block.getNotes().size(), 1);
 
         n.setPitch(100);
-
         assertEquals(block.getNotes().get(0).getPitch(), 0);
     }
 
     @Test
     void testOddPaste() {
-        Block copyBlock = block.clone();
-        Copyable c = new Block(0, 120);
-        block.paste(Arrays.asList(c), 0);
-        TestUtil.assertBlockEquals(block, copyBlock);
+        DawClipboard dawClipboard = new DawClipboard();
+        dawClipboard.copy(Arrays.asList(block));
+
+        assertEquals(block.getNotes().size(), 0);
+        block.paste(dawClipboard.getContents(), 0);
+        assertEquals(block.getNotes().size(), 0);
     }
 }

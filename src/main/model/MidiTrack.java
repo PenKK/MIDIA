@@ -11,11 +11,11 @@ import javax.sound.midi.Track;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import model.editing.Copyable;
+import model.editing.Pastable;
 import model.event.Event;
 import model.event.EventLog;
 import model.instrument.Instrument;
-import model.util.Copyable;
-import model.util.Pastable;
 import persistance.Writable;
 
 // A high level representation of a track, which is a single layer/instrument of the project.
@@ -216,15 +216,13 @@ public class MidiTrack implements Writable, Pastable {
 
     @Override
     public void paste(List<Copyable> copiedItems, long position) {
-        System.out.println("pasted at tick " + position);
-
-        ArrayList<Block> blocksTemp = new ArrayList<>();
+        ArrayList<Block> copiedBlocks = new ArrayList<>();
         long minBlockStartTick = -1;
 
         for (Copyable c : copiedItems) {
             if (c.getClass().equals(Block.class)) {
                 Block block = ((Block) c).clone();
-                blocksTemp.add(block);
+                copiedBlocks.add(block);
                 long startTick = block.getStartTick();
 
                 if (startTick < minBlockStartTick || minBlockStartTick == -1) {
@@ -233,7 +231,7 @@ public class MidiTrack implements Writable, Pastable {
             }
         }
 
-        for (Block b : blocksTemp) {
+        for (Block b : copiedBlocks) {
             b.setStartTick(b.getStartTick() - minBlockStartTick + position);
             this.addBlock(b);
         }

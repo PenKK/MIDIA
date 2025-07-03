@@ -1,4 +1,4 @@
-package model.util;
+package model.editing;
 
 public interface Selectable {
 

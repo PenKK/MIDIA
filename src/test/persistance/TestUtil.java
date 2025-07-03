@@ -64,11 +64,11 @@ public class TestUtil {
             Note n1 = block1.getNotes().get(i);
             Note n2 = block2.getNotes().get(i);
 
-            checkNote(n1, n2);
+            assertNoteEquals(n1, n2);
         }
     }
 
-    public static void checkNote(Note note1, Note note2) {
+    public static void assertNoteEquals(Note note1, Note note2) {
         assertEquals(note1.getPitch(), note2.getPitch());
         assertEquals(note1.getDurationTicks(), note2.getDurationTicks());
         assertEquals(note1.getStartTick(), note2.getStartTick());

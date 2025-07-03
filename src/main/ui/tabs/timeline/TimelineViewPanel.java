@@ -8,7 +8,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import model.TimelineController;
-import model.util.DawClipboard;
+import model.editing.DawClipboard;
 import ui.ruler.RulerScrollPane;
 import ui.tabs.timeline.midi.TrackPanel;
 import ui.tabs.timeline.midi.TrackScrollPane;

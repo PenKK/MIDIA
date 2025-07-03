@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
@@ -16,8 +17,10 @@ import javax.sound.midi.Track;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import model.editing.DawClipboard;
 import model.instrument.Instrument;
 import model.instrument.TonalInstrument;
+import persistance.TestUtil;
 import model.instrument.PercussiveInstrument;
 
 // Much of testing is done according to https://midi.org/spec-detail
@@ -41,8 +44,8 @@ public class TestMidiTrack {
         assertEquals(midiTrack.getName(), "Piano Melody");
         assertEquals(midiTrack.getChannel(), 0);
         assertEquals(midiTrack.toString(), "Piano Melody");
-        assertEquals(midiTrack.info(), 
-                    "name: Piano Melody, channel: 0, instrument: Acoustic Grand Piano, block count: 0");
+        assertEquals(midiTrack.info(),
+                "name: Piano Melody, channel: 0, instrument: Acoustic Grand Piano, block count: 0");
 
         midiTrack = new MidiTrack("Percussive drums", PercussiveInstrument.ACOUSTIC_BASS_DRUM, 9);
         assertFalse(midiTrack.isMuted());
@@ -233,13 +236,13 @@ public class TestMidiTrack {
 
         ArrayList<MidiEvent> expectedMidiEvents = new ArrayList<>();
 
-        MidiEvent n1on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
+        MidiEvent n1on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
         MidiEvent n1off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 0), 5);
-        MidiEvent n2on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 56, 50), 4);
+        MidiEvent n2on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 56, 50), 4);
         MidiEvent n2off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 56, 0), 13);
-        MidiEvent n3on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 65, 90), 14);
+        MidiEvent n3on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 65, 90), 14);
         MidiEvent n3off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 65, 0), 31);
-        MidiEvent n4on  = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 64, 40), 35);
+        MidiEvent n4on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 64, 40), 35);
         MidiEvent n4off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 64, 0), 45);
 
         MidiEvent programChangeEvent = new MidiEvent(new ShortMessage(ShortMessage.PROGRAM_CHANGE,
@@ -271,7 +274,7 @@ public class TestMidiTrack {
             assertEquals(realEventData.getStatus(), expectedEventData.getStatus());
             assertEquals(realEventData.getMessage()[0], expectedEventData.getMessage()[0]);
             assertEquals(realEventData.getMessage()[1], expectedEventData.getMessage()[1]);
-            if ((realEventData.getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) { 
+            if ((realEventData.getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) {
                 // The last byte of program change events is unused, and can be random/unpredictable
                 assertEquals(realEventData.getMessage()[2], expectedEventData.getMessage()[2]);
             }
@@ -340,7 +343,7 @@ public class TestMidiTrack {
         }
 
         b.removeNote(0); // Will now not throw
-        midiTrack.applyToTrack(t); 
+        midiTrack.applyToTrack(t);
 
         Block blockWithInvalidNote = new Block(0, 1000);
         midiTrack.addBlock(blockWithInvalidNote);
@@ -352,5 +355,65 @@ public class TestMidiTrack {
         } catch (RuntimeException e) {
             // success
         }
+    }
+
+    @Test
+    public void testPaste() {
+        Block b = new Block(1000, 500);
+        Note n = new Note(1, 0, 0, 500);
+        Block b2 = new Block(2000, 1000);
+        Note n2 = new Note(2, 0, 0, 500);
+
+        b.addNote(n);
+        b2.addNote(n2);
+
+        DawClipboard dawClipboard = new DawClipboard();
+        dawClipboard.copy(Arrays.asList(b, b2));
+
+        midiTrack.paste(dawClipboard.getContents(), 2000);
+
+        assertEquals(midiTrack.getBlocks().size(), 2);
+
+        Block block = midiTrack.getBlock(0);
+        Block block2 = midiTrack.getBlock(1);
+
+        assertEquals(block.getDurationTicks(), 500);
+        assertEquals(block2.getDurationTicks(), 1000);
+        assertEquals(block.getStartTick(), 2000);
+        assertEquals(block2.getStartTick(), 3000);
+        assertEquals(block.getNotes().size(), 1);
+        assertEquals(block2.getNotes().size(), 1);
+        TestUtil.assertNoteEquals(block.getNotes().get(0), n);
+        TestUtil.assertNoteEquals(block2.getNotes().get(0), n2);
+    }
+
+        @Test
+    public void testPasteReverse() {
+        Block b = new Block(1000, 500);
+        Note n = new Note(1, 0, 0, 500);
+        Block b2 = new Block(2000, 1000);
+        Note n2 = new Note(2, 0, 0, 500);
+
+        b.addNote(n);
+        b2.addNote(n2);
+
+        DawClipboard dawClipboard = new DawClipboard();
+        dawClipboard.copy(Arrays.asList(b2, n, b, n2));
+
+        midiTrack.paste(dawClipboard.getContents(), 2000);
+
+        assertEquals(midiTrack.getBlocks().size(), 2);
+
+        Block block = midiTrack.getBlock(1);
+        Block block2 = midiTrack.getBlock(0);
+
+        assertEquals(block.getDurationTicks(), 500);
+        assertEquals(block2.getDurationTicks(), 1000);
+        assertEquals(block.getStartTick(), 2000);
+        assertEquals(block2.getStartTick(), 3000);
+        assertEquals(block.getNotes().size(), 1);
+        assertEquals(block2.getNotes().size(), 1);
+        TestUtil.assertNoteEquals(block.getNotes().get(0), n);
+        TestUtil.assertNoteEquals(block2.getNotes().get(0), n2);
     }
 }
