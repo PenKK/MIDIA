@@ -8,9 +8,7 @@ import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import model.editing.Copyable;
 import model.editing.DawClipboard;
-import persistance.TestUtil;
 
 public class TestBlock {
     Block block;
