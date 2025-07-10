@@ -1,4 +1,4 @@
-# A DAW (Digital Audio Workstation)
+# MIDIA, a MIDI DAW (Digital Audio Workstation)
 
 ***Why a DAW?***
 - I have made games before, but I wanted to make an actual piece of software that serves a specific purpose. 
