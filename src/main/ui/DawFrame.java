@@ -78,7 +78,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
     // MODIFIES: this
     // EFFECTS: updates the title of the JFrame to timeline instance name
     private void updateTitle() {
-        String newTitle = timelineController.getTimeline().getProjectName().concat(" - Digital Audio Workstation");
+        String newTitle = timelineController.getTimeline().getProjectName().concat(" - MIDIA");
         this.setTitle(newTitle);
     }
 

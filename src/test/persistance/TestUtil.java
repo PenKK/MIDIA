@@ -124,4 +124,16 @@ public class TestUtil {
         bassBlock2.setStartTick(beatTicks * 11);
         bass.addBlock(bassBlock2);
     }
+
+    
+    public static void checkNotesEqual(ArrayList<Note> l1, ArrayList<Note> l2) {
+        assertEquals(l1.size(), l2.size());
+        for (int i = 0; i < l1.size(); i++) {
+            assertEquals(l1.get(i).getPitch(), l2.get(i).getPitch());
+            assertEquals(l1.get(i).getStartTick(), l2.get(i).getStartTick());
+            assertEquals(l1.get(i).getDurationTicks(), l2.get(i).getDurationTicks());
+            assertEquals(l1.get(i).getVelocity(), l2.get(i).getVelocity());
+        }
+    }
+
 }

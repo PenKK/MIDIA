@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import model.editing.DawClipboard;
+import persistance.TestUtil;
 
 public class TestBlock {
     Block block;
@@ -135,7 +136,7 @@ public class TestBlock {
         expectedNotes.add(new Note(65, 90, 9 + 10, 17));
         expectedNotes.add(new Note(56, 50, 4 + 10, 9));
 
-        checkNotesEqual(expectedNotes, block.getNotesTimeline());
+        TestUtil.checkNotesEqual(expectedNotes, block.getNotesTimeline());
 
         expectedNotes.clear();
 
@@ -144,7 +145,7 @@ public class TestBlock {
         expectedNotes.add(new Note(65, 90, 9 + 4, 17));
         expectedNotes.add(new Note(56, 50, 4 + 4, 9));
 
-        checkNotesEqual(expectedNotes, block.getNotesTimeline());
+        TestUtil.checkNotesEqual(expectedNotes, block.getNotesTimeline());
 
         block.setStartTick(0);
         expectedNotes.clear();
@@ -152,17 +153,7 @@ public class TestBlock {
         expectedNotes.add(new Note(60, 60, 0 + 0, 5));
         expectedNotes.add(new Note(65, 90, 9 + 0, 17));
         expectedNotes.add(new Note(56, 50, 4 + 0, 9));
-        checkNotesEqual(expectedNotes, block.getNotesTimeline());
-    }
-
-    private void checkNotesEqual(ArrayList<Note> n1, ArrayList<Note> n2) {
-        assertEquals(n1.size(), n2.size());
-        for (int i = 0; i < n1.size(); i++) {
-            assertEquals(n1.get(i).getPitch(), n2.get(i).getPitch());
-            assertEquals(n1.get(i).getStartTick(), n2.get(i).getStartTick());
-            assertEquals(n1.get(i).getDurationTicks(), n2.get(i).getDurationTicks());
-            assertEquals(n1.get(i).getVelocity(), n2.get(i).getVelocity());
-        }
+        TestUtil.checkNotesEqual(expectedNotes, block.getNotesTimeline());
     }
 
     @Test
