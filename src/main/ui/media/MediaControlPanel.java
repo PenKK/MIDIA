@@ -143,7 +143,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private ImageIcon getImageIcon(String path) {
         try {
             return new ImageIcon(
-                    ImageIO.read(getClass().getResource(path)).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+                    ImageIO.read(getClass().getResourceAsStream(path)).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         } catch (IOException e) {
             System.out.println("Couldnt load image at " + path);
             return null;
