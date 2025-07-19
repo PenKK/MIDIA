@@ -1,4 +1,4 @@
-package ui.tabs.timeline.midi;
+package ui.windows.timeline.midi;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -16,8 +16,8 @@ import model.Player;
 import model.Timeline;
 import model.TimelineController;
 import model.editing.DawClipboard;
-import ui.tabs.timeline.midi.popup.BlockPopupMenu;
-import ui.tabs.timeline.midi.popup.TrackGapPopupMenu;
+import ui.windows.timeline.midi.popup.BlockPopupMenu;
+import ui.windows.timeline.midi.popup.TrackGapPopupMenu;
 
 // Interactable render of the MidiTrack's blocks and notes
 public class TrackRenderPanel extends JPanel {

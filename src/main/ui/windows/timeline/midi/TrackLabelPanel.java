@@ -1,4 +1,4 @@
-package ui.tabs.timeline.midi;
+package ui.windows.timeline.midi;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -7,7 +7,7 @@ import javax.swing.JPanel;
 
 import model.MidiTrack;
 import model.TimelineController;
-import ui.tabs.timeline.midi.popup.LabelPopupMenu;
+import ui.windows.timeline.midi.popup.LabelPopupMenu;
 
 // Interactable display of the general information of a MidiTrack
 public class TrackLabelPanel extends JPanel {

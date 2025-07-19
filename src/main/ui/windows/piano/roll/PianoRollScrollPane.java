@@ -1,4 +1,4 @@
-package ui.tabs.piano.roll;
+package ui.windows.piano.roll;
 
 import java.awt.Color;
 
@@ -7,7 +7,7 @@ import javax.swing.JViewport;
 import javax.swing.ScrollPaneConstants;
 
 import model.TimelineController;
-import ui.tabs.timeline.midi.LineContainerPanel;
+import ui.windows.timeline.midi.LineContainerPanel;
 
 public class PianoRollScrollPane extends JScrollPane {
 

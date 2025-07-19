@@ -1,4 +1,4 @@
-package ui.tabs.timeline.midi.popup;
+package ui.windows.timeline.midi.popup;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +8,7 @@ import javax.swing.JPopupMenu;
 
 import model.TimelineController;
 import model.editing.DawClipboard;
-import ui.tabs.timeline.midi.TrackRenderPanel;
+import ui.windows.timeline.midi.TrackRenderPanel;
 
 public class TrackGapPopupMenu extends JPopupMenu implements ActionListener {
 

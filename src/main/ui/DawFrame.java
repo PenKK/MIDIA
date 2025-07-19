@@ -23,13 +23,14 @@ import persistance.JsonWriter;
 import ui.media.MediaControlPanel;
 import ui.menubar.MenuBar;
 import ui.menubar.menus.FileMenu;
-import ui.tabs.TabbedPane;
+import ui.windows.timeline.TimelineViewPanel;
 
 // The frame of the graphical UI. Contains the entirety of the UI.
 public class DawFrame extends JFrame implements PropertyChangeListener {
 
     private MenuBar menuBar;
-    private TabbedPane tabbedPane;
+    // private TabbedPane tabbedPane;
+    private TimelineViewPanel timelineViewPanel;
     private MediaControlPanel mediaControlPanel;
     private TimelineController timelineController;
     private DawClipboard dawClipboard;
@@ -40,7 +41,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         menuBar = new MenuBar(timelineController);
         mediaControlPanel = new MediaControlPanel(timelineController);
         dawClipboard = new DawClipboard();
-        tabbedPane = new TabbedPane(timelineController, dawClipboard);
+        timelineViewPanel = new TimelineViewPanel(timelineController, dawClipboard);
         
         timelineController.addObserver(this);
 
@@ -52,7 +53,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
 
         this.setJMenuBar(menuBar);
         this.add(mediaControlPanel, BorderLayout.NORTH);
-        this.add(tabbedPane, BorderLayout.CENTER);
+        this.add(timelineViewPanel, BorderLayout.CENTER);
 
         updateTitle();
         this.setLocationRelativeTo(null);

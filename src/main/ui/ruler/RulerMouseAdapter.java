@@ -5,7 +5,7 @@ import javax.swing.event.MouseInputAdapter;
 
 import model.Timeline;
 import model.TimelineController;
-import ui.tabs.timeline.midi.TrackLabelPanel;
+import ui.windows.timeline.midi.TrackLabelPanel;
 
 public class RulerMouseAdapter extends MouseInputAdapter {
 

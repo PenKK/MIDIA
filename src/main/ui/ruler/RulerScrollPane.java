@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import model.TimelineController;
-import ui.tabs.timeline.midi.TrackPanel;
+import ui.windows.timeline.midi.TrackPanel;
 
 // Panel that shows the tickmarks above timeline to indicate beat marks and other timely infomration
 public class RulerScrollPane extends JScrollPane {

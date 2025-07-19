@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import model.Player;
 import model.Timeline;
 import model.TimelineController;
-import ui.tabs.timeline.midi.TrackLabelPanel;
+import ui.windows.timeline.midi.TrackLabelPanel;
 
 // The panel for Graphics to draw on to show Ruler tick marks
 public class RulerRenderPanel extends JPanel implements PropertyChangeListener {

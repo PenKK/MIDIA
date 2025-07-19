@@ -1,4 +1,4 @@
-package ui.tabs.timeline;
+package ui.windows.timeline;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import model.TimelineController;
 import model.editing.DawClipboard;
 import ui.ruler.RulerScrollPane;
-import ui.tabs.timeline.midi.TrackPanel;
-import ui.tabs.timeline.midi.TrackScrollPane;
+import ui.windows.timeline.midi.TrackPanel;
+import ui.windows.timeline.midi.TrackScrollPane;
 
 // Holds the timeline view, and a ruler at the top
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener {

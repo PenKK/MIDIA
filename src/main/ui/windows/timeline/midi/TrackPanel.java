@@ -1,4 +1,4 @@
-package ui.tabs.timeline.midi;
+package ui.windows.timeline.midi;
 
 import java.awt.Color;
 import java.awt.Component;

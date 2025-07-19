@@ -1,4 +1,4 @@
-package ui.tabs.timeline.midi.popup;
+package ui.windows.timeline.midi.popup;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,8 +12,8 @@ import model.Timeline;
 import model.TimelineController;
 import model.instrument.Instrument;
 import model.instrument.TonalInstrument;
+import ui.windows.timeline.midi.TrackLabelPanel;
 import model.instrument.PercussiveInstrument;
-import ui.tabs.timeline.midi.TrackLabelPanel;
 
 // The popup menu for modifying a track
 public class LabelPopupMenu extends JPopupMenu implements ActionListener {

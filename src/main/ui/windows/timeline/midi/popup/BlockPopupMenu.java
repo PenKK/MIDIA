@@ -1,4 +1,4 @@
-package ui.tabs.timeline.midi.popup;
+package ui.windows.timeline.midi.popup;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

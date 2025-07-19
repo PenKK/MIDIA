@@ -1,4 +1,4 @@
-package ui.tabs.piano.roll;
+package ui.windows.piano.roll;
 
 
 import javax.swing.BoxLayout;
@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 
 import model.TimelineController;
 import ui.ruler.RulerScrollPane;
-import ui.tabs.timeline.midi.TrackPanel;
+import ui.windows.timeline.midi.TrackPanel;
 
 // JPanel tab that lets the user create notes via graphical interface
 public class PianoRollViewPanel extends JPanel {
