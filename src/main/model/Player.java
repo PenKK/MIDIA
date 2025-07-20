@@ -16,23 +16,21 @@ import model.event.Event;
 import model.event.EventLog;
 import persistance.Writable;
 
-public class Player implements Writable {
+public abstract class Player implements Writable {
 
     public static final int PULSES_PER_QUARTER_NOTE = 960;
-    private static final float DEFAULT_BPM = 120;
+    protected static final float DEFAULT_BPM = 120;
 
-    private Sequencer sequencer;
-    private Sequence sequence;
-    private Timeline timeline;
+    protected Sequencer sequencer;
+    protected Sequence sequence;
 
-    private float bpm;
-    private long positionTick;
-    private ArrayList<Integer> availableChannels;
+    protected float bpm;
+    protected long positionTick;
+    protected ArrayList<Integer> availableChannels;
 
     public Player(Timeline timeline) {
         bpm = DEFAULT_BPM;
         positionTick = 0;
-        this.timeline = timeline;
 
         try {
             sequencer = MidiSystem.getSequencer();
@@ -60,25 +58,8 @@ public class Player implements Writable {
     }
 
     // MODIFIES: this
-    // EFFECTS: updates the sequence with the current midiTracks, converting each one 
-    //          to a Java Track. Throws InvalidMidiDataException if invalid midi data
-    //          is found when setting the sequence to the sequencer
-    public void updateSequence() throws InvalidMidiDataException {
-        resetTracks();
-        for (MidiTrack currentMidiTrack : timeline.getMidiTracks()) {
-            if (currentMidiTrack.isMuted() || currentMidiTrack.getVolume() == 0) {
-                continue;
-            }
-
-            Track track = sequence.createTrack();
-            currentMidiTrack.applyToTrack(track);
-        }
-
-        sequencer.setSequence(sequence);
-
-        Event e = new Event(String.format("Playback sequence was updated in Timeline %s", timeline.getProjectName()));
-        EventLog.getInstance().logEvent(e);
-    }
+    // EFFECTS: updates the sequence with the correct notes
+    public abstract void updateSequence() throws InvalidMidiDataException;
 
     // MODIFIES: this
     // EFFECTS: deletes all Tracks from the sequence, essentially resetting playback
@@ -86,9 +67,6 @@ public class Player implements Writable {
         for (Track track : sequence.getTracks()) {
             sequence.deleteTrack(track);
         }
-
-        Event e = new Event(String.format("Playback sequence cleared in Timeline %s", timeline.getProjectName()));
-        EventLog.getInstance().logEvent(e);
     }
 
     // MODIFIES: this
@@ -111,10 +89,6 @@ public class Player implements Writable {
     public void pause() {
         sequencer.stop();
         updatePositionTick();
-
-        Event e = new Event(String.format("Playback paused in Timeline %s at tick: %d",
-                timeline.getProjectName(), sequencer.getTickPosition()));
-        EventLog.getInstance().logEvent(e);
     }
 
     // MODFIES: this
@@ -126,11 +100,10 @@ public class Player implements Writable {
     // REQUIRES: newPositionTick >= 0
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback given ticks
-    public void setPositionTick(long newPositionTick) {
+    public long setPositionTick(long newPositionTick) {
         long oldPositionTick = positionTick;
         this.positionTick = newPositionTick;
-
-        timeline.getPropertyChangeSupport().firePropertyChange("positionTick", oldPositionTick, newPositionTick);
+        return oldPositionTick;
     }
 
     // MODIFIES: this
@@ -160,15 +133,15 @@ public class Player implements Writable {
 
     // REQUIRES: bpm >= 1
     // EFFECTS: changes the BPM
-    public void setBPM(float bpm) {
-        float oldBpm = bpm;
+    public float setBPM(float bpm) {
+        float oldBpm = this.bpm;
         this.bpm = bpm;
 
         if (isPlaying()) {
             sequencer.setTempoInBPM(bpm);
         }
 
-        timeline.getPropertyChangeSupport().firePropertyChange("bpm", oldBpm, bpm);
+        return oldBpm;
     }
 
     // REQUIRES: ticks >= 0
@@ -215,12 +188,12 @@ public class Player implements Writable {
     }
 
     // EFFECTS: returns the calculation of the sequence length in beats
-    public double getLengthBeats() {
+    public abstract double getLengthBeats() {
         return ticksToBeats(timeline.getLengthTicks());
     }
 
     // EFFECTS: returns the calculation of the sequence length in milliseconds
-    public double getLengthMs() {
+    public abstract double getLengthMs() {
         return ticksToMs(timeline.getLengthTicks());
     }
 

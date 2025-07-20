@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -16,23 +17,24 @@ import model.Player;
 import model.Timeline;
 import model.TimelineController;
 import model.editing.DawClipboard;
+import ui.windows.piano.roll.PianoRollDialog;
 import ui.windows.timeline.midi.popup.BlockPopupMenu;
 import ui.windows.timeline.midi.popup.TrackGapPopupMenu;
 
 // Interactable render of the MidiTrack's blocks and notes
 public class TrackRenderPanel extends JPanel {
 
-    private final Color NOTE_COLOR = Color.decode("#ECF0F1");
-    private final Color BLOCK_BACKGROUND_COLOR = Color.decode("#34495E");
-    private final Color LINE_COLOR = Color.decode("#333333");
+    private static final Color NOTE_COLOR = Color.decode("#ECF0F1");
+    private static final Color BLOCK_BACKGROUND_COLOR = Color.decode("#34495E");
+    private static final Color LINE_COLOR = Color.decode("#333333");
 
-    private final int CORNER_ROUNDING_BLOCK = 2;
-    private final int BLOCK_HEIGHT_MARGIN = 6;
-    private final int EMPTY_BLOCK_WIDTH = 100;
+    private static final int CORNER_ROUNDING_BLOCK = 2;
+    private static final int BLOCK_HEIGHT_MARGIN = 6;
+    private static final int EMPTY_BLOCK_WIDTH = 100;
 
-    private final int MIN_NOTE_RANGE = 16;
-    private final int NOTE_RANGE_PADDING = 2;
-    private final double NOTE_CORNER_RADIUS = 0.3;
+    private static final int MIN_NOTE_RANGE = 16;
+    private static final int NOTE_RANGE_PADDING = 2;
+    private static final double NOTE_CORNER_RADIUS = 0.3;
 
     private MidiTrack midiTrack;
     private TimelineController timelineController;
@@ -230,9 +232,10 @@ public class TrackRenderPanel extends JPanel {
         long tick = timelineController.getTimeline().scalePixelToTick(e.getX());
 
         Block b = getBlock(tick);
+        String title = midiTrack.getName().concat(String.format(" [%d]", midiTrack.getBlocks().indexOf(b) + 1));
 
         if (b != null) {
-            System.out.println("Block at startTick " + b.getStartTick() + " clicked!");
+            new PianoRollDialog((JFrame) SwingUtilities.getWindowAncestor(this), b, timelineController, title);
         }
     }
 
