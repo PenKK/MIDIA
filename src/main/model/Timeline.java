@@ -46,7 +46,7 @@ public class Timeline implements Writable {
         beatDivision = DEFAULT_BEAT_DIVISON;
         beatsPerMeasure = DEFAULT_BEATS_PER_MEASURE;
         horizontalScaleFactor = DEFAULT_HORIZONTAL_SCALE;
-        player = new Player(this);
+        player = new TimelinePlayer(this);
         midiTracks = new ArrayList<>();
 
         Event e = new Event(String.format("A new timeline instance was created with project name: %s",

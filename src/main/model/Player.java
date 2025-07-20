@@ -188,14 +188,10 @@ public abstract class Player implements Writable {
     }
 
     // EFFECTS: returns the calculation of the sequence length in beats
-    public abstract double getLengthBeats() {
-        return ticksToBeats(timeline.getLengthTicks());
-    }
+    public abstract double getLengthBeats();
 
     // EFFECTS: returns the calculation of the sequence length in milliseconds
-    public abstract double getLengthMs() {
-        return ticksToMs(timeline.getLengthTicks());
-    }
+    public abstract double getLengthMs();
 
     public long getPositionTick() {
         return positionTick;

@@ -66,5 +66,17 @@ public class TimelinePlayer extends Player {
         return oldBpm;
     }
 
+    // EFFECTS: returns the calculation of the sequence length in beats
+    @Override
+    public double getLengthBeats() {
+        return ticksToBeats(timeline.getLengthTicks());
+    }
+
+    // EFFECTS: returns the calculation of the sequence length in milliseconds
+    @Override
+    public double getLengthMs() {
+        return ticksToMs(timeline.getLengthTicks());
+    }
+
     
 }

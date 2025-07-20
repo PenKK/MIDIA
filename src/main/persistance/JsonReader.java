@@ -19,6 +19,7 @@ import model.MidiTrack;
 import model.Note;
 import model.Player;
 import model.Timeline;
+import model.TimelinePlayer;
 import model.instrument.Instrument;
 import model.instrument.TonalInstrument;
 import model.instrument.PercussiveInstrument;
@@ -77,7 +78,7 @@ public class JsonReader {
     }
 
     private Player parsePlayer(JSONObject playerJson, Timeline tl) {
-        Player p = new Player(tl);
+        Player p = new TimelinePlayer(tl);
         float beatsPerMinute = playerJson.getFloat("beatsPerMinute");
         int positionTick = playerJson.getInt("positionTick");
 
