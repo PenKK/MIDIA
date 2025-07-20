@@ -176,7 +176,8 @@ public enum TonalInstrument implements Instrument {
     public int getProgramNumber() {
         return programNumber;
     }
-
+    
+    @Override
     public String getName() {
         return name;
     }

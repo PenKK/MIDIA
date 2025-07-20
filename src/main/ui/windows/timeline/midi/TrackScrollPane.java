@@ -4,15 +4,14 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
-import javax.swing.ScrollPaneConstants;
 
 import model.MidiTrack;
 import model.TimelineController;
 import model.editing.DawClipboard;
+import ui.ruler.BlankScrollPane;
 
 // JPanel that holds the interactable view of the timeline, rendered using graphics
-public class TrackScrollPane extends JScrollPane implements PropertyChangeListener {
+public class TrackScrollPane extends BlankScrollPane implements PropertyChangeListener {
 
     private TimelineController timelineController;
     private LineContainerPanel lineContainer;
@@ -22,17 +21,10 @@ public class TrackScrollPane extends JScrollPane implements PropertyChangeListen
     public TrackScrollPane(TimelineController timelineController, DawClipboard dawClipboard) {
         this.timelineController = timelineController;
         this.dawClipboard = dawClipboard;
-        
         lineContainer = new LineContainerPanel(timelineController);
 
-        this.setBorder(null);
         this.setViewportView(lineContainer);
-        this.getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-        this.getVerticalScrollBar().setUnitIncrement(16);
-        this.getHorizontalScrollBar().setUnitIncrement(16);
-        this.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        this.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        this.setAlignmentX(0);
+        this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         timelineController.addObserver(this);
 
         updateMidiTrackPanels();

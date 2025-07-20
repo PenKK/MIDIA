@@ -4,6 +4,7 @@ package model.instrument;
 // Taken from https://en.wikipedia.org/wiki/General_MIDI
 public enum PercussiveInstrument implements Instrument {
 
+    // Drum Kit 
     ACOUSTIC_BASS_DRUM(35, "Acoustic Bass Drum"),
     ELECTRIC_BASS_DRUM(36, "Electric Bass Drum"),
     SIDE_STICK(37, "Side Stick"),
@@ -29,6 +30,8 @@ public enum PercussiveInstrument implements Instrument {
     CRASH_CYMBAL_2(57, "Crash Cymbal 2"),
     VIBRASLAP(58, "Vibraslap"),
     RIDE_CYMBAL_2(59, "Ride Cymbal 2"),
+
+    // Latin Percussion
     HIGH_BONGO(60, "High Bongo"),
     LOW_BONGO(61, "Low Bongo"),
     MUTE_HIGH_CONGA(62, "Mute High Conga"),
@@ -40,10 +43,14 @@ public enum PercussiveInstrument implements Instrument {
     LOW_AGOGO(68, "Low Agogô"),
     CABASA(69, "Cabasa"),
     MARACAS(70, "Maracas"),
+
+    // Whistles & Guiros
     SHORT_WHISTLE(71, "Short Whistle"),
     LONG_WHISTLE(72, "Long Whistle"),
     SHORT_GUIRO(73, "Short Güiro"),
     LONG_GUIRO(74, "Long Güiro"),
+
+    // Wood Blocks & Misc
     CLAVES(75, "Claves"),
     HIGH_WOODBLOCK(76, "High Woodblock"),
     LOW_WOODBLOCK(77, "Low Woodblock"),
@@ -65,7 +72,8 @@ public enum PercussiveInstrument implements Instrument {
     public int getProgramNumber() {
         return programNumber;
     }
-
+    
+    @Override
     public String getName() {
         return name;
     }
