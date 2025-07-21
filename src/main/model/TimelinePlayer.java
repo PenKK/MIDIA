@@ -11,7 +11,6 @@ public class TimelinePlayer extends Player {
     private Timeline timeline;
 
     public TimelinePlayer(Timeline timeline) {
-        super(timeline);
         this.timeline = timeline;
     }
 

@@ -28,7 +28,7 @@ public abstract class Player implements Writable {
     protected long positionTick;
     protected ArrayList<Integer> availableChannels;
 
-    public Player(Timeline timeline) {
+    public Player() {
         bpm = DEFAULT_BPM;
         positionTick = 0;
 

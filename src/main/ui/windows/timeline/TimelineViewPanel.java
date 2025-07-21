@@ -9,20 +9,20 @@ import javax.swing.JPanel;
 
 import model.TimelineController;
 import model.editing.DawClipboard;
-import ui.ruler.RulerScrollPane;
 import ui.windows.timeline.midi.TrackPanel;
 import ui.windows.timeline.midi.TrackScrollPane;
+import ui.windows.timeline.ruler.TimelineRulerScrollPane;
 
 // Holds the timeline view, and a ruler at the top
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener {
 
     private TrackScrollPane midiTrackScrollPane;
-    private RulerScrollPane rulerScrollPane;
+    private TimelineRulerScrollPane rulerScrollPane;
 
     // EFFECTS: Creates timeline view container, and initializes sub components
     public TimelineViewPanel(TimelineController timelineController, DawClipboard dawClipboard) {
         midiTrackScrollPane = new TrackScrollPane(timelineController, dawClipboard);
-        rulerScrollPane = new RulerScrollPane(timelineController);
+        rulerScrollPane = new TimelineRulerScrollPane(timelineController);
 
         timelineController.addObserver(this);
         syncHorizontalScrollBars();

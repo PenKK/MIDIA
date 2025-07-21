@@ -32,7 +32,6 @@ public class TrackLabelPanel extends JPanel {
         this.setBackground(DEFAULT_BACKGROUND_COLOR);
         this.setPreferredSize(new Dimension(LABEL_BOX_WIDTH, TrackPanel.HEIGHT));
         this.setMaximumSize(new Dimension(LABEL_BOX_WIDTH, TrackPanel.HEIGHT));
-        this.setMinimumSize(new Dimension(LABEL_BOX_WIDTH, TrackPanel.HEIGHT));
     }
 
     public MidiTrack getMidiTrack() {
