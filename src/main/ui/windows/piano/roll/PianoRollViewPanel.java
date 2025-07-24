@@ -5,6 +5,9 @@ import java.awt.Color;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
+import model.Block;
+import model.BlockPlayer;
+import model.MidiTrack;
 import model.TimelineController;
 import ui.windows.piano.roll.ruler.PianoRollRulerScrollPane;
 import ui.windows.timeline.midi.TrackPanel;
@@ -12,13 +15,17 @@ import ui.windows.timeline.midi.TrackPanel;
 // JPanel tab that lets the user create notes via graphical interface
 public class PianoRollViewPanel extends JPanel {
 
-    PianoRollRulerScrollPane rulerScrollPane;
-    JPanel editorContainer;
-    PianoRollKeysScrollPane pianoRollKeysScrollPane;
-    PianoRollNoteGrid pianoRollNoteGrid;
+    private PianoRollRulerScrollPane rulerScrollPane;
+    private JPanel editorContainer;
+    private PianoRollKeysScrollPane pianoRollKeysScrollPane;
+    private PianoRollNoteGrid pianoRollNoteGrid;
 
-    public PianoRollViewPanel(TimelineController timelineController) {
-        rulerScrollPane = new PianoRollRulerScrollPane();
+    private BlockPlayer blockPlayer;
+
+    public PianoRollViewPanel(TimelineController timelineController, MidiTrack parentMidiTrack, Block block) {
+        blockPlayer = new BlockPlayer(block, parentMidiTrack, timelineController.getTimeline().getPlayer().getBPM());
+        
+        rulerScrollPane = new PianoRollRulerScrollPane(timelineController, parentMidiTrack, blockPlayer);
         editorContainer = new JPanel();
         pianoRollKeysScrollPane = new PianoRollKeysScrollPane();
         pianoRollNoteGrid = new PianoRollNoteGrid();

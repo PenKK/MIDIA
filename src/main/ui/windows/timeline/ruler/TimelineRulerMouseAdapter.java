@@ -32,8 +32,8 @@ public class TimelineRulerMouseAdapter extends RulerMouseAdapter {
             resume = true;
         }
 
-        if (!timelineController.isDraggingRuler()) {
-            timelineController.startRulerDrag();
+        if (!timelineController.getTimeline().getPlayer().isDraggingRuler()) {
+            timelineController.getTimeline().getPlayer().startRulerDrag();
         }
         updateX(e);
     }
@@ -45,7 +45,7 @@ public class TimelineRulerMouseAdapter extends RulerMouseAdapter {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        timelineController.stopRulerDrag();
+        timelineController.getTimeline().getPlayer().stopRulerDrag();
         if (resume) {
             timelineController.playTimeline();
             resume = false;

@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.event.ActionEvent;
+
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Track;
 
@@ -75,6 +77,29 @@ public class TimelinePlayer extends Player {
     @Override
     public double getLengthMs() {
         return ticksToMs(timeline.getLengthTicks());
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(playbackUpdateTimer)) {
+            if (!isDraggingRuler) {
+                updatePositionTick();
+            }
+
+            timeline.getPropertyChangeSupport().firePropertyChange("positionTick", null, null);
+        }
+    }
+
+    @Override
+    public void startRulerDrag() {
+        super.startRulerDrag();
+        timeline.getPropertyChangeSupport().firePropertyChange("rulerDragStarted", null, null);
+    }
+    
+    @Override
+    public void stopRulerDrag() {
+        super.stopRulerDrag();
+        timeline.getPropertyChangeSupport().firePropertyChange("rulerDragStopped", null, null);
     }
 
     

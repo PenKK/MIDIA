@@ -1,5 +1,31 @@
 package ui.windows.piano.roll.ruler;
 
-public class PianoRollRulerRenderPanel {
+import java.awt.Graphics;
 
+import model.Block;
+import model.BlockPlayer;
+import model.MidiTrack;
+import model.TimelineController;
+import ui.ruler.RulerRenderPanel;
+
+public class PianoRollRulerRenderPanel extends RulerRenderPanel {
+
+    private TimelineController timelineController;
+    private MidiTrack parentMidiTrack;
+    private BlockPlayer blockPlayer;
+    
+    public PianoRollRulerRenderPanel(TimelineController timelineController, MidiTrack parentMidiTrack, BlockPlayer blockPlayer) {
+        super();
+        this.timelineController = timelineController;
+        this.parentMidiTrack = parentMidiTrack;
+        this.blockPlayer = blockPlayer;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: Draws the ruler markings
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        super.drawAllTickMarks(g, timelineController, getWidth());
+    }
 }

@@ -13,23 +13,12 @@ public class TimelineController implements MetaEventListener {
 
     private Timeline timeline;
     private PropertyChangeSupport pcs;
-    private boolean isDraggingRuler;
 
     public TimelineController() {
-        isDraggingRuler = false;
+       
         pcs = new PropertyChangeSupport(this);
         timeline = new Timeline("New Project", pcs);
         updateSequencerListener();
-    }
-
-    public void startRulerDrag() {
-        isDraggingRuler = true;
-        pcs.firePropertyChange("rulerDragStarted", null, null);
-    }
-
-    public void stopRulerDrag() {
-        isDraggingRuler = false;
-        pcs.firePropertyChange("rulerDragStopped", null, null);
     }
 
     public Timeline getTimeline() {
@@ -95,10 +84,6 @@ public class TimelineController implements MetaEventListener {
 
     public PropertyChangeSupport getPropertyChangeSupport() {
         return pcs;
-    }
-
-    public boolean isDraggingRuler() {
-        return isDraggingRuler;
     }
 
     @Override

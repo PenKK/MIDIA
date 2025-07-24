@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -8,6 +9,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.Track;
+import javax.swing.Timer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,10 +18,11 @@ import model.event.Event;
 import model.event.EventLog;
 import persistance.Writable;
 
-public abstract class Player implements Writable {
+public abstract class Player implements Writable, ActionListener {
 
     public static final int PULSES_PER_QUARTER_NOTE = 960;
     protected static final float DEFAULT_BPM = 120;
+    public static final int UI_UPDATE_DELAY = 10;
 
     protected Sequencer sequencer;
     protected Sequence sequence;
@@ -27,10 +30,14 @@ public abstract class Player implements Writable {
     protected float bpm;
     protected long positionTick;
     protected ArrayList<Integer> availableChannels;
+    protected Timer playbackUpdateTimer;
+    protected boolean isDraggingRuler;
 
     public Player() {
         bpm = DEFAULT_BPM;
         positionTick = 0;
+        playbackUpdateTimer = new Timer(UI_UPDATE_DELAY, this);
+        isDraggingRuler = false;
 
         try {
             sequencer = MidiSystem.getSequencer();
@@ -187,6 +194,14 @@ public abstract class Player implements Writable {
         return ticksToBeats(ticks) + 1;
     }
 
+    public void startRulerDrag() {
+        isDraggingRuler = true;
+    }
+
+    public void stopRulerDrag() {
+        isDraggingRuler = false;
+    }
+
     // EFFECTS: returns the calculation of the sequence length in beats
     public abstract double getLengthBeats();
 
@@ -224,6 +239,10 @@ public abstract class Player implements Writable {
         return sequencer;
     }
 
+    public boolean isDraggingRuler() {
+        return isDraggingRuler;
+    }
+
     @Override
     public JSONObject toJson() {
         JSONObject playerJson = new JSONObject();
@@ -233,5 +252,9 @@ public abstract class Player implements Writable {
         playerJson.put("availableChannels", new JSONArray(availableChannels));
 
         return playerJson;
+    }
+
+    public Timer getPlaybackUpdaterTimer() {
+        return playbackUpdateTimer;
     }
 }

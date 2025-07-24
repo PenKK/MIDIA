@@ -38,6 +38,7 @@ public class TrackRenderPanel extends JPanel {
 
     private MidiTrack midiTrack;
     private TimelineController timelineController;
+    private PianoRollDialog pianoRollDialog;
     private DawClipboard dawClipboard;
 
     // EFFECTS: recieves the specified midiTrack, and listens for mouse events
@@ -140,6 +141,7 @@ public class TrackRenderPanel extends JPanel {
     // MODIFIES: this
     // EFFECTS: draws the specified blocks and their notes. the height of notes is 
     //          drawn relative to all other notes in the blocks
+    @SuppressWarnings("methodlength")
     private void drawBlockNotes(ArrayList<Block> blocks, Graphics g) {
         Timeline timeline = timelineController.getTimeline();
         int[] pitchRange = determineRange(blocks);
@@ -235,7 +237,12 @@ public class TrackRenderPanel extends JPanel {
         String title = midiTrack.getName().concat(String.format(" [%d]", midiTrack.getBlocks().indexOf(b) + 1));
 
         if (b != null) {
-            new PianoRollDialog((JFrame) SwingUtilities.getWindowAncestor(this), b, timelineController, title);
+            if (pianoRollDialog != null && pianoRollDialog.isVisible()) {
+                pianoRollDialog.dispose();
+            }
+            pianoRollDialog = new PianoRollDialog((JFrame) SwingUtilities.getWindowAncestor(this), 
+                                                  b, timelineController, midiTrack, title);
+            pianoRollDialog.setVisible(true);
         }
     }
 

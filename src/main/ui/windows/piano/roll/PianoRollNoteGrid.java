@@ -8,7 +8,7 @@ import ui.ruler.BlankScrollPane;
 
 public class PianoRollNoteGrid extends BlankScrollPane {
 
-    JPanel gridContainer;
+    private JPanel gridContainer;
 
     PianoRollNoteGrid() {
         gridContainer = new JPanel();

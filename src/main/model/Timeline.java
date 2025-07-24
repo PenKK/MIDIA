@@ -104,6 +104,7 @@ public class Timeline implements Writable {
 
     public void play() throws InvalidMidiDataException {
         player.play();
+        pcs.firePropertyChange("playbackStarted", null, null);
     }
 
     public void pause() {

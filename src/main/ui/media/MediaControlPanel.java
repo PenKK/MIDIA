@@ -28,7 +28,6 @@ import model.TimelineController;
 // Panel containing UI elements related to playback
 public class MediaControlPanel extends JPanel implements ActionListener, ChangeListener, PropertyChangeListener {
 
-    public static final int UI_UPDATE_DELAY = 10;
     public static final double MAX_HORIZONTAL_SCALE = 5;
     public static final double MIN_HORIZONTAL_SCALE = 0.3;
 
@@ -37,8 +36,6 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private ImageIcon playImage = null;
     private ImageIcon pauseImage = null;
 
-    private Timer playbackUpdateTimer;
-
     private JPanel leftAlignPanel;
     private JPanel rightAlignPanel;
 
@@ -46,7 +43,6 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private JButton playButton;
     private JSlider scaleSlider;
     private JLabel bpmDisplay;
-
 
     // EFFECTS: creates a MediaControlPanel with timers and initializes image icons and components
     public MediaControlPanel(TimelineController timelineController) {
@@ -67,8 +63,6 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
 
         leftAlignPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         rightAlignPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-
-        playbackUpdateTimer = new Timer(UI_UPDATE_DELAY, this);
 
         scaleSlider = new JSlider();
         scaleSlider.addChangeListener(this);
@@ -119,6 +113,8 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
 
     // EFFECTS: toggles playback
     public void togglePlay() {
+        Timer playbackUpdateTimer = timelineController.getTimeline().getPlayer().getPlaybackUpdaterTimer();
+
         if (timelineController.isPlaying()) {
             timelineController.pauseTimeline();
             playbackUpdateTimer.stop();
@@ -163,17 +159,17 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     // EFFECTS: handles behavior for when song ends: changes play icon, stops tickUpdateTimer, brings position to 0
     private void handleEnd() {
         playButton.setIcon(playImage);
-        playbackUpdateTimer.stop();
+        timelineController.getTimeline().getPlayer().getPlaybackUpdaterTimer().stop();
     }
 
-    // MODIFIES: this
-    // EFFECTS: triggers an update to the positionTick field in the instance (and hence fires propertyChangeEvent)
-    private void updateTimelineTick() {
-        if (timelineController.isDraggingRuler()) {
-            return;
-        }
-        timelineController.getTimeline().getPlayer().updatePositionTick();
-    }
+    // // MODIFIES: this
+    // // EFFECTS: triggers an update to the positionTick field in the instance (and hence fires propertyChangeEvent)
+    // private void updateTimelineTick() {
+    //     if (timelineController.isDraggingRuler()) {
+    //         return;
+    //     }
+    //     timelineController.getTimeline().getPlayer().updatePositionTick();
+    // }
 
     // MODIFIES: this
     // EFFECTS: updates the UI time display using the timeline player
@@ -200,9 +196,6 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         Object source = e.getSource();
         if (source.equals(playButton)) {
             togglePlay();
-        } else if (source.equals(playbackUpdateTimer)) {
-            updateTimelineTick();
-            updateTimeDisplay();
         }
     }
 

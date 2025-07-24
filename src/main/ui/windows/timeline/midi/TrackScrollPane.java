@@ -21,7 +21,7 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
     public TrackScrollPane(TimelineController timelineController, DawClipboard dawClipboard) {
         this.timelineController = timelineController;
         this.dawClipboard = dawClipboard;
-        lineContainer = new LineContainerPanel(timelineController);
+        lineContainer = new LineContainerPanel(timelineController, timelineController.getTimeline().getPlayer());
 
         this.setViewportView(lineContainer);
         this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);

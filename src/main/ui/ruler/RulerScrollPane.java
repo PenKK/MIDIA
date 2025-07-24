@@ -13,7 +13,6 @@ public abstract class RulerScrollPane extends BlankScrollPane {
     public static final int DEFAULT_RULER_WIDTH = 800;
 
     public RulerScrollPane() {
-
         this.setPreferredSize(new Dimension(DEFAULT_RULER_WIDTH, RULER_HEIGHT));
         this.setMaximumSize(new Dimension(Integer.MAX_VALUE, RULER_HEIGHT));
         this.setMinimumSize(new Dimension(DEFAULT_RULER_WIDTH, RULER_HEIGHT));

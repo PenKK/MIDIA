@@ -87,7 +87,7 @@ public class MidiTrack implements Writable, Pastable {
 
         for (Block currentBlock : blocks) {
             for (Note note : currentBlock.getNotesTimeline()) {
-                applyNoteToTrack(note, track);
+                applyNoteToTrack(track, note, isPercussive(), instrument, getChannel());
             }
         }
     }
@@ -95,15 +95,15 @@ public class MidiTrack implements Writable, Pastable {
     // MODIFIES: track
     // EFFECTS: Helper method for applyToTrack; converts note to MIDI event on and off
     //          and applies it to the specified track.
-    private void applyNoteToTrack(Note note, Track track) {
+    public static void applyNoteToTrack(Track track, Note note, boolean isPercussive, Instrument instrument, int channel) {
         try {
             ShortMessage onMessage = new ShortMessage();
             ShortMessage offMessage = new ShortMessage();
             // Percussive tracks use data1 for the instrument as they have no pitch
-            int data1 = isPercussive() ? instrument.getProgramNumber() : note.getPitch();
+            int data1 = isPercussive ? instrument.getProgramNumber() : note.getPitch();
 
-            onMessage.setMessage(ShortMessage.NOTE_ON, getChannel(), data1, note.getVelocity());
-            offMessage.setMessage(ShortMessage.NOTE_OFF, getChannel(), data1, 0); 
+            onMessage.setMessage(ShortMessage.NOTE_ON, channel, data1, note.getVelocity());
+            offMessage.setMessage(ShortMessage.NOTE_OFF, channel, data1, 0); 
 
             MidiEvent noteOnEvent = new MidiEvent(onMessage, note.getStartTick());
             MidiEvent noteOffEvent = new MidiEvent(offMessage, note.getStartTick() + note.getDurationTicks());
