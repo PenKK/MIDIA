@@ -77,11 +77,11 @@ public class TestTimelineController extends TestUtil {
 
     @Test
     void testRulerDrag() {
-        assertFalse(tc.isDraggingRuler());
-        tc.startRulerDrag();
-        assertTrue(tc.isDraggingRuler());
-        tc.stopRulerDrag();
-        assertFalse(tc.isDraggingRuler());
+        assertFalse(tc.getTimeline().getPlayer().isDraggingRuler());
+        tc.getTimeline().getPlayer().startRulerDrag();
+        assertTrue(tc.getTimeline().getPlayer().isDraggingRuler());
+        tc.getTimeline().getPlayer().stopRulerDrag();
+        assertFalse(tc.getTimeline().getPlayer().isDraggingRuler());
     }
 
     @Test
