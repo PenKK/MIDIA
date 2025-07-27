@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -147,16 +148,19 @@ public class NoteInputDialog extends InputDialog {
         }
 
         Timeline timeline = timelineController.getTimeline();
-        int p = (int) pitch.getValue();
-        int v = (int) velocity.getValue();
+        int pitch = (int) this.pitch.getValue();
+        int velocity = (int) this.velocity.getValue();
         long startTick = timeline.getPlayer().beatsToTicks((double) startBeat.getValue() - 1);
         long durationTicks = timeline.getPlayer().beatsToTicks((double) durationBeats.getValue());
 
-        if (((MidiTrack) midiTracksComboBox.getSelectedItem()).isPercussive()) {
-            p = 0;
+        MidiTrack midiTrack = (MidiTrack) Objects.requireNonNull(midiTracksComboBox.getSelectedItem(),
+                                                        "No track selected");
+
+        if (midiTrack.isPercussive()) {
+            pitch = 0;
         }
 
-        Note note = new Note(p, v, startTick, durationTicks);
+        Note note = new Note(pitch, velocity, startTick, durationTicks);
         selectedBlock.addNote(note);
         timelineController.refreshTrackLayout();
     }

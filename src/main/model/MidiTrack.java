@@ -30,7 +30,7 @@ public class MidiTrack implements Writable, Pastable {
     private Instrument instrument; // 0 to 127 inclusive if not percussive, else 35 to 81 inclusive
     private int volume; // 0 to 127 inclusive
     private String name;
-    private ArrayList<Block> blocks;
+    private final ArrayList<Block> blocks;
     private final int channel;
 
     // REQUIRES: 0 <= instrument <= 127 if percussive is false, else 35 <= instrument <= 81
@@ -39,7 +39,7 @@ public class MidiTrack implements Writable, Pastable {
     //          percussive according to parameter, and a name.
     public MidiTrack(String name, Instrument instrument, int channel) {
         this.muted = false;
-        this.blocks = new ArrayList<Block>();
+        this.blocks = new ArrayList<>();
         this.instrument = instrument;
         this.volume = DEFAULT_VOLUME;
         this.channel = channel;
@@ -95,7 +95,8 @@ public class MidiTrack implements Writable, Pastable {
     // MODIFIES: track
     // EFFECTS: Helper method for applyToTrack; converts note to MIDI event on and off
     //          and applies it to the specified track.
-    public static void applyNoteToTrack(Track track, Note note, boolean isPercussive, Instrument instrument, int channel) {
+    public static void applyNoteToTrack(Track track, Note note, boolean isPercussive,
+                                        Instrument instrument, int channel) {
         try {
             ShortMessage onMessage = new ShortMessage();
             ShortMessage offMessage = new ShortMessage();

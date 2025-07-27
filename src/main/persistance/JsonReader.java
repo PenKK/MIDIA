@@ -28,7 +28,7 @@ import model.instrument.PercussiveInstrument;
 // Code adapted from src/main/persistance/JsonReader
 //     at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonReader {
-    private String sourcePath;
+    private final String sourcePath;
 
     // EFFECTS: constructs reader to read from source file
     public JsonReader(String source) {
@@ -48,14 +48,14 @@ public class JsonReader {
         StringBuilder contentBuilder = new StringBuilder();
 
         try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
-            stream.forEach(s -> contentBuilder.append(s));
+            stream.forEach(contentBuilder::append);
         }
 
         return contentBuilder.toString();
     }
 
     // EFFECTS: parses timeline from JSON object and returns it
-    private Timeline parseTimeline(JSONObject jsonObject) throws MidiUnavailableException, InvalidMidiDataException {
+    private Timeline parseTimeline(JSONObject jsonObject) {
         String projectName = jsonObject.getString("projectName");
         Timeline timeline = new Timeline(projectName, new PropertyChangeSupport(projectName));
 

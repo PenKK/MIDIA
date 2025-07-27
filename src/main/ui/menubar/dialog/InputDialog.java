@@ -15,7 +15,7 @@ import model.TimelineController;
 public abstract class InputDialog extends JDialog implements ActionListener {
 
     protected TimelineController timelineController;
-    private Component invoker;
+    private final Component invoker;
 
     // EFFECTS: creates an input dialog with the specified title
     InputDialog(String frameTitle, Component invoker, Dimension d, TimelineController timelineController) {

@@ -12,7 +12,7 @@ import javax.sound.midi.Sequencer;
 public class TimelineController implements MetaEventListener {
 
     private Timeline timeline;
-    private PropertyChangeSupport pcs;
+    private final PropertyChangeSupport pcs;
 
     public TimelineController() {
        

@@ -9,10 +9,10 @@ import javax.swing.UIManager;
 import model.TimelineController;
 import ui.ruler.RulerScrollPane;
 
-// Panel that shows the tickmarks above timeline to indicate beat marks and other timely infomration
+// Panel that shows the tick marks above timeline to indicate beat marks and other timely infomration
 public class TimelineRulerScrollPane extends RulerScrollPane {
 
-    private TimelineRulerRenderPanel renderContainer;
+    private final TimelineRulerRenderPanel renderContainer;
 
     // EFFECTS: Constructs the pane, setting dimensions and appropirate listeners and viewports
     public TimelineRulerScrollPane(TimelineController timelineController) {
@@ -28,9 +28,5 @@ public class TimelineRulerScrollPane extends RulerScrollPane {
             renderContainer.setPreferredSize(new Dimension(widthScrollBoxAdjusted, RulerScrollPane.RULER_HEIGHT));
             renderContainer.revalidate();
         });
-    }
-
-    public TimelineRulerRenderPanel getRenderPanel() {
-        return renderContainer;
     }
 }

@@ -36,10 +36,10 @@ public class TrackRenderPanel extends JPanel {
     private static final int NOTE_RANGE_PADDING = 2;
     private static final double NOTE_CORNER_RADIUS = 0.3;
 
-    private MidiTrack midiTrack;
-    private TimelineController timelineController;
+    private final MidiTrack midiTrack;
+    private final TimelineController timelineController;
     private PianoRollDialog pianoRollDialog;
-    private DawClipboard dawClipboard;
+    private final DawClipboard dawClipboard;
 
     // EFFECTS: recieves the specified midiTrack, and listens for mouse events
     public TrackRenderPanel(MidiTrack midiTrack, TimelineController timelineController, DawClipboard dawClipboard) {
@@ -161,7 +161,7 @@ public class TrackRenderPanel extends JPanel {
                 int relativePitch = n.getPitch() - pitchOffset + (NOTE_RANGE_PADDING / 2);
 
                 int x = (int) timeline.scaleTickToPixel(n.getStartTick());
-                int y = trackHeight - (int) Math.round(relativePitch * heightDouble - BLOCK_HEIGHT_MARGIN / 2);
+                int y = trackHeight - (int) Math.round(relativePitch * heightDouble - (double) BLOCK_HEIGHT_MARGIN / 2);
                 int height = (int) Math.round(heightDouble);
                 int width = (int) timeline.scaleTickToPixel(n.getDurationTicks());
 
@@ -181,11 +181,7 @@ public class TrackRenderPanel extends JPanel {
 
         long tick = timelineController.getTimeline().getPlayer().getPositionTick();
 
-        if (n.getStartTick() <= tick && tick <= n.getStartTick() + n.getDurationTicks()) {
-            return true;
-        }
-
-        return false;
+        return n.getStartTick() <= tick && tick <= n.getStartTick() + n.getDurationTicks();
     }
 
     // EFFECTS: returns the last horizontal pixel that is drawn from blocks (scaled)
@@ -225,7 +221,7 @@ public class TrackRenderPanel extends JPanel {
         if (block == null) {
             new TrackGapPopupMenu(this, timelineController, dawClipboard, e.getX()).show(this, e.getX(), e.getY());
         } else {
-            new BlockPopupMenu(block, timelineController, dawClipboard).show(this, e.getX(), e.getY());
+            new BlockPopupMenu(block, dawClipboard).show(this, e.getX(), e.getY());
         }
     }
 

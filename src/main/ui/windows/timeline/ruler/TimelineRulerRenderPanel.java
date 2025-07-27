@@ -10,7 +10,7 @@ import ui.ruler.RulerRenderPanel;
 // The panel for Graphics to draw on to show Ruler tick marks
 public class TimelineRulerRenderPanel extends RulerRenderPanel implements PropertyChangeListener {
 
-    private TimelineController timelineController;
+    private final TimelineController timelineController;
 
     // EFFECTS: Sets null border for zero padding, borders will be drawn via Graphics
     TimelineRulerRenderPanel(TimelineController timelineController) {
@@ -27,7 +27,7 @@ public class TimelineRulerRenderPanel extends RulerRenderPanel implements Proper
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        super.drawAllTickMarks(g, timelineController, getWidth());
+        drawAllTickMarks(g, timelineController, getWidth());
     }
 
     // EFFECTS: listens for property change events and runs methods accordingly

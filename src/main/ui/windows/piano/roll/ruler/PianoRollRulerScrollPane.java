@@ -10,9 +10,10 @@ import ui.ruler.RulerScrollPane;
 
 public class PianoRollRulerScrollPane extends RulerScrollPane {
 
-    private PianoRollRulerRenderPanel pianoRollRulerRenderPanel;
+    private final PianoRollRulerRenderPanel pianoRollRulerRenderPanel;
 
-    public PianoRollRulerScrollPane(TimelineController timelineController, MidiTrack parentMidiTrack, BlockPlayer blockPlayer) {
+    public PianoRollRulerScrollPane(TimelineController timelineController, MidiTrack parentMidiTrack,
+                                    BlockPlayer blockPlayer) {
         super();
         pianoRollRulerRenderPanel = new PianoRollRulerRenderPanel(timelineController, parentMidiTrack, blockPlayer);
         pianoRollRulerRenderPanel.setLayout(new BoxLayout(pianoRollRulerRenderPanel, BoxLayout.X_AXIS));

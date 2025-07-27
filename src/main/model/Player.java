@@ -184,8 +184,7 @@ public abstract class Player implements Writable, ActionListener {
     // REQUIRES: ticks >= 0
     // EFFECTS: calculates ticks to beats conversion (reverse of above)
     public double ticksToBeats(long ticks) {
-        double beats = (double) ticks / (double) sequence.getResolution();
-        return beats;
+        return (double) ticks / (double) sequence.getResolution();
     }
 
     // REQUIRES: ticks >= 0

@@ -14,8 +14,8 @@ import model.TimelineController;
 // A container to draw the line of the position tick indicator line over tracks
 public class LineContainerPanel extends JPanel implements PropertyChangeListener {
 
-    private TimelineController timelineController;
-    private Player player;
+    private final TimelineController timelineController;
+    private final Player player;
     private int lineX = TrackLabelPanel.LABEL_BOX_WIDTH;
 
     // EFFECTS: creates a LineContainerPanel that observs the timeline and has BoxLayout

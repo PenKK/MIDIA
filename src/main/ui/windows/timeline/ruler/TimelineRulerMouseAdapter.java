@@ -9,7 +9,7 @@ import ui.windows.timeline.midi.TrackLabelPanel;
 
 public class TimelineRulerMouseAdapter extends RulerMouseAdapter {
 
-    private TimelineController timelineController;
+    private final TimelineController timelineController;
 
     public TimelineRulerMouseAdapter(TimelineController timelineController) {
         this.timelineController = timelineController;

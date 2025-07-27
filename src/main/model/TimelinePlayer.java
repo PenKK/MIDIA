@@ -10,7 +10,7 @@ import model.event.EventLog;
 
 public class TimelinePlayer extends Player {
     
-    private Timeline timeline;
+    private final Timeline timeline;
 
     public TimelinePlayer(Timeline timeline) {
         this.timeline = timeline;

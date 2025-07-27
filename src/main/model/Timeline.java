@@ -19,13 +19,13 @@ import persistance.Writable;
 // Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
 public class Timeline implements Writable {
 
-    private static final int DEFAULT_BEAT_DIVISON = 4;
+    private static final int DEFAULT_BEAT_DIVISION = 4;
     private static final int DEFAULT_BEATS_PER_MEASURE = 4;
     private static final double DEFAULT_HORIZONTAL_SCALE = 1;
     private static final double BASE_PIXELS_PER_BEAT = 100.0;
 
     private String projectName;
-    private ArrayList<MidiTrack> midiTracks;
+    private final ArrayList<MidiTrack> midiTracks;
     private Player player;
     private PropertyChangeSupport pcs;
 
@@ -43,7 +43,7 @@ public class Timeline implements Writable {
         this.projectName = projectName;
         this.pcs = pcs;
 
-        beatDivision = DEFAULT_BEAT_DIVISON;
+        beatDivision = DEFAULT_BEAT_DIVISION;
         beatsPerMeasure = DEFAULT_BEATS_PER_MEASURE;
         horizontalScaleFactor = DEFAULT_HORIZONTAL_SCALE;
         player = new TimelinePlayer(this);
@@ -60,7 +60,7 @@ public class Timeline implements Writable {
     public MidiTrack createMidiTrack(String name, Instrument instrument) {
         boolean percussive = !instrument.getType().equals("tonal");
         
-        if (!percussive && player.getAvailableChannels().size() <= 0) {
+        if (!percussive && player.getAvailableChannels().isEmpty()) {
             return null;
         }
 
@@ -198,7 +198,7 @@ public class Timeline implements Writable {
     }
 
     public MidiTrack[] getMidiTracksArray() {
-        return midiTracks.toArray(new MidiTrack[midiTracks.size()]);
+        return midiTracks.toArray(new MidiTrack[0]);
     }
 
     public void updatePlayerSequence() throws InvalidMidiDataException {

@@ -75,10 +75,8 @@ public class BeatConfigurationInputDialog extends InputDialog implements Propert
     public void propertyChange(PropertyChangeEvent evt) {
         String property = evt.getPropertyName();
 
-        switch (property) {
-            case "timelineReplaced":
-                updateValues();
-                break;
+        if (property.equals("timelineReplaced")) {
+            updateValues();
         }
     }
 

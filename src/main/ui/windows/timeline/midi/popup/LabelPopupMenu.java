@@ -18,11 +18,11 @@ import model.instrument.PercussiveInstrument;
 // The popup menu for modifying a track
 public class LabelPopupMenu extends JPopupMenu implements ActionListener {
 
-    private TimelineController timelineController;
-    private TrackLabelPanel parentPanel;
-    private JMenuItem rename;
-    private JMenuItem delete;
-    private JMenuItem changeInstrument;
+    private final TimelineController timelineController;
+    private final TrackLabelPanel parentPanel;
+    private final JMenuItem rename;
+    private final JMenuItem delete;
+    private final JMenuItem changeInstrument;
 
     // EFFECTS: creates a popup menu for the specified parent midiTrackLabelPanel
     public LabelPopupMenu(TrackLabelPanel parentPanel, TimelineController timelineController) {
@@ -50,7 +50,7 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
     private void rename() {
         String newName = JOptionPane.showInputDialog("Enter a new track name for "
                 + parentPanel.getMidiTrack().getName());
-        if (newName == null || newName.equals("")) {
+        if (newName == null || newName.isEmpty()) {
             return;
         }
 

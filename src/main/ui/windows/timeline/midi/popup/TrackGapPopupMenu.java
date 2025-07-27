@@ -12,11 +12,11 @@ import ui.windows.timeline.midi.TrackRenderPanel;
 
 public class TrackGapPopupMenu extends JPopupMenu implements ActionListener {
 
-    private TrackRenderPanel trackRenderPanel;
-    private TimelineController timelineController;
-    private DawClipboard dawClipboard;
-    private JMenuItem pasteMenuItem;
-    private long tick;
+    private final TrackRenderPanel trackRenderPanel;
+    private final TimelineController timelineController;
+    private final DawClipboard dawClipboard;
+    private final JMenuItem pasteMenuItem;
+    private final long tick;
 
     public TrackGapPopupMenu(TrackRenderPanel trackRenderPanel, TimelineController timelineController, 
                              DawClipboard dawClipboard, int mouseXPosition) {

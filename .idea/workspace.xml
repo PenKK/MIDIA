@@ -4,8 +4,45 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="695bc72a-6cb1-4634-8aeb-61d5adad041f" name="Changes" comment="Added a new type of player, BlockPlayer, for the piano roll">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+    <list default="true" id="695bc72a-6cb1-4634-8aeb-61d5adad041f" name="Changes" comment="code cleanup, adding finals, simplifying statements">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/Block.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/Block.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/BlockPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/BlockPlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/MidiTrack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/MidiTrack.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/Player.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/Timeline.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/Timeline.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/TimelineController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/TimelineController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/TimelinePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/TimelinePlayer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/editing/DawClipboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/editing/DawClipboard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/event/Event.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/event/Event.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/event/EventLog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/event/EventLog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/model/instrument/Instrument.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/instrument/Instrument.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/persistance/JsonReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/persistance/JsonReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/persistance/JsonWriter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/persistance/JsonWriter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/media/BpmMouseInputAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/media/BpmMouseInputAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/media/MediaControlPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/media/MediaControlPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/menubar/dialog/BeatConfigurationInputDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/menubar/dialog/BeatConfigurationInputDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/menubar/dialog/InputDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/menubar/dialog/InputDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/menubar/dialog/NoteInputDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/menubar/dialog/NoteInputDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/menubar/dialog/TrackInputDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/menubar/dialog/TrackInputDialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/menubar/menus/FileMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/menubar/menus/FileMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/menubar/menus/MenuItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/menubar/menus/MenuItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/menubar/menus/TrackMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/menubar/menus/TrackMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/menubar/menus/ViewMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/menubar/menus/ViewMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/piano/roll/ruler/PianoRollRulerRenderPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/piano/roll/ruler/PianoRollRulerRenderPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/piano/roll/ruler/PianoRollRulerScrollPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/piano/roll/ruler/PianoRollRulerScrollPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/TimelineViewPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/TimelineViewPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/LineContainerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/LineContainerPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/TrackLabelPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/TrackLabelPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/TrackPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/TrackPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/TrackRenderPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/TrackRenderPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/TrackScrollPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/TrackScrollPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/popup/BlockPopupMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/popup/BlockPopupMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/popup/LabelPopupMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/popup/LabelPopupMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/popup/TrackGapPopupMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/popup/TrackGapPopupMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/ruler/TimelineRulerMouseAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/ruler/TimelineRulerMouseAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/ruler/TimelineRulerRenderPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/ruler/TimelineRulerRenderPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/ruler/TimelineRulerScrollPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/ruler/TimelineRulerScrollPane.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,6 +64,9 @@
     &quot;accountId&quot;: &quot;e1305c04-d041-4adb-9298-28da32dd48a8&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
@@ -41,6 +81,7 @@
     &quot;JUnit.All in DAW-App.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;feature/piano-roll&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
@@ -50,11 +91,24 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.sync&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ui.Main" />
+      <module name="DAW-App" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ui.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="All in DAW-App" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="DAW-App" />
       <option name="PACKAGE_NAME" value="" />
@@ -65,6 +119,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="JUnit.All in DAW-App" />
       </list>
     </recent_temporary>
@@ -87,7 +142,9 @@
       <workItem from="1753314696844" duration="1060000" />
       <workItem from="1753323309425" duration="201000" />
       <workItem from="1753323521901" duration="1008000" />
-      <workItem from="1753427718930" duration="102000" />
+      <workItem from="1753427718930" duration="2643000" />
+      <workItem from="1753510671535" duration="33000" />
+      <workItem from="1753588302436" duration="2742000" />
     </task>
     <task id="LOCAL-00001" summary="Changed location of timer for media control panel.&#10;it is now handled by the player">
       <option name="closed" value="true" />
@@ -113,7 +170,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753324433632</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="fixed git ignore">
+      <option name="closed" value="true" />
+      <created>1753427888816</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1753427888816</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -134,7 +199,9 @@
     <MESSAGE value="Changed location of timer for media control panel.&#10;it is now handled by the player" />
     <MESSAGE value="fixed tests that broke from moving the rulerDrag boolean to player" />
     <MESSAGE value="Added a new type of player, BlockPlayer, for the piano roll" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a new type of player, BlockPlayer, for the piano roll" />
+    <MESSAGE value="fixed git ignore" />
+    <MESSAGE value="code cleanup, adding finals, simplifying statements" />
+    <option name="LAST_COMMIT_MESSAGE" value="code cleanup, adding finals, simplifying statements" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

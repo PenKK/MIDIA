@@ -16,10 +16,10 @@ import ui.windows.timeline.ruler.TimelineRulerScrollPane;
 // Holds the timeline view, and a ruler at the top
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener {
 
-    private TrackScrollPane midiTrackScrollPane;
-    private TimelineRulerScrollPane rulerScrollPane;
+    private final TrackScrollPane midiTrackScrollPane;
+    private final TimelineRulerScrollPane rulerScrollPane;
 
-    // EFFECTS: Creates timeline view container, and initializes sub components
+    // EFFECTS: Creates timeline view container, and initializes subcomponents
     public TimelineViewPanel(TimelineController timelineController, DawClipboard dawClipboard) {
         midiTrackScrollPane = new TrackScrollPane(timelineController, dawClipboard);
         rulerScrollPane = new TimelineRulerScrollPane(timelineController);

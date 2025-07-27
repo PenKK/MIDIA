@@ -10,8 +10,8 @@ import model.event.EventLog;
 
 public class BlockPlayer extends Player {
 
-    private Block block;
-    private MidiTrack parentMidiTrack;
+    private final Block block;
+    private final MidiTrack parentMidiTrack;
 
     public BlockPlayer(Block block, MidiTrack parentMidiTrack, float initialBpm) {
         super();
@@ -33,7 +33,8 @@ public class BlockPlayer extends Player {
 
         sequencer.setSequence(sequence);
 
-        Event e = new Event(String.format("Playback sequence was updated in Block [Piano Roll] with instrument %s", parentMidiTrack.getInstrument()));
+        Event e = new Event(String.format("Playback sequence was updated in Block [Piano Roll] with instrument %s",
+                                          parentMidiTrack.getInstrument()));
         EventLog.getInstance().logEvent(e);
     }
 

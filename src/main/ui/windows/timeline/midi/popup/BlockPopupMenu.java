@@ -2,23 +2,22 @@ package ui.windows.timeline.midi.popup;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.util.Collections;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import model.Block;
-import model.TimelineController;
 import model.editing.DawClipboard;
 
 public class BlockPopupMenu extends JPopupMenu implements ActionListener {
 
-    private Block block;
-    private DawClipboard dawClipboard;
+    private final Block block;
+    private final DawClipboard dawClipboard;
 
-    private JMenuItem copyMenuItem;
+    private final JMenuItem copyMenuItem;
 
-    public BlockPopupMenu(Block block, TimelineController timelineController, DawClipboard dawClipboard) {
+    public BlockPopupMenu(Block block, DawClipboard dawClipboard) {
         this.block = block;
         this.dawClipboard = dawClipboard;
 
@@ -31,7 +30,7 @@ public class BlockPopupMenu extends JPopupMenu implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(copyMenuItem)) {
-            dawClipboard.copy(Arrays.asList(block));
+            dawClipboard.copy(Collections.singletonList(block));
         }
     }
 }

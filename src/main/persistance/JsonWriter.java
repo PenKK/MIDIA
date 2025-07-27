@@ -14,7 +14,7 @@ import model.Timeline;
 public class JsonWriter {
 
     private static final int TAB_SPACING = 4;
-    private String path;
+    private final String path;
     private PrintWriter writer;
 
     // EFFECTS: constructs writer that writes at the specified path
@@ -30,7 +30,7 @@ public class JsonWriter {
     // EFFECTS: opens writer; throws FileNotFoundException if the path is not found/accessible
     //          for writing
     public void open() throws FileNotFoundException {
-        writer = new PrintWriter(new File(path));
+        writer = new PrintWriter(path);
     }
 
     // MODIFIES: this

@@ -15,10 +15,10 @@ import model.TimelineController;
 
 public class BpmMouseInputAdapter extends MouseInputAdapter {
 
-    private final int RESISTANCE = 10;
+    private static final int RESISTANCE = 10;
 
-    private TimelineController timelineController;
-    private JLabel bpmDisplay;
+    private final TimelineController timelineController;
+    private final JLabel bpmDisplay;
     private Robot robot;
     private Point anchorPointOnScreen;
     private float dragAccumulator;

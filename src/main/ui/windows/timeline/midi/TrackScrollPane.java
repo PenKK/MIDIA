@@ -13,9 +13,9 @@ import ui.ruler.BlankScrollPane;
 // JPanel that holds the interactable view of the timeline, rendered using graphics
 public class TrackScrollPane extends BlankScrollPane implements PropertyChangeListener {
 
-    private TimelineController timelineController;
-    private LineContainerPanel lineContainer;
-    private DawClipboard dawClipboard;
+    private final TimelineController timelineController;
+    private final LineContainerPanel lineContainer;
+    private final DawClipboard dawClipboard;
 
     // EFFECTS: initializes the timeline 
     public TrackScrollPane(TimelineController timelineController, DawClipboard dawClipboard) {

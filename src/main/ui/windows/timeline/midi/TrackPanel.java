@@ -13,7 +13,7 @@ import model.MidiTrack;
 import model.TimelineController;
 import model.editing.DawClipboard;
 
-// Represents a single MidiTrack in the TinelinePanel UI.
+// Represents a single MidiTrack in the TimelinePanel UI.
 // Contains two sub Panels, MidiTrackLabelPanel and MidiTrackRenderPanel
 public class TrackPanel extends JPanel {
 
@@ -21,8 +21,8 @@ public class TrackPanel extends JPanel {
     public static final int HEIGHT = 100;
     public static final int MINIMUM_WIDTH = 500;
 
-    private TrackLabelPanel labelPanel;
-    private TrackRenderPanel renderPanel;
+    private final TrackLabelPanel labelPanel;
+    private final TrackRenderPanel renderPanel;
 
     // Creates sub panels, adjusts width according to render panel length, and then adds it to this
     public TrackPanel(MidiTrack midiTrack, TimelineController timelineController, DawClipboard dawClipboard) {

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -31,7 +32,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     public static final double MAX_HORIZONTAL_SCALE = 5;
     public static final double MIN_HORIZONTAL_SCALE = 0.3;
 
-    private TimelineController timelineController;
+    private final TimelineController timelineController;
 
     private ImageIcon playImage = null;
     private ImageIcon pauseImage = null;
@@ -139,9 +140,10 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private ImageIcon getImageIcon(String path) {
         try {
             return new ImageIcon(
-                    ImageIO.read(getClass().getResourceAsStream(path)).getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+                    ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)))
+                            .getScaledInstance(16, 16, Image.SCALE_SMOOTH));
         } catch (IOException e) {
-            System.out.println("Couldnt load image at " + path);
+            System.out.println("Couldn't load image at " + path);
             return null;
         }
     }

@@ -15,9 +15,9 @@ public class TrackLabelPanel extends JPanel {
     public static final int LABEL_BOX_WIDTH = 100;
     private static final Color DEFAULT_BACKGROUND_COLOR = Color.GRAY;
 
-    private MidiTrack midiTrack;
-    private LabelPopupMenu labelPopupMenu;
-    private JLabel nameLabel;
+    private final MidiTrack midiTrack;
+    private final LabelPopupMenu labelPopupMenu;
+    private final JLabel nameLabel;
 
     // EFFECTS: Creates the label panel which contains information about the MidiTrack for that row
     public TrackLabelPanel(MidiTrack midiTrack, TimelineController timelineController) {
