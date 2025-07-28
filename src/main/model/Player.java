@@ -95,12 +95,12 @@ public abstract class Player implements Writable, ActionListener {
     // EFFECTS: Pauses playback
     public void pause() {
         sequencer.stop();
-        updatePositionTick();
+        syncPositionTick();
     }
 
-    // MODFIES: this
+    // MODIFIES: this
     // EFFECTS: updates the position tick according to the current playback tick
-    public void updatePositionTick() {
+    public void syncPositionTick() {
         setPositionTick(sequencer.getTickPosition());
     }
 

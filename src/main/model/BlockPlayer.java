@@ -52,7 +52,7 @@ public class BlockPlayer extends Player {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(playbackUpdateTimer)) {
             if (!isDraggingRuler) {
-                updatePositionTick();
+                syncPositionTick();
             }
 
             // timeline.getPropertyChangeSupport().firePropertyChange("positionTick", null, null);

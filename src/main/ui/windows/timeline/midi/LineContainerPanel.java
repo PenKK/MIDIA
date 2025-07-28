@@ -15,10 +15,10 @@ import model.TimelineController;
 public class LineContainerPanel extends JPanel implements PropertyChangeListener {
 
     private final TimelineController timelineController;
-    private final Player player;
+    private Player player;
     private int lineX = TrackLabelPanel.LABEL_BOX_WIDTH;
 
-    // EFFECTS: creates a LineContainerPanel that observs the timeline and has BoxLayout
+    // EFFECTS: creates a LineContainerPanel that observes the timeline and has BoxLayout
     public LineContainerPanel(TimelineController timelineController, Player player) {
         super();
         this.timelineController = timelineController;
@@ -46,19 +46,24 @@ public class LineContainerPanel extends JPanel implements PropertyChangeListener
         }
     }
 
-    // EFFECTS: listens for property changes and runs methods accoringly 
+    private void updatePlayer() {
+        this.player = timelineController.getTimeline().getPlayer();
+        updateLineX();
+    }
+
+    // EFFECTS: listens for property changes and runs methods accordingly
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
 
         switch (propertyName) {
             case "positionTick":
-            case "timelineReplaced":
             case "horizontalScaleFactor":
                 updateLineX();
                 break;
-            case "playbackStarted":
-
+            case "timelineReplaced":
+                updatePlayer();
+                break;
         }
     }
 }
