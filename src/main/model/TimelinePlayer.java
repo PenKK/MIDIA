@@ -87,15 +87,6 @@ public class TimelinePlayer extends Player {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(playbackUpdateTimer)) {
-            if (!isDraggingRuler) {
-                syncPositionTick();
-            }
-        }
-    }
-
-    @Override
     public void startRulerDrag() {
         super.startRulerDrag();
         timeline.getPropertyChangeSupport().firePropertyChange("rulerDragStarted", null, null);

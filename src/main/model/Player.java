@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
@@ -199,6 +200,15 @@ public abstract class Player implements Writable, ActionListener {
 
     public void stopRulerDrag() {
         isDraggingRuler = false;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(playbackUpdateTimer)) {
+            if (!isDraggingRuler) {
+                syncPositionTick();
+            }
+        }
     }
 
     // EFFECTS: returns the calculation of the sequence length in beats

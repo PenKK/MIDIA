@@ -38,7 +38,7 @@ public class PianoRollKeysScrollPane extends BlankScrollPane {
             public void paint(Graphics g) {
                 super.paint(g);
                 
-                g.drawRect(0, 7*10 * KEY_HEIGHT - 20, 10, 10);
+                g.drawRect(0, 7 * 10 * KEY_HEIGHT - 20, 10, 10);
             }
         };
     }

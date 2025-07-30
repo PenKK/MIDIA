@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import model.BlockPlayer;
 import model.MidiTrack;
 import model.TimelineController;
+import ui.ruler.RulerMouseAdapter;
 import ui.ruler.RulerRenderPanel;
 
 public class PianoRollRulerRenderPanel extends RulerRenderPanel {
@@ -19,6 +20,10 @@ public class PianoRollRulerRenderPanel extends RulerRenderPanel {
         this.timelineController = timelineController;
         this.parentMidiTrack = parentMidiTrack;
         this.blockPlayer = blockPlayer;
+
+        RulerMouseAdapter mouseAdapter = new RulerMouseAdapter(timelineController, blockPlayer);
+        this.addMouseListener(mouseAdapter);
+        this.addMouseMotionListener(mouseAdapter);
     }
 
     // MODIFIES: this

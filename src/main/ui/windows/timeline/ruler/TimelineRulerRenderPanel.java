@@ -5,6 +5,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import model.TimelineController;
+import ui.ruler.RulerMouseAdapter;
 import ui.ruler.RulerRenderPanel;
 
 // The panel for Graphics to draw on to show Ruler tick marks
@@ -15,7 +16,8 @@ public class TimelineRulerRenderPanel extends RulerRenderPanel implements Proper
     // EFFECTS: Sets null border for zero padding, borders will be drawn via Graphics
     TimelineRulerRenderPanel(TimelineController timelineController) {
         super();
-        TimelineRulerMouseAdapter mouseAdapter = new TimelineRulerMouseAdapter(timelineController);
+        RulerMouseAdapter mouseAdapter = new RulerMouseAdapter(timelineController,
+                timelineController.getTimeline().getPlayer());
         this.timelineController = timelineController;
         this.addMouseListener(mouseAdapter);
         this.addMouseMotionListener(mouseAdapter);

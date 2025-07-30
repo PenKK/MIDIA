@@ -47,16 +47,4 @@ public class BlockPlayer extends Player {
     public double getLengthMs() {
         return ticksToMs(block.getDurationTicks());
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource().equals(playbackUpdateTimer)) {
-            if (!isDraggingRuler) {
-                syncPositionTick();
-            }
-
-            // timeline.getPropertyChangeSupport().firePropertyChange("positionTick", null, null);
-        }
-    }       
-
 }

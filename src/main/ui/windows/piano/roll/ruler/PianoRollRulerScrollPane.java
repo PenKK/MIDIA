@@ -7,6 +7,7 @@ import model.BlockPlayer;
 import model.MidiTrack;
 import model.TimelineController;
 import ui.ruler.RulerScrollPane;
+import ui.windows.timeline.midi.LineContainerPanel;
 
 public class PianoRollRulerScrollPane extends RulerScrollPane {
 
@@ -17,6 +18,7 @@ public class PianoRollRulerScrollPane extends RulerScrollPane {
         super();
         pianoRollRulerRenderPanel = new PianoRollRulerRenderPanel(timelineController, parentMidiTrack, blockPlayer);
         pianoRollRulerRenderPanel.setLayout(new BoxLayout(pianoRollRulerRenderPanel, BoxLayout.X_AXIS));
+
         setViewportView(pianoRollRulerRenderPanel);
     }
 }

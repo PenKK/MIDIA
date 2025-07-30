@@ -4,12 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="695bc72a-6cb1-4634-8aeb-61d5adad041f" name="Changes" comment="changed inspection profile">
+    <list default="true" id="695bc72a-6cb1-4634-8aeb-61d5adad041f" name="Changes" comment="fixed a bug where lineX wouldn't update after switching timelines because I did not update the player reference">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/model/BlockPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/BlockPlayer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/model/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/Player.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/model/TimelinePlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/model/TimelinePlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/LineContainerPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/midi/LineContainerPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/ruler/RulerMouseAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/ruler/RulerMouseAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/piano/roll/PianoRollKeysScrollPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/piano/roll/PianoRollKeysScrollPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/piano/roll/ruler/PianoRollRulerRenderPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/piano/roll/ruler/PianoRollRulerRenderPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/piano/roll/ruler/PianoRollRulerScrollPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/piano/roll/ruler/PianoRollRulerScrollPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/ruler/TimelineRulerMouseAdapter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/ui/windows/timeline/ruler/TimelineRulerRenderPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/ui/windows/timeline/ruler/TimelineRulerRenderPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,8 +63,15 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "settings.sync",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
+    ]
   }
 }]]></component>
   <component name="RunManager" selected="Application.Main">
@@ -113,7 +125,9 @@
       <workItem from="1753510671535" duration="33000" />
       <workItem from="1753588302436" duration="3051000" />
       <workItem from="1753597156591" duration="1861000" />
-      <workItem from="1753676945143" duration="1147000" />
+      <workItem from="1753676945143" duration="2949000" />
+      <workItem from="1753738126907" duration="11988000" />
+      <workItem from="1753913789822" duration="153000" />
     </task>
     <task id="LOCAL-00001" summary="Changed location of timer for media control panel.&#10;it is now handled by the player">
       <option name="closed" value="true" />
@@ -163,7 +177,15 @@
       <option name="project" value="LOCAL" />
       <updated>1753591253250</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="fixed a bug where lineX wouldn't update after switching timelines because I did not update the player reference">
+      <option name="closed" value="true" />
+      <created>1753678228179</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1753678228179</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -187,7 +209,8 @@
     <MESSAGE value="fixed git ignore" />
     <MESSAGE value="code cleanup, adding finals, simplifying statements" />
     <MESSAGE value="changed inspection profile" />
-    <option name="LAST_COMMIT_MESSAGE" value="changed inspection profile" />
+    <MESSAGE value="fixed a bug where lineX wouldn't update after switching timelines because I did not update the player reference" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed a bug where lineX wouldn't update after switching timelines because I did not update the player reference" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
