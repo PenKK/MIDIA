@@ -3,3 +3,5 @@
 /bin/
 data/projects/autosave
 /out/*
+*.iml
+.idea/
