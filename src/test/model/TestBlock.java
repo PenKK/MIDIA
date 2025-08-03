@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,9 +24,9 @@ public class TestBlock {
     void testConstructor() {
         assertEquals(new ArrayList<Note>(), block.getNotes());
         assertEquals(10, block.getStartTick());
-        assertEquals(block.toString(), "S: 10, N: 0");
-        assertEquals(block.getDurationTicks(), 1000);
-        assertEquals(block.info(), "Start tick: 10, duration: 1000, current note count: 0");
+        assertEquals("S: 10, N: 0", block.toString());
+        assertEquals(1000, block.getDurationTicks());
+        assertEquals("Start tick: 10, duration: 1000, current note count: 0", block.info());
     }
 
     @Test
@@ -35,24 +36,24 @@ public class TestBlock {
         Note note3 = new Note(65, 90, 9, 17);
         ArrayList<Note> expectedNotes = new ArrayList<>();
 
-        assertEquals(block.addNote(note1), 0);
+        assertEquals(0, block.addNote(note1));
         expectedNotes.add(note1);
         assertEquals(block.getNotes(), expectedNotes);
 
-        assertEquals(block.addNote(note2), 1);
+        assertEquals(1, block.addNote(note2));
         expectedNotes.add(note2);
         assertEquals(block.getNotes(), expectedNotes);
 
-        assertEquals(block.addNote(note3), 2);
+        assertEquals(2, block.addNote(note3));
         expectedNotes.add(note3);
         assertEquals(block.getNotes(), expectedNotes);
 
         block.getNotes().clear();
-        assertEquals(block.getNotes().size(), 0);
+        assertEquals(0, block.getNotes().size());
 
-        assertEquals(block.addNote(note1), 0);
-        assertEquals(block.addNote(note2), 1);
-        assertEquals(block.addNote(note3), 2);
+        assertEquals(0, block.addNote(note1));
+        assertEquals(1, block.addNote(note2));
+        assertEquals(2, block.addNote(note3));
     }
 
     @Test
@@ -66,31 +67,31 @@ public class TestBlock {
         Note note44 = new Note(65, 90, 1, 1000);
         ArrayList<Note> expectedNotes = new ArrayList<>();
 
-        assertEquals(block.addNote(note1), 0);
+        assertEquals(0, block.addNote(note1));
         expectedNotes.add(note1);
         assertEquals(block.getNotes(), expectedNotes);
 
-        assertEquals(block.addNote(note2), 1);
+        assertEquals(1, block.addNote(note2));
         expectedNotes.add(note2);
         assertEquals(block.getNotes(), expectedNotes);
 
-        assertEquals(block.addNote(note3), 2);
+        assertEquals(2, block.addNote(note3));
         expectedNotes.add(note3);
         assertEquals(block.getNotes(), expectedNotes);
 
         block.getNotes().clear();
-        assertEquals(block.getNotes().size(), 0);
+        assertEquals(0, block.getNotes().size());
 
-        assertEquals(block.addNote(note1), 0);
-        assertEquals(block.addNote(note2), 1);
-        assertEquals(block.addNote(note3), 2);
+        assertEquals(0, block.addNote(note1));
+        assertEquals(1, block.addNote(note2));
+        assertEquals(2, block.addNote(note3));
 
-        assertEquals(block.addNote(note11), 3);
-        assertEquals(block.addNote(note22), 4);
-        assertEquals(block.addNote(note33), -1);
-        assertEquals(block.addNote(note44), -1);
+        assertEquals(3, block.addNote(note11));
+        assertEquals(4, block.addNote(note22));
+        assertEquals(-1, block.addNote(note33));
+        assertEquals(-1, block.addNote(note44));
 
-        assertEquals(block.getNotes().size(), 5);
+        assertEquals(5, block.getNotes().size());
     }
 
     @Test
@@ -174,24 +175,24 @@ public class TestBlock {
         Note n = new Note(0, 0, 0, 0);
         DawClipboard dawClipboard = new DawClipboard();
         assertTrue(dawClipboard.isEmpty());
-        dawClipboard.copy(Arrays.asList(n));
+        dawClipboard.copy(List.of(n));
         assertFalse(dawClipboard.isEmpty());
 
-        assertEquals(block.getNotes().size(), 0);
+        assertEquals(0, block.getNotes().size());
         block.paste(dawClipboard.getContents(), 0);
-        assertEquals(block.getNotes().size(), 1);
+        assertEquals(1, block.getNotes().size());
 
         n.setPitch(100);
-        assertEquals(block.getNotes().get(0).getPitch(), 0);
+        assertEquals(0, block.getNotes().get(0).getPitch());
     }
 
     @Test
     void testOddPaste() {
         DawClipboard dawClipboard = new DawClipboard();
-        dawClipboard.copy(Arrays.asList(block));
+        dawClipboard.copy(List.of(block));
 
-        assertEquals(block.getNotes().size(), 0);
+        assertEquals(0, block.getNotes().size());
         block.paste(dawClipboard.getContents(), 0);
-        assertEquals(block.getNotes().size(), 0);
+        assertEquals(0, block.getNotes().size());
     }
 }

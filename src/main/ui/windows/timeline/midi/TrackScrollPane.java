@@ -1,9 +1,10 @@
 package ui.windows.timeline.midi;
 
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 import model.MidiTrack;
 import model.TimelineController;
@@ -49,6 +50,13 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
 
         switch (propertyName) {
             case "timelineReplaced":
+                updateTrackRenderPanels();
+            case "blockCreated":
+            case "blockDeleted":
+            case "blockPasted":
+            case "blockUpdated":
+                updateWidth();
+                break;
             case "midiTracks":
             case "horizontalScaleFactor":
                 updateTrackRenderPanels();
@@ -56,6 +64,19 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
             default:
                 break;
         }
+
+    }
+
+    public void updateWidth() {
+        int newWidth = 0;
+        for (Component component : lineContainer.getComponents()) {
+            if (component instanceof TrackRenderPanel currentPanel) {
+                newWidth = Math.max(newWidth, currentPanel.getScaledWidth());
+            }
+        }
+
+        lineContainer.setPreferredSize(new Dimension(newWidth + TrackRenderPanel.WIDTH_PADDING, getHeight()));
+        timelineController.getPropertyChangeSupport().firePropertyChange("TrackScrollPaneWidth", null, newWidth);
     }
 
     // EFFECTS: returns width of the scrollPanes container

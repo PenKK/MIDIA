@@ -8,7 +8,6 @@ import javax.swing.JScrollPane;
 
 public abstract class RulerScrollPane extends BlankScrollPane {
 
-    public static final int BEAT_WIDTH = 25;
     public static final int RULER_HEIGHT = TrackLabelPanel.HEIGHT / 4;
     public static final int DEFAULT_RULER_WIDTH = 800;
 

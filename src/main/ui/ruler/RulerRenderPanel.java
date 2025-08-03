@@ -33,7 +33,7 @@ public abstract class RulerRenderPanel extends JPanel {
         this.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
     }
 
-        // MODIFIES: this
+    // MODIFIES: this
     // EFFECTS: Draws the ticks marks of measures, beats, and divisions, according to timeline instance
     @SuppressWarnings("methodlength")
     public static void drawAllTickMarks(Graphics g, TimelineController timelineController, int width) {
@@ -48,11 +48,9 @@ public abstract class RulerRenderPanel extends JPanel {
         long measureTickInterval = (long) Player.PULSES_PER_QUARTER_NOTE * beatsPerMeasure;
         long beatTickInterval = Player.PULSES_PER_QUARTER_NOTE;
 
-        int startOffset = TrackLabelPanel.LABEL_BOX_WIDTH;
-
         for (long tick = 0; tick <= width / timeline.getPixelsPerTick(); tick += divisionTickInterval) {
             int height = TICK_HEIGHT;
-            int pixelPosition = (int) (timeline.scaleTickToPixel(tick) + startOffset);
+            int pixelPosition = (int) (timeline.scaleTickToPixel(tick));
             g.setColor(DIVISION_TICK_COLOR);
 
             if (tick % measureTickInterval == 0) { // One measure

@@ -29,7 +29,7 @@ public class RulerMouseAdapter extends MouseInputAdapter implements PropertyChan
     protected void updateX(MouseEvent e) {
         Timeline timeline = timelineController.getTimeline();
 
-        int tick = (int) Math.max(0, (timeline.scalePixelToTick(e.getX() - TrackLabelPanel.LABEL_BOX_WIDTH)));
+        int tick = (int) Math.max(0, (timeline.scalePixelToTick(e.getX())));
 
         tick = Math.max(tick, 0);
         player.setPositionTick(tick);

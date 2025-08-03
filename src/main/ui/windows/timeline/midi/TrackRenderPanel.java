@@ -25,6 +25,8 @@ import ui.windows.timeline.midi.popup.TrackGapPopupMenu;
 // Interactable render of the MidiTrack's blocks and notes
 public class TrackRenderPanel extends JPanel {
 
+    public static final int WIDTH_PADDING = 300;
+
     private static final Color NOTE_COLOR = Color.decode("#ECF0F1");
     private static final Color BLOCK_BACKGROUND_COLOR = Color.decode("#34495E");
     private static final Color LINE_COLOR = Color.decode("#333333");
@@ -47,7 +49,8 @@ public class TrackRenderPanel extends JPanel {
         this.dawClipboard = dawClipboard;
         this.timelineController = timelineController;
         this.midiTrack = midiTrack;
-        setPreferredSize(new Dimension(getWidth(), TrackLabelPanel.HEIGHT));
+
+        setPreferredSize(new Dimension(getScaledWidth() + WIDTH_PADDING, TrackLabelPanel.HEIGHT));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, TrackLabelPanel.HEIGHT));
 
         this.addMouseListener(mouseAdapter());
@@ -194,12 +197,13 @@ public class TrackRenderPanel extends JPanel {
                 endPixel = temp;
             }
         }
+
         return (int) timelineController.getTimeline().scaleTickToPixel(endPixel);
     }
 
     private MouseAdapter mouseAdapter() {
         return new MouseAdapter() {
-            // EFFECTS: listens for mouse events and runs methods accoringly
+            // EFFECTS: listens for mouse events and runs methods accordingly
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
