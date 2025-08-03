@@ -35,6 +35,7 @@ public abstract class RulerRenderPanel extends JPanel {
 
         // MODIFIES: this
     // EFFECTS: Draws the ticks marks of measures, beats, and divisions, according to timeline instance
+    @SuppressWarnings("methodlength")
     public static void drawAllTickMarks(Graphics g, TimelineController timelineController, int width) {
         Timeline timeline = timelineController.getTimeline();
 

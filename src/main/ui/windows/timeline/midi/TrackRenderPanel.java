@@ -1,9 +1,10 @@
 package ui.windows.timeline.midi;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -41,11 +42,13 @@ public class TrackRenderPanel extends JPanel {
     private PianoRollDialog pianoRollDialog;
     private final DawClipboard dawClipboard;
 
-    // EFFECTS: recieves the specified midiTrack, and listens for mouse events
+    // EFFECTS: receives the specified midiTrack, and listens for mouse events
     public TrackRenderPanel(MidiTrack midiTrack, TimelineController timelineController, DawClipboard dawClipboard) {
         this.dawClipboard = dawClipboard;
         this.timelineController = timelineController;
         this.midiTrack = midiTrack;
+        setPreferredSize(new Dimension(getWidth(), TrackLabelPanel.HEIGHT));
+        setMaximumSize(new Dimension(Integer.MAX_VALUE, TrackLabelPanel.HEIGHT));
 
         this.addMouseListener(mouseAdapter());
     }
@@ -58,7 +61,6 @@ public class TrackRenderPanel extends JPanel {
         drawBlockBorders(midiTrack.getBlocks(), g);
         drawLines(g);
         drawBlockNotes(midiTrack.getBlocks(), g);
-
     }
 
     private void drawLines(Graphics g) {
@@ -92,10 +94,9 @@ public class TrackRenderPanel extends JPanel {
         int width = (int) timeline.scaleTickToPixel(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
         int x = (int) timeline.scaleTickToPixel(block.getStartTick());
         int y = BLOCK_HEIGHT_MARGIN / 2;
-        int height = TrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
+        int height = TrackLabelPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
 
         g.fillRoundRect(x, y, width, height, CORNER_ROUNDING_BLOCK, CORNER_ROUNDING_BLOCK);
-
         g.setColor(tempColor);
     }
 
@@ -149,7 +150,7 @@ public class TrackRenderPanel extends JPanel {
         int minPitch = pitchRange[0];
         int maxPitch = pitchRange[1];
 
-        int trackHeight = TrackPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
+        int trackHeight = TrackLabelPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
         int range = Math.abs(minPitch - maxPitch);
         int rangeAdjusted = Math.max(range, MIN_NOTE_RANGE);
         double heightDouble = trackHeight / (double) (rangeAdjusted + NOTE_RANGE_PADDING);

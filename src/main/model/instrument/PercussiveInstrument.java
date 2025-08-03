@@ -77,7 +77,6 @@ public enum PercussiveInstrument implements Instrument {
     public String getName() {
         return name;
     }
-
     
     @Override
     public String getType() {
@@ -88,5 +87,4 @@ public enum PercussiveInstrument implements Instrument {
     public String toString() {
         return name;
     }
-
 }

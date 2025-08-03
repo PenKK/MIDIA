@@ -36,7 +36,7 @@ public class TrackGapPopupMenu extends JPopupMenu implements ActionListener {
         if (e.getSource().equals(pasteMenuItem)) {
             trackRenderPanel.getMidiTrack().paste(dawClipboard.getContents(), 
                                                   timelineController.getTimeline().snapTickLower(tick));
-            timelineController.refreshTrackLayout();
+            timelineController.getPropertyChangeSupport().firePropertyChange("blockPasted", null, null);
         }
     }
 

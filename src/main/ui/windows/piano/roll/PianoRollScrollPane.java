@@ -11,11 +11,11 @@ import javax.swing.JScrollPane;
 import ui.ruler.BlankScrollPane;
 import ui.windows.timeline.midi.TrackLabelPanel;
 
-public class PianoRollKeysScrollPane extends BlankScrollPane {
+public class PianoRollScrollPane extends BlankScrollPane {
 
     private static int KEY_HEIGHT = 30;
 
-    PianoRollKeysScrollPane() {
+    PianoRollScrollPane() {
         super();
         JPanel keysRenderPanel = keysRenderPanel();
 

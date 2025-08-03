@@ -1,15 +1,15 @@
 package ui.ruler;
 
+import ui.windows.timeline.midi.TrackLabelPanel;
+
 import java.awt.Dimension;
 
 import javax.swing.JScrollPane;
 
-import ui.windows.timeline.midi.TrackPanel;
-
 public abstract class RulerScrollPane extends BlankScrollPane {
 
     public static final int BEAT_WIDTH = 25;
-    public static final int RULER_HEIGHT = TrackPanel.HEIGHT / 4;
+    public static final int RULER_HEIGHT = TrackLabelPanel.HEIGHT / 4;
     public static final int DEFAULT_RULER_WIDTH = 800;
 
     public RulerScrollPane() {

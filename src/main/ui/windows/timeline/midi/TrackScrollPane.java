@@ -27,28 +27,21 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
         this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         timelineController.addObserver(this);
 
-        updateMidiTrackPanels();
+        updateTrackRenderPanels();
     }
 
     // EFFECTS: clears all MidiTrackPanels and then populates according to current Timeline
-    private void updateMidiTrackPanels() {
-        clearTrackPanels();
+    private void updateTrackRenderPanels() {
+        lineContainer.removeAll();
         for (MidiTrack track : timelineController.getTimeline().getMidiTracks()) {
-            TrackPanel currentPanel = new TrackPanel(track, timelineController, dawClipboard);
+            TrackRenderPanel currentPanel = new TrackRenderPanel(track, timelineController, dawClipboard);
             lineContainer.add(currentPanel);
         }
 
-        revalidate();
         repaint();
     }
 
-    // MODFIES: this
-    // EFFECTS: Removes MidiTrackPanels from the container
-    private void clearTrackPanels() {
-        lineContainer.removeAll();
-    }
-
-    // MODFIES: this
+    // MODIFIES: this
     // EFFECTS: listens for proper change events and executes methods accordingly
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
@@ -58,7 +51,7 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
             case "timelineReplaced":
             case "midiTracks":
             case "horizontalScaleFactor":
-                updateMidiTrackPanels();
+                updateTrackRenderPanels();
                 break;
             default:
                 break;
