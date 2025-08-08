@@ -1,11 +1,5 @@
 # MIDIA (Musical Interface for Digital Instrument Arrangement)
 
-***Why a DAW?***
-- I have made games before, but I wanted to make an actual piece of software that serves a specific purpose. 
-- Music has always been of great interest to me, I started playing trombone in grade 7 and have continued since.
-- Although I honestly have never made music in a DAW before, I have some (very basic) understanding of how these programs work and music.
-- I thought that creating such a program would be a feasible challenge considering Java's built-in support for MIDI handling in the Sound library.
-
 ## Usage
 
 ### Create a track
