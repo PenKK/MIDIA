@@ -201,6 +201,11 @@ public class TrackRenderPanel extends JPanel {
         return (int) timelineController.getTimeline().scaleTickToPixel(endPixel);
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(getScaledWidth(), super.getPreferredSize().height);
+    }
+
     private MouseAdapter mouseAdapter() {
         return new MouseAdapter() {
             // EFFECTS: listens for mouse events and runs methods accordingly

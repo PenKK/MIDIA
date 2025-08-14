@@ -18,8 +18,8 @@ import ui.windows.timeline.ruler.TimelineRulerScrollPane;
 // Holds the timeline view, and a ruler at the top
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener {
 
-    private JPanel topHorizontalPanel;
-    private JPanel bottomHorizontalPanel;
+    private final JPanel topHorizontalPanel;
+    private final JPanel bottomHorizontalPanel;
 
     private final TrackScrollPane trackScrollPane;
     private final TimelineRulerScrollPane rulerScrollPane;
