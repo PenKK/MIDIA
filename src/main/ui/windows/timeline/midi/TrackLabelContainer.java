@@ -28,6 +28,7 @@ public class TrackLabelContainer extends JPanel implements PropertyChangeListene
             this.add(new TrackLabelPanel(track, timelineController));
         }
 
+        revalidate();
         repaint();
     }
 

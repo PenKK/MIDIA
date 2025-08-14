@@ -37,10 +37,10 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
     private void updateTrackRenderPanels() {
         lineContainer.removeAll();
         for (MidiTrack track : timelineController.getTimeline().getMidiTracks()) {
-            TrackRenderPanel currentPanel = new TrackRenderPanel(track, timelineController, dawClipboard);
-            lineContainer.add(currentPanel);
+            lineContainer.add(new TrackRenderPanel(track, timelineController, dawClipboard));
         }
 
+        revalidate();
         repaint();
     }
 

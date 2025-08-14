@@ -162,7 +162,7 @@ public class NoteInputDialog extends InputDialog {
 
         Note note = new Note(pitch, velocity, startTick, durationTicks);
         selectedBlock.addNote(note);
-        timelineController.refreshTrackLayout();
+        timelineController.getPropertyChangeSupport().firePropertyChange("noteCreated", null, selectedBlock);
     }
 
     @Override

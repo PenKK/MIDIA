@@ -73,6 +73,8 @@ public class LineContainerPanel extends JPanel implements PropertyChangeListener
                 updatePlayer();
                 break;
             case "blockPasted":
+            case "blockCreated":
+            case "noteCreated":
                 repaint();
                 break;
         }

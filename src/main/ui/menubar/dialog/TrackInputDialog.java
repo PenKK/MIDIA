@@ -87,15 +87,13 @@ public class TrackInputDialog extends InputDialog {
     // MODIFIES: this
     // EFFECTS: updates the instrumentComboBox list of instrument options accoring to checkBox for percussion
     private void updateInstrumentList(JCheckBox checkBox) {
+        DefaultComboBoxModel<Instrument> items;
         if (checkBox.isSelected()) {
-            DefaultComboBoxModel<Instrument> items = 
-                    new DefaultComboBoxModel<>(PercussiveInstrument.values());
-            instrumentComboBox.setModel(items);
+            items = new DefaultComboBoxModel<>(PercussiveInstrument.values());
         } else {
-            DefaultComboBoxModel<Instrument> items = 
-                    new DefaultComboBoxModel<>(TonalInstrument.values());
-            instrumentComboBox.setModel(items);
+            items = new DefaultComboBoxModel<>(TonalInstrument.values());
         }
+        instrumentComboBox.setModel(items);
     }
 
 

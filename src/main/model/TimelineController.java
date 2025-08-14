@@ -77,11 +77,6 @@ public class TimelineController implements MetaEventListener {
         pcs.removePropertyChangeListener(observer);
     }
 
-    // EFFECTS: forces a timeline update (for rendering purposes one day better fix hopefuly)
-    public void refreshTrackLayout() {
-        pcs.firePropertyChange("timelineReplaced", null, this);
-    }
-
     public PropertyChangeSupport getPropertyChangeSupport() {
         return pcs;
     }
