@@ -1,7 +1,6 @@
 package ui.windows.timeline.midi;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -44,6 +43,15 @@ public class LineContainerPanel extends JPanel implements PropertyChangeListener
             g.setColor(Color.RED);
             g.drawLine(lineX, 0, lineX, getHeight());
         }
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        int width = 0;
+        for (Component comp : getComponents()) {
+            width = Math.max(width, comp.getPreferredSize().width);
+        }
+        return new Dimension(width + TrackRenderPanel.WIDTH_PADDING, super.getPreferredSize().height);
     }
 
     private void updatePlayer() {

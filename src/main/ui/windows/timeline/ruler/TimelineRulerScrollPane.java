@@ -24,8 +24,7 @@ public class TimelineRulerScrollPane extends RulerScrollPane {
     // EFFECTS: adjusts the width of the ruler to match the MidiTrackPanel rows
     public void updateWidth(int width) {
         SwingUtilities.invokeLater(() -> {
-            int widthScrollBoxAdjusted = width + (int) UIManager.get("ScrollBar.width");
-            renderContainer.setPreferredSize(new Dimension(widthScrollBoxAdjusted, RulerScrollPane.RULER_HEIGHT));
+            renderContainer.setPreferredSize(new Dimension(width, RulerScrollPane.RULER_HEIGHT));
             renderContainer.revalidate();
         });
     }

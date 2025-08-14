@@ -26,6 +26,8 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
 
         this.setViewportView(lineContainer);
         this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        this.setMinimumSize(new Dimension(0, 0));
         timelineController.addObserver(this);
 
         updateTrackRenderPanels();
@@ -68,14 +70,8 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
     }
 
     public void updateWidth() {
-        int newWidth = 0;
-        for (Component component : lineContainer.getComponents()) {
-            if (component instanceof TrackRenderPanel currentPanel) {
-                newWidth = Math.max(newWidth, currentPanel.getScaledWidth());
-            }
-        }
-
-        lineContainer.setPreferredSize(new Dimension(newWidth + TrackRenderPanel.WIDTH_PADDING, getHeight()));
+        lineContainer.revalidate();
+        int newWidth = lineContainer.getPreferredSize().width;
         timelineController.getPropertyChangeSupport().firePropertyChange("TrackScrollPaneWidth", null, newWidth);
     }
 
