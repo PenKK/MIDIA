@@ -2,8 +2,7 @@ package ui.windows.piano.roll;
 
 import java.awt.BorderLayout;
 
-import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import model.Block;
 import model.MidiTrack;
@@ -16,6 +15,7 @@ public class PianoRollDialog extends JDialog {
         setLayout(new BorderLayout());
         setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         setResizable(true);
+        getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 
         PianoRollViewPanel pianoRollViewPanel = new PianoRollViewPanel(timelineController, parentMidiTrack, block);
         add(pianoRollViewPanel, BorderLayout.CENTER);

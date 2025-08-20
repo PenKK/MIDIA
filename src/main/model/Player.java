@@ -45,7 +45,7 @@ public abstract class Player implements Writable, ActionListener {
             sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
             sequencer.open();
         } catch (MidiUnavailableException e) {
-            throw new RuntimeException("MIDI device unavaliable, unable to initialize player", e);
+            throw new RuntimeException("MIDI device unavailable, unable to initialize player", e);
         } catch (InvalidMidiDataException e) {
             throw new RuntimeException("Invalid MIDI data found during player initialization, PPQ may be invalid", e);
         }

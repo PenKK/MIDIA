@@ -37,42 +37,42 @@ public class TestMidiTrack {
     @Test
     void testConstructor() {
         assertFalse(midiTrack.isMuted());
-        assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
-        assertEquals(midiTrack.getInstrument().getProgramNumber(), 0); // 0 is piano
-        assertEquals(midiTrack.getVolume(), 100);
-        assertEquals(midiTrack.getVolumeScaled(), 79); // 100 / 127
-        assertEquals(midiTrack.getName(), "Piano Melody");
-        assertEquals(midiTrack.getChannel(), 0);
-        assertEquals(midiTrack.toString(), "Piano Melody");
-        assertEquals(midiTrack.info(),
-                "name: Piano Melody, channel: 0, instrument: Acoustic Grand Piano, block count: 0");
+        assertEquals(new ArrayList<Block>(), midiTrack.getBlocks());
+        assertEquals(0, midiTrack.getInstrument().getProgramNumber()); // 0 is piano
+        assertEquals(100, midiTrack.getVolume());
+        assertEquals(79, midiTrack.getVolumeScaled()); // 100 / 127
+        assertEquals("Piano Melody", midiTrack.getName());
+        assertEquals(0, midiTrack.getChannel());
+        assertEquals("Piano Melody", midiTrack.toString());
+        assertEquals("name: Piano Melody, channel: 0, instrument: Acoustic Grand Piano, block count: 0",
+                midiTrack.info());
 
         midiTrack = new MidiTrack("Percussive drums", PercussiveInstrument.ACOUSTIC_BASS_DRUM, 9);
         assertFalse(midiTrack.isMuted());
-        assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
-        assertEquals(midiTrack.getInstrument().getProgramNumber(), 35); // 35 is bass drum
-        assertEquals(midiTrack.getVolume(), 100);
-        assertEquals(midiTrack.getVolumeScaled(), 79);
-        assertEquals(midiTrack.getName(), "Percussive drums");
-        assertEquals(midiTrack.getChannel(), 9);
-        assertEquals(midiTrack.toString(), "Percussive drums");
+        assertEquals(new ArrayList<Block>(), midiTrack.getBlocks());
+        assertEquals(35, midiTrack.getInstrument().getProgramNumber()); // 35 is bass drum
+        assertEquals(100, midiTrack.getVolume());
+        assertEquals(79, midiTrack.getVolumeScaled());
+        assertEquals("Percussive drums", midiTrack.getName());
+        assertEquals(9, midiTrack.getChannel());
+        assertEquals("Percussive drums", midiTrack.toString());
     }
 
     @Test
     void testConstructorOverload() {
         midiTrack = new MidiTrack("Non Percussive", TonalInstrument.ACOUSTIC_GUITAR_NYLON, 0);
         assertFalse(midiTrack.isMuted());
-        assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
-        assertEquals(midiTrack.getInstrument().getProgramNumber(), 24);
-        assertEquals(midiTrack.getVolume(), 100);
-        assertEquals(midiTrack.getName(), "Non Percussive");
+        assertEquals(new ArrayList<Block>(), midiTrack.getBlocks());
+        assertEquals(24, midiTrack.getInstrument().getProgramNumber());
+        assertEquals(100, midiTrack.getVolume());
+        assertEquals("Non Percussive", midiTrack.getName());
 
         midiTrack = new MidiTrack("Percussive", PercussiveInstrument.ACOUSTIC_SNARE, 9); // 38 is acoustic snare
         assertFalse(midiTrack.isMuted());
-        assertEquals(midiTrack.getBlocks(), new ArrayList<Block>());
-        assertEquals(midiTrack.getInstrument().getProgramNumber(), 38);
-        assertEquals(midiTrack.getVolume(), 100);
-        assertEquals(midiTrack.getName(), "Percussive");
+        assertEquals(new ArrayList<Block>(), midiTrack.getBlocks());
+        assertEquals(38, midiTrack.getInstrument().getProgramNumber());
+        assertEquals(100, midiTrack.getVolume());
+        assertEquals("Percussive", midiTrack.getName());
     }
 
     @Test
@@ -94,7 +94,7 @@ public class TestMidiTrack {
         expectedBlocks.add(b3);
         assertEquals(expectedBlocks, midiTrack.getBlocks());
 
-        assertEquals(midiTrack.getBlocks().size(), 3);
+        assertEquals(3, midiTrack.getBlocks().size());
         assertEquals(midiTrack.getBlock(1), expectedBlocks.get(1));
     }
 
@@ -124,7 +124,7 @@ public class TestMidiTrack {
         expectedBlocks.remove(0);
         assertEquals(expectedBlocks, midiTrack.getBlocks());
 
-        assertEquals(midiTrack.getBlocks().size(), 0);
+        assertEquals(0, midiTrack.getBlocks().size());
     }
 
     @Test
@@ -196,18 +196,18 @@ public class TestMidiTrack {
         Timeline timeline = new Timeline("test", null);
         timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
         midiTrack = timeline.createMidiTrack("Piano melody", instr);
-        assertEquals(midiTrack.getInstrument().getProgramNumber(), 0);
+        assertEquals(0, midiTrack.getInstrument().getProgramNumber());
         midiTrack.setInstrument(TonalInstrument.ELECTRIC_PIANO_1);
         timeline.updatePlayerSequence();
 
         Track t = timeline.getPlayer().getSequence().getTracks()[0];
-        assertEquals(t.get(0).getMessage().getMessage()[1], 4);
+        assertEquals(4, t.get(0).getMessage().getMessage()[1]);
 
         midiTrack.setInstrument(TonalInstrument.CELESTA);
         timeline.updatePlayerSequence();
 
         t = timeline.getPlayer().getSequence().getTracks()[0];
-        assertEquals(t.get(0).getMessage().getMessage()[1], 8);
+        assertEquals(8, t.get(0).getMessage().getMessage()[1]);
     }
 
     @Test
@@ -224,14 +224,14 @@ public class TestMidiTrack {
         Note n3 = new Note(65, 90, 9, 17);
         Note n4 = new Note(64, 40, 30, 10);
 
-        assertEquals(b1.addNote(n1), 0);
-        assertEquals(b1.addNote(n2), 1);
+        assertEquals(0, b1.addNote(n1));
+        assertEquals(1, b1.addNote(n2));
 
-        assertEquals(b2.addNote(n3), 0);
-        assertEquals(b2.addNote(n4), 1);
+        assertEquals(0, b2.addNote(n3));
+        assertEquals(1, b2.addNote(n4));
 
-        assertEquals(midiTrack.addBlock(b1), 0);
-        assertEquals(midiTrack.addBlock(b2), 1);
+        assertEquals(0, midiTrack.addBlock(b1));
+        assertEquals(1, midiTrack.addBlock(b2));
         midiTrack.applyToTrack(track);
 
         ArrayList<MidiEvent> expectedMidiEvents = new ArrayList<>();
@@ -290,12 +290,12 @@ public class TestMidiTrack {
         assertTrue(midiTrack.isPercussive());
         midiTrack.applyToTrack(track);
 
-        assertEquals(track.size(), 2); // volume, and end message, there should be no program change event
+        assertEquals(2, track.size()); // volume, and end message, there should be no program change event
 
         byte[] volumeEventData = track.get(0).getMessage().getMessage();
-        assertEquals(volumeEventData[0] & 0xFF, 185); // 185 is change to channel 10, which is percussive
-        assertEquals(volumeEventData[1] & 0xFF, 7); // next byte is the function, 7 is channel volume
-        assertEquals(volumeEventData[2] & 0xFF, 100); // set volume to 100
+        assertEquals(185, volumeEventData[0] & 0xFF); // 185 is change to channel 10, which is percussive
+        assertEquals(7, volumeEventData[1] & 0xFF); // next byte is the function, 7 is channel volume
+        assertEquals(100, volumeEventData[2] & 0xFF); // set volume to 100
 
         sequence = new Sequence(Sequence.PPQ, 960);
         track = sequence.createTrack();
@@ -309,22 +309,22 @@ public class TestMidiTrack {
         midiTrack.applyToTrack(track);
 
         byte[] noteOnData = track.get(1).getMessage().getMessage();
-        assertEquals(noteOnData[0] & 0xFF, 153); // Note on on channel 10
-        assertEquals(noteOnData[1] & 0xFF, 40); // Note number 40, corresponding to instrument
-        assertEquals(noteOnData[2] & 0xFF, 100); // Velocity of note
+        assertEquals(153, noteOnData[0] & 0xFF); // Note on on channel 10
+        assertEquals(40, noteOnData[1] & 0xFF); // Note number 40, corresponding to instrument
+        assertEquals(100, noteOnData[2] & 0xFF); // Velocity of note
 
         byte[] noteOffData = track.get(2).getMessage().getMessage();
-        assertEquals(noteOffData[0] & 0xFF, 137); // Note off on channel 10
-        assertEquals(noteOffData[1] & 0xFF, 40); // Note number 40, corresponding to instrument
-        assertEquals(noteOffData[2] & 0xFF, 0); // Velocity of note
+        assertEquals(137, noteOffData[0] & 0xFF); // Note off on channel 10
+        assertEquals(40, noteOffData[1] & 0xFF); // Note number 40, corresponding to instrument
+        assertEquals(0, noteOffData[2] & 0xFF); // Velocity of note
     }
 
     @Test
     void testNameChange() {
         midiTrack.setName("Drums");
-        assertEquals(midiTrack.getName(), "Drums");
+        assertEquals("Drums", midiTrack.getName());
         midiTrack.setName("Explosion sound");
-        assertEquals(midiTrack.getName(), "Explosion sound");
+        assertEquals("Explosion sound", midiTrack.getName());
     }
 
     @Test
@@ -372,17 +372,17 @@ public class TestMidiTrack {
 
         midiTrack.paste(dawClipboard.getContents(), 2000);
 
-        assertEquals(midiTrack.getBlocks().size(), 2);
+        assertEquals(2, midiTrack.getBlocks().size());
 
         Block block = midiTrack.getBlock(0);
         Block block2 = midiTrack.getBlock(1);
 
-        assertEquals(block.getDurationTicks(), 500);
-        assertEquals(block2.getDurationTicks(), 1000);
-        assertEquals(block.getStartTick(), 2000);
-        assertEquals(block2.getStartTick(), 3000);
-        assertEquals(block.getNotes().size(), 1);
-        assertEquals(block2.getNotes().size(), 1);
+        assertEquals(500, block.getDurationTicks());
+        assertEquals(1000, block2.getDurationTicks());
+        assertEquals(2000, block.getStartTick());
+        assertEquals(3000, block2.getStartTick());
+        assertEquals(1, block.getNotes().size());
+        assertEquals(1, block2.getNotes().size());
         TestUtil.assertNoteEquals(block.getNotes().get(0), n);
         TestUtil.assertNoteEquals(block2.getNotes().get(0), n2);
     }
@@ -402,17 +402,17 @@ public class TestMidiTrack {
 
         midiTrack.paste(dawClipboard.getContents(), 2000);
 
-        assertEquals(midiTrack.getBlocks().size(), 2);
+        assertEquals(2, midiTrack.getBlocks().size());
 
         Block block = midiTrack.getBlock(1);
         Block block2 = midiTrack.getBlock(0);
 
-        assertEquals(block.getDurationTicks(), 500);
-        assertEquals(block2.getDurationTicks(), 1000);
-        assertEquals(block.getStartTick(), 2000);
-        assertEquals(block2.getStartTick(), 3000);
-        assertEquals(block.getNotes().size(), 1);
-        assertEquals(block2.getNotes().size(), 1);
+        assertEquals(500, block.getDurationTicks());
+        assertEquals(1000, block2.getDurationTicks());
+        assertEquals(2000, block.getStartTick());
+        assertEquals(3000, block2.getStartTick());
+        assertEquals(1, block.getNotes().size());
+        assertEquals(1, block2.getNotes().size());
         TestUtil.assertNoteEquals(block.getNotes().get(0), n);
         TestUtil.assertNoteEquals(block2.getNotes().get(0), n2);
     }

@@ -18,7 +18,7 @@ public class TrackLabelContainer extends JPanel implements PropertyChangeListene
         setBorder(BorderFactory.createMatteBorder(0, 0, 0, 0, new Color(0, 0, 0)));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        setPreferredSize(new Dimension(TrackLabelPanel.LABEL_BOX_WIDTH, 0));
+//        setPreferredSize(new Dimension(TrackLabelPanel.LABEL_BOX_WIDTH, 0));
         setMaximumSize(new Dimension(TrackLabelPanel.LABEL_BOX_WIDTH,Integer.MAX_VALUE));
     }
 

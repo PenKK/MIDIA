@@ -18,7 +18,7 @@ public class Block implements Writable, Copyable, Pastable {
 
     private final ArrayList<Note> notes;
     private long startTick;
-    private final long durationTicks;
+    private long durationTicks;
 
     // REQUIRES: startTick >= 0
     // EFFECTS: Creates a block with no notes inside of it with a startTick
@@ -62,6 +62,10 @@ public class Block implements Writable, Copyable, Pastable {
     // EFFECTS: Changes the position of the block on the timeline
     public void setStartTick(long newStartTick) {
         startTick = newStartTick;
+    }
+
+    public void setDurationTicks(long durationTicks) {
+        this.durationTicks = durationTicks;
     }
 
     // EFFECTS: Returns notes with timings adjusted relative to the timeline, rather than the block

@@ -1,8 +1,8 @@
 package model;
 
-import java.awt.event.ActionEvent;
-
 import javax.sound.midi.InvalidMidiDataException;
+import javax.sound.midi.MidiEvent;
+import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
 
 import model.event.Event;
@@ -12,11 +12,13 @@ public class BlockPlayer extends Player {
 
     private final Block block;
     private final MidiTrack parentMidiTrack;
+    private int volume;
 
     public BlockPlayer(Block block, MidiTrack parentMidiTrack, float initialBpm) {
         super();
         this.block = block;
         this.parentMidiTrack = parentMidiTrack;
+        this.volume = parentMidiTrack.getVolume();
 
         setBPM(initialBpm);
     }
@@ -25,6 +27,14 @@ public class BlockPlayer extends Player {
     public void updateSequence() throws InvalidMidiDataException {
         resetTracks();
         Track track = sequence.createTrack();
+
+        ShortMessage programChangeMessage = new ShortMessage(ShortMessage.PROGRAM_CHANGE,
+                parentMidiTrack.getChannel(), parentMidiTrack.getInstrument().getProgramNumber(),0);
+        ShortMessage volMessage = new ShortMessage(ShortMessage.CONTROL_CHANGE, parentMidiTrack.getChannel(),
+                7, volume);
+
+        track.add(new MidiEvent(programChangeMessage, 0));
+        track.add(new MidiEvent(volMessage, 0));
         
         for (Note note : block.getNotes()) {
             MidiTrack.applyNoteToTrack(track, note, parentMidiTrack.isPercussive(), 
@@ -46,5 +56,21 @@ public class BlockPlayer extends Player {
     @Override
     public double getLengthMs() {
         return ticksToMs(block.getDurationTicks());
+    }
+
+    public MidiTrack getParentMidiTrack() {
+        return parentMidiTrack;
+    }
+
+    public Block getBlock() {
+        return block;
+    }
+
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
     }
 }

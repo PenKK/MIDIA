@@ -17,7 +17,7 @@ public class TestInstrument {
             num++;
         }
         
-        assertEquals(num, 128);
+        assertEquals(128, num);
 
         num = 35;
         for (Instrument i : PercussiveInstrument.values()) {
@@ -25,9 +25,9 @@ public class TestInstrument {
             num++;
         }
         
-        assertEquals(num, 82);
-        assertEquals(TonalInstrument.ALTO_SAX.getName(), "Alto Sax");
-        assertEquals(PercussiveInstrument.ACOUSTIC_BASS_DRUM.getName(), "Acoustic Bass Drum");
+        assertEquals(82, num);
+        assertEquals("Alto Sax", TonalInstrument.ALTO_SAX.getName());
+        assertEquals("Acoustic Bass Drum", PercussiveInstrument.ACOUSTIC_BASS_DRUM.getName());
 
         assertEquals(TonalInstrument.BARITONE_SAX.getName(), 
                      TonalInstrument.BARITONE_SAX.toString());

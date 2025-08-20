@@ -30,6 +30,13 @@ public class TestBlock {
     }
 
     @Test
+    void testDurationSetter() {
+        assertEquals(1000, block.getDurationTicks());
+        block.setDurationTicks(300);
+        assertEquals(300, block.getDurationTicks());
+    }
+
+    @Test
     void testAddNote() {
         Note note1 = new Note(60, 60, 0, 5);
         Note note2 = new Note(56, 50, 4, 9);

@@ -12,6 +12,7 @@ import model.editing.DawClipboard;
 import ui.ruler.RulerScrollPane;
 import ui.windows.timeline.midi.TrackLabelContainer;
 import ui.windows.timeline.midi.TrackLabelPanel;
+import ui.windows.timeline.midi.TrackLabelScrollPane;
 import ui.windows.timeline.midi.TrackScrollPane;
 import ui.windows.timeline.ruler.TimelineRulerScrollPane;
 
@@ -23,7 +24,7 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
 
     private final TrackScrollPane trackScrollPane;
     private final TimelineRulerScrollPane rulerScrollPane;
-    private final TrackLabelContainer trackLabelContainer;
+    private final TrackLabelScrollPane trackLabelScrollPane;
     
     private static final MatteBorder BLANK_BORDER = new MatteBorder(0, 0, 0, 0, Color.GRAY);
 
@@ -34,13 +35,14 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
 
         rulerScrollPane = new TimelineRulerScrollPane(timelineController);
         trackScrollPane = new TrackScrollPane(timelineController, dawClipboard);
-        trackLabelContainer = new TrackLabelContainer(timelineController);
+        trackLabelScrollPane = new TrackLabelScrollPane(timelineController);
 
         initTopHorizontalPanel();
         initBottomHorizontalPanel();
 
         timelineController.addObserver(this);
-        syncHorizontalScrollBars();
+        syncScrollBars(trackScrollPane.getHorizontalScrollBar(), rulerScrollPane.getHorizontalScrollBar());
+        syncScrollBars(trackScrollPane.getVerticalScrollBar(), trackLabelScrollPane.getVerticalScrollBar());
 
         this.setLayout(new BorderLayout());
         this.setBorder(BLANK_BORDER);
@@ -58,13 +60,13 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
 
     private void initBottomHorizontalPanel() {
         bottomHorizontalPanel.setLayout(new BoxLayout(bottomHorizontalPanel, BoxLayout.X_AXIS));
-        bottomHorizontalPanel.add(trackLabelContainer);
+        bottomHorizontalPanel.add(trackLabelScrollPane);
         bottomHorizontalPanel.add(trackScrollPane);
         bottomHorizontalPanel.setBorder(BLANK_BORDER);
         bottomHorizontalPanel.setAlignmentX(LEFT_ALIGNMENT);
     }
 
-    private JPanel getFillerPanel() {
+    public static JPanel getFillerPanel() {
         JPanel rulerFillerPanel = new JPanel();
         Dimension fillerDimension = new Dimension(TrackLabelPanel.LABEL_BOX_WIDTH, RulerScrollPane.RULER_HEIGHT);
         rulerFillerPanel.setPreferredSize(fillerDimension);
@@ -75,13 +77,10 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
 
     // MODIFIES: this
     // EFFECTS: triggers adjustment listener for when the midiTrackScrollPane is scrolled
-    private void syncHorizontalScrollBars() {
-        JScrollBar trackBar = trackScrollPane.getHorizontalScrollBar();
-        JScrollBar rulerBar = rulerScrollPane.getHorizontalScrollBar();
-
-        trackBar.addAdjustmentListener(e -> {
-            if (!rulerBar.getValueIsAdjusting()) {
-                rulerBar.setValue(trackBar.getValue());
+    public static void syncScrollBars(JScrollBar leader, JScrollBar follower) {
+        leader.addAdjustmentListener(e -> {
+            if (!follower.getValueIsAdjusting()) {
+                follower.setValue(leader.getValue());
             }
         });
     }

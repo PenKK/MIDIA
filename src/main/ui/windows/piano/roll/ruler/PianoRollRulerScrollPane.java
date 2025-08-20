@@ -13,12 +13,9 @@ public class PianoRollRulerScrollPane extends RulerScrollPane {
 
     private final PianoRollRulerRenderPanel pianoRollRulerRenderPanel;
 
-    public PianoRollRulerScrollPane(TimelineController timelineController, MidiTrack parentMidiTrack,
-                                    BlockPlayer blockPlayer) {
+    public PianoRollRulerScrollPane(TimelineController timelineController, BlockPlayer blockPlayer) {
         super();
-        pianoRollRulerRenderPanel = new PianoRollRulerRenderPanel(timelineController, parentMidiTrack, blockPlayer);
-        pianoRollRulerRenderPanel.setLayout(new BoxLayout(pianoRollRulerRenderPanel, BoxLayout.X_AXIS));
-
+        pianoRollRulerRenderPanel = new PianoRollRulerRenderPanel(timelineController, blockPlayer);
         setViewportView(pianoRollRulerRenderPanel);
     }
 }
