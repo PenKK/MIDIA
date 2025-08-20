@@ -8,19 +8,32 @@ import javax.sound.midi.Track;
 import model.event.Event;
 import model.event.EventLog;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 public class BlockPlayer extends Player {
 
     private final Block block;
     private final MidiTrack parentMidiTrack;
+    private final PropertyChangeSupport propertyChangeSupport;
     private int volume;
 
     public BlockPlayer(Block block, MidiTrack parentMidiTrack, float initialBpm) {
         super();
+        propertyChangeSupport = new PropertyChangeSupport(this);
         this.block = block;
         this.parentMidiTrack = parentMidiTrack;
         this.volume = parentMidiTrack.getVolume();
 
         setBPM(initialBpm);
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
     @Override
@@ -46,6 +59,13 @@ public class BlockPlayer extends Player {
         Event e = new Event(String.format("Playback sequence was updated in Block [Piano Roll] with instrument %s",
                                           parentMidiTrack.getInstrument()));
         EventLog.getInstance().logEvent(e);
+    }
+
+    @Override
+    public long setPositionTick(long newPositionTick) {
+        long oldPositionTick = super.setPositionTick(newPositionTick);
+        propertyChangeSupport.firePropertyChange("positionTick", oldPositionTick, newPositionTick);
+        return oldPositionTick;
     }
 
     @Override

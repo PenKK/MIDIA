@@ -10,6 +10,8 @@ import model.MidiTrack;
 import model.TimelineController;
 import model.editing.DawClipboard;
 import ui.ruler.BlankScrollPane;
+import ui.ruler.LineContainerPanel;
+import ui.windows.timeline.TimelineLineContainerPanel;
 
 // JPanel that holds the interactable view of the timeline, rendered using graphics
 public class TrackScrollPane extends BlankScrollPane implements PropertyChangeListener {
@@ -22,7 +24,7 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
     public TrackScrollPane(TimelineController timelineController, DawClipboard dawClipboard) {
         this.timelineController = timelineController;
         this.dawClipboard = dawClipboard;
-        lineContainer = new LineContainerPanel(timelineController, timelineController.getTimeline().getPlayer());
+        lineContainer = new TimelineLineContainerPanel(timelineController, timelineController.getTimeline().getPlayer());
 
         this.setViewportView(lineContainer);
         this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);

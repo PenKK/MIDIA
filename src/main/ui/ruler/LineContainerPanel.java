@@ -1,17 +1,17 @@
-package ui.windows.timeline.midi;
+package ui.ruler;
 
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
 import model.Player;
 import model.TimelineController;
+import ui.windows.timeline.midi.TrackRenderPanel;
 
 // A container to draw the line of the position tick indicator line over tracks
-public class LineContainerPanel extends JPanel implements PropertyChangeListener {
+public abstract class LineContainerPanel extends JPanel {
 
     private final TimelineController timelineController;
     private Player player;
@@ -24,7 +24,6 @@ public class LineContainerPanel extends JPanel implements PropertyChangeListener
         this.player = player;
         lineX = 0;
 
-        timelineController.addObserver(this);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 
@@ -54,29 +53,8 @@ public class LineContainerPanel extends JPanel implements PropertyChangeListener
         return new Dimension(width + TrackRenderPanel.WIDTH_PADDING, super.getPreferredSize().height);
     }
 
-    private void updatePlayer() {
+    protected void updatePlayer() {
         this.player = timelineController.getTimeline().getPlayer();
         updateLineX();
-    }
-
-    // EFFECTS: listens for property changes and runs methods accordingly
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        String propertyName = evt.getPropertyName();
-
-        switch (propertyName) {
-            case "positionTick":
-            case "horizontalScaleFactor":
-                updateLineX();
-                break;
-            case "timelineReplaced":
-                updatePlayer();
-                break;
-            case "blockPasted":
-            case "blockCreated":
-            case "noteCreated":
-                repaint();
-                break;
-        }
     }
 }
