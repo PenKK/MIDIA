@@ -4,6 +4,7 @@ import model.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 public class PianoRollNoteGridEditor extends JPanel {
 
@@ -19,6 +20,20 @@ public class PianoRollNoteGridEditor extends JPanel {
         this.timelineController = timelineController;
         this.setPreferredSize(new Dimension(1000, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
         this.setMinimumSize(new Dimension(1000, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
+
+        assignControls();
+    }
+
+    private void assignControls() {
+        InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke("SPACE"), "toggleLoop");
+
+        getActionMap().put("toggleLoop", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                blockPlayer.toggleLoop();
+            }
+        });
     }
 
     @Override

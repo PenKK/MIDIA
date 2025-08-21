@@ -1,9 +1,6 @@
 package model;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiEvent;
-import javax.sound.midi.ShortMessage;
-import javax.sound.midi.Track;
+import javax.sound.midi.*;
 
 import model.event.Event;
 import model.event.EventLog;
@@ -11,12 +8,13 @@ import model.event.EventLog;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public class BlockPlayer extends Player {
+public class BlockPlayer extends Player implements MetaEventListener {
 
     private final Block block;
     private final MidiTrack parentMidiTrack;
     private final PropertyChangeSupport propertyChangeSupport;
     private int volume;
+    private boolean loop;
 
     public BlockPlayer(Block block, MidiTrack parentMidiTrack, float initialBpm) {
         super();
@@ -24,8 +22,29 @@ public class BlockPlayer extends Player {
         this.block = block;
         this.parentMidiTrack = parentMidiTrack;
         this.volume = parentMidiTrack.getVolume();
+        this.loop = false;
+
+        sequencer.addMetaEventListener(this);
 
         setBPM(initialBpm);
+    }
+
+    public void toggleLoop() {
+        this.loop = !this.loop;
+
+        if (loop) {
+            try {
+                play();
+            } catch (InvalidMidiDataException e) {
+                throw new RuntimeException("Failed to play sequencer on loop toggle", e);
+            }
+        } else {
+            pause();
+        }
+    }
+
+    public boolean isLooping() {
+        return loop;
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -68,6 +87,8 @@ public class BlockPlayer extends Player {
         return oldPositionTick;
     }
 
+
+
     @Override
     public double getLengthBeats() {
         return ticksToBeats(block.getDurationTicks());
@@ -92,5 +113,19 @@ public class BlockPlayer extends Player {
 
     public void setVolume(int volume) {
         this.volume = volume;
+    }
+
+    @Override
+    public void meta(MetaMessage meta) {
+        if (meta.getType() == TimelineController.PLAYER_END_META_TYPE) {
+            if (loop) {
+                setPositionTick(0);
+                try {
+                    play();
+                } catch (InvalidMidiDataException e) {
+                    throw new RuntimeException("Failed to loop sequencer upon reaching end of block", e);
+                }
+            }
+        }
     }
 }

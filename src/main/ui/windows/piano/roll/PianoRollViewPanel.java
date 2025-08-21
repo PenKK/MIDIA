@@ -24,11 +24,7 @@ public class PianoRollViewPanel extends JPanel {
     private final PianoRollNoteDisplay pianoRollNoteDisplay;
     private final PianoRollNoteGridPane pianoRollNoteGrid;
 
-    private final BlockPlayer blockPlayer;
-
-    public PianoRollViewPanel(TimelineController timelineController, MidiTrack parentMidiTrack, Block block) {
-        blockPlayer = new BlockPlayer(block, parentMidiTrack, timelineController.getTimeline().getPlayer().getBPM());
-
+    public PianoRollViewPanel(TimelineController timelineController, BlockPlayer blockPlayer) {
         bottomHorizontalContainer = new JPanel();
         topHorizontalContainer = new JPanel();
         rulerScrollPane = new PianoRollRulerScrollPane(timelineController, blockPlayer);

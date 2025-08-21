@@ -104,7 +104,6 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         bpmDisplay.addMouseMotionListener(bpmMouseAdapapter);
     }
 
-
     private void createTimeLabel() {
         timeLabel = new JLabel("00:00.00");
         timeLabel.setOpaque(true);
@@ -163,15 +162,6 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         playButton.setIcon(playImage);
         timelineController.getTimeline().getPlayer().getPlaybackUpdaterTimer().stop();
     }
-
-    // // MODIFIES: this
-    // // EFFECTS: triggers an update to the positionTick field in the instance (and hence fires propertyChangeEvent)
-    // private void updateTimelineTick() {
-    //     if (timelineController.isDraggingRuler()) {
-    //         return;
-    //     }
-    //     timelineController.getTimeline().getPlayer().updatePositionTick();
-    // }
 
     // MODIFIES: this
     // EFFECTS: updates the UI time display using the timeline player

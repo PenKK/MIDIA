@@ -11,6 +11,8 @@ import javax.sound.midi.Sequencer;
 // A controller class responsible for managing a single Timeline instance
 public class TimelineController implements MetaEventListener {
 
+    public static final int PLAYER_END_META_TYPE = 47;
+
     private Timeline timeline;
     private final PropertyChangeSupport pcs;
 
@@ -55,9 +57,9 @@ public class TimelineController implements MetaEventListener {
         }
 
         if (oldTimeline != null) {
-            Sequencer seqr = oldTimeline.getPlayer().getSequencer();
-            seqr.removeMetaEventListener(this);
-            seqr.close();
+            Player player = oldTimeline.getPlayer();
+            player.getSequencer().removeMetaEventListener(this);
+            player.close();
         }
 
         this.timeline = newTimeline;
@@ -83,7 +85,7 @@ public class TimelineController implements MetaEventListener {
 
     @Override
     public void meta(MetaMessage meta) {
-        if (meta.getType() == 47) { // 47 fires when the sequencer naturally reaches the end
+        if (meta.getType() == PLAYER_END_META_TYPE) {
             pcs.firePropertyChange("playbackEnded", null, null);
         }
     }
