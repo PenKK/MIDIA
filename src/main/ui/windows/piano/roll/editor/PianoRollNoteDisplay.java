@@ -8,7 +8,7 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import ui.ruler.BlankScrollPane;
+import ui.common.BlankScrollPane;
 import ui.windows.timeline.midi.TrackLabelPanel;
 
 public class PianoRollNoteDisplay extends BlankScrollPane {

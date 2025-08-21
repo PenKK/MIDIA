@@ -87,8 +87,6 @@ public class BlockPlayer extends Player implements MetaEventListener {
         return oldPositionTick;
     }
 
-
-
     @Override
     public double getLengthBeats() {
         return ticksToBeats(block.getDurationTicks());

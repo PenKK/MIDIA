@@ -9,12 +9,14 @@ import javax.swing.*;
 import model.MidiTrack;
 import model.TimelineController;
 import model.editing.DawClipboard;
-import ui.ruler.BlankScrollPane;
-import ui.ruler.LineContainerPanel;
+import ui.common.BlankScrollPane;
+import ui.common.LineContainerPanel;
+import ui.common.RulerDimensionHelper;
 import ui.windows.timeline.TimelineLineContainerPanel;
 
 // JPanel that holds the interactable view of the timeline, rendered using graphics
-public class TrackScrollPane extends BlankScrollPane implements PropertyChangeListener {
+public class TrackScrollPane extends BlankScrollPane
+        implements PropertyChangeListener, RulerDimensionHelper.ContainerWidthProvider {
 
     private final TimelineController timelineController;
     private final LineContainerPanel lineContainer;
@@ -24,7 +26,8 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
     public TrackScrollPane(TimelineController timelineController, DawClipboard dawClipboard) {
         this.timelineController = timelineController;
         this.dawClipboard = dawClipboard;
-        lineContainer = new TimelineLineContainerPanel(timelineController, timelineController.getTimeline().getPlayer());
+        lineContainer = new TimelineLineContainerPanel(timelineController,
+                timelineController.getTimeline().getPlayer());
 
         this.setViewportView(lineContainer);
         this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -78,6 +81,7 @@ public class TrackScrollPane extends BlankScrollPane implements PropertyChangeLi
     }
 
     // EFFECTS: returns width of the scrollPanes container
+    @Override
     public int getContainerWidth() {
         return lineContainer.getPreferredSize().width;
     }

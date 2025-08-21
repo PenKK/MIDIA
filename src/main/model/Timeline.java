@@ -38,7 +38,7 @@ public class Timeline implements Writable {
     //          Method throws MidiUnavailableException if the device has no MIDI sequencer
     //          available, which is fatal and unrecoverable.
     //          Method throws InvalidMidiDataException if the Sequence has an invalid 
-    //          divison type.
+    //          division type.
     public Timeline(String projectName, PropertyChangeSupport pcs) {
         this.projectName = projectName;
         this.pcs = pcs;

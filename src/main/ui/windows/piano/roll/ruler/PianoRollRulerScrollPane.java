@@ -3,9 +3,13 @@ package ui.windows.piano.roll.ruler;
 
 import model.BlockPlayer;
 import model.TimelineController;
+import ui.common.RulerDimensionHelper;
 import ui.ruler.RulerScrollPane;
 
-public class PianoRollRulerScrollPane extends RulerScrollPane {
+import javax.swing.*;
+import java.awt.*;
+
+public class PianoRollRulerScrollPane extends RulerScrollPane implements RulerDimensionHelper.RulerWidthUpdater {
 
     private final PianoRollRulerRenderPanel pianoRollRulerRenderPanel;
 
@@ -13,5 +17,13 @@ public class PianoRollRulerScrollPane extends RulerScrollPane {
         super();
         pianoRollRulerRenderPanel = new PianoRollRulerRenderPanel(timelineController, blockPlayer);
         setViewportView(pianoRollRulerRenderPanel);
+    }
+
+    @Override
+    public void updateWidth(int width) {
+        SwingUtilities.invokeLater(() -> {
+            pianoRollRulerRenderPanel.setPreferredSize(new Dimension(width, RulerScrollPane.RULER_HEIGHT));
+            pianoRollRulerRenderPanel.revalidate();
+        });
     }
 }

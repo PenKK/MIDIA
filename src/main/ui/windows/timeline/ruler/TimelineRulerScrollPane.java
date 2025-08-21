@@ -7,10 +7,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import model.TimelineController;
+import ui.common.RulerDimensionHelper;
 import ui.ruler.RulerScrollPane;
 
 // Panel that shows the tick marks above timeline to indicate beat marks and other timely information
-public class TimelineRulerScrollPane extends RulerScrollPane {
+public class TimelineRulerScrollPane extends RulerScrollPane implements RulerDimensionHelper.RulerWidthUpdater {
 
     private final TimelineRulerRenderPanel renderContainer;
 
@@ -22,6 +23,7 @@ public class TimelineRulerScrollPane extends RulerScrollPane {
     }
 
     // EFFECTS: adjusts the width of the ruler to match the MidiTrackPanel rows
+    @Override
     public void updateWidth(int width) {
         SwingUtilities.invokeLater(() -> {
             renderContainer.setPreferredSize(new Dimension(width, RulerScrollPane.RULER_HEIGHT));

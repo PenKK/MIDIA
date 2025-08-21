@@ -86,6 +86,7 @@ public abstract class Player implements Writable, ActionListener {
         sequencer.setTickPosition(positionTick);
         sequencer.setTempoInBPM(bpm);
         sequencer.start();
+        playbackUpdateTimer.start();
 
         Event e = new Event(String.format("Playback started, Sequence length: %d ticks",
                 sequencer.getTickLength()));
@@ -96,6 +97,7 @@ public abstract class Player implements Writable, ActionListener {
     // EFFECTS: Pauses playback
     public void pause() {
         sequencer.stop();
+        playbackUpdateTimer.stop();
         syncPositionTick();
     }
 

@@ -113,17 +113,13 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
 
     // EFFECTS: toggles playback
     public void togglePlay() {
-        Timer playbackUpdateTimer = timelineController.getTimeline().getPlayer().getPlaybackUpdaterTimer();
-
         if (timelineController.isPlaying()) {
             timelineController.pauseTimeline();
-            playbackUpdateTimer.stop();
             playButton.setIcon(playImage);
             return;
         }
 
         timelineController.playTimeline();
-        playbackUpdateTimer.start();
         playButton.setIcon(pauseImage);
     }
 

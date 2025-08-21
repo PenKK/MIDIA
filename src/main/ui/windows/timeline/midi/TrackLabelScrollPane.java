@@ -1,8 +1,7 @@
 package ui.windows.timeline.midi;
 
-import model.Timeline;
 import model.TimelineController;
-import ui.ruler.BlankScrollPane;
+import ui.common.BlankScrollPane;
 
 import javax.swing.*;
 import java.awt.*;

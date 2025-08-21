@@ -1,5 +1,6 @@
 package ui.ruler;
 
+import ui.common.BlankScrollPane;
 import ui.windows.timeline.midi.TrackLabelPanel;
 
 import java.awt.Dimension;

@@ -6,10 +6,11 @@ import javax.swing.*;
 
 import model.BlockPlayer;
 import model.TimelineController;
-import ui.ruler.BlankScrollPane;
-import ui.ruler.LineContainerPanel;
+import ui.common.BlankScrollPane;
+import ui.common.LineContainerPanel;
+import ui.common.RulerDimensionHelper;
 
-public class PianoRollNoteGridPane extends BlankScrollPane {
+public class PianoRollNoteGridPane extends BlankScrollPane implements RulerDimensionHelper.ContainerWidthProvider {
 
     private final PianoRollNoteGridEditor pianoRollNoteGridEditor;
     private final LineContainerPanel lineContainerPanel;
@@ -23,5 +24,10 @@ public class PianoRollNoteGridPane extends BlankScrollPane {
         setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         setViewportView(lineContainerPanel);
         setBackground(Color.BLUE);
+    }
+
+    @Override
+    public int getContainerWidth() {
+        return lineContainerPanel.getPreferredSize().width;
     }
 }

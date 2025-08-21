@@ -1,7 +1,6 @@
-package ui.ruler;
+package ui.common;
 
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;

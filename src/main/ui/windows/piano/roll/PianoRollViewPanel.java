@@ -1,13 +1,12 @@
 package ui.windows.piano.roll;
 
-import java.awt.Color;
+import java.awt.*;
 
 import javax.swing.*;
 
-import model.Block;
 import model.BlockPlayer;
-import model.MidiTrack;
 import model.TimelineController;
+import ui.common.RulerDimensionHelper;
 import ui.windows.piano.roll.editor.PianoRollNoteDisplay;
 import ui.windows.piano.roll.editor.PianoRollNoteGridPane;
 import ui.windows.piano.roll.ruler.PianoRollRulerScrollPane;
@@ -20,35 +19,39 @@ public class PianoRollViewPanel extends JPanel {
     private final JPanel topHorizontalContainer;
     private final JPanel bottomHorizontalContainer;
 
-    private final PianoRollRulerScrollPane rulerScrollPane;
+    private final PianoRollRulerScrollPane pianoRollRulerScrollPane;
     private final PianoRollNoteDisplay pianoRollNoteDisplay;
     private final PianoRollNoteGridPane pianoRollNoteGrid;
 
     public PianoRollViewPanel(TimelineController timelineController, BlockPlayer blockPlayer) {
         bottomHorizontalContainer = new JPanel();
         topHorizontalContainer = new JPanel();
-        rulerScrollPane = new PianoRollRulerScrollPane(timelineController, blockPlayer);
+        pianoRollRulerScrollPane = new PianoRollRulerScrollPane(timelineController, blockPlayer);
         pianoRollNoteDisplay = new PianoRollNoteDisplay();
         pianoRollNoteGrid = new PianoRollNoteGridPane(blockPlayer, timelineController);
 
         initTopHorizontalContainer();
         initBottomHorizontalContainer();
-        TimelineViewPanel.syncScrollBars(pianoRollNoteDisplay.getHorizontalScrollBar(),
-                                                   pianoRollNoteDisplay.getHorizontalScrollBar());
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        updateRulerDimensions();
+
         this.setBorder(TrackLabelPanel.BORDER);
         this.setAlignmentX(LEFT_ALIGNMENT);
 
-        this.add(topHorizontalContainer);
-        this.add(bottomHorizontalContainer);
+        this.setLayout(new BorderLayout());
+        this.add(topHorizontalContainer, BorderLayout.NORTH);
+        this.add(bottomHorizontalContainer, BorderLayout.CENTER);
+    }
+
+    private void updateRulerDimensions() {
+        RulerDimensionHelper.updateRulerDimensions(pianoRollNoteGrid, pianoRollRulerScrollPane);
     }
 
     private void initTopHorizontalContainer() {
         topHorizontalContainer.setLayout(new BoxLayout(topHorizontalContainer, BoxLayout.X_AXIS));
         topHorizontalContainer.setAlignmentX(LEFT_ALIGNMENT);
         topHorizontalContainer.add(TimelineViewPanel.getFillerPanel());
-        topHorizontalContainer.add(rulerScrollPane);
+        topHorizontalContainer.add(pianoRollRulerScrollPane);
     }
 
     private void initBottomHorizontalContainer() {
@@ -57,5 +60,10 @@ public class PianoRollViewPanel extends JPanel {
         bottomHorizontalContainer.setAlignmentX(LEFT_ALIGNMENT);
         bottomHorizontalContainer.add(pianoRollNoteDisplay);
         bottomHorizontalContainer.add(pianoRollNoteGrid);
+
+        TimelineViewPanel.syncScrollBars(pianoRollNoteGrid.getHorizontalScrollBar(),
+                pianoRollRulerScrollPane.getHorizontalScrollBar());
+        TimelineViewPanel.syncScrollBars(pianoRollNoteGrid.getVerticalScrollBar(),
+                pianoRollNoteDisplay.getVerticalScrollBar());
     }
 }

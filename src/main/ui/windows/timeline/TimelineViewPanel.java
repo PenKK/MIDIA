@@ -9,6 +9,7 @@ import javax.swing.border.MatteBorder;
 
 import model.TimelineController;
 import model.editing.DawClipboard;
+import ui.common.RulerDimensionHelper;
 import ui.ruler.RulerScrollPane;
 import ui.windows.timeline.midi.TrackLabelContainer;
 import ui.windows.timeline.midi.TrackLabelPanel;
@@ -88,8 +89,7 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
     // MODIFIES: this
     // EFFECTS: resizes the ruler's width to match the midiTrackScrollPane's width
     private void updateRulerDimensions() {
-        int trackContentWidth = trackScrollPane.getContainerWidth();
-        rulerScrollPane.updateWidth(trackContentWidth + 200); // 200 is padding
+        RulerDimensionHelper.updateRulerDimensions(trackScrollPane, rulerScrollPane);
     }
 
     // MODIFIES: this

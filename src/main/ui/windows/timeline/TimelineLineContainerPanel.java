@@ -2,7 +2,7 @@ package ui.windows.timeline;
 
 import model.Player;
 import model.TimelineController;
-import ui.ruler.LineContainerPanel;
+import ui.common.LineContainerPanel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

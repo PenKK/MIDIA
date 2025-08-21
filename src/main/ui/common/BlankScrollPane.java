@@ -1,11 +1,11 @@
-package ui.ruler;
+package ui.common;
 
 import java.awt.Component;
 
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
-public class BlankScrollPane extends JScrollPane {
+public abstract class BlankScrollPane extends JScrollPane {
 
     public BlankScrollPane() {
         this.setBorder(null);
