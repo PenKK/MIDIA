@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.JPanel;
 
@@ -33,6 +34,11 @@ public abstract class RulerRenderPanel extends JPanel {
         this.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
     }
 
+    protected void addMouseAdapter(RulerMouseAdapter adapter) {
+        this.addMouseListener(adapter);
+        this.addMouseMotionListener(adapter);
+    }
+
     // MODIFIES: this
     // EFFECTS: Draws the ticks marks of measures, beats, and divisions, according to timeline instance
     @SuppressWarnings("methodlength")
@@ -50,7 +56,7 @@ public abstract class RulerRenderPanel extends JPanel {
 
         for (long tick = 0; tick <= width / timeline.getPixelsPerTick(); tick += divisionTickInterval) {
             int height = TICK_HEIGHT;
-            int pixelPosition = (int) (timeline.scaleTickToPixel(tick));
+            int pixelPosition = timeline.scaleTickToPixel(tick);
             g.setColor(DIVISION_TICK_COLOR);
 
             if (tick % measureTickInterval == 0) { // One measure

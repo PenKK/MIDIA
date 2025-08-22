@@ -3,6 +3,8 @@ package ui.windows.timeline.midi;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -75,7 +77,7 @@ public class TrackRenderPanel extends JPanel {
 
         for (long tick = 0; tick <= getWidth() / timeline.getPixelsPerTick(); tick += divisionTickInterval) {
             g.setColor(LINE_COLOR);
-            int pixelPosition = (int) (timeline.scaleTickToPixel(tick));
+            int pixelPosition = timeline.scaleTickToPixel(tick);
 
             if (tick % measureTickInterval == 0) { // One measure
                 g.setColor(g.getColor().darker());
@@ -92,8 +94,8 @@ public class TrackRenderPanel extends JPanel {
 
         Timeline timeline = timelineController.getTimeline();
 
-        int width = (int) timeline.scaleTickToPixel(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
-        int x = (int) timeline.scaleTickToPixel(block.getStartTick());
+        int width = timeline.scaleTickToPixel(Math.max(block.getDurationTicks(), EMPTY_BLOCK_WIDTH));
+        int x = timeline.scaleTickToPixel(block.getStartTick());
         int y = BLOCK_HEIGHT_MARGIN / 2;
         int height = TrackLabelPanel.HEIGHT - BLOCK_HEIGHT_MARGIN;
 
@@ -162,10 +164,10 @@ public class TrackRenderPanel extends JPanel {
                 int pitchOffset = minPitch - (range == 0 ? (MIN_NOTE_RANGE / 2) : 0);
                 int relativePitch = n.getPitch() - pitchOffset + (NOTE_RANGE_PADDING / 2);
 
-                int x = (int) timeline.scaleTickToPixel(n.getStartTick());
+                int x = timeline.scaleTickToPixel(n.getStartTick());
                 int y = trackHeight - (int) Math.round(relativePitch * heightDouble - (double) BLOCK_HEIGHT_MARGIN / 2);
                 int height = (int) Math.round(heightDouble);
-                int width = (int) timeline.scaleTickToPixel(n.getDurationTicks());
+                int width = timeline.scaleTickToPixel(n.getDurationTicks());
 
                 g.setColor(NOTE_COLOR);
                 if (isNotePlaying(n)) {
@@ -196,7 +198,7 @@ public class TrackRenderPanel extends JPanel {
             }
         }
 
-        return (int) timelineController.getTimeline().scaleTickToPixel(endPixel);
+        return timelineController.getTimeline().scaleTickToPixel(endPixel);
     }
 
     @Override

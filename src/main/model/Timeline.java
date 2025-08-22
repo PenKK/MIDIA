@@ -174,8 +174,8 @@ public class Timeline implements Writable {
     }
 
     // EFFECTS: returns the tick scaled for UI, rounded to the nearest integer
-    public long scaleTickToPixel(long tick) {
-        return Math.round(tick * getPixelsPerTick());
+    public int scaleTickToPixel(long tick) {
+        return (int) Math.round(tick * getPixelsPerTick());
     }
 
     // EFFECTS: returns the tick scaled for UI, rounded to the nearest integer
@@ -188,9 +188,13 @@ public class Timeline implements Writable {
         return Math.round((double) rawTick / divisionTickInterval) * divisionTickInterval;
     }
 
-    public long snapTickLower(long rawTick) {
+    public long snapTickLowerDivision(long rawTick) {
         long divisionTickInterval = Player.PULSES_PER_QUARTER_NOTE / beatDivision;
         return (rawTick / divisionTickInterval) * divisionTickInterval;
+    }
+
+    public long snapTickLowerBeat(long rawTick) {
+        return (rawTick / Player.PULSES_PER_QUARTER_NOTE) * Player.PULSES_PER_QUARTER_NOTE;
     }
 
     public ArrayList<MidiTrack> getMidiTracks() {

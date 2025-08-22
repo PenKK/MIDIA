@@ -5,8 +5,10 @@ import model.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-public class PianoRollNoteGridEditor extends JPanel {
+public class PianoRollEditor extends JPanel implements PropertyChangeListener {
 
     private static final Color BEAT_LINE_COLOR = Color.decode("#303234");
     private static final Color MEASURE_LINE_COLOR = Color.decode("#242627");
@@ -15,13 +17,21 @@ public class PianoRollNoteGridEditor extends JPanel {
     private final BlockPlayer blockPlayer;
     private final TimelineController timelineController;
 
-    PianoRollNoteGridEditor(BlockPlayer blockPlayer, TimelineController timelineController) {
+    PianoRollEditor(BlockPlayer blockPlayer, TimelineController timelineController) {
         this.blockPlayer = blockPlayer;
         this.timelineController = timelineController;
-        this.setPreferredSize(new Dimension(1000, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
-        this.setMinimumSize(new Dimension(1000, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
+        int width = getLoopPixelWidth();
+        this.setPreferredSize(new Dimension(width, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
+        this.setMinimumSize(new Dimension(width, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
 
+        this.setBackground(Color.decode("#3c3f41").darker());
+
+        PianoRollEditorMouseAdapter mouseAdapter = new PianoRollEditorMouseAdapter(blockPlayer, timelineController);
+        this.addMouseListener(mouseAdapter);
+        this.addMouseMotionListener(mouseAdapter);
         assignControls();
+
+        blockPlayer.addPropertyChangeListener(this);
     }
 
     private void assignControls() {
@@ -40,8 +50,14 @@ public class PianoRollNoteGridEditor extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
 
+        g.setColor(Color.decode("#3c3f41"));
+        g.fillRect(0, 0, getLoopPixelWidth(), this.getHeight());
         drawGridLines(g);
         drawBlockNotes(g);
+    }
+
+    private int getLoopPixelWidth() {
+        return timelineController.getTimeline().scaleTickToPixel(blockPlayer.getBlock().getDurationTicks());
     }
 
     private void drawGridLines(Graphics g) {
@@ -56,7 +72,7 @@ public class PianoRollNoteGridEditor extends JPanel {
         // Vertical lines
         for (long tick = 0; tick <= getWidth() / timeline.getPixelsPerTick(); tick += divisionTickInterval) {
             g.setColor(BEAT_LINE_COLOR);
-            int pixelPosition = (int) (timeline.scaleTickToPixel(tick));
+            int pixelPosition = timeline.scaleTickToPixel(tick);
 
             if (tick % ppq == 0) { // for each beat
                 if (tick % measureTickInterval == 0) {
@@ -77,13 +93,26 @@ public class PianoRollNoteGridEditor extends JPanel {
         Timeline timeline = timelineController.getTimeline();
         Block block = blockPlayer.getBlock();
         g.setColor(NOTE_COLOR);
+        boolean isPercussive = blockPlayer.getParentMidiTrack().isPercussive();
 
         block.getNotes().forEach(note -> {
-            int x = (int) timeline.scaleTickToPixel(note.getStartTick());
-            int y = PianoRollNoteDisplay.KEY_HEIGHT * 127 - note.getPitch() * PianoRollNoteDisplay.KEY_HEIGHT;
-            int width = (int) timeline.scaleTickToPixel(note.getDurationTicks());
+            int x = timeline.scaleTickToPixel(note.getStartTick());
+            int y = isPercussive ? 7 * PianoRollNoteDisplay.KEY_HEIGHT :
+                    PianoRollNoteDisplay.KEY_HEIGHT * 127 - note.getPitch() * PianoRollNoteDisplay.KEY_HEIGHT;
+            int width = timeline.scaleTickToPixel(note.getDurationTicks());
             int height = PianoRollNoteDisplay.KEY_HEIGHT;
             g.fillRect(x, y, width, height);
         });
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String property =  evt.getPropertyName();
+
+        switch (property) {
+            case "noteRemoved":
+            case "noteCreated":
+                repaint();
+        }
     }
 }

@@ -29,6 +29,7 @@ public class TimelineLineContainerPanel extends LineContainerPanel implements Pr
             case "blockPasted":
             case "blockCreated":
             case "noteCreated":
+            case "pianoRollNoteEdited":
                 repaint();
                 break;
         }

@@ -55,6 +55,10 @@ public class BlockPlayer extends Player implements MetaEventListener {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
+    public PropertyChangeSupport getPropertyChangeSupport() {
+        return propertyChangeSupport;
+    }
+
     @Override
     public void updateSequence() throws InvalidMidiDataException {
         resetTracks();

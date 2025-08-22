@@ -463,11 +463,11 @@ public class TestTimelinePlayer extends TestUtil {
 
     @Test
     void testTickSnapping() {
-        assertEquals(720, timeline.snapTickLower(959));
-        assertEquals(960, timeline.snapTickLower(960));
-        assertEquals(960, timeline.snapTickLower(961));
-        assertEquals(960, timeline.snapTickLower(960 + 960 / 4 - 1));
-        assertEquals(1200, timeline.snapTickLower(960 + 960 / 4 - 0));
+        assertEquals(720, timeline.snapTickLowerDivision(959));
+        assertEquals(960, timeline.snapTickLowerDivision(960));
+        assertEquals(960, timeline.snapTickLowerDivision(961));
+        assertEquals(960, timeline.snapTickLowerDivision(960 + 960 / 4 - 1));
+        assertEquals(1200, timeline.snapTickLowerDivision(960 + 960 / 4 - 0));
 
         assertEquals(960, timeline.snapTickNearest(959));
         assertEquals(960, timeline.snapTickNearest(960));

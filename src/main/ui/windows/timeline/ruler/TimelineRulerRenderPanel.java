@@ -19,8 +19,7 @@ public class TimelineRulerRenderPanel extends RulerRenderPanel implements Proper
         RulerMouseAdapter mouseAdapter = new RulerMouseAdapter(timelineController,
                 timelineController.getTimeline().getPlayer());
         this.timelineController = timelineController;
-        this.addMouseListener(mouseAdapter);
-        this.addMouseMotionListener(mouseAdapter);
+        addMouseAdapter(mouseAdapter);
         timelineController.addObserver(this);
     }
 

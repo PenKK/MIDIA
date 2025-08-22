@@ -8,7 +8,7 @@ import model.BlockPlayer;
 import model.TimelineController;
 import ui.common.RulerDimensionHelper;
 import ui.windows.piano.roll.editor.PianoRollNoteDisplay;
-import ui.windows.piano.roll.editor.PianoRollNoteGridPane;
+import ui.windows.piano.roll.editor.PianoRollEditorPane;
 import ui.windows.piano.roll.ruler.PianoRollRulerScrollPane;
 import ui.windows.timeline.TimelineViewPanel;
 import ui.windows.timeline.midi.TrackLabelPanel;
@@ -21,14 +21,14 @@ public class PianoRollViewPanel extends JPanel {
 
     private final PianoRollRulerScrollPane pianoRollRulerScrollPane;
     private final PianoRollNoteDisplay pianoRollNoteDisplay;
-    private final PianoRollNoteGridPane pianoRollNoteGrid;
+    private final PianoRollEditorPane pianoRollNoteGrid;
 
     public PianoRollViewPanel(TimelineController timelineController, BlockPlayer blockPlayer) {
         bottomHorizontalContainer = new JPanel();
         topHorizontalContainer = new JPanel();
         pianoRollRulerScrollPane = new PianoRollRulerScrollPane(timelineController, blockPlayer);
         pianoRollNoteDisplay = new PianoRollNoteDisplay();
-        pianoRollNoteGrid = new PianoRollNoteGridPane(blockPlayer, timelineController);
+        pianoRollNoteGrid = new PianoRollEditorPane(blockPlayer, timelineController);
 
         initTopHorizontalContainer();
         initBottomHorizontalContainer();

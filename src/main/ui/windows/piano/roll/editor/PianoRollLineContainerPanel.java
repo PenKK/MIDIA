@@ -14,7 +14,9 @@ public class PianoRollLineContainerPanel extends LineContainerPanel implements P
         super(timelineController, blockPlayer);
         blockPlayer.addPropertyChangeListener(this);
 
-        this.setPreferredSize(new Dimension(1000, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
+        int width = timelineController.getTimeline().scaleTickToPixel(blockPlayer.getBlock().getDurationTicks());
+
+        this.setPreferredSize(new Dimension(width, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
         this.setMinimumSize(new Dimension(1000, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
     }
 
