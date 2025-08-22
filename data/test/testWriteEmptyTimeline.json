@@ -5,7 +5,7 @@
     "projectName": "bob",
     "midiTracks": [],
     "player": {
-        "positionTick": 0,
+        "tickPosition": 0,
         "beatsPerMinute": 120,
         "availableChannels": [
             0,

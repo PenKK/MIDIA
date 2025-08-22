@@ -368,7 +368,7 @@
         }
     ],
     "player": {
-        "positionTick": 1920,
+        "tickPosition": 1920,
         "beatsPerMinute": 120,
         "availableChannels": [2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15]
     }

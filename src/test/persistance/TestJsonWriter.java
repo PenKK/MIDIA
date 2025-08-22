@@ -81,7 +81,7 @@ public class TestJsonWriter {
             Timeline timeline = new Timeline("joe", null);
             timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
             timeline.getPlayer().setBPM(420);
-            timeline.getPlayer().setPositionTick(1000);
+            timeline.getPlayer().setTickPosition(1000);
 
             jsonWriter.open();
             jsonWriter.write(timeline);
@@ -105,7 +105,7 @@ public class TestJsonWriter {
             Timeline timeline = new Timeline("joe", null);
             timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
             timeline.getPlayer().setBPM(420);
-            timeline.getPlayer().setPositionTick(1000);
+            timeline.getPlayer().setTickPosition(1000);
 
             jsonWriter.open();
             jsonWriter.write(timeline);

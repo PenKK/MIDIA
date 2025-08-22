@@ -66,7 +66,7 @@ public class TestTimelinePlayer extends TestUtil {
         assertEquals("test", timeline.getProjectName());
         assertEquals(new ArrayList<MidiTrack>(), timeline.getMidiTracks());
         assertEquals(120, timeline.getPlayer().getBPM());
-        assertEquals(0, timeline.getPlayer().getPositionTick());
+        assertEquals(0, timeline.getPlayer().getTickPosition());
         assertEquals(4, timeline.getBeatDivision());
         assertEquals(4, timeline.getBeatsPerMeasure());
         assertEquals(1, timeline.getHorizontalScaleFactor());
@@ -326,32 +326,32 @@ public class TestTimelinePlayer extends TestUtil {
 
         assertEquals(10000, timeline.getDurationRemainingMS());
 
-        timeline.getPlayer().setPositionTick(30);
-        assertEquals(30, timeline.getPlayer().getPositionTick());
+        timeline.getPlayer().setTickPosition(30);
+        assertEquals(30, timeline.getPlayer().getTickPosition());
         assertEquals(9984, timeline.getDurationRemainingMS());
 
         assertEquals(15.625, timeline.getPlayer().getPositionMs(), roundingDelta);
         assertEquals(0.03125, timeline.getPlayer().getPositionBeats(), roundingDelta); // 30 ms is very short
         assertEquals(0.03125 + 1, timeline.getPlayer().getPositionOnBeat(), roundingDelta);
         timeline.getPlayer().setPositionMs(15.625);
-        assertEquals(30, timeline.getPlayer().getPositionTick());
+        assertEquals(30, timeline.getPlayer().getTickPosition());
         assertEquals(9984, timeline.getDurationRemainingMS());
 
-        timeline.getPlayer().setPositionTick(20);
-        assertEquals(20, timeline.getPlayer().getPositionTick());
+        timeline.getPlayer().setTickPosition(20);
+        assertEquals(20, timeline.getPlayer().getTickPosition());
         assertEquals(10.42, timeline.getPlayer().getPositionMs(), roundingDelta);
         assertEquals(9989, timeline.getDurationRemainingMS());
 
         timeline.getPlayer().setBPM(240);
-        timeline.getPlayer().setPositionTick(20);
-        assertEquals(20, timeline.getPlayer().getPositionTick());
+        timeline.getPlayer().setTickPosition(20);
+        assertEquals(20, timeline.getPlayer().getTickPosition());
         assertEquals(5.2, timeline.getPlayer().getPositionMs(), roundingDelta);
         assertEquals(0.0208, timeline.getPlayer().getPositionBeats(), roundingDelta);
         assertEquals(0.0208 + 1, timeline.getPlayer().getPositionOnBeat(), roundingDelta);
         assertEquals(4994, timeline.getDurationRemainingMS());
 
-        timeline.getPlayer().setPositionTick(0);
-        assertEquals(0, timeline.getPlayer().getPositionTick());
+        timeline.getPlayer().setTickPosition(0);
+        assertEquals(0, timeline.getPlayer().getTickPosition());
         assertEquals(0, timeline.getPlayer().getPositionBeats());
         assertEquals(1.0, timeline.getPlayer().getPositionOnBeat());
         assertEquals(5000, timeline.getDurationRemainingMS());
@@ -447,9 +447,9 @@ public class TestTimelinePlayer extends TestUtil {
         assertEquals(0.25, timeline.getPlayer().ticksToBeats(960 / 4)); // remains same
 
         timeline.getPlayer().setPositionBeat(5);
-        assertEquals(4 * 960, timeline.getPlayer().getPositionTick());
+        assertEquals(4 * 960, timeline.getPlayer().getTickPosition());
         timeline.getPlayer().setPositionBeat(1.5);
-        assertEquals(960 / 2, timeline.getPlayer().getPositionTick());
+        assertEquals(960 / 2, timeline.getPlayer().getTickPosition());
     }
 
     @Test

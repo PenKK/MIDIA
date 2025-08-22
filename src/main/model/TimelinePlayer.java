@@ -1,7 +1,5 @@
 package model;
 
-import java.awt.event.ActionEvent;
-
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.Track;
 
@@ -54,10 +52,10 @@ public class TimelinePlayer extends Player {
     }
     
     @Override
-    public long setPositionTick(long newPositionTick) {
-        long oldPositionTick = super.setPositionTick(newPositionTick);
-        timeline.getPropertyChangeSupport().firePropertyChange("positionTick", oldPositionTick, newPositionTick);
-        return oldPositionTick;
+    public long setTickPosition(long newTickPosition) {
+        long oldTickPosition = super.setTickPosition(newTickPosition);
+        timeline.getPropertyChangeSupport().firePropertyChange("tickPosition", oldTickPosition, newTickPosition);
+        return oldTickPosition;
     }
 
     @Override

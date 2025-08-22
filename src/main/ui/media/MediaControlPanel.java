@@ -215,7 +215,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
             case "playbackEnded":
                 handleEnd();
                 break;
-            case "positionTick":
+            case "tickPosition":
                 updateTimeDisplay();
                 break;
             default:

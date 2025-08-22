@@ -20,8 +20,7 @@ public class TimelineLineContainerPanel extends LineContainerPanel implements Pr
         String propertyName = evt.getPropertyName();
 
         switch (propertyName) {
-            case "positionTick":
-            case "horizontalScaleFactor":
+            case "tickPosition": case "horizontalScaleFactor":
                 updateLineX();
                 break;
             case "timelineReplaced":

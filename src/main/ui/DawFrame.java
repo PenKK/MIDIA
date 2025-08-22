@@ -61,7 +61,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
 
     }
 
-    // MOFIES: this
+    // MODIFIES: this
     // EFFECTS: listens for certain property updates and runs methods accordingly
     @Override
     public void propertyChange(PropertyChangeEvent evt) {

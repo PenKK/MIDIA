@@ -22,7 +22,7 @@ public class PianoRollLineContainerPanel extends LineContainerPanel implements P
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
 
-        if (propertyName.equals("positionTick")) {
+        if (propertyName.equals("tickPosition")) {
             updateLineX();
         }
     }

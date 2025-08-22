@@ -1,7 +1,7 @@
 {
     "player": {
         "beatsPerMinute": 120,
-        "positionTick": 0,
+        "tickPosition": 0,
         "availableChannels": [
             0,
             1,

@@ -80,13 +80,13 @@ public class JsonReader {
     private Player parsePlayer(JSONObject playerJson, Timeline tl) {
         Player p = new TimelinePlayer(tl);
         float beatsPerMinute = playerJson.getFloat("beatsPerMinute");
-        int positionTick = playerJson.getInt("positionTick");
+        int tickPosition = playerJson.getInt("tickPosition");
 
         JSONArray availableChannels = playerJson.getJSONArray("availableChannels");
         ArrayList<Integer> availableChannelsList = parseIntegerArrayList(availableChannels);
 
         p.setBPM(beatsPerMinute);
-        p.setPositionTick(positionTick);
+        p.setTickPosition(tickPosition);
         p.setAvailableChannels(availableChannelsList);
 
         return p;

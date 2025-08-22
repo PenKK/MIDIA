@@ -81,10 +81,10 @@ public class BlockPlayer extends Player implements MetaEventListener {
     }
 
     @Override
-    public long setPositionTick(long newPositionTick) {
-        long oldPositionTick = super.setPositionTick(newPositionTick);
-        propertyChangeSupport.firePropertyChange("positionTick", oldPositionTick, newPositionTick);
-        return oldPositionTick;
+    public long setTickPosition(long newTickPosition) {
+        long oldTickPosition = super.setTickPosition(newTickPosition);
+        propertyChangeSupport.firePropertyChange("tickPosition", oldTickPosition, newTickPosition);
+        return oldTickPosition;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class BlockPlayer extends Player implements MetaEventListener {
     public void meta(MetaMessage meta) {
         if (meta.getType() == TimelineController.PLAYER_END_META_TYPE) {
             if (loop) {
-                setPositionTick(0);
+                setTickPosition(0);
                 try {
                     play();
                 } catch (InvalidMidiDataException e) {

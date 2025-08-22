@@ -4,7 +4,6 @@ import model.Player;
 import model.Timeline;
 import model.TimelineController;
 import model.TimelinePlayer;
-import ui.windows.timeline.midi.TrackLabelPanel;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.swing.event.MouseInputAdapter;
@@ -32,7 +31,7 @@ public class RulerMouseAdapter extends MouseInputAdapter implements PropertyChan
         int tick = (int) Math.max(0, (timeline.scalePixelToTick(e.getX())));
 
         tick = Math.max(tick, 0);
-        player.setPositionTick(tick);
+        player.setTickPosition(tick);
     }
 
     @Override

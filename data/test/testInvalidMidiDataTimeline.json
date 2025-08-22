@@ -5,7 +5,7 @@
     "projectName": "joe",
     "midiTracks": [],
     "player": {
-        "positionTick": 1000,
+        "tickPosition": 1000,
         "beatsPerMinute": 420,
         "availableChannels": [
             0,

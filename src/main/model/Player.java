@@ -29,14 +29,14 @@ public abstract class Player implements Writable, ActionListener {
     protected Sequence sequence;
 
     protected float bpm;
-    protected long positionTick;
+    protected long tickPosition;
     protected ArrayList<Integer> availableChannels;
     protected Timer playbackUpdateTimer;
     protected boolean isDraggingRuler;
 
     public Player() {
         bpm = DEFAULT_BPM;
-        positionTick = 0;
+        tickPosition = 0;
         playbackUpdateTimer = new Timer(UI_UPDATE_DELAY, this);
         isDraggingRuler = false;
 
@@ -83,7 +83,7 @@ public abstract class Player implements Writable, ActionListener {
     //          midi data is found during the sequence update (handled by UI)
     public void play() throws InvalidMidiDataException {
         updateSequence();
-        sequencer.setTickPosition(positionTick);
+        sequencer.setTickPosition(tickPosition);
         sequencer.setTempoInBPM(bpm);
         sequencer.start();
         playbackUpdateTimer.start();
@@ -98,7 +98,7 @@ public abstract class Player implements Writable, ActionListener {
     public void pause() {
         sequencer.stop();
         playbackUpdateTimer.stop();
-        syncPositionTick();
+        syncToSequencerTickPosition();
     }
 
     // MODIFIES: this
@@ -109,17 +109,17 @@ public abstract class Player implements Writable, ActionListener {
 
     // MODIFIES: this
     // EFFECTS: updates the position tick according to the current playback tick
-    public void syncPositionTick() {
-        setPositionTick(sequencer.getTickPosition());
+    public void syncToSequencerTickPosition() {
+        setTickPosition(sequencer.getTickPosition());
     }
 
-    // REQUIRES: newPositionTick >= 0
+    // REQUIRES: newTickPosition >= 0
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback given ticks
-    public long setPositionTick(long newPositionTick) {
-        long oldPositionTick = positionTick;
-        this.positionTick = newPositionTick;
-        return oldPositionTick;
+    public long setTickPosition(long newTickPosition) {
+        long oldTickPosition = tickPosition;
+        this.tickPosition = newTickPosition;
+        return oldTickPosition;
     }
 
     // MODIFIES: this
@@ -137,14 +137,14 @@ public abstract class Player implements Writable, ActionListener {
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback at the given milliseconds
     public void setPositionMs(double newPositionMs) {
-        setPositionTick(msToTicks(newPositionMs));
+        setTickPosition(msToTicks(newPositionMs));
     }
 
     // REQUIRES: newPositionBeat >= 1
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback given the beat to start at
     public void setPositionBeat(double newPositionBeat) {
-        setPositionTick(beatsToTicks(newPositionBeat - 1));
+        setTickPosition(beatsToTicks(newPositionBeat - 1));
     }
 
     // REQUIRES: bpm >= 1
@@ -214,7 +214,7 @@ public abstract class Player implements Writable, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(playbackUpdateTimer)) {
             if (!isDraggingRuler) {
-                syncPositionTick();
+                syncToSequencerTickPosition();
             }
         }
     }
@@ -225,18 +225,18 @@ public abstract class Player implements Writable, ActionListener {
     // EFFECTS: returns the calculation of the sequence length in milliseconds
     public abstract double getLengthMs();
 
-    public long getPositionTick() {
-        return positionTick;
+    public long getTickPosition() {
+        return tickPosition;
     }
 
     // EFFECTS: returns the timeline position in ms by converting ticks to ms
     public double getPositionMs() {
-        return ticksToMs(positionTick);
+        return ticksToMs(tickPosition);
     }
 
     // EFFECTS: returns the timeline position in beats by converting ticks to beats
     public double getPositionBeats() {
-        return ticksToBeats(positionTick);
+        return ticksToBeats(tickPosition);
     }
 
     // EFFECTS: returns the beat on which the timeline position starts playback
@@ -265,7 +265,7 @@ public abstract class Player implements Writable, ActionListener {
         JSONObject playerJson = new JSONObject();
 
         playerJson.put("beatsPerMinute", bpm);
-        playerJson.put("positionTick", positionTick);
+        playerJson.put("tickPosition", tickPosition);
         playerJson.put("availableChannels", new JSONArray(availableChannels));
 
         return playerJson;

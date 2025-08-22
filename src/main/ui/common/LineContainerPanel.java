@@ -27,9 +27,9 @@ public abstract class LineContainerPanel extends JPanel {
     }
 
     // MODIFIES: this
-    // EFFECTS: updates lineX value with the timeline positionTick (scaled) and repaints
+    // EFFECTS: updates lineX value with the timeline tickPosition (scaled) and repaints
     public void updateLineX() {
-        this.lineX = (int) timelineController.getTimeline().scaleTickToPixel(player.getPositionTick());
+        this.lineX = (int) timelineController.getTimeline().scaleTickToPixel(player.getTickPosition());
         repaint();
     }
 
