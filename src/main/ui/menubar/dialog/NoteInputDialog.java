@@ -157,7 +157,7 @@ public class NoteInputDialog extends InputDialog {
                                                         "No track selected");
 
         if (midiTrack.isPercussive()) {
-            pitch = 0;
+            pitch = Note.PERCUSSIVE_DEFAULT_PITCH;
         }
 
         Note note = new Note(pitch, velocity, startTick, durationTicks);

@@ -111,7 +111,7 @@ public class TrackRenderPanel extends JPanel {
 
     // EFFECTS: returns the pitch range of the notes within the blocks
     private int[] determineRange(ArrayList<Block> blocks) {
-        if (blocks.isEmpty() || midiTrack.isPercussive()) {
+        if (blocks.isEmpty()) {
             return new int[] { 0, 0 };
         }
 

@@ -10,6 +10,8 @@ import persistance.Writable;
 // to a MIDIEvent object and applied to a Track object by the MidiTrack class (by the timeline).
 public class Note implements Writable, Copyable {
 
+    public static final int PERCUSSIVE_DEFAULT_PITCH = 120;
+
     private int pitch; // Notes in a percussive track do not utilize pitch
     private int velocity;
     private long startTick;

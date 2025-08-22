@@ -49,9 +49,9 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-
         g.setColor(Color.decode("#3c3f41"));
         g.fillRect(0, 0, getLoopPixelWidth(), this.getHeight());
+
         drawGridLines(g);
         drawBlockNotes(g);
     }
@@ -60,6 +60,7 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
         return timelineController.getTimeline().scaleTickToPixel(blockPlayer.getBlock().getDurationTicks());
     }
 
+    @SuppressWarnings("methodlength")
     private void drawGridLines(Graphics g) {
         Timeline timeline = timelineController.getTimeline();
 
@@ -69,6 +70,22 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
 
         long divisionTickInterval = ppq / beatDivisions;
         long measureTickInterval = (long) ppq * beatsPerMeasure;
+
+        boolean percussive = blockPlayer.getParentMidiTrack().isPercussive();
+        int topY = 7 * PianoRollNoteDisplay.KEY_HEIGHT;
+        int botY = 8 * PianoRollNoteDisplay.KEY_HEIGHT;
+
+        g.setColor(BEAT_LINE_COLOR);
+        // Horizontal lines
+        if (percussive) {
+            g.drawLine(0, topY, getWidth(), topY);
+            g.drawLine(0, botY, getWidth(), botY);
+        } else {
+            for (int i = 0; i <= 127; i++) {
+                int y = i * PianoRollNoteDisplay.KEY_HEIGHT;
+                g.drawLine(0, y, getWidth(), y);
+            }
+        }
         // Vertical lines
         for (long tick = 0; tick <= getWidth() / timeline.getPixelsPerTick(); tick += divisionTickInterval) {
             g.setColor(BEAT_LINE_COLOR);
@@ -78,14 +95,8 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
                 if (tick % measureTickInterval == 0) {
                     g.setColor(MEASURE_LINE_COLOR);
                 }
-                g.drawLine(pixelPosition, 0, pixelPosition, getHeight());
+                g.drawLine(pixelPosition, percussive ? topY : 0, pixelPosition,percussive ? botY : getHeight());
             }
-        }
-        // Horizontal lines
-        for (int i = 0; i <= 127; i++) {
-            g.setColor(BEAT_LINE_COLOR);
-            int y = i * PianoRollNoteDisplay.KEY_HEIGHT;
-            g.drawLine(0, y, getWidth(), y);
         }
     }
 
@@ -93,12 +104,10 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
         Timeline timeline = timelineController.getTimeline();
         Block block = blockPlayer.getBlock();
         g.setColor(NOTE_COLOR);
-        boolean isPercussive = blockPlayer.getParentMidiTrack().isPercussive();
 
         block.getNotes().forEach(note -> {
             int x = timeline.scaleTickToPixel(note.getStartTick());
-            int y = isPercussive ? 7 * PianoRollNoteDisplay.KEY_HEIGHT :
-                    PianoRollNoteDisplay.KEY_HEIGHT * 127 - note.getPitch() * PianoRollNoteDisplay.KEY_HEIGHT;
+            int y = PianoRollNoteDisplay.KEY_HEIGHT * 127 - note.getPitch() * PianoRollNoteDisplay.KEY_HEIGHT;
             int width = timeline.scaleTickToPixel(note.getDurationTicks());
             int height = PianoRollNoteDisplay.KEY_HEIGHT;
             g.fillRect(x, y, width, height);

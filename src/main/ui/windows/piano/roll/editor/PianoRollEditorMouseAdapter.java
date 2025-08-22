@@ -34,6 +34,7 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         }
         if (clickedNote != null && e.getButton() == MouseEvent.BUTTON3) {
             removeNote(clickedNote);
+            return;
         }
         if (clickedNote != null && e.getButton() == MouseEvent.BUTTON1) {
             draggingNote = true;
@@ -41,6 +42,10 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
     }
 
     private void createNote(long tick, int pitch) {
+        if (blockPlayer.getParentMidiTrack().isPercussive() && pitch != Note.PERCUSSIVE_DEFAULT_PITCH) {
+            return;
+        }
+
         Timeline timeline = timelineController.getTimeline();
         long startTick = timeline.snapTickLowerBeat(tick);
         long durationTicks = blockPlayer.beatsToTicks(1);
@@ -52,7 +57,7 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
 
     private void removeNote(Note note) {
         boolean removeSuccessful = blockPlayer.getBlock().getNotes().remove(note);
-        assert removeSuccessful;
+        assert removeSuccessful : String.format("Note %s was note found when removing", note);
         blockPlayer.getPropertyChangeSupport().firePropertyChange("noteRemoved", null, null);
         sendNoteChangeEventTimelineController();
     }
