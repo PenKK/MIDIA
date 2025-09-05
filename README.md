@@ -1,5 +1,7 @@
 # MIDIA (Musical Interface for Digital Instrument Arrangement)
 
+<img width="963" height="804" alt="display" src="https://github.com/user-attachments/assets/3ec6d260-70de-4374-bc30-fd7c8d92c447" />
+
 ## Usage
 
 ### Create a track
