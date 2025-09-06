@@ -25,14 +25,12 @@ public class FileMenu extends Menu {
     public static final String PROJECTS_DIRECTORY = "data/projects";
     public static final String AUTO_SAVE_FILE_DIRECTORY = PROJECTS_DIRECTORY.concat("/autosave/");
 
-    private MenuItem open;
-    private MenuItem save;
-    private MenuItem newProject;
-    private MenuItem delete;
+    private final MenuItem open;
+    private final MenuItem save;
+    private final MenuItem newProject;
+    private final MenuItem delete;
 
-    private JFileChooser fileChooser;
-    private JsonReader reader;
-    private JsonWriter writer;
+    private final JFileChooser fileChooser;
 
     // EFFECTS: creates file JMenu, its file chooser, its JMenuItems, and apppriate action listeners
     public FileMenu(TimelineController timelineController) {
@@ -82,7 +80,7 @@ public class FileMenu extends Menu {
         }
 
         String path = fileChooser.getSelectedFile().getPath();
-        reader = new JsonReader(path);
+        JsonReader reader = new JsonReader(path);
 
         try {
             Timeline newTimeline = reader.read();
@@ -107,7 +105,7 @@ public class FileMenu extends Menu {
         }
 
         String path = fileChooser.getSelectedFile().getPath();
-        writer = new JsonWriter(path);
+        JsonWriter writer = new JsonWriter(path);
 
         try {
             Timeline timeline = timelineController.getTimeline();
@@ -131,6 +129,9 @@ public class FileMenu extends Menu {
             return;
         }
 
-        fileChooser.getSelectedFile().delete();
+        if (!fileChooser.getSelectedFile().delete()) {
+            throw new RuntimeException("Unable to delete project file at path "
+                                       + fileChooser.getSelectedFile().getPath());
+        }
     }
 }

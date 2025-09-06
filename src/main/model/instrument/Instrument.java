@@ -4,16 +4,16 @@ import org.json.JSONObject;
 
 import persistance.Writable;
 
-// An instrument with with a name and program number
+// An instrument with a name and program number
 public interface Instrument extends Writable {
 
-    public int getProgramNumber();
+    int getProgramNumber();
 
-    public String getName();
+    String getName();
 
-    public String name();
+    String name();
 
-    public String getType();
+    String getType();
 
     @Override
     default JSONObject toJson() {

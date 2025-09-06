@@ -4,8 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.JPanel;
 
@@ -14,8 +13,7 @@ import model.Timeline;
 import model.TimelineController;
 import ui.windows.timeline.midi.TrackLabelPanel;
 
-// The panel for Graphics to draw on to show Ruler tick marks
-public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
+public abstract class RulerRenderPanel extends JPanel {
 
     public static final int TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.3);
     public static final int BEAT_TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.6);
@@ -29,31 +27,22 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
 
     private static final int FONT_PADDING = 4;
 
-    private TimelineController timelineController;
-
-    // EFFECTS: Sets null border for zero padding, borders will be drawn via Graphics
-    RulerRenderPanel(TimelineController timelineController) {
-        RulerMouseAdapter mouseAdapter = new RulerMouseAdapter(timelineController);
-        this.timelineController = timelineController;
+    public RulerRenderPanel() {
+        super();
         this.setBorder(null);
         this.setBackground(Color.GRAY);
         this.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-        this.addMouseListener(mouseAdapter);
-        this.addMouseMotionListener(mouseAdapter);
-        timelineController.addObserver(this);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Draws the ruler markings
-    @Override
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        drawAllTickMarks(g);
+    protected void addMouseAdapter(RulerMouseAdapter adapter) {
+        this.addMouseListener(adapter);
+        this.addMouseMotionListener(adapter);
     }
 
     // MODIFIES: this
     // EFFECTS: Draws the ticks marks of measures, beats, and divisions, according to timeline instance
-    private void drawAllTickMarks(Graphics g) {
+    @SuppressWarnings("methodlength")
+    public static void drawAllTickMarks(Graphics g, TimelineController timelineController, int width) {
         Timeline timeline = timelineController.getTimeline();
 
         int beatDivisions = timeline.getBeatDivision();
@@ -65,11 +54,9 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
         long measureTickInterval = (long) Player.PULSES_PER_QUARTER_NOTE * beatsPerMeasure;
         long beatTickInterval = Player.PULSES_PER_QUARTER_NOTE;
 
-        int startOffset = TrackLabelPanel.LABEL_BOX_WIDTH;
-
-        for (long tick = 0; tick <= getWidth() / timeline.getPixelsPerTick(); tick += divisionTickInterval) {
+        for (long tick = 0; tick <= width / timeline.getPixelsPerTick(); tick += divisionTickInterval) {
             int height = TICK_HEIGHT;
-            int pixelPosition = (int) (timeline.scaleTickToPixel(tick) + startOffset);
+            int pixelPosition = timeline.scaleTickToPixel(tick);
             g.setColor(DIVISION_TICK_COLOR);
 
             if (tick % measureTickInterval == 0) { // One measure
@@ -86,20 +73,4 @@ public class RulerRenderPanel extends JPanel implements PropertyChangeListener {
             g.drawLine(pixelPosition, 0, pixelPosition, height);
         }
     }
-
-    // EFFECTS: listens for property change events and runs methods accordingly
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        String propertyName = evt.getPropertyName();
-
-        switch (propertyName) {
-            case "beatDivision":
-            case "beatsPerMeasure":
-            case "timelineReplaced":
-            case "horizontalScaleFactor":
-                repaint();
-                break;
-        }
-    }
-
 }

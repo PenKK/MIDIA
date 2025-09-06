@@ -24,24 +24,24 @@ public class TestNote {
     @Test
     void testSetters() {
         note.setDurationTicks(100);
-        assertEquals(note.getDurationTicks(), 100);
+        assertEquals(100, note.getDurationTicks());
         note.setDurationTicks(3);
-        assertEquals(note.getDurationTicks(), 3);
+        assertEquals(3, note.getDurationTicks());
 
         note.setPitch(100);
-        assertEquals(note.getPitch(), 100);
+        assertEquals(100, note.getPitch());
         note.setPitch(65);
-        assertEquals(note.getPitch(), 65);
+        assertEquals(65, note.getPitch());
 
         note.setVelocity(99);
-        assertEquals(note.getVelocity(), 99);
+        assertEquals(99, note.getVelocity());
         note.setVelocity(33);
-        assertEquals(note.getVelocity(), 33);
+        assertEquals(33, note.getVelocity());
 
         note.setStartTick(43);
-        assertEquals(note.getStartTick(), 43);
+        assertEquals(43, note.getStartTick());
         note.setStartTick(2000);
-        assertEquals(note.getStartTick(), 2000);
+        assertEquals(2000, note.getStartTick());
     }
 
     @Test

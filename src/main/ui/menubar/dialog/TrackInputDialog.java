@@ -3,6 +3,7 @@ package ui.menubar.dialog;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.util.Objects;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -65,12 +66,13 @@ public class TrackInputDialog extends InputDialog {
     }
 
     // MODIFIES: this
-    // EFFECTS: creates a track on the the timeline with user input from fields
+    // EFFECTS: creates a track on the timeline with user input from fields
     private void submit() {
         String name = nameField.getText().trim();
-        Instrument instrument = (Instrument) instrumentComboBox.getSelectedItem();
+        Instrument instrument = (Instrument) Objects.requireNonNull(instrumentComboBox.getSelectedItem(),
+                                                            "Instrument not selected");
 
-        if (name.equals("") || name == null) {
+        if (name.isEmpty()) {
             return;
         }
 
@@ -85,15 +87,13 @@ public class TrackInputDialog extends InputDialog {
     // MODIFIES: this
     // EFFECTS: updates the instrumentComboBox list of instrument options accoring to checkBox for percussion
     private void updateInstrumentList(JCheckBox checkBox) {
+        DefaultComboBoxModel<Instrument> items;
         if (checkBox.isSelected()) {
-            DefaultComboBoxModel<Instrument> items = 
-                    new DefaultComboBoxModel<Instrument>(PercussiveInstrument.values());
-            instrumentComboBox.setModel(items);
+            items = new DefaultComboBoxModel<>(PercussiveInstrument.values());
         } else {
-            DefaultComboBoxModel<Instrument> items = 
-                    new DefaultComboBoxModel<Instrument>(TonalInstrument.values());
-            instrumentComboBox.setModel(items);
+            items = new DefaultComboBoxModel<>(TonalInstrument.values());
         }
+        instrumentComboBox.setModel(items);
     }
 
 

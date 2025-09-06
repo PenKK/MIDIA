@@ -43,8 +43,8 @@ public class TestEvent {
 
     @Test
     public void testEquals() {
-        assertFalse(e.equals(null));
-        assertFalse(e.equals(new Object()));
+        assertNotEquals(null, e);
+        assertNotEquals(new Object(), e);
     }
 
     @Test

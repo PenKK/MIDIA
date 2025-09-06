@@ -30,7 +30,7 @@ public class MidiTrack implements Writable, Pastable {
     private Instrument instrument; // 0 to 127 inclusive if not percussive, else 35 to 81 inclusive
     private int volume; // 0 to 127 inclusive
     private String name;
-    private ArrayList<Block> blocks;
+    private final ArrayList<Block> blocks;
     private final int channel;
 
     // REQUIRES: 0 <= instrument <= 127 if percussive is false, else 35 <= instrument <= 81
@@ -39,7 +39,7 @@ public class MidiTrack implements Writable, Pastable {
     //          percussive according to parameter, and a name.
     public MidiTrack(String name, Instrument instrument, int channel) {
         this.muted = false;
-        this.blocks = new ArrayList<Block>();
+        this.blocks = new ArrayList<>();
         this.instrument = instrument;
         this.volume = DEFAULT_VOLUME;
         this.channel = channel;
@@ -74,20 +74,18 @@ public class MidiTrack implements Writable, Pastable {
     //          Creates one event for the note on event, and one for the end not event (per note).
     //          All created events are applied to the track.
     public void applyToTrack(Track track) throws InvalidMidiDataException {
-        ShortMessage programChangeMessage = new ShortMessage();
-        ShortMessage volMessage = new ShortMessage();
-
-        programChangeMessage.setMessage(ShortMessage.PROGRAM_CHANGE, getChannel(), instrument.getProgramNumber(),0);
-        volMessage.setMessage(ShortMessage.CONTROL_CHANGE, getChannel(), 7, volume);
+        ShortMessage volMessage = new ShortMessage(ShortMessage.CONTROL_CHANGE, getChannel(), 7, volume);
 
         if (!isPercussive()) { // Tracks on channel 10 ignore program change
+            ShortMessage programChangeMessage = new ShortMessage(ShortMessage.PROGRAM_CHANGE, getChannel(),
+                    instrument.getProgramNumber(),0);
             track.add(new MidiEvent(programChangeMessage, 0));
         }
         track.add(new MidiEvent(volMessage, 0));
 
         for (Block currentBlock : blocks) {
             for (Note note : currentBlock.getNotesTimeline()) {
-                applyNoteToTrack(note, track);
+                applyNoteToTrack(track, note, isPercussive(), instrument, getChannel());
             }
         }
     }
@@ -95,15 +93,16 @@ public class MidiTrack implements Writable, Pastable {
     // MODIFIES: track
     // EFFECTS: Helper method for applyToTrack; converts note to MIDI event on and off
     //          and applies it to the specified track.
-    private void applyNoteToTrack(Note note, Track track) {
+    public static void applyNoteToTrack(Track track, Note note, boolean isPercussive,
+                                        Instrument instrument, int channel) {
         try {
             ShortMessage onMessage = new ShortMessage();
             ShortMessage offMessage = new ShortMessage();
             // Percussive tracks use data1 for the instrument as they have no pitch
-            int data1 = isPercussive() ? instrument.getProgramNumber() : note.getPitch();
+            int data1 = isPercussive ? instrument.getProgramNumber() : note.getPitch();
 
-            onMessage.setMessage(ShortMessage.NOTE_ON, getChannel(), data1, note.getVelocity());
-            offMessage.setMessage(ShortMessage.NOTE_OFF, getChannel(), data1, 0); 
+            onMessage.setMessage(ShortMessage.NOTE_ON, channel, data1, note.getVelocity());
+            offMessage.setMessage(ShortMessage.NOTE_OFF, channel, data1, 0); 
 
             MidiEvent noteOnEvent = new MidiEvent(onMessage, note.getStartTick());
             MidiEvent noteOffEvent = new MidiEvent(offMessage, note.getStartTick() + note.getDurationTicks());

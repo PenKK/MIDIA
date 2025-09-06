@@ -16,7 +16,7 @@ import persistance.Writable;
 // The block can be moved on the timeline by changing the startTick.
 public class Block implements Writable, Copyable, Pastable {
 
-    private ArrayList<Note> notes;
+    private final ArrayList<Note> notes;
     private long startTick;
     private long durationTicks;
 
@@ -59,9 +59,13 @@ public class Block implements Writable, Copyable, Pastable {
 
     // REQUIRES: newStartTick >= 0
     // MODIFIES: this
-    // EFFECTS: Changes the position of the block on the time line
+    // EFFECTS: Changes the position of the block on the timeline
     public void setStartTick(long newStartTick) {
         startTick = newStartTick;
+    }
+
+    public void setDurationTicks(long durationTicks) {
+        this.durationTicks = durationTicks;
     }
 
     // EFFECTS: Returns notes with timings adjusted relative to the timeline, rather than the block
@@ -124,7 +128,8 @@ public class Block implements Writable, Copyable, Pastable {
 
     // EFFECTS: returns a string with general information about the block
     public String info() {
-        return String.format("Start tick: %d, duration: %d, current note count: %d", startTick, durationTicks, notes.size());
+        return String.format("Start tick: %d, duration: %d, current note count: %d",
+                             startTick, durationTicks, notes.size());
     }
 
     // EFFECTS: returns a string with start tick and note count

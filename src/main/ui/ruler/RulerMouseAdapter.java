@@ -1,39 +1,48 @@
 package ui.ruler;
 
-import java.awt.event.MouseEvent;
-import javax.swing.event.MouseInputAdapter;
-
+import model.Player;
 import model.Timeline;
 import model.TimelineController;
-import ui.windows.timeline.midi.TrackLabelPanel;
+import model.TimelinePlayer;
 
-public class RulerMouseAdapter extends MouseInputAdapter {
+import javax.sound.midi.InvalidMidiDataException;
+import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-    private TimelineController timelineController;
-    private boolean resume = false;
+public class RulerMouseAdapter extends MouseInputAdapter implements PropertyChangeListener {
 
-    RulerMouseAdapter(TimelineController timelineController) {
+    protected boolean resume = false;
+
+    private final TimelineController timelineController;
+    private Player player;
+
+    public RulerMouseAdapter(TimelineController timelineController, Player player) {
         this.timelineController = timelineController;
+        this.player = player;
+
+        timelineController.addObserver(this);
     }
 
-    private void updateX(MouseEvent e) {
+    protected void updateX(MouseEvent e) {
         Timeline timeline = timelineController.getTimeline();
 
-        int tick = (int) Math.max(0, (timeline.scalePixelToTick(e.getX() - TrackLabelPanel.LABEL_BOX_WIDTH)));
+        int tick = (int) Math.max(0, (timeline.scalePixelToTick(e.getX())));
 
         tick = Math.max(tick, 0);
-        timeline.getPlayer().setPositionTick(tick);
+        player.setTickPosition(tick);
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (timelineController.isPlaying()) {
-            timelineController.pauseTimeline();
+        if (player.isPlaying()) {
+            player.pause();
             resume = true;
         }
 
-        if (!timelineController.isDraggingRuler()) {
-            timelineController.startRulerDrag();
+        if (!player.isDraggingRuler()) {
+            player.startRulerDrag();
         }
         updateX(e);
     }
@@ -45,10 +54,29 @@ public class RulerMouseAdapter extends MouseInputAdapter {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        timelineController.stopRulerDrag();
+        player.stopRulerDrag();
         if (resume) {
-            timelineController.playTimeline();
+            try {
+                player.play();
+            } catch (InvalidMidiDataException ex) {
+                throw new RuntimeException("Failed to play player on mouse release", ex);
+            }
             resume = false;
+        }
+    }
+
+    private void updatePlayer() {
+        if (player instanceof TimelinePlayer) {
+            player = timelineController.getTimeline().getPlayer();
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+
+        if (propertyName.equals("timelineReplaced")) {
+            updatePlayer();
         }
     }
 }

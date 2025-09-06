@@ -51,27 +51,27 @@ public class TestTimelinePlayer extends TestUtil {
 
     @Test
     void testPixelScaling() {
-        assertEquals(timeline.scaleTickToPixel(50), 5);
+        assertEquals(5, timeline.scaleTickToPixel(50));
         timeline.setHorizontalScaleFactor(5);
-        assertEquals(timeline.scaleTickToPixel(50), 26);
+        assertEquals(26, timeline.scaleTickToPixel(50));
 
         timeline.setHorizontalScaleFactor(1);
-        assertEquals(timeline.scalePixelToTick(5), 48);
+        assertEquals(48, timeline.scalePixelToTick(5));
         timeline.setHorizontalScaleFactor(5);
-        assertEquals(timeline.scalePixelToTick(26), 50);
+        assertEquals(50, timeline.scalePixelToTick(26));
     }
 
     @Test
     void testConstructor() throws MidiUnavailableException {
-        assertEquals(timeline.getProjectName(), "test");
-        assertEquals(timeline.getMidiTracks(), new ArrayList<MidiTrack>());
-        assertEquals(timeline.getPlayer().getBPM(), 120);
-        assertEquals(timeline.getPlayer().getPositionTick(), 0);
-        assertEquals(timeline.getBeatDivision(), 4);
-        assertEquals(timeline.getBeatsPerMeasure(), 4);
-        assertEquals(timeline.getHorizontalScaleFactor(), 1);
-        assertEquals(timeline.getPlayer().getSequence().getResolution(), 960);
-        assertEquals(timeline.getPlayer().getSequence().getDivisionType(), Sequence.PPQ);
+        assertEquals("test", timeline.getProjectName());
+        assertEquals(new ArrayList<MidiTrack>(), timeline.getMidiTracks());
+        assertEquals(120, timeline.getPlayer().getBPM());
+        assertEquals(0, timeline.getPlayer().getTickPosition());
+        assertEquals(4, timeline.getBeatDivision());
+        assertEquals(4, timeline.getBeatsPerMeasure());
+        assertEquals(1, timeline.getHorizontalScaleFactor());
+        assertEquals(960, timeline.getPlayer().getSequence().getResolution());
+        assertEquals(Sequence.PPQ, timeline.getPlayer().getSequence().getDivisionType());
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
     }
 
@@ -84,9 +84,9 @@ public class TestTimelinePlayer extends TestUtil {
         expectedMidiTracks.add(midiTrack);
         assertEquals(timeline.getMidiTracks(), expectedMidiTracks);
         assertEquals(timeline.getTrack(0), expectedMidiTracks.get(0));
-        assertEquals(timeline.getMidiTracks().size(), 1);
-        assertEquals(midiTrack.getChannel(), 0);
-        assertEquals(timeline.getMidiTracksArray()[0], (new MidiTrack[] { midiTrack })[0]);
+        assertEquals(1, timeline.getMidiTracks().size());
+        assertEquals(0, midiTrack.getChannel());
+        assertEquals(timeline.getMidiTracksArray()[0], midiTrack);
 
         expectedChannels.remove(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
@@ -96,8 +96,8 @@ public class TestTimelinePlayer extends TestUtil {
         assertEquals(timeline.getMidiTracks(), expectedMidiTracks);
         assertEquals(timeline.getTrack(1), expectedMidiTracks.get(1));
         assertEquals(timeline.getTrack(0), expectedMidiTracks.get(0));
-        assertEquals(timeline.getMidiTracks().size(), 2);
-        assertEquals(anotherMidiTrack.getChannel(), 1);
+        assertEquals(2, timeline.getMidiTracks().size());
+        assertEquals(1, anotherMidiTrack.getChannel());
 
         expectedChannels.remove(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
@@ -116,14 +116,14 @@ public class TestTimelinePlayer extends TestUtil {
         expectedChannels.remove(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
 
-        assertEquals(timeline.getMidiTracks().size(), 2);
+        assertEquals(2, timeline.getMidiTracks().size());
         assertEquals(timeline.removeMidiTrack(0), midiTrack);
         expectedChannels.add(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
 
-        assertEquals(timeline.getMidiTracks().size(), 1);
+        assertEquals(1, timeline.getMidiTracks().size());
         assertEquals(timeline.removeMidiTrack(0), anotherMidiTrack);
-        assertEquals(timeline.getMidiTracks().size(), 0);
+        assertEquals(0, timeline.getMidiTracks().size());
         expectedChannels.add(1);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
     }
@@ -147,53 +147,54 @@ public class TestTimelinePlayer extends TestUtil {
         expectedMidiTracks.add(mt2);
         expectedMidiTracks.add(mt3);
 
-        assertEquals(timeline.getMidiTracks().size(), 3);
+        assertEquals(3, timeline.getMidiTracks().size());
+        assertEquals(expectedMidiTracks, timeline.getMidiTracks());
         assertEquals(timeline.removeMidiTrack(2), mt3);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
 
-        assertEquals(timeline.getMidiTracks().size(), 2);
+        assertEquals(2, timeline.getMidiTracks().size());
         assertEquals(timeline.removeMidiTrack(0), mt1);
         expectedChannels.add(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
 
-        assertEquals(timeline.getMidiTracks().size(), 1);
+        assertEquals(1, timeline.getMidiTracks().size());
         assertEquals(timeline.removeMidiTrack(0), mt2);
         expectedChannels.add(1);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
-        assertEquals(timeline.getMidiTracks().size(), 0);
+        assertEquals(0, timeline.getMidiTracks().size());
     }
 
     @Test
     void testManyTracksAndPlayBack() {
         ArrayList<MidiTrack> midiTracks = new ArrayList<>();
 
-        while (timeline.getPlayer().getAvailableChannels().size() != 0) {
+        while (!timeline.getPlayer().getAvailableChannels().isEmpty()) {
             midiTracks.add(timeline.createMidiTrack("instrumental", TonalInstrument.ELECTRIC_PIANO_1));
         }
-        assertTrue(midiTracks.size() == 15);
+        assertEquals(15, midiTracks.size());
 
         midiTracks.add(timeline.createMidiTrack("percussive", instr));
-        assertEquals(timeline.createMidiTrack("cant make more", instr), null);
+        assertNull(timeline.createMidiTrack("cant make more", instr));
 
         timeline.removeMidiTrack(5);
-        assertTrue(timeline.getPlayer().getAvailableChannels().size() == 1);
-        assertEquals(timeline.createMidiTrack("1 more", TonalInstrument.HARPSICHORD).getChannel(), 5);
-        assertEquals(timeline.createMidiTrack("cant make more", instr), null);
+        assertEquals(1, timeline.getPlayer().getAvailableChannels().size());
+        assertEquals(5, timeline.createMidiTrack("1 more", TonalInstrument.HARPSICHORD).getChannel());
+        assertNull(timeline.createMidiTrack("cant make more", instr));
 
         assertTrue(timeline.getPlayer().getAvailableChannels().isEmpty());
         timeline.removeMidiTrack(10);
-        assertTrue(timeline.getPlayer().getAvailableChannels().size() == 1);
-        assertEquals(timeline.createMidiTrack("1 more", TonalInstrument.HARPSICHORD).getChannel(), 12);
+        assertEquals(1, timeline.getPlayer().getAvailableChannels().size());
+        assertEquals(12, timeline.createMidiTrack("1 more", TonalInstrument.HARPSICHORD).getChannel());
     }
 
     @Test
     void testManyTracksCreate() {
         ArrayList<MidiTrack> midiTracks = new ArrayList<>();
 
-        while (timeline.getPlayer().getAvailableChannels().size() != 0) {
+        while (!timeline.getPlayer().getAvailableChannels().isEmpty()) {
             midiTracks.add(timeline.createMidiTrack("instrumental", TonalInstrument.ELECTRIC_PIANO_1));
         }
-        assertTrue(midiTracks.size() == 15);
+        assertEquals(15, midiTracks.size());
 
         MidiTrack instrumentalTrack = timeline.createMidiTrack("inst", instr);
         MidiTrack percussionTrack = timeline.createMidiTrack("perc", PercussiveInstrument.HIGH_TOM);
@@ -325,42 +326,42 @@ public class TestTimelinePlayer extends TestUtil {
 
         assertEquals(10000, timeline.getDurationRemainingMS());
 
-        timeline.getPlayer().setPositionTick(30);
-        assertEquals(timeline.getPlayer().getPositionTick(), 30);
+        timeline.getPlayer().setTickPosition(30);
+        assertEquals(30, timeline.getPlayer().getTickPosition());
         assertEquals(9984, timeline.getDurationRemainingMS());
 
-        assertEquals(timeline.getPlayer().getPositionMs(), 15.625, roundingDelta);
-        assertEquals(timeline.getPlayer().getPositionBeats(), 0.03125, roundingDelta); // 30 ms is very short
-        assertEquals(timeline.getPlayer().getPositionOnBeat(), 0.03125 + 1, roundingDelta);
+        assertEquals(15.625, timeline.getPlayer().getPositionMs(), roundingDelta);
+        assertEquals(0.03125, timeline.getPlayer().getPositionBeats(), roundingDelta); // 30 ms is very short
+        assertEquals(0.03125 + 1, timeline.getPlayer().getPositionOnBeat(), roundingDelta);
         timeline.getPlayer().setPositionMs(15.625);
-        assertEquals(timeline.getPlayer().getPositionTick(), 30);
+        assertEquals(30, timeline.getPlayer().getTickPosition());
         assertEquals(9984, timeline.getDurationRemainingMS());
 
-        timeline.getPlayer().setPositionTick(20);
-        assertEquals(timeline.getPlayer().getPositionTick(), 20);
-        assertEquals(timeline.getPlayer().getPositionMs(), 10.42, roundingDelta);
+        timeline.getPlayer().setTickPosition(20);
+        assertEquals(20, timeline.getPlayer().getTickPosition());
+        assertEquals(10.42, timeline.getPlayer().getPositionMs(), roundingDelta);
         assertEquals(9989, timeline.getDurationRemainingMS());
 
         timeline.getPlayer().setBPM(240);
-        timeline.getPlayer().setPositionTick(20);
-        assertEquals(timeline.getPlayer().getPositionTick(), 20);
-        assertEquals(timeline.getPlayer().getPositionMs(), 5.2, roundingDelta);
-        assertEquals(timeline.getPlayer().getPositionBeats(), 0.0208, roundingDelta);
-        assertEquals(timeline.getPlayer().getPositionOnBeat(), 0.0208 + 1, roundingDelta);
+        timeline.getPlayer().setTickPosition(20);
+        assertEquals(20, timeline.getPlayer().getTickPosition());
+        assertEquals(5.2, timeline.getPlayer().getPositionMs(), roundingDelta);
+        assertEquals(0.0208, timeline.getPlayer().getPositionBeats(), roundingDelta);
+        assertEquals(0.0208 + 1, timeline.getPlayer().getPositionOnBeat(), roundingDelta);
         assertEquals(4994, timeline.getDurationRemainingMS());
 
-        timeline.getPlayer().setPositionTick(0);
-        assertEquals(timeline.getPlayer().getPositionTick(), 0);
-        assertEquals(timeline.getPlayer().getPositionBeats(), 0);
-        assertEquals(timeline.getPlayer().getPositionOnBeat(), 1.0);
+        timeline.getPlayer().setTickPosition(0);
+        assertEquals(0, timeline.getPlayer().getTickPosition());
+        assertEquals(0, timeline.getPlayer().getPositionBeats());
+        assertEquals(1.0, timeline.getPlayer().getPositionOnBeat());
         assertEquals(5000, timeline.getDurationRemainingMS());
 
         timeline.getPlayer().setPositionBeat(11);
-        assertEquals(timeline.getPlayer().getPositionMs(), 2500);
+        assertEquals(2500, timeline.getPlayer().getPositionMs());
         assertEquals(2500, timeline.getDurationRemainingMS());
 
         timeline.getPlayer().setPositionBeat(1);
-        assertEquals(timeline.getPlayer().getPositionMs(), 0);
+        assertEquals(0, timeline.getPlayer().getPositionMs());
         assertEquals(5000, timeline.getDurationRemainingMS());
     }
 
@@ -377,25 +378,25 @@ public class TestTimelinePlayer extends TestUtil {
         midiTrack4.setMuted(true);
 
         timeline.getPlayer().updateSequence();
-        assertEquals(timeline.getPlayer().getSequence().getTracks().length, 0);
+        assertEquals(0, timeline.getPlayer().getSequence().getTracks().length);
 
         midiTrack1.setMuted(false);
         timeline.getPlayer().updateSequence();
-        assertEquals(timeline.getPlayer().getSequence().getTracks().length, 1);
+        assertEquals(1, timeline.getPlayer().getSequence().getTracks().length);
 
         midiTrack2.setMuted(false);
         midiTrack3.setMuted(false);
         timeline.getPlayer().updateSequence();
-        assertEquals(timeline.getPlayer().getSequence().getTracks().length, 3);
+        assertEquals(3, timeline.getPlayer().getSequence().getTracks().length);
 
         midiTrack3.setMuted(true);
         timeline.getPlayer().updateSequence();
-        assertEquals(timeline.getPlayer().getSequence().getTracks().length, 2);
+        assertEquals(2, timeline.getPlayer().getSequence().getTracks().length);
 
         midiTrack3.setMuted(false);
         midiTrack4.setMuted(false);
         timeline.getPlayer().updateSequence();
-        assertEquals(timeline.getPlayer().getSequence().getTracks().length, 4);
+        assertEquals(4, timeline.getPlayer().getSequence().getTracks().length);
     }
 
     @Test
@@ -410,68 +411,68 @@ public class TestTimelinePlayer extends TestUtil {
         // PPQ = 960, note ends at 960, and the bpm is 120.
         // So 1 quarter note at 120 BPM
         // 120 BPM = 0.5 seconds per quarter note
-        assertEquals(timeline.getLengthMs(), 500);
-        assertEquals(timeline.getPlayer().msToTicks(500), 960); // Check the reverse
-        assertEquals(timeline.getLengthBeats(), 1); // 1 beat = 1 quarter note
+        assertEquals(500, timeline.getLengthMs());
+        assertEquals(960, timeline.getPlayer().msToTicks(500)); // Check the reverse
+        assertEquals(1, timeline.getLengthBeats()); // 1 beat = 1 quarter note
         MidiTrack testTrack2 = timeline.createMidiTrack("track2", instr);
         Block testBlock2 = new Block(960, 1920);
         Note testNote2 = new Note(60, 100, 0, 1920);
 
-        assertNotEquals(testBlock2.addNote(testNote2), -1);
+        assertNotEquals(-1, testBlock2.addNote(testNote2));
         testTrack2.addBlock(testBlock2);
 
-        assertEquals(timeline.getLengthMs(), 1500);
-        assertEquals(timeline.getPlayer().msToTicks(1500), 1920 + 960); // Check the reverse
-        assertEquals(timeline.getLengthBeats(), 3);
+        assertEquals(1500, timeline.getLengthMs());
+        assertEquals(1920 + 960, timeline.getPlayer().msToTicks(1500)); // Check the reverse
+        assertEquals(3, timeline.getLengthBeats());
 
         timeline.getPlayer().setBPM(240); // double BPM
-        assertEquals(timeline.getLengthMs(), 750); // ms halves
+        assertEquals(750, timeline.getLengthMs()); // ms halves
 
         testBlock2.addNote(new Note(60, 60, 231, 500));
-        assertEquals(timeline.getLengthMs(), 750);
+        assertEquals(750, timeline.getLengthMs());
     }
 
     @Test
     void testBeats() {
-        assertEquals(timeline.getPlayer().ticksToBeats(960), 1);
-        assertEquals(timeline.getPlayer().ticksToOnBeat(960), 1 + 1);
-        assertEquals(timeline.getPlayer().beatsToTicks(1), 960);
-        assertEquals(timeline.getPlayer().ticksToBeats(960 + 960 / 2), 1.5);
-        assertEquals(timeline.getPlayer().ticksToBeats(960 / 4), 0.25);
-        assertEquals(timeline.getPlayer().ticksToOnBeat(960 / 4), 0.25 + 1);
-        assertEquals(timeline.getPlayer().beatsToMs(1), 500);
+        assertEquals(1, timeline.getPlayer().ticksToBeats(960));
+        assertEquals(1 + 1, timeline.getPlayer().ticksToOnBeat(960));
+        assertEquals(960, timeline.getPlayer().beatsToTicks(1));
+        assertEquals(1.5, timeline.getPlayer().ticksToBeats(960 + 960 / 2));
+        assertEquals(0.25, timeline.getPlayer().ticksToBeats(960 / 4));
+        assertEquals(0.25 + 1, timeline.getPlayer().ticksToOnBeat(960 / 4));
+        assertEquals(500, timeline.getPlayer().beatsToMs(1));
 
         timeline.getPlayer().setBPM(100);
-        // BPM does not change the converstion as beats = ticks / PPQN
-        assertEquals(timeline.getPlayer().ticksToBeats(960 / 4), 0.25); // remains same
+        // BPM does not change the conversion as beats = ticks / PPQN
+        assertEquals(0.25, timeline.getPlayer().ticksToBeats(960 / 4)); // remains same
 
         timeline.getPlayer().setPositionBeat(5);
-        assertEquals(timeline.getPlayer().getPositionTick(), 4 * 960);
+        assertEquals(4 * 960, timeline.getPlayer().getTickPosition());
         timeline.getPlayer().setPositionBeat(1.5);
-        assertEquals(timeline.getPlayer().getPositionTick(), 960 / 2);
+        assertEquals(960 / 2, timeline.getPlayer().getTickPosition());
     }
 
     @Test
     void testProjectNameChange() {
-        assertEquals(timeline.getProjectName(), "test");
+        assertEquals("test", timeline.getProjectName());
         timeline.setProjectName("cool song");
-        assertEquals(timeline.getProjectName(), "cool song");
+        assertEquals("cool song", timeline.getProjectName());
         timeline.setProjectName("cooler song");
-        assertEquals(timeline.getProjectName(), "cooler song");
+        assertEquals("cooler song", timeline.getProjectName());
     }
 
     @Test
     void testTickSnapping() {
-        assertEquals(timeline.snapTickLower(959), 720);
-        assertEquals(timeline.snapTickLower(960), 960);
-        assertEquals(timeline.snapTickLower(961), 960);
-        assertEquals(timeline.snapTickLower(960 + 960 / 4 - 1), 960);
-        assertEquals(timeline.snapTickLower(960 + 960 / 4 - 0), 1200);
+        assertEquals(720, timeline.snapTickLowerDivision(959));
+        assertEquals(960, timeline.snapTickLowerDivision(960));
+        assertEquals(960, timeline.snapTickLowerDivision(961));
+        assertEquals(960, timeline.snapTickLowerDivision(960 + 960 / 4 - 1));
+        assertEquals(1200, timeline.snapTickLowerDivision(960 + 960 / 4 - 0));
 
-        assertEquals(timeline.snapTickNearest(959), 960);
-        assertEquals(timeline.snapTickNearest(960), 960);
-        assertEquals(timeline.snapTickNearest(961), 960);
-        assertEquals(timeline.snapTickNearest(960 + 960 / 8 - 1), 960);
-        assertEquals(timeline.snapTickNearest(960 + 960 / 8 - 0), 1200);
+        assertEquals(960, timeline.snapTickNearest(959));
+        assertEquals(960, timeline.snapTickNearest(960));
+        assertEquals(960, timeline.snapTickNearest(961));
+        assertEquals(960, timeline.snapTickNearest(960 + 960 / 8 - 1));
+        assertEquals(1200, timeline.snapTickNearest(960 + 960 / 8 - 0));
     }
 }

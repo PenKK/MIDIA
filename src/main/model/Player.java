@@ -1,5 +1,7 @@
 package model;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.sound.midi.InvalidMidiDataException;
@@ -8,6 +10,7 @@ import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.Track;
+import javax.swing.Timer;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -16,30 +19,33 @@ import model.event.Event;
 import model.event.EventLog;
 import persistance.Writable;
 
-public class Player implements Writable {
+public abstract class Player implements Writable, ActionListener {
 
     public static final int PULSES_PER_QUARTER_NOTE = 960;
-    private static final float DEFAULT_BPM = 120;
+    protected static final float DEFAULT_BPM = 120;
+    public static final int UI_UPDATE_DELAY = 10;
 
-    private Sequencer sequencer;
-    private Sequence sequence;
-    private Timeline timeline;
+    protected Sequencer sequencer;
+    protected Sequence sequence;
 
-    private float bpm;
-    private long positionTick;
-    private ArrayList<Integer> availableChannels;
+    protected float bpm;
+    protected long tickPosition;
+    protected ArrayList<Integer> availableChannels;
+    protected Timer playbackUpdateTimer;
+    protected boolean isDraggingRuler;
 
-    public Player(Timeline timeline) {
+    public Player() {
         bpm = DEFAULT_BPM;
-        positionTick = 0;
-        this.timeline = timeline;
+        tickPosition = 0;
+        playbackUpdateTimer = new Timer(UI_UPDATE_DELAY, this);
+        isDraggingRuler = false;
 
         try {
             sequencer = MidiSystem.getSequencer();
             sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
             sequencer.open();
         } catch (MidiUnavailableException e) {
-            throw new RuntimeException("MIDI device unavaliable, unable to initialize player", e);
+            throw new RuntimeException("MIDI device unavailable, unable to initialize player", e);
         } catch (InvalidMidiDataException e) {
             throw new RuntimeException("Invalid MIDI data found during player initialization, PPQ may be invalid", e);
         }
@@ -60,25 +66,8 @@ public class Player implements Writable {
     }
 
     // MODIFIES: this
-    // EFFECTS: updates the sequence with the current midiTracks, converting each one 
-    //          to a Java Track. Throws InvalidMidiDataException if invalid midi data
-    //          is found when setting the sequence to the sequencer
-    public void updateSequence() throws InvalidMidiDataException {
-        resetTracks();
-        for (MidiTrack currentMidiTrack : timeline.getMidiTracks()) {
-            if (currentMidiTrack.isMuted() || currentMidiTrack.getVolume() == 0) {
-                continue;
-            }
-
-            Track track = sequence.createTrack();
-            currentMidiTrack.applyToTrack(track);
-        }
-
-        sequencer.setSequence(sequence);
-
-        Event e = new Event(String.format("Playback sequence was updated in Timeline %s", timeline.getProjectName()));
-        EventLog.getInstance().logEvent(e);
-    }
+    // EFFECTS: updates the sequence with the correct notes
+    public abstract void updateSequence() throws InvalidMidiDataException;
 
     // MODIFIES: this
     // EFFECTS: deletes all Tracks from the sequence, essentially resetting playback
@@ -86,9 +75,6 @@ public class Player implements Writable {
         for (Track track : sequence.getTracks()) {
             sequence.deleteTrack(track);
         }
-
-        Event e = new Event(String.format("Playback sequence cleared in Timeline %s", timeline.getProjectName()));
-        EventLog.getInstance().logEvent(e);
     }
 
     // MODIFIES: this
@@ -97,9 +83,10 @@ public class Player implements Writable {
     //          midi data is found during the sequence update (handled by UI)
     public void play() throws InvalidMidiDataException {
         updateSequence();
-        sequencer.setTickPosition(positionTick);
+        sequencer.setTickPosition(tickPosition);
         sequencer.setTempoInBPM(bpm);
         sequencer.start();
+        playbackUpdateTimer.start();
 
         Event e = new Event(String.format("Playback started, Sequence length: %d ticks",
                 sequencer.getTickLength()));
@@ -110,27 +97,29 @@ public class Player implements Writable {
     // EFFECTS: Pauses playback
     public void pause() {
         sequencer.stop();
-        updatePositionTick();
-
-        Event e = new Event(String.format("Playback paused in Timeline %s at tick: %d",
-                timeline.getProjectName(), sequencer.getTickPosition()));
-        EventLog.getInstance().logEvent(e);
+        playbackUpdateTimer.stop();
+        syncToSequencerTickPosition();
     }
 
-    // MODFIES: this
+    // MODIFIES: this
+    // EFFECTS: closes sequencer and releases system resources
+    public void close() {
+        sequencer.close();
+    }
+
+    // MODIFIES: this
     // EFFECTS: updates the position tick according to the current playback tick
-    public void updatePositionTick() {
-        setPositionTick(sequencer.getTickPosition());
+    public void syncToSequencerTickPosition() {
+        setTickPosition(sequencer.getTickPosition());
     }
 
-    // REQUIRES: newPositionTick >= 0
+    // REQUIRES: newTickPosition >= 0
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback given ticks
-    public void setPositionTick(long newPositionTick) {
-        long oldPositionTick = positionTick;
-        this.positionTick = newPositionTick;
-
-        timeline.getPropertyChangeSupport().firePropertyChange("positionTick", oldPositionTick, newPositionTick);
+    public long setTickPosition(long newTickPosition) {
+        long oldTickPosition = tickPosition;
+        this.tickPosition = newTickPosition;
+        return oldTickPosition;
     }
 
     // MODIFIES: this
@@ -148,27 +137,27 @@ public class Player implements Writable {
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback at the given milliseconds
     public void setPositionMs(double newPositionMs) {
-        setPositionTick(msToTicks(newPositionMs));
+        setTickPosition(msToTicks(newPositionMs));
     }
 
     // REQUIRES: newPositionBeat >= 1
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback given the beat to start at
     public void setPositionBeat(double newPositionBeat) {
-        setPositionTick(beatsToTicks(newPositionBeat - 1));
+        setTickPosition(beatsToTicks(newPositionBeat - 1));
     }
 
     // REQUIRES: bpm >= 1
     // EFFECTS: changes the BPM
-    public void setBPM(float bpm) {
-        float oldBpm = bpm;
+    public float setBPM(float bpm) {
+        float oldBpm = this.bpm;
         this.bpm = bpm;
 
         if (isPlaying()) {
             sequencer.setTempoInBPM(bpm);
         }
 
-        timeline.getPropertyChangeSupport().firePropertyChange("bpm", oldBpm, bpm);
+        return oldBpm;
     }
 
     // REQUIRES: ticks >= 0
@@ -204,8 +193,7 @@ public class Player implements Writable {
     // REQUIRES: ticks >= 0
     // EFFECTS: calculates ticks to beats conversion (reverse of above)
     public double ticksToBeats(long ticks) {
-        double beats = (double) ticks / (double) sequence.getResolution();
-        return beats;
+        return (double) ticks / (double) sequence.getResolution();
     }
 
     // REQUIRES: ticks >= 0
@@ -214,28 +202,41 @@ public class Player implements Writable {
         return ticksToBeats(ticks) + 1;
     }
 
-    // EFFECTS: returns the calculation of the sequence length in beats
-    public double getLengthBeats() {
-        return ticksToBeats(timeline.getLengthTicks());
+    public void startRulerDrag() {
+        isDraggingRuler = true;
     }
+
+    public void stopRulerDrag() {
+        isDraggingRuler = false;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource().equals(playbackUpdateTimer)) {
+            if (!isDraggingRuler) {
+                syncToSequencerTickPosition();
+            }
+        }
+    }
+
+    // EFFECTS: returns the calculation of the sequence length in beats
+    public abstract double getLengthBeats();
 
     // EFFECTS: returns the calculation of the sequence length in milliseconds
-    public double getLengthMs() {
-        return ticksToMs(timeline.getLengthTicks());
-    }
+    public abstract double getLengthMs();
 
-    public long getPositionTick() {
-        return positionTick;
+    public long getTickPosition() {
+        return tickPosition;
     }
 
     // EFFECTS: returns the timeline position in ms by converting ticks to ms
     public double getPositionMs() {
-        return ticksToMs(positionTick);
+        return ticksToMs(tickPosition);
     }
 
     // EFFECTS: returns the timeline position in beats by converting ticks to beats
     public double getPositionBeats() {
-        return ticksToBeats(positionTick);
+        return ticksToBeats(tickPosition);
     }
 
     // EFFECTS: returns the beat on which the timeline position starts playback
@@ -255,14 +256,22 @@ public class Player implements Writable {
         return sequencer;
     }
 
+    public boolean isDraggingRuler() {
+        return isDraggingRuler;
+    }
+
     @Override
     public JSONObject toJson() {
         JSONObject playerJson = new JSONObject();
 
         playerJson.put("beatsPerMinute", bpm);
-        playerJson.put("positionTick", positionTick);
+        playerJson.put("tickPosition", tickPosition);
         playerJson.put("availableChannels", new JSONArray(availableChannels));
 
         return playerJson;
+    }
+
+    public Timer getPlaybackUpdaterTimer() {
+        return playbackUpdateTimer;
     }
 }

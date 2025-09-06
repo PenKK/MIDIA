@@ -27,7 +27,7 @@ public class TestUtil {
 
     public static void assertPlayerEquals(Player p1, Player p2) {
         assertEquals(p1.getBPM(), p2.getBPM());
-        assertEquals(p1.getPositionTick(), p2.getPositionTick());
+        assertEquals(p1.getTickPosition(), p2.getTickPosition());
         assertEquals(p1.getAvailableChannels(), p2.getAvailableChannels());
     }
 

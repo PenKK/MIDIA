@@ -19,13 +19,13 @@ import persistance.Writable;
 // Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
 public class Timeline implements Writable {
 
-    private static final int DEFAULT_BEAT_DIVISON = 4;
+    private static final int DEFAULT_BEAT_DIVISION = 4;
     private static final int DEFAULT_BEATS_PER_MEASURE = 4;
     private static final double DEFAULT_HORIZONTAL_SCALE = 1;
     private static final double BASE_PIXELS_PER_BEAT = 100.0;
 
     private String projectName;
-    private ArrayList<MidiTrack> midiTracks;
+    private final ArrayList<MidiTrack> midiTracks;
     private Player player;
     private PropertyChangeSupport pcs;
 
@@ -38,15 +38,15 @@ public class Timeline implements Writable {
     //          Method throws MidiUnavailableException if the device has no MIDI sequencer
     //          available, which is fatal and unrecoverable.
     //          Method throws InvalidMidiDataException if the Sequence has an invalid 
-    //          divison type.
+    //          division type.
     public Timeline(String projectName, PropertyChangeSupport pcs) {
         this.projectName = projectName;
         this.pcs = pcs;
 
-        beatDivision = DEFAULT_BEAT_DIVISON;
+        beatDivision = DEFAULT_BEAT_DIVISION;
         beatsPerMeasure = DEFAULT_BEATS_PER_MEASURE;
         horizontalScaleFactor = DEFAULT_HORIZONTAL_SCALE;
-        player = new Player(this);
+        player = new TimelinePlayer(this);
         midiTracks = new ArrayList<>();
 
         Event e = new Event(String.format("A new timeline instance was created with project name: %s",
@@ -60,7 +60,7 @@ public class Timeline implements Writable {
     public MidiTrack createMidiTrack(String name, Instrument instrument) {
         boolean percussive = !instrument.getType().equals("tonal");
         
-        if (!percussive && player.getAvailableChannels().size() <= 0) {
+        if (!percussive && player.getAvailableChannels().isEmpty()) {
             return null;
         }
 
@@ -104,6 +104,7 @@ public class Timeline implements Writable {
 
     public void play() throws InvalidMidiDataException {
         player.play();
+        pcs.firePropertyChange("playbackStarted", null, null);
     }
 
     public void pause() {
@@ -173,8 +174,8 @@ public class Timeline implements Writable {
     }
 
     // EFFECTS: returns the tick scaled for UI, rounded to the nearest integer
-    public long scaleTickToPixel(long tick) {
-        return Math.round(tick * getPixelsPerTick());
+    public int scaleTickToPixel(long tick) {
+        return (int) Math.round(tick * getPixelsPerTick());
     }
 
     // EFFECTS: returns the tick scaled for UI, rounded to the nearest integer
@@ -187,9 +188,13 @@ public class Timeline implements Writable {
         return Math.round((double) rawTick / divisionTickInterval) * divisionTickInterval;
     }
 
-    public long snapTickLower(long rawTick) {
+    public long snapTickLowerDivision(long rawTick) {
         long divisionTickInterval = Player.PULSES_PER_QUARTER_NOTE / beatDivision;
         return (rawTick / divisionTickInterval) * divisionTickInterval;
+    }
+
+    public long snapTickLowerBeat(long rawTick) {
+        return (rawTick / Player.PULSES_PER_QUARTER_NOTE) * Player.PULSES_PER_QUARTER_NOTE;
     }
 
     public ArrayList<MidiTrack> getMidiTracks() {
@@ -197,7 +202,7 @@ public class Timeline implements Writable {
     }
 
     public MidiTrack[] getMidiTracksArray() {
-        return midiTracks.toArray(new MidiTrack[midiTracks.size()]);
+        return midiTracks.toArray(new MidiTrack[0]);
     }
 
     public void updatePlayerSequence() throws InvalidMidiDataException {

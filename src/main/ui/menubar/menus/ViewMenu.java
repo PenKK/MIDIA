@@ -8,8 +8,8 @@ import ui.menubar.dialog.BeatConfigurationInputDialog;
 // A menubar with items that control how the timeline is scaled / viewed
 public class ViewMenu extends Menu {
 
-    private MenuItem beatConfiguration;
-    private BeatConfigurationInputDialog beatConfigurationInputDialog;
+    private final MenuItem beatConfiguration;
+    private final BeatConfigurationInputDialog beatConfigurationInputDialog;
 
     // EFFECTS: creates a view menu with a title and MenuItems
     public ViewMenu(TimelineController timelineController) {

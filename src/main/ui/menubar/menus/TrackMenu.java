@@ -10,13 +10,13 @@ import ui.menubar.dialog.TrackInputDialog;
 // The track menu option in the menu bar
 public class TrackMenu extends Menu {
 
-    private MenuItem newTrack;
-    private MenuItem addBlock;
-    private MenuItem addNote;
+    private final MenuItem newTrack;
+    private final MenuItem addBlock;
+    private final MenuItem addNote;
 
-    private TrackInputDialog trackInputDialog;
-    private BlockInputDialog blockInputDialog;
-    private NoteInputDialog noteInputDialog;
+    private final TrackInputDialog trackInputDialog;
+    private final BlockInputDialog blockInputDialog;
+    private final NoteInputDialog noteInputDialog;
 
     // EFFECTS: creates a track menu and initializes menu items
     public TrackMenu(TimelineController timelineController) {

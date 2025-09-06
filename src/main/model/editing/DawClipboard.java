@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DawClipboard {
-    private List<Copyable> clipboardContents = new ArrayList<>();
+    private final List<Copyable> clipboardContents = new ArrayList<>();
 
     public void copy(List<Copyable> itemsToCopy) {
         clipboardContents.clear();

@@ -19,6 +19,7 @@ import model.MidiTrack;
 import model.Note;
 import model.Player;
 import model.Timeline;
+import model.TimelinePlayer;
 import model.instrument.Instrument;
 import model.instrument.TonalInstrument;
 import model.instrument.PercussiveInstrument;
@@ -27,7 +28,7 @@ import model.instrument.PercussiveInstrument;
 // Code adapted from src/main/persistance/JsonReader
 //     at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonReader {
-    private String sourcePath;
+    private final String sourcePath;
 
     // EFFECTS: constructs reader to read from source file
     public JsonReader(String source) {
@@ -47,14 +48,14 @@ public class JsonReader {
         StringBuilder contentBuilder = new StringBuilder();
 
         try (Stream<String> stream = Files.lines(Paths.get(source), StandardCharsets.UTF_8)) {
-            stream.forEach(s -> contentBuilder.append(s));
+            stream.forEach(contentBuilder::append);
         }
 
         return contentBuilder.toString();
     }
 
     // EFFECTS: parses timeline from JSON object and returns it
-    private Timeline parseTimeline(JSONObject jsonObject) throws MidiUnavailableException, InvalidMidiDataException {
+    private Timeline parseTimeline(JSONObject jsonObject) {
         String projectName = jsonObject.getString("projectName");
         Timeline timeline = new Timeline(projectName, new PropertyChangeSupport(projectName));
 
@@ -77,15 +78,15 @@ public class JsonReader {
     }
 
     private Player parsePlayer(JSONObject playerJson, Timeline tl) {
-        Player p = new Player(tl);
+        Player p = new TimelinePlayer(tl);
         float beatsPerMinute = playerJson.getFloat("beatsPerMinute");
-        int positionTick = playerJson.getInt("positionTick");
+        int tickPosition = playerJson.getInt("tickPosition");
 
         JSONArray availableChannels = playerJson.getJSONArray("availableChannels");
         ArrayList<Integer> availableChannelsList = parseIntegerArrayList(availableChannels);
 
         p.setBPM(beatsPerMinute);
-        p.setPositionTick(positionTick);
+        p.setTickPosition(tickPosition);
         p.setAvailableChannels(availableChannelsList);
 
         return p;

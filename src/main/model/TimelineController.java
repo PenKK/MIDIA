@@ -11,25 +11,16 @@ import javax.sound.midi.Sequencer;
 // A controller class responsible for managing a single Timeline instance
 public class TimelineController implements MetaEventListener {
 
+    public static final int PLAYER_END_META_TYPE = 47;
+
     private Timeline timeline;
-    private PropertyChangeSupport pcs;
-    private boolean isDraggingRuler;
+    private final PropertyChangeSupport pcs;
 
     public TimelineController() {
-        isDraggingRuler = false;
+       
         pcs = new PropertyChangeSupport(this);
         timeline = new Timeline("New Project", pcs);
         updateSequencerListener();
-    }
-
-    public void startRulerDrag() {
-        isDraggingRuler = true;
-        pcs.firePropertyChange("rulerDragStarted", null, null);
-    }
-
-    public void stopRulerDrag() {
-        isDraggingRuler = false;
-        pcs.firePropertyChange("rulerDragStopped", null, null);
     }
 
     public Timeline getTimeline() {
@@ -66,9 +57,9 @@ public class TimelineController implements MetaEventListener {
         }
 
         if (oldTimeline != null) {
-            Sequencer seqr = oldTimeline.getPlayer().getSequencer();
-            seqr.removeMetaEventListener(this);
-            seqr.close();
+            Player player = oldTimeline.getPlayer();
+            player.getSequencer().removeMetaEventListener(this);
+            player.close();
         }
 
         this.timeline = newTimeline;
@@ -88,22 +79,13 @@ public class TimelineController implements MetaEventListener {
         pcs.removePropertyChangeListener(observer);
     }
 
-    // EFFECTS: forces a timeline update (for rendering purposes one day better fix hopefuly)
-    public void refreshTrackLayout() {
-        pcs.firePropertyChange("timelineReplaced", null, this);
-    }
-
     public PropertyChangeSupport getPropertyChangeSupport() {
         return pcs;
     }
 
-    public boolean isDraggingRuler() {
-        return isDraggingRuler;
-    }
-
     @Override
     public void meta(MetaMessage meta) {
-        if (meta.getType() == 47) { // 47 fires when the sequencer naturally reaches the end
+        if (meta.getType() == PLAYER_END_META_TYPE) {
             pcs.firePropertyChange("playbackEnded", null, null);
         }
     }

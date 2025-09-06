@@ -1,6 +1,5 @@
 package model;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.beans.PropertyChangeEvent;
@@ -40,20 +39,20 @@ public class TestTimelineController extends TestUtil {
         }
 
         TestObserver testObserver = new TestObserver();
-        assertEquals(testObserver.getValue(), 0);
+        assertEquals(0, testObserver.getValue());
 
         tc.addObserver(testObserver);
-        assertEquals(tc.getPropertyChangeSupport().getPropertyChangeListeners().length, 1);
+        assertEquals(1, tc.getPropertyChangeSupport().getPropertyChangeListeners().length);
 
-        tc.refreshTrackLayout();
-        assertEquals(testObserver.getValue(), 1);
+        tc.getPropertyChangeSupport().firePropertyChange("timelineReplaced", null, tc.getTimeline());
+        assertEquals(1, testObserver.getValue());
 
         tc.setInstance(new Timeline("joe", tc.getPropertyChangeSupport()));
-        assertEquals(testObserver.getValue(), 2);
+        assertEquals(2, testObserver.getValue());
 
         tc.removeObserver(testObserver);
-        tc.refreshTrackLayout();
-        assertEquals(testObserver.getValue(), 2);
+        tc.getPropertyChangeSupport().firePropertyChange("timelineReplaced", null, tc.getTimeline());
+        assertEquals(2, testObserver.getValue());
     }
 
     @Test
@@ -77,11 +76,11 @@ public class TestTimelineController extends TestUtil {
 
     @Test
     void testRulerDrag() {
-        assertFalse(tc.isDraggingRuler());
-        tc.startRulerDrag();
-        assertTrue(tc.isDraggingRuler());
-        tc.stopRulerDrag();
-        assertFalse(tc.isDraggingRuler());
+        assertFalse(tc.getTimeline().getPlayer().isDraggingRuler());
+        tc.getTimeline().getPlayer().startRulerDrag();
+        assertTrue(tc.getTimeline().getPlayer().isDraggingRuler());
+        tc.getTimeline().getPlayer().stopRulerDrag();
+        assertFalse(tc.getTimeline().getPlayer().isDraggingRuler());
     }
 
     @Test

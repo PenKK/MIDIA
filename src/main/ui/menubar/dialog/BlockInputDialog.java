@@ -84,8 +84,7 @@ public class BlockInputDialog extends InputDialog {
         long startTick = p.beatsToTicks(startBeat);
         long durationTicks = p.beatsToTicks(durationBeats);
         midiTrack.addBlock(new Block(startTick, durationTicks));
-
-        timelineController.refreshTrackLayout();
+        timelineController.getPropertyChangeSupport().firePropertyChange("blockCreated", null, null);
     }
 
     @Override

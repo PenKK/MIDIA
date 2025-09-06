@@ -10,17 +10,18 @@ import java.util.Iterator;
  * one EventLog in the system and that the system has global access
  * to the single instance of the EventLog.
  */
+// TODO: Add types of logs ([INFO], [ERROR], [WARN]) and rework all exceptions accordingly.
 public class EventLog implements Iterable<Event> {
     /** the only EventLog in the system (Singleton Design Pattern) */
     private static EventLog theLog;
-    private Collection<Event> events;
+    private final Collection<Event> events;
 
     /** 
      * Prevent external construction.
      * (Singleton Design Pattern).
      */
     private EventLog() {
-        events = new ArrayList<Event>();
+        events = new ArrayList<>();
     }
 
     /**
