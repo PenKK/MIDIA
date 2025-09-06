@@ -41,6 +41,11 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         }
     }
 
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        draggingNote = false;
+    }
+
     private void createNote(long tick, int pitch) {
         if (blockPlayer.getParentMidiTrack().isPercussive() && pitch != Note.PERCUSSIVE_DEFAULT_PITCH) {
             return;
@@ -49,17 +54,22 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         Timeline timeline = timelineController.getTimeline();
         long startTick = timeline.snapTickLowerBeat(tick);
         long durationTicks = blockPlayer.beatsToTicks(1);
-        Note newNote = new Note(pitch, 100, startTick, durationTicks);
+        Note newNote = new Note(pitch, 127, startTick, durationTicks);
         blockPlayer.getBlock().addNote(newNote);
+
+        if (!blockPlayer.isPlaying()) {
+            blockPlayer.playNote(pitch);
+        }
+
         blockPlayer.getPropertyChangeSupport().firePropertyChange("noteCreated", null, newNote);
-        sendNoteChangeEventTimelineController();
+        notifyControllerNoteChange();
     }
 
     private void removeNote(Note note) {
         boolean removeSuccessful = blockPlayer.getBlock().getNotes().remove(note);
         assert removeSuccessful : String.format("Note %s was note found when removing", note);
         blockPlayer.getPropertyChangeSupport().firePropertyChange("noteRemoved", null, null);
-        sendNoteChangeEventTimelineController();
+        notifyControllerNoteChange();
     }
 
     private Note getNoteOnPosition(long tick, int pitch) {
@@ -72,7 +82,7 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         return null;
     }
 
-    private void sendNoteChangeEventTimelineController() {
+    private void notifyControllerNoteChange() {
         timelineController.getPropertyChangeSupport().firePropertyChange("pianoRollNoteEdited", null, null);
     }
 }

@@ -77,11 +77,51 @@ public class BlockPlayer extends Player implements MetaEventListener {
                                        parentMidiTrack.getInstrument(), parentMidiTrack.getChannel());
         }
 
+        modifySystemReset(track);
+
         sequencer.setSequence(sequence);
 
         Event e = new Event(String.format("Playback sequence was updated in Block [Piano Roll] with instrument %s",
                                           parentMidiTrack.getInstrument()));
         EventLog.getInstance().logEvent(e);
+    }
+
+    private void modifySystemReset(Track track) {
+        for (int i = track.size() - 1; i >= 0; i--) {
+            MidiEvent event = track.get(i);
+
+            if ((event.getMessage().getMessage()[0] & 0xFF) == 255) {
+                event.setTick(getBlock().getDurationTicks());
+                return;
+            }
+        }
+
+        throw new RuntimeException("No system reset found");
+    }
+
+    public void playNote(int pitch) {
+        resetTracks();
+        try {
+            Synthesizer synthesizer = MidiSystem.getSynthesizer();
+            Receiver receiver = synthesizer.getReceiver();
+            synthesizer.open();
+
+            int data1 = parentMidiTrack.isPercussive() ? parentMidiTrack.getInstrument().getProgramNumber() : pitch;
+
+            ShortMessage onMessage = new ShortMessage(ShortMessage.NOTE_ON, parentMidiTrack.getChannel(), data1, 127);
+            ShortMessage offMessage = new ShortMessage(ShortMessage.NOTE_OFF, parentMidiTrack.getChannel(), data1, 127);
+            ShortMessage programMessage = new ShortMessage(ShortMessage.PROGRAM_CHANGE, parentMidiTrack.getChannel(),
+                    parentMidiTrack.getInstrument().getProgramNumber(),0);
+
+            receiver.send(programMessage, 0);
+            receiver.send(onMessage, 0);
+            receiver.send(offMessage, PULSES_PER_QUARTER_NOTE * 2);
+
+        } catch (MidiUnavailableException e) {
+            throw new RuntimeException("Synthesizer unavailable", e);
+        } catch (InvalidMidiDataException e) {
+            throw new RuntimeException("Invalid midi in synthesizer", e);
+        }
     }
 
     @Override

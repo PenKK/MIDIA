@@ -19,7 +19,7 @@ public class BpmMouseInputAdapter extends MouseInputAdapter {
 
     private final TimelineController timelineController;
     private final JLabel bpmDisplay;
-    private Robot robot;
+    private final Robot robot;
     private Point anchorPointOnScreen;
     private float dragAccumulator;
 
@@ -31,8 +31,7 @@ public class BpmMouseInputAdapter extends MouseInputAdapter {
         try {
             robot = new Robot();
         } catch (AWTException e) {
-            System.out.println("Failed to initialize BpmMouseInputAdapter robot");
-            e.printStackTrace();
+            throw new RuntimeException("Failed to initialize BpmMouseInputAdapter robot", e);
         }
     }
 
@@ -77,7 +76,7 @@ public class BpmMouseInputAdapter extends MouseInputAdapter {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        changeBpm(Float.valueOf(bpmDisplay.getText()));
+        changeBpm(Float.parseFloat(bpmDisplay.getText()));
         bpmDisplay.setCursor(orignalCursor);
     }
 

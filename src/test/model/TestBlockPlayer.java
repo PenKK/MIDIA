@@ -82,6 +82,13 @@ public class TestBlockPlayer {
         assertEquals(1920, track.get(5).getTick());
 
         assertEquals(ShortMessage.SYSTEM_RESET, message6[0] & 0xFF);
+        assertEquals(1920, track.get(6).getTick());
+    }
+
+    @Test
+    void testSystemResetTick() throws InvalidMidiDataException {
+        blockPlayer.updateSequence();
+
     }
 
     @Test
