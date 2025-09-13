@@ -152,7 +152,7 @@ public class DawCLI {
     private void load() throws MidiUnavailableException {
         clearConsole();
         File projectsDirectory = new File("./data/projects");
-        File[] projectFiles = projectsDirectory.listFiles();
+        File[] projectFiles = projectsDirectory.listFiles(file -> file.getName().endsWith(".json"));
 
         assert projectFiles != null;
         displayProjects(projectFiles);

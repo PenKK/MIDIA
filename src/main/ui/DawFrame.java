@@ -30,7 +30,6 @@ import ui.windows.timeline.TimelineViewPanel;
 public class DawFrame extends JFrame implements PropertyChangeListener {
 
     private MenuBar menuBar;
-    // private TabbedPane tabbedPane;
     private TimelineViewPanel timelineViewPanel;
     private MediaControlPanel mediaControlPanel;
     private TimelineController timelineController;
@@ -97,7 +96,7 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         };
     }
 
-    // EFFECTS: auto saves the currently timeline into the auto save directory
+    // EFFECTS: auto saves the current timeline into the auto save directory
     public void autoSave() {
         Timeline t = timelineController.getTimeline();
         JsonWriter writer = new JsonWriter(FileMenu.AUTO_SAVE_FILE_DIRECTORY.concat(t.getProjectName()));
