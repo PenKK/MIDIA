@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -385,20 +386,23 @@ public class DawCLI {
             percussive = getStringInput(new String[] { "t", "f" }, false).equals("t");
         }
 
-        System.out.println(
-                "What instrument does this track play?\n(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
-        int instrument = percussive ? getNumericalInput(35, 81, false) : (getNumericalInput(1, 128, false) - 1);
-        Instrument instr = TonalInstrument.ACOUSTIC_GRAND_PIANO;
+        printInstruments(percussive);
+        System.out.println("What instrument does this track play?");
+        int instrument = percussive ? getNumericalInput(35, 81, false) : (getNumericalInput(0, 127, false));
         Instrument[] allInstruments = percussive ? PercussiveInstrument.values() : TonalInstrument.values();
-        for (int i = percussive ? 35 : 0; i < 127; i++) {
-            Instrument check = allInstruments[i];
-            if (instrument == check.getProgramNumber()) {
-                instr = check;
-            }
-        }
 
+        Instrument instr =  Arrays.stream(allInstruments)
+                .filter(i -> i.getProgramNumber() == instrument).findAny().orElse(null);
+
+        assert instr != null;
         MidiTrack newMidiTrack = timeline.createMidiTrack(name, instr);
         return timeline.getMidiTracks().indexOf(newMidiTrack);
+    }
+
+    private void printInstruments(boolean percussive) {
+        for (Instrument instrument : percussive ? PercussiveInstrument.values() : TonalInstrument.values()) {
+            System.out.printf("[%d]%s%n", instrument.getProgramNumber(), instrument.getName());
+        }
     }
 
     // REQUIRES: index >= 0 and for there to be at least 1 track in the timeline
@@ -465,11 +469,11 @@ public class DawCLI {
     // EFFECTS: Prompts for input to change a tracks instrument, gives different ranges depending on
     //          if the track is percussive.
     private void changeTrackInstrument(MidiTrack midiTrack) {
+        printInstruments(midiTrack.isPercussive());
         System.out.printf("What is the new instrument for track %s?%n", midiTrack.getName());
-        System.out.println("(see program change events https://en.wikipedia.org/wiki/General_MIDI)");
 
         int instrument = midiTrack.isPercussive() ? getNumericalInput(35, 81, false)
-                                                  : getNumericalInput(1, 128, false) - 1;
+                                                  : getNumericalInput(0, 127, false);
 
         Instrument instr = TonalInstrument.ACOUSTIC_GRAND_PIANO;
         Instrument[] allInstruments = midiTrack.isPercussive() ? PercussiveInstrument.values()
@@ -497,8 +501,7 @@ public class DawCLI {
 
         System.out.printf("Track             %s%n", selectedTrack.getName());
         System.out.printf("Number of blocks  %d%n", selectedTrack.getBlocks().size());
-        System.out.printf("Instrument        %d%s%n",
-                selectedTrack.getInstrument().getProgramNumber() + (selectedTrack.isPercussive() ? 0 : 1),
+        System.out.printf("Instrument        %s%s%n", selectedTrack.getInstrument(),
                 selectedTrack.isPercussive() ? " (Percussive)" : "");
         System.out.printf("Volume            %d%n", selectedTrack.getVolumeScaled());
         System.out.printf("Muted             %s%n%n", selectedTrack.isMuted() ? "Yes" : "No");
