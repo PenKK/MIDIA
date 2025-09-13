@@ -401,7 +401,7 @@ public class DawCLI {
 
     private void printInstruments(boolean percussive) {
         for (Instrument instrument : percussive ? PercussiveInstrument.values() : TonalInstrument.values()) {
-            System.out.printf("[%d]%s%n", instrument.getProgramNumber(), instrument.getName());
+            System.out.printf("[%d] %s%n", instrument.getProgramNumber(), instrument.getName());
         }
     }
 
@@ -475,15 +475,12 @@ public class DawCLI {
         int instrument = midiTrack.isPercussive() ? getNumericalInput(35, 81, false)
                                                   : getNumericalInput(0, 127, false);
 
-        Instrument instr = TonalInstrument.ACOUSTIC_GRAND_PIANO;
         Instrument[] allInstruments = midiTrack.isPercussive() ? PercussiveInstrument.values()
                                                                : TonalInstrument.values();
-        for (int i = midiTrack.isPercussive() ? 35 : 0; i < 127; i++) {
-            Instrument check = allInstruments[i];
-            if (instrument == check.getProgramNumber()) {
-                instr = check;
-            }
-        }
+        Instrument instr = Arrays.stream(allInstruments)
+                .filter(i -> i.getProgramNumber() == instrument).findAny().orElse(null);
+
+        assert instr != null;
 
         midiTrack.setInstrument(instr);
     }
