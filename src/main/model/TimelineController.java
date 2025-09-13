@@ -6,7 +6,6 @@ import java.beans.PropertyChangeSupport;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaEventListener;
 import javax.sound.midi.MetaMessage;
-import javax.sound.midi.Sequencer;
 
 // A controller class responsible for managing a single Timeline instance
 public class TimelineController implements MetaEventListener {
