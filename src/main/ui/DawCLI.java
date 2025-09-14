@@ -532,7 +532,7 @@ public class DawCLI {
         Player player = timelineController.getTimeline().getPlayer();
         double startBeat = getNumericalInput(1, Double.MAX_VALUE) - 1;
         System.out.println("How many beats long is this block?");
-        double beatDuration = getNumericalInput(0, Double.MAX_VALUE) - 1;
+        double beatDuration = getNumericalInput(0, Double.MAX_VALUE);
         midiTrack.addBlock(new Block(player.beatsToTicks(startBeat), player.beatsToTicks(beatDuration)));
         return midiTrack.getBlocks().size() - 1;
     }
@@ -711,6 +711,7 @@ public class DawCLI {
     private void createNewNote(Block block, boolean percussive) {
         int pitch = 0;
         Player player = timelineController.getTimeline().getPlayer();
+        double blockBeatDuration = player.ticksToBeats(block.getDurationTicks());
 
         if (!percussive) {
             System.out.println("Whats the note pitch?");
@@ -722,10 +723,10 @@ public class DawCLI {
         int velocity = getNumericalInput(0, 127, false);
 
         System.out.println("What beat does the note start on? (relative to this block)");
-        double startBeat = getNumericalInput(1, Double.MAX_VALUE) - 1;
+        double startBeat = getNumericalInput(1, blockBeatDuration) - 1;
 
-        System.out.println("How many beats long is the note?");
-        double durationBeats = getNumericalInput(0, Double.MAX_VALUE);
+        System.out.println("How many beats long is the note? ");
+        double durationBeats = getNumericalInput(0, blockBeatDuration - startBeat);
 
         block.addNote(new Note(pitch, velocity, player.beatsToTicks(startBeat),
                 player.beatsToTicks(durationBeats)));
