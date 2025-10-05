@@ -6,7 +6,12 @@ Musical Interface for Digital Instrument Arrangement
 Made with Java Swing and the java.sound.midi library. <br>
 FlatLaf look and feel was used: https://www.formdev.com/flatlaf/.
 
+## UML Diagram (outdated)
+<img width="700" alt="UML_DIAGRAM-1" src="https://github.com/user-attachments/assets/2104ee08-ff3b-4511-98e8-d64312eba37c" />
+
+
 ## Usage
+
 
 ### Create a track
 1. Use the Track menu at the top left to insert a new track
