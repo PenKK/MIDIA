@@ -4,6 +4,7 @@
 Musical Interface for Digital Instrument Arrangement
 
 Made with Java Swing and the java.sound.midi library. <br>
+Tested with JUnit.
 FlatLaf look and feel was used: https://www.formdev.com/flatlaf/.
 
 ## UML Diagram (outdated)
