@@ -67,8 +67,8 @@ public class TestTimelinePlayer extends TestUtil {
         assertEquals(new ArrayList<MidiTrack>(), timeline.getMidiTracks());
         assertEquals(120, timeline.getPlayer().getBPM());
         assertEquals(0, timeline.getPlayer().getTickPosition());
-        assertEquals(4, timeline.getBeatDivision());
-        assertEquals(4, timeline.getBeatsPerMeasure());
+        assertEquals(4, timeline.getPlayer().getBeatDivision());
+        assertEquals(4, timeline.getPlayer().getBeatsPerMeasure());
         assertEquals(1, timeline.getHorizontalScaleFactor());
         assertEquals(960, timeline.getPlayer().getSequence().getResolution());
         assertEquals(Sequence.PPQ, timeline.getPlayer().getSequence().getDivisionType());
@@ -463,16 +463,16 @@ public class TestTimelinePlayer extends TestUtil {
 
     @Test
     void testTickSnapping() {
-        assertEquals(720, timeline.snapTickLowerDivision(959));
-        assertEquals(960, timeline.snapTickLowerDivision(960));
-        assertEquals(960, timeline.snapTickLowerDivision(961));
-        assertEquals(960, timeline.snapTickLowerDivision(960 + 960 / 4 - 1));
-        assertEquals(1200, timeline.snapTickLowerDivision(960 + 960 / 4 - 0));
+        assertEquals(720, timeline.getPlayer().snapTickLowerDivision(959));
+        assertEquals(960, timeline.getPlayer().snapTickLowerDivision(960));
+        assertEquals(960, timeline.getPlayer().snapTickLowerDivision(961));
+        assertEquals(960, timeline.getPlayer().snapTickLowerDivision(960 + 960 / 4 - 1));
+        assertEquals(1200, timeline.getPlayer().snapTickLowerDivision(960 + 960 / 4 - 0));
 
-        assertEquals(960, timeline.snapTickNearest(959));
-        assertEquals(960, timeline.snapTickNearest(960));
-        assertEquals(960, timeline.snapTickNearest(961));
-        assertEquals(960, timeline.snapTickNearest(960 + 960 / 8 - 1));
-        assertEquals(1200, timeline.snapTickNearest(960 + 960 / 8 - 0));
+        assertEquals(960, timeline.getPlayer().snapTickNearest(959));
+        assertEquals(960, timeline.getPlayer().snapTickNearest(960));
+        assertEquals(960, timeline.getPlayer().snapTickNearest(961));
+        assertEquals(960, timeline.getPlayer().snapTickNearest(960 + 960 / 8 - 1));
+        assertEquals(1200, timeline.getPlayer().snapTickNearest(960 + 960 / 8 - 0));
     }
 }

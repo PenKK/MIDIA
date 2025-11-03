@@ -68,8 +68,8 @@ public class JsonReader {
         JSONArray midiTracksJsonArray = jsonObject.getJSONArray("midiTracks");
 
         timeline.setPlayer(player);
-        timeline.setBeatDivision(beatDivision);
-        timeline.setBeatsPerMeasure(beatsPerMeasure);
+        timeline.getPlayer().setBeatDivision(beatDivision);
+        timeline.getPlayer().setBeatsPerMeasure(beatsPerMeasure);
         timeline.setHorizontalScaleFactor(horizontalScale);
         addMidiTracks(timeline, midiTracksJsonArray);
 

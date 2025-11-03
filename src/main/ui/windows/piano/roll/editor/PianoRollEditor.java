@@ -13,6 +13,7 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
     private static final Color BEAT_LINE_COLOR = Color.decode("#303234");
     private static final Color MEASURE_LINE_COLOR = Color.decode("#242627");
     private static final Color NOTE_COLOR = Color.decode("#AB47BC");
+    private static final Color BACKGROUND_COLOR = Color.decode("#2A2C2D");
 
     private final BlockPlayer blockPlayer;
     private final TimelineController timelineController;
@@ -23,8 +24,7 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
         int width = getLoopPixelWidth();
         this.setPreferredSize(new Dimension(width, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
         this.setMinimumSize(new Dimension(width, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
-
-        this.setBackground(Color.decode("#3c3f41").darker());
+        this.setBackground(BACKGROUND_COLOR);
 
         PianoRollEditorMouseAdapter mouseAdapter = new PianoRollEditorMouseAdapter(blockPlayer, timelineController);
         this.addMouseListener(mouseAdapter);
@@ -64,8 +64,8 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
     private void drawGridLines(Graphics g) {
         Timeline timeline = timelineController.getTimeline();
 
-        int beatDivisions = timeline.getBeatDivision();
-        int beatsPerMeasure = timeline.getBeatsPerMeasure();
+        int beatDivisions = timeline.getPlayer().getBeatDivision();
+        int beatsPerMeasure = timeline.getPlayer().getBeatsPerMeasure();
         int ppq = Player.PULSES_PER_QUARTER_NOTE;
 
         long divisionTickInterval = ppq / beatDivisions;
@@ -91,12 +91,12 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
             g.setColor(BEAT_LINE_COLOR);
             int pixelPosition = timeline.scaleTickToPixel(tick);
 
-            if (tick % ppq == 0) { // for each beat
-                if (tick % measureTickInterval == 0) {
-                    g.setColor(MEASURE_LINE_COLOR);
-                }
-                g.drawLine(pixelPosition, percussive ? topY : 0, pixelPosition,percussive ? botY : getHeight());
+            if (tick % ppq == 0) {
+                g.setColor(MEASURE_LINE_COLOR);
+            } else if (tick % measureTickInterval == 0) {
+                g.setColor(MEASURE_LINE_COLOR.darker());
             }
+            g.drawLine(pixelPosition, percussive ? topY : 0, pixelPosition,percussive ? botY : getHeight());
         }
     }
 

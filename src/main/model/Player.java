@@ -21,12 +21,18 @@ import persistance.Writable;
 
 public abstract class Player implements Writable, ActionListener {
 
+    private static final int DEFAULT_BEAT_DIVISION = 4;
+    private static final int DEFAULT_BEATS_PER_MEASURE = 4;
+
     public static final int PULSES_PER_QUARTER_NOTE = 960;
     protected static final float DEFAULT_BPM = 120;
     public static final int UI_UPDATE_DELAY = 10;
 
     protected Sequencer sequencer;
     protected Sequence sequence;
+
+    private int beatDivision;
+    private int beatsPerMeasure;
 
     protected float bpm;
     protected long tickPosition;
@@ -37,6 +43,8 @@ public abstract class Player implements Writable, ActionListener {
     public Player() {
         bpm = DEFAULT_BPM;
         tickPosition = 0;
+        beatDivision = DEFAULT_BEAT_DIVISION;
+        beatsPerMeasure = DEFAULT_BEATS_PER_MEASURE;
         playbackUpdateTimer = new Timer(UI_UPDATE_DELAY, this);
         isDraggingRuler = false;
 
@@ -113,6 +121,22 @@ public abstract class Player implements Writable, ActionListener {
         setTickPosition(sequencer.getTickPosition());
     }
 
+    // MODIFIES: this
+    // EFFECTS: changes beatDivision
+    public int setBeatDivision(int newBeatDivision) {
+        int oldBeatDivision = this.beatDivision;
+        this.beatDivision = newBeatDivision;
+        return oldBeatDivision;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: changes beatsPerMeasure and fires propertyChangeEvent
+    public int setBeatsPerMeasure(int newBeatsPerMeasure) {
+        int oldBeatsPerMeasure = this.beatsPerMeasure;
+        this.beatsPerMeasure = newBeatsPerMeasure;
+        return oldBeatsPerMeasure;
+    }
+
     // REQUIRES: newTickPosition >= 0
     // MODIFIES: this
     // EFFECTS: Changes timeline position to start playback given ticks
@@ -120,6 +144,16 @@ public abstract class Player implements Writable, ActionListener {
         long oldTickPosition = tickPosition;
         this.tickPosition = newTickPosition;
         return oldTickPosition;
+    }
+
+    public long snapTickNearest(long rawTick) {
+        long divisionTickInterval = PULSES_PER_QUARTER_NOTE / beatDivision;
+        return Math.round((double) rawTick / divisionTickInterval) * divisionTickInterval;
+    }
+
+    public long snapTickLowerDivision(long rawTick) {
+        long divisionTickInterval = PULSES_PER_QUARTER_NOTE / beatDivision;
+        return (rawTick / divisionTickInterval) * divisionTickInterval;
     }
 
     // MODIFIES: this
@@ -254,6 +288,14 @@ public abstract class Player implements Writable, ActionListener {
 
     public Sequencer getSequencer() {
         return sequencer;
+    }
+
+    public int getBeatsPerMeasure() {
+        return beatsPerMeasure;
+    }
+
+    public int getBeatDivision() {
+        return beatDivision;
     }
 
     public boolean isDraggingRuler() {

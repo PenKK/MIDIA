@@ -69,8 +69,8 @@ public class TrackRenderPanel extends JPanel {
     private void drawLines(Graphics g) {
         Timeline timeline = timelineController.getTimeline();
 
-        int beatDivisions = timeline.getBeatDivision();
-        int beatsPerMeasure = timeline.getBeatsPerMeasure();
+        int beatDivisions = timeline.getPlayer().getBeatDivision();
+        int beatsPerMeasure = timeline.getPlayer().getBeatsPerMeasure();
 
         long divisionTickInterval = Player.PULSES_PER_QUARTER_NOTE / beatDivisions;
         long measureTickInterval = (long) Player.PULSES_PER_QUARTER_NOTE * beatsPerMeasure;

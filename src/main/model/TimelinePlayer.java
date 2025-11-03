@@ -50,6 +50,24 @@ public class TimelinePlayer extends Player {
                 timeline.getProjectName(), sequencer.getTickPosition()));
         EventLog.getInstance().logEvent(e);
     }
+
+    // MODIFIES: this
+    // EFFECTS: changes beatDivision and fires propertyChangeEvent
+    @Override
+    public int setBeatDivision(int newBeatDivision) {
+        int oldBeatDivision = super.setBeatDivision(newBeatDivision);
+        timeline.getPropertyChangeSupport().firePropertyChange("beatDivision", oldBeatDivision, newBeatDivision);
+        return oldBeatDivision;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: changes beatsPerMeasure and fires propertyChangeEvent
+    @Override
+    public int setBeatsPerMeasure(int newBeatsPerMeasure) {
+        int oldBeatsPerMeasure = super.setBeatsPerMeasure(newBeatsPerMeasure);
+        timeline.getPropertyChangeSupport().firePropertyChange("beatsPerMeasure", oldBeatsPerMeasure, newBeatsPerMeasure);
+        return oldBeatsPerMeasure;
+    }
     
     @Override
     public long setTickPosition(long newTickPosition) {

@@ -33,8 +33,8 @@ public class BeatConfigurationInputDialog extends InputDialog implements Propert
     @Override
     protected void initFields() {
         Timeline timeline = timelineController.getTimeline();
-        SpinnerModel nonZeroBeatDivision = new SpinnerNumberModel(timeline.getBeatDivision(), 1, 128, 1);
-        SpinnerModel nonZeroBPM = new SpinnerNumberModel(timeline.getBeatsPerMeasure(), 1, 128, 1);
+        SpinnerModel nonZeroBeatDivision = new SpinnerNumberModel(timeline.getPlayer().getBeatDivision(), 1, 128, 1);
+        SpinnerModel nonZeroBPM = new SpinnerNumberModel(timeline.getPlayer().getBeatsPerMeasure(), 1, 128, 1);
 
         beatDivision = new JSpinner(nonZeroBeatDivision);
         beatsPerMeasure = new JSpinner(nonZeroBPM);
@@ -53,14 +53,14 @@ public class BeatConfigurationInputDialog extends InputDialog implements Propert
     private void save() {
         Timeline timeline = timelineController.getTimeline();
         
-        timeline.setBeatDivision((int) beatDivision.getValue());
-        timeline.setBeatsPerMeasure((int) beatsPerMeasure.getValue());
+        timeline.getPlayer().setBeatDivision((int) beatDivision.getValue());
+        timeline.getPlayer().setBeatsPerMeasure((int) beatsPerMeasure.getValue());
     }
 
     private void updateValues() {
         Timeline timeline = timelineController.getTimeline();
-        beatDivision.setValue(timeline.getBeatDivision());
-        beatsPerMeasure.setValue(timeline.getBeatsPerMeasure());
+        beatDivision.setValue(timeline.getPlayer().getBeatDivision());
+        beatsPerMeasure.setValue(timeline.getPlayer().getBeatsPerMeasure());
     }
 
     // EFFECTS: listens for button clicks and runs methods accordingly

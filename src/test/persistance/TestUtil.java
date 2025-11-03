@@ -17,8 +17,8 @@ import java.util.ArrayList;
 public class TestUtil {
     public static void assertTimelineEquals(Timeline timeline1, Timeline timeline2) {
         assertEquals(timeline1.getProjectName(), timeline2.getProjectName());
-        assertEquals(timeline1.getBeatDivision(), timeline2.getBeatDivision());
-        assertEquals(timeline1.getBeatsPerMeasure(), timeline2.getBeatsPerMeasure());
+        assertEquals(timeline1.getPlayer().getBeatDivision(), timeline2.getPlayer().getBeatDivision());
+        assertEquals(timeline1.getPlayer().getBeatsPerMeasure(), timeline2.getPlayer().getBeatsPerMeasure());
         assertEquals(timeline1.getHorizontalScaleFactor(), timeline2.getHorizontalScaleFactor());
         assertPlayerEquals(timeline1.getPlayer(), timeline2.getPlayer());
 
