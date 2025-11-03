@@ -19,8 +19,6 @@ import persistance.Writable;
 // Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
 public class Timeline implements Writable {
 
-    private static final int DEFAULT_BEAT_DIVISION = 4;
-    private static final int DEFAULT_BEATS_PER_MEASURE = 4;
     private static final double DEFAULT_HORIZONTAL_SCALE = 1;
     private static final double BASE_PIXELS_PER_BEAT = 100.0;
 
@@ -29,8 +27,6 @@ public class Timeline implements Writable {
     private Player player;
     private PropertyChangeSupport pcs;
 
-    private int beatDivision;
-    private int beatsPerMeasure;
     private double horizontalScaleFactor;
 
     // EFFECTS: Creates a timeline with a single sequence with no tracks and the positon 
@@ -43,8 +39,6 @@ public class Timeline implements Writable {
         this.projectName = projectName;
         this.pcs = pcs;
 
-        beatDivision = DEFAULT_BEAT_DIVISION;
-        beatsPerMeasure = DEFAULT_BEATS_PER_MEASURE;
         horizontalScaleFactor = DEFAULT_HORIZONTAL_SCALE;
         player = new TimelinePlayer(this);
         midiTracks = new ArrayList<>();
@@ -125,22 +119,6 @@ public class Timeline implements Writable {
     }
 
     // MODIFIES: this
-    // EFFECTS: changes beatDivision and fires propertyChangeEvent
-    public void setBeatDivision(int newBeatDivision) {
-        int oldBeatDivision = this.beatDivision;
-        this.beatDivision = newBeatDivision;
-        pcs.firePropertyChange("beatDivision", oldBeatDivision, newBeatDivision);
-    }
-
-    // MODIFIES: this
-    // EFFECTS: changes beatsPerMeasure and fires propertyChangeEvent
-    public void setBeatsPerMeasure(int newBeatsPerMeasure) {
-        int oldBeatsPerMeasure = this.beatsPerMeasure;
-        this.beatsPerMeasure = newBeatsPerMeasure;
-        pcs.firePropertyChange("beatsPerMeasure", oldBeatsPerMeasure, newBeatsPerMeasure);
-    }
-
-    // MODIFIES: this
     // EFFECTS: changes horizontalScale and fires propertyChangeEvent
     public void setHorizontalScaleFactor(double newHorizontalScale) {
         double oldHorizontalScale = this.horizontalScaleFactor;
@@ -183,16 +161,6 @@ public class Timeline implements Writable {
         return Math.round(pixel / getPixelsPerTick());
     }
 
-    public long snapTickNearest(long rawTick) {
-        long divisionTickInterval = Player.PULSES_PER_QUARTER_NOTE / beatDivision;
-        return Math.round((double) rawTick / divisionTickInterval) * divisionTickInterval;
-    }
-
-    public long snapTickLowerDivision(long rawTick) {
-        long divisionTickInterval = Player.PULSES_PER_QUARTER_NOTE / beatDivision;
-        return (rawTick / divisionTickInterval) * divisionTickInterval;
-    }
-
     public long snapTickLowerBeat(long rawTick) {
         return (rawTick / Player.PULSES_PER_QUARTER_NOTE) * Player.PULSES_PER_QUARTER_NOTE;
     }
@@ -220,14 +188,6 @@ public class Timeline implements Writable {
 
     public double getHorizontalScaleFactor() {
         return horizontalScaleFactor;
-    }
-
-    public int getBeatsPerMeasure() {
-        return beatsPerMeasure;
-    }
-
-    public int getBeatDivision() {
-        return beatDivision;
     }
 
     public Player getPlayer() {
@@ -267,8 +227,8 @@ public class Timeline implements Writable {
 
         timelineJson.put("projectName", projectName);
         timelineJson.put("player", player.toJson());
-        timelineJson.put("beatDivision", beatDivision);
-        timelineJson.put("beatsPerMeasure", beatsPerMeasure);
+        timelineJson.put("beatDivision", player.getBeatDivision());
+        timelineJson.put("beatsPerMeasure", player.getBeatsPerMeasure());
         timelineJson.put("horizontalScaleFactor", horizontalScaleFactor);
         timelineJson.put("midiTracks", midiTracksToJson());
 
