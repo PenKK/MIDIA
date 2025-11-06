@@ -8,6 +8,9 @@ import model.TimelineController;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * Mouse adapter for adding, removing, and dragging notes in the piano roll editor.
+ */
 public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
 
     private final BlockPlayer blockPlayer;
@@ -15,12 +18,18 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
 
     private boolean draggingNote;
 
+    /**
+     * Creates a mouse adapter bound to a block player and timeline controller.
+     */
     public PianoRollEditorMouseAdapter(BlockPlayer blockPlayer, TimelineController timelineController) {
         this.blockPlayer = blockPlayer;
         this.timelineController = timelineController;
         this.draggingNote = false;
     }
 
+    /**
+     * Handles note creation on left click, deletion on right click, or starts dragging.
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         Timeline timeline = timelineController.getTimeline();
@@ -41,11 +50,18 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         }
     }
 
+    /**
+     * Ends note dragging when the mouse is released.
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         draggingNote = false;
     }
 
+    /**
+     * Creates and adds a new note at the snapped tick and given pitch.
+     * For percussive tracks, only the default pitch is allowed.
+     */
     private void createNote(long tick, int pitch) {
         if (blockPlayer.getParentMidiTrack().isPercussive() && pitch != Note.PERCUSSIVE_DEFAULT_PITCH) {
             return;
@@ -65,6 +81,9 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         notifyControllerNoteChange();
     }
 
+    /**
+     * Removes the specified note from the block and notifies listeners.
+     */
     private void removeNote(Note note) {
         boolean removeSuccessful = blockPlayer.getBlock().getNotes().remove(note);
         assert removeSuccessful : String.format("Note %s was note found when removing", note);
@@ -72,6 +91,9 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         notifyControllerNoteChange();
     }
 
+    /**
+     * Returns the note under the given tick and pitch, or null if none.
+     */
     private Note getNoteOnPosition(long tick, int pitch) {
         for (Note n : blockPlayer.getBlock().getNotes()) {
             if (n.getStartTick() <= tick && n.getStartTick() + n.getDurationTicks() >= tick && pitch == n.getPitch()) {
@@ -82,6 +104,9 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         return null;
     }
 
+    /**
+     * Notifies the controller that a note edit occurred, triggering UI updates.
+     */
     private void notifyControllerNoteChange() {
         timelineController.getPropertyChangeSupport().firePropertyChange("pianoRollNoteEdited", null, null);
     }

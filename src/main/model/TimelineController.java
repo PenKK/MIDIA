@@ -7,7 +7,9 @@ import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MetaEventListener;
 import javax.sound.midi.MetaMessage;
 
-// A controller class responsible for managing a single Timeline instance
+/**
+ * Controls and manages a single Timeline instance, including playback wiring and lifecycle.
+ */
 public class TimelineController implements MetaEventListener {
 
     public static final int PLAYER_END_META_TYPE = 47;
@@ -65,14 +67,20 @@ public class TimelineController implements MetaEventListener {
         pcs.firePropertyChange("timelineReplaced", oldTimeline, newTimeline);
     }
 
-    // MODIFIES: this
-    // EFFECTS: adds the specified observer as a listener of property changes
+    /**
+     * Adds the specified observer as a listener of property changes.
+     *
+     * @param observer the observer to add
+     */
     public void addObserver(PropertyChangeListener observer) {
         pcs.addPropertyChangeListener(observer);
     }
 
-    // MODIFIES: this
-    // EFFECTS: removes the specified observer as a listener of property changes
+    /**
+     * Removes the specified observer from property change listeners.
+     *
+     * @param observer the observer to remove
+     */
     public void removeObserver(PropertyChangeListener observer) {
         pcs.removePropertyChangeListener(observer);
     }

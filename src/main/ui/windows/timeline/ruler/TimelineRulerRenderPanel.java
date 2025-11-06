@@ -8,12 +8,17 @@ import model.TimelineController;
 import ui.ruler.RulerMouseAdapter;
 import ui.ruler.RulerRenderPanel;
 
-// The panel for Graphics to draw on to show Ruler tick marks
+/**
+ * Ruler render panel for the timeline view.
+ * Draws measure, beat, and division tick marks and responds to timeline changes.
+ */
 public class TimelineRulerRenderPanel extends RulerRenderPanel implements PropertyChangeListener {
 
     private final TimelineController timelineController;
 
-    // EFFECTS: Sets null border for zero padding, borders will be drawn via Graphics
+    /**
+     * Creates the timeline ruler render panel and wires mouse and property listeners.
+     */
     TimelineRulerRenderPanel(TimelineController timelineController) {
         super();
         RulerMouseAdapter mouseAdapter = new RulerMouseAdapter(timelineController,
@@ -23,15 +28,18 @@ public class TimelineRulerRenderPanel extends RulerRenderPanel implements Proper
         timelineController.addObserver(this);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Draws the ruler markings
+    /**
+     * Paints the ruler tick marks according to the current timeline settings.
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         drawAllTickMarks(g, timelineController, getWidth());
     }
 
-    // EFFECTS: listens for property change events and runs methods accordingly
+    /**
+     * Repaints the ruler when timing or scale-related properties change.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();

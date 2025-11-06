@@ -15,21 +15,26 @@ import javax.swing.SpinnerNumberModel;
 import model.Timeline;
 import model.TimelineController;
 
-// A JInputDialog for receiving integer inputs for ruler beats per measure and beat division
+/**
+ * Dialog for configuring the ruler beat division and beats per measure settings.
+ */
 public class BeatConfigurationInputDialog extends InputDialog implements PropertyChangeListener {
 
     private JButton save;
     private JSpinner beatDivision;
     private JSpinner beatsPerMeasure;
 
-    // EFFECTS: creates an input dialog and displays it
+    /**
+     * Creates the beat configuration dialog and subscribes to timeline updates.
+     */
     public BeatConfigurationInputDialog(Component invoker, TimelineController timelineController) {
         super("Beat Configuration", invoker, new Dimension(300, 200), timelineController);
         timelineController.addObserver(this);
     }
 
-    // MODIFIES: this
-    // EFFECTS: initializes input fields
+    /**
+     * Initializes the input fields for beat division and beats per measure.
+     */
     @Override
     protected void initFields() {
         Timeline timeline = timelineController.getTimeline();
@@ -49,7 +54,9 @@ public class BeatConfigurationInputDialog extends InputDialog implements Propert
         this.add(save);
     }
     
-    // EFFECTS: updates the timeline ruler settings with the new beat configuration
+    /**
+     * Applies the selected beat configuration to the timeline.
+     */
     private void save() {
         Timeline timeline = timelineController.getTimeline();
         
@@ -63,7 +70,9 @@ public class BeatConfigurationInputDialog extends InputDialog implements Propert
         beatsPerMeasure.setValue(timeline.getPlayer().getBeatsPerMeasure());
     }
 
-    // EFFECTS: listens for button clicks and runs methods accordingly
+    /**
+     * Handles the Save button action to commit beat configuration changes.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(save)) {
@@ -71,6 +80,9 @@ public class BeatConfigurationInputDialog extends InputDialog implements Propert
         }
     }
 
+    /**
+     * Refreshes displayed values when the timeline instance is replaced.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String property = evt.getPropertyName();

@@ -9,14 +9,22 @@ import model.Player;
 import model.TimelineController;
 import ui.windows.timeline.midi.TrackRenderPanel;
 
-// A container to draw the line of the position tick indicator line over tracks
+/**
+ * Container panel that overlays a moving playhead line above track components.
+ * Observes the timeline/player and repaints when the position changes.
+ */
 public abstract class LineContainerPanel extends JPanel {
 
     private final TimelineController timelineController;
     private Player player;
     private int lineX;
 
-    // EFFECTS: creates a LineContainerPanel that observes the timeline and has BoxLayout
+    /**
+     * Creates a LineContainerPanel that observes the timeline and arranges children vertically.
+     *
+     * @param timelineController the controller providing timeline state
+     * @param player             the player supplying the current tick position
+     */
     public LineContainerPanel(TimelineController timelineController, Player player) {
         super();
         this.timelineController = timelineController;
@@ -26,14 +34,17 @@ public abstract class LineContainerPanel extends JPanel {
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
     }
 
-    // MODIFIES: this
-    // EFFECTS: updates lineX value with the timeline tickPosition (scaled) and repaints
+    /**
+     * Updates the x-position of the playhead line from the current tick and repaints.
+     */
     public void updateLineX() {
         this.lineX = timelineController.getTimeline().scaleTickToPixel(player.getTickPosition());
         repaint();
     }
 
-    // EFFECTS: paints the position line at lineX
+    /**
+     * Paints the playhead line at the current x position.
+     */
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -43,6 +54,9 @@ public abstract class LineContainerPanel extends JPanel {
         }
     }
 
+    /**
+     * Computes preferred width based on children, adding padding for track rendering.
+     */
     @Override
     public Dimension getPreferredSize() {
         int width = 0;
@@ -52,6 +66,9 @@ public abstract class LineContainerPanel extends JPanel {
         return new Dimension(width + TrackRenderPanel.WIDTH_PADDING, super.getPreferredSize().height);
     }
 
+    /**
+     * Rebinds to the current player (e.g., on timeline replacement) and updates the playhead.
+     */
     protected void updatePlayer() {
         this.player = timelineController.getTimeline().getPlayer();
         updateLineX();

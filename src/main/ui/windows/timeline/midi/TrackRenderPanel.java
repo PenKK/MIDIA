@@ -22,7 +22,10 @@ import ui.windows.piano.roll.PianoRollDialog;
 import ui.windows.timeline.midi.popup.BlockPopupMenu;
 import ui.windows.timeline.midi.popup.TrackGapPopupMenu;
 
-// Interactable render of the MidiTrack's blocks and notes
+/**
+ * Interactive rendering panel for a single MidiTrack's blocks and notes.
+ * Supports context menus and opening a piano roll on double click.
+ */
 public class TrackRenderPanel extends JPanel {
 
     public static final int WIDTH_PADDING = 300;
@@ -44,7 +47,9 @@ public class TrackRenderPanel extends JPanel {
     private PianoRollDialog pianoRollDialog;
     private final DawClipboard dawClipboard;
 
-    // EFFECTS: receives the specified midiTrack, and listens for mouse events
+    /**
+     * Constructs a render panel for the provided track and attaches mouse interactions.
+     */
     public TrackRenderPanel(MidiTrack midiTrack, TimelineController timelineController, DawClipboard dawClipboard) {
         this.dawClipboard = dawClipboard;
         this.timelineController = timelineController;
@@ -178,6 +183,9 @@ public class TrackRenderPanel extends JPanel {
         }
     }
 
+    /**
+     * Returns true if the given note overlaps the current playback tick.
+     */
     private boolean isNotePlaying(Note n) {
         if (!timelineController.isPlaying()) {
             return false;
@@ -188,7 +196,9 @@ public class TrackRenderPanel extends JPanel {
         return n.getStartTick() <= tick && tick <= n.getStartTick() + n.getDurationTicks();
     }
 
-    // EFFECTS: returns the last horizontal pixel that is drawn from blocks (scaled)
+    /**
+     * Returns the maximum drawn width (in pixels) based on the end of the last block.
+     */
     public int getScaledWidth() {
         long endPixel = 0;
         for (Block b : midiTrack.getBlocks()) {
@@ -208,7 +218,9 @@ public class TrackRenderPanel extends JPanel {
 
     private MouseAdapter mouseAdapter() {
         return new MouseAdapter() {
-            // EFFECTS: listens for mouse events and runs methods accordingly
+            /**
+             * Opens context menus on right click and a piano roll on double left click.
+             */
             @Override
             public void mouseReleased(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {

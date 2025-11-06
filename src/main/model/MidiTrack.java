@@ -18,10 +18,13 @@ import model.event.EventLog;
 import model.instrument.Instrument;
 import persistance.Writable;
 
-// A high level representation of a track, which is a single layer/instrument of the project.
-// For playback the MidiTrack will be converted to a javax.sound.midi.Track
-// See https://midi.org/expanded-midi-1-0-messages-list for midi message correspondence
-// See https://en.wikipedia.org/wiki/General_MIDI for more midi information
+/**
+ * A high-level representation of a track, which is a single layer/instrument of the project.
+ * <p>
+ * For playback this MidiTrack is converted to a {@code javax.sound.midi.Track}.
+ * See <a href="https://midi.org/expanded-midi-1-0-messages-list">...</a> for MIDI messages and
+ * <a href="https://en.wikipedia.org/wiki/General_MIDI">...</a> for instrument information.
+ */
 public class MidiTrack implements Writable, Pastable {
 
     private static final int DEFAULT_VOLUME = 100;
@@ -33,10 +36,19 @@ public class MidiTrack implements Writable, Pastable {
     private final ArrayList<Block> blocks;
     private final int channel;
 
-    // REQUIRES: 0 <= instrument <= 127 if percussive is false, else 35 <= instrument <= 81
-    // EFFECTS: Creates a single track that initially: is not muted,
-    //          has no blocks, set to a specified instrument, a default volume,
-    //          percussive according to parameter, and a name.
+    /**
+     * Constructs a MidiTrack.
+     * <p>
+     * Preconditions:
+     * - If the track is not percussive, {@code instrument.getProgramNumber()} must be in [0, 127].
+     * - If the track is percussive, {@code instrument.getProgramNumber()} should match the percussive range (35-81).
+     * The track is initialized as unmuted, with no blocks, the given instrument, a default volume, the given channel,
+     * and name.
+     *
+     * @param name       the display name of the track
+     * @param instrument the instrument for this track
+     * @param channel    the MIDI channel (9 for percussive; otherwise a free channel)
+     */
     public MidiTrack(String name, Instrument instrument, int channel) {
         this.muted = false;
         this.blocks = new ArrayList<>();
@@ -46,8 +58,12 @@ public class MidiTrack implements Writable, Pastable {
         this.name = name;
     }
 
-    // MODIFIES: this
-    // EFFECTS: Adds a block to the list of blocks, returns the index it was created it
+    /**
+     * Adds a block to this track.
+     *
+     * @param block the block to add
+     * @return the index at which the block was added
+     */
     public int addBlock(Block block) {
         blocks.add(block);
         Event e = new Event(String.format("Added Block with %d notes to MidiTrack %s", 
@@ -56,9 +72,14 @@ public class MidiTrack implements Writable, Pastable {
         return blocks.size() - 1;
     }
 
-    // REQUIRES: index >= 0
-    // MODIFIES: this 
-    // EFFECTS: removes the block at the given index in this track and returns it
+    /**
+     * Removes and returns the block at the given index.
+     * <p>
+     * Preconditions: {@code index >= 0}
+     *
+     * @param index the index of the block to remove
+     * @return the removed block
+     */
     public Block removeBlock(int index) {
         Block b = blocks.remove(index);
 
@@ -68,11 +89,15 @@ public class MidiTrack implements Writable, Pastable {
         return b;
     }
 
-    // MODIFIES: track
-    // EFFECTS: Converts MidiTrack to Java Track data. First creates volume and instrument (program change) messages.
-    //          Then converts each block from blocks to individual notes to MIDI events.    
-    //          Creates one event for the note on event, and one for the end not event (per note).
-    //          All created events are applied to the track.
+    /**
+     * Applies this MidiTrack's data to the given {@link Track}.
+     * <p>
+     * Creates initial volume and (if applicable) program change messages,
+     * then converts each block's notes to NOTE_ON and NOTE_OFF events and adds them to the track.
+     *
+     * @param track the Java MIDI track to populate
+     * @throws InvalidMidiDataException if invalid MIDI data is encountered
+     */
     public void applyToTrack(Track track) throws InvalidMidiDataException {
         ShortMessage volMessage = new ShortMessage(ShortMessage.CONTROL_CHANGE, getChannel(), 7, volume);
 
@@ -90,9 +115,16 @@ public class MidiTrack implements Writable, Pastable {
         }
     }
 
-    // MODIFIES: track
-    // EFFECTS: Helper method for applyToTrack; converts note to MIDI event on and off
-    //          and applies it to the specified track.
+    /**
+     * Helper for {@link #applyToTrack(Track)} to add NOTE_ON and NOTE_OFF events for a note.
+     *
+     * @param track        the track to add events to
+     * @param note         the note to apply
+     * @param isPercussive whether the track is percussive (channel 9 semantics)
+     * @param instrument   the instrument to use (used for percussive data1)
+     * @param channel      the MIDI channel
+     * @throws RuntimeException if invalid, MIDI data prevents applying the note
+     */
     public static void applyNoteToTrack(Track track, Note note, boolean isPercussive,
                                         Instrument instrument, int channel) {
         try {
@@ -114,14 +146,20 @@ public class MidiTrack implements Writable, Pastable {
         }
     }
 
-    // REQUIRES: 0 <= newVolume <= 127
+    /**
+     * Sets the raw MIDI volume.
+     *
+     * @param newVolume the new volume (0-127)
+     */
     public void setVolume(int newVolume) {
         volume = newVolume;
     }
 
-    // REQUIRES: 0 <= newVolume <= 100
-    // MODFIES: this
-    // EFFECTS: sets the volume in a range 0 - 100 and scales it to 0 - 127
+    /**
+     * Sets the volume using a 0-100 scale and converts it to the MIDI 0-127 range.
+     *
+     * @param newVolume the scaled volume (0-100)
+     */
     public void setVolumeScaled(int newVolume) {
         volume = (int) Math.round(newVolume * 1.27);
     }
@@ -134,7 +172,15 @@ public class MidiTrack implements Writable, Pastable {
         muted = mutedValue;
     }
 
-    // REQUIRES: 0 <= instrument <= 127 if not percussive, else 35 <= instrument <= 81
+    /**
+     * Sets the instrument for this track.
+     * <p>
+     * Preconditions:
+     * - For non-percussive tracks, program number in [0, 127].
+     * - For percussive tracks, use percussive mapping (35-81).
+     *
+     * @param instrument the new instrument
+     */
     public void setInstrument(Instrument instrument) {
         this.instrument = instrument;
     }
@@ -151,7 +197,11 @@ public class MidiTrack implements Writable, Pastable {
         return volume;
     }
 
-    // EFFECTS: returns volume scaled down from 127 to 100
+    /**
+     * Returns the volume scaled from the MIDI range (0-127) to 0-100.
+     *
+     * @return the scaled volume (0-100)
+     */
     public int getVolumeScaled() {
         return (int) Math.round(volume / 1.27);
     }
@@ -172,12 +222,20 @@ public class MidiTrack implements Writable, Pastable {
         return name;
     }
 
-    // EFFECTS: returns true if the track is on channel 9, which is reserved for percussion
+    /**
+     * Returns whether this track is percussive (MIDI channel 9).
+     *
+     * @return true if channel is 9; false otherwise
+     */
     public boolean isPercussive() {
         return channel == 9;
     }
 
-    // EFFECTS: returns a JSON object representation of the MidiTrack
+    /**
+     * Returns a JSON object representation of this MidiTrack.
+     *
+     * @return the JSON representation of this track
+     */
     @Override
     public JSONObject toJson() {
         JSONObject midiTrackJson = new JSONObject();
@@ -191,7 +249,11 @@ public class MidiTrack implements Writable, Pastable {
         return midiTrackJson;
     }
 
-    // EFFECTS: returns a string with general info about the MidiTrack
+    /**
+     * Returns a string with general information about the MidiTrack.
+     *
+     * @return formatted string with name, channel, instrument, and block count
+     */
     public String info() {
         return String.format("name: %s, channel: %d, instrument: %s, block count: %d",
                               name, channel, instrument, blocks.size());
@@ -202,7 +264,11 @@ public class MidiTrack implements Writable, Pastable {
         return name;
     }
 
-    // EFFECTS: returns JSON Array representation of blocks in this midiTrack
+    /**
+     * Returns a JSON array representation of the blocks in this track.
+     *
+     * @return JSON array containing block JSON
+     */
     private JSONArray blocksToJson() {
         JSONArray blocksJson = new JSONArray();
 

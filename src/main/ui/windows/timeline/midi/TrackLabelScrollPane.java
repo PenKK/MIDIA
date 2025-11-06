@@ -6,10 +6,16 @@ import ui.common.BlankScrollPane;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Scroll pane for the vertical list of track labels, with fixed width.
+ */
 public class TrackLabelScrollPane extends BlankScrollPane {
 
     private TrackLabelContainer trackLabelContainer;
 
+    /**
+     * Constructs the scroll pane and embeds the track label container.
+     */
     public TrackLabelScrollPane(TimelineController timelineController) {
         super();
         trackLabelContainer = new TrackLabelContainer(timelineController);

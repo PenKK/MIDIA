@@ -7,6 +7,9 @@ import java.awt.Dimension;
 
 import javax.swing.JScrollPane;
 
+/**
+ * Scroll pane wrapper for ruler components with fixed height and no scroll bars.
+ */
 public abstract class RulerScrollPane extends BlankScrollPane {
 
     public static final int RULER_HEIGHT = TrackLabelPanel.HEIGHT / 4;

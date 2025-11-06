@@ -19,7 +19,9 @@ import model.instrument.Instrument;
 import model.instrument.TonalInstrument;
 import model.instrument.PercussiveInstrument;
 
-// An InputDialog for creating new MidiTracks.
+/**
+ * Dialog for creating new tracks with optional percussive instrument selection.
+ */
 public class TrackInputDialog extends InputDialog {
 
     private JTextField nameField;
@@ -27,13 +29,16 @@ public class TrackInputDialog extends InputDialog {
     private JComboBox<Instrument> instrumentComboBox;
     private JButton create;
 
-    // EFFECTS: creates input dialog for creating a new track
+    /**
+     * Creates a dialog for track creation, including instrument selection.
+     */
     public TrackInputDialog(Component invoker, TimelineController timelineController) {
         super("Create Track", invoker, new Dimension(400, 300), timelineController);
     }
 
-    // MODIFIES: this
-    // EFFECTS: initializes fields and adds them to this
+    /**
+     * Initializes input fields and binds actions for track creation.
+     */
     @Override
     protected void initFields() {
         nameField = new JTextField();
@@ -55,7 +60,9 @@ public class TrackInputDialog extends InputDialog {
         
     }
 
-    // EFFECTS: listens for actions and runs methods accordingly
+    /**
+     * Handles UI actions for instrument mode toggling and submission.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(percussiveCheckBox)) {
@@ -65,8 +72,9 @@ public class TrackInputDialog extends InputDialog {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: creates a track on the timeline with user input from fields
+    /**
+     * Creates a track on the timeline using the provided name and selected instrument.
+     */
     private void submit() {
         String name = nameField.getText().trim();
         Instrument instrument = (Instrument) Objects.requireNonNull(instrumentComboBox.getSelectedItem(),
@@ -84,8 +92,11 @@ public class TrackInputDialog extends InputDialog {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: updates the instrumentComboBox list of instrument options accoring to checkBox for percussion
+    /**
+     * Updates the instrument list to tonal or percussive options based on the checkbox state.
+     *
+     * @param checkBox the percussive mode checkbox
+     */
     private void updateInstrumentList(JCheckBox checkBox) {
         DefaultComboBoxModel<Instrument> items;
         if (checkBox.isSelected()) {

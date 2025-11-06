@@ -12,12 +12,22 @@ import javax.swing.SwingUtilities;
 
 import model.TimelineController;
 
+/**
+ * Base class for modal input dialogs used in the menu system.
+ */
 public abstract class InputDialog extends JDialog implements ActionListener {
 
     protected TimelineController timelineController;
     private final Component invoker;
 
-    // EFFECTS: creates an input dialog with the specified title
+    /**
+     * Creates an input dialog with the specified title and preferred size.
+     *
+     * @param frameTitle         the dialog title
+     * @param invoker            the component the dialog is positioned relative to
+     * @param d                  the preferred dialog size
+     * @param timelineController the controller used to act on user input
+     */
     InputDialog(String frameTitle, Component invoker, Dimension d, TimelineController timelineController) {
         super((JFrame) SwingUtilities.getWindowAncestor(invoker), frameTitle, true);
 
@@ -31,12 +41,14 @@ public abstract class InputDialog extends JDialog implements ActionListener {
         this.pack();
     }
 
-    // MODIFIES: this
-    // EFFECTS: initializes fields and adds them to this
+    /**
+     * Initializes and adds fields to the dialog.
+     */
     protected abstract void initFields();
 
-    // MODIFIES: this
-    // EFFECTS: makes the dialog visible and relative to invoker
+    /**
+     * Shows the dialog centered relative to the invoker window.
+     */
     public void display() {
         this.setLocationRelativeTo(SwingUtilities.getWindowAncestor(invoker));
         this.setVisible(true);

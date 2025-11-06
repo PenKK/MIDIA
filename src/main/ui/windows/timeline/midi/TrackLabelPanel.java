@@ -9,7 +9,9 @@ import model.MidiTrack;
 import model.TimelineController;
 import ui.windows.timeline.midi.popup.LabelPopupMenu;
 
-// Interactable display of the general information of a MidiTrack
+/**
+ * Interactive panel showing a track's label and context menu actions.
+ */
 public class TrackLabelPanel extends JPanel {
 
     public static final int LABEL_BOX_WIDTH = 100;
@@ -22,7 +24,9 @@ public class TrackLabelPanel extends JPanel {
     private final LabelPopupMenu labelPopupMenu;
     private final JLabel nameLabel;
 
-    // EFFECTS: Creates the label panel which contains information about the MidiTrack for that row
+    /**
+     * Creates a label panel for the given track with a context menu for common actions.
+     */
     public TrackLabelPanel(MidiTrack midiTrack, TimelineController timelineController) {
         this.midiTrack = midiTrack;
         nameLabel = new JLabel(midiTrack.getName());

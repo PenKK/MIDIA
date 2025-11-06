@@ -7,6 +7,9 @@ import ui.common.LineContainerPanel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * Overlay panel rendering the playhead line over the timeline track area.
+ */
 public class TimelineLineContainerPanel extends LineContainerPanel implements PropertyChangeListener {
 
     public TimelineLineContainerPanel(TimelineController timelineController, Player player) {
@@ -14,7 +17,9 @@ public class TimelineLineContainerPanel extends LineContainerPanel implements Pr
         timelineController.addObserver(this);
     }
 
-    // EFFECTS: listens for property changes and runs methods accordingly
+    /**
+     * Updates the playhead or repaints based on timeline changes.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();

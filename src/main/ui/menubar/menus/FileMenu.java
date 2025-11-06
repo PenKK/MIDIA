@@ -19,7 +19,9 @@ import model.TimelineController;
 import persistance.JsonReader;
 import persistance.JsonWriter;
 
-// The File dropdown Menu, responsible for saving and loading and other file settings
+/**
+ * The File menu, responsible for opening, saving, creating, and deleting projects.
+ */
 public class FileMenu extends Menu {
 
     public static final String PROJECTS_DIRECTORY = "data/projects";
@@ -32,7 +34,11 @@ public class FileMenu extends Menu {
 
     private final JFileChooser fileChooser;
 
-    // EFFECTS: creates file JMenu, its file chooser, its JMenuItems, and apppriate action listeners
+    /**
+     * Constructs the File menu with menu items and a JSON-only file chooser.
+     *
+     * @param timelineController the controller used to handle menu actions
+     */
     public FileMenu(TimelineController timelineController) {
         super("File", timelineController);
 
@@ -50,7 +56,9 @@ public class FileMenu extends Menu {
         fileChooser.setAcceptAllFileFilterUsed(false);
     }
 
-    // EFFECTS: Assigns actions to methods
+    /**
+     * Routes menu actions to the appropriate handlers.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(newProject)) {
@@ -64,14 +72,16 @@ public class FileMenu extends Menu {
         }
     }
 
-    // MODIFIES: timeline singleton
-    // EFFECTS: assigns the instance a new Timeline 
+    /**
+     * Creates a new project with default settings.
+     */
     private void newProject() {
         timelineController.setInstance(new Timeline("New Project", timelineController.getPropertyChangeSupport()));
     }
 
-    // MODIFIES: timelineController
-    // EFFECTS: Prompts user to pick a project json file to load
+    /**
+     * Prompts the user to open a project JSON file and loads it into the application.
+     */
     private void openProject() {
         int result = fileChooser.showOpenDialog(this);
 
@@ -95,8 +105,9 @@ public class FileMenu extends Menu {
         }
     }
 
-    // MODIFIES: projects folder
-    // EFFECTS: saves current project instance to a prompted path
+    /**
+     * Saves the current project to a chosen file path.
+     */
     private void saveProject() {
         int result = fileChooser.showSaveDialog(this);
 
@@ -120,8 +131,9 @@ public class FileMenu extends Menu {
         }
     }
 
-    // MODIFIES: Timeline instance, projects folder
-    // EFFECTS: prompts user to delete a project with JFileChooser
+    /**
+     * Prompts the user to delete an existing project file.
+     */
     private void deleteProject() {
         int result = fileChooser.showDialog(this, "Delete Project");
 

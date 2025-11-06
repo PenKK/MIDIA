@@ -13,10 +13,13 @@ import model.event.EventLog;
 import model.instrument.Instrument;
 import persistance.Writable;
 
-// The orchestrator of the whole project.
-// This class will manage the primary Sequence/MidiTracks objects and is responsible for playback,
-// converting MidiTrack to javax.sound.midi.Track, tempo, assigning channels, 
-// Higher level MidiTrack(s) will be converted to the lower level Java Track for playback
+/**
+ * The orchestrator of the project.
+ * <p>
+ * Manages the primary sequence and MidiTracks, is responsible for playback,
+ * converting MidiTracks to {@code javax.sound.midi.Track}, tempo, channel assignment,
+ * and other timeline-level operations.
+ */
 public class Timeline implements Writable {
 
     private static final double DEFAULT_HORIZONTAL_SCALE = 1;
@@ -29,12 +32,12 @@ public class Timeline implements Writable {
 
     private double horizontalScaleFactor;
 
-    // EFFECTS: Creates a timeline with a single sequence with no tracks and the positon 
-    //          tick at 0, and a BPM of 120.
-    //          Method throws MidiUnavailableException if the device has no MIDI sequencer
-    //          available, which is fatal and unrecoverable.
-    //          Method throws InvalidMidiDataException if the Sequence has an invalid 
-    //          division type.
+    /**
+     * Constructs a timeline with no tracks, position at tick 0, and a default playback state.
+     *
+     * @param projectName the name of the project
+     * @param pcs         the property change support used to publish timeline events
+     */
     public Timeline(String projectName, PropertyChangeSupport pcs) {
         this.projectName = projectName;
         this.pcs = pcs;
@@ -48,9 +51,15 @@ public class Timeline implements Writable {
         EventLog.getInstance().logEvent(e);
     }
 
-    // REQUIRES: player.getAvailableChannels().size() >= 0
-    // MODIFIES: this
-    // EFFECTS: Creates a midiTrack, add its to the list of tracks and returns it
+    /**
+     * Creates a new MidiTrack and adds it to the timeline.
+     * <p>
+     * If a non-percussive instrument is requested but no channels are available, returns null.
+     *
+     * @param name       the track name
+     * @param instrument the instrument for the track
+     * @return the created track, or null if creation is not possible due to channel exhaustion
+     */
     public MidiTrack createMidiTrack(String name, Instrument instrument) {
         boolean percussive = !instrument.getType().equals("tonal");
         
@@ -74,11 +83,15 @@ public class Timeline implements Writable {
         return newMidiTrack;
     }
 
-    // REQUIRES: index >= 0 and midiTracks.size() > 0
-    // MODIFIES: this
-    // EFFECTS: removes the MidiTrack at the specified index from midiTracks, adds the
-    //          channel to available channels if the MidiTrack is not percussive, and then
-    //          returns the MidiTrack
+    /**
+     * Removes and returns the MidiTrack at the specified index.
+     * <p>
+     * If the removed track is non-percussive, its channel is returned to the pool of available channels.
+     * Preconditions: {@code index >= 0} and {@code midiTracks.size() > 0}
+     *
+     * @param index the index of the track to remove
+     * @return the removed MidiTrack
+     */
     public MidiTrack removeMidiTrack(int index) {
         ArrayList<MidiTrack> oldTracks = new ArrayList<>(midiTracks);
         MidiTrack removed = midiTracks.remove(index);
@@ -109,8 +122,11 @@ public class Timeline implements Writable {
         return (int) (getLengthMs() - player.getPositionMs());
     }
 
-    // MODIFIES: this
-    // EFFECTS: changes projectName and fires propertyChangeEvent
+    /**
+     * Sets the project name and fires a property change event.
+     *
+     * @param newProjectName the new project name
+     */
     public void setProjectName(String newProjectName) {
         String oldProjectName = projectName;
         this.projectName = newProjectName;
@@ -118,8 +134,11 @@ public class Timeline implements Writable {
         pcs.firePropertyChange("projectName", oldProjectName, newProjectName);
     }
 
-    // MODIFIES: this
-    // EFFECTS: changes horizontalScale and fires propertyChangeEvent
+    /**
+     * Sets the horizontal scale for UI rendering and fires a property change event.
+     *
+     * @param newHorizontalScale the new horizontal scale factor
+     */
     public void setHorizontalScaleFactor(double newHorizontalScale) {
         double oldHorizontalScale = this.horizontalScaleFactor;
         this.horizontalScaleFactor = newHorizontalScale;
@@ -130,8 +149,12 @@ public class Timeline implements Writable {
         player = p;
     }
 
-    // EFFECTS: calculates the tick at which the last note ends, this method
-    //          is needed to calculate length ticks without first calling updateSequence()
+    /**
+     * Calculates the tick at which the last note ends across all tracks and blocks.
+     * Useful for computing the total length without updating the sequencer.
+     *
+     * @return the last note end tick
+     */
     public long getLengthTicks() {
         long lastNoteEndTick = 0;
         for (MidiTrack midiTrack : midiTracks) {
@@ -151,12 +174,22 @@ public class Timeline implements Writable {
         return (BASE_PIXELS_PER_BEAT / Player.PULSES_PER_QUARTER_NOTE) * horizontalScaleFactor;
     }
 
-    // EFFECTS: returns the tick scaled for UI, rounded to the nearest integer
+    /**
+     * Converts a tick value to pixels for UI rendering.
+     *
+     * @param tick the tick value
+     * @return the pixel value, rounded to the nearest integer
+     */
     public int scaleTickToPixel(long tick) {
         return (int) Math.round(tick * getPixelsPerTick());
     }
 
-    // EFFECTS: returns the tick scaled for UI, rounded to the nearest integer
+    /**
+     * Converts a pixel value to ticks for UI interactions.
+     *
+     * @param pixel the pixel value
+     * @return the tick value, rounded to the nearest integer
+     */
     public long scalePixelToTick(int pixel) {
         return Math.round(pixel / getPixelsPerTick());
     }
@@ -177,7 +210,12 @@ public class Timeline implements Writable {
         player.updateSequence();
     }
 
-    // EFFECTS: returns the track at the specified index from tracks array
+    /**
+     * Returns the track at the specified index.
+     *
+     * @param index the track index
+     * @return the MidiTrack at the given index
+     */
     public MidiTrack getTrack(int index) {
         return midiTracks.get(index);
     }
@@ -202,8 +240,11 @@ public class Timeline implements Writable {
         return player.getLengthBeats();
     }
 
-    // MODIFIES: this
-    // EFFECTS: adds midiTrack to the list of tracks
+    /**
+     * Adds a MidiTrack to this timeline.
+     *
+     * @param midiTrack the track to add
+     */
     public void addMidiTrack(MidiTrack midiTrack) {
         midiTracks.add(midiTrack);
 
@@ -220,7 +261,11 @@ public class Timeline implements Writable {
         this.pcs = pcs;
     }
 
-    // EFFECTS: returns JSON object representation of the timeline
+    /**
+     * Returns a JSON object representation of this timeline.
+     *
+     * @return the JSON representation of the timeline
+     */
     @Override
     public JSONObject toJson() {
         JSONObject timelineJson = new JSONObject();
@@ -235,7 +280,11 @@ public class Timeline implements Writable {
         return timelineJson;
     }
 
-    // EFFECTS: returns JSON Array representation of midiTracks array
+    /**
+     * Returns a JSON array representation of the MidiTracks in this timeline.
+     *
+     * @return a JSON array of track JSON objects
+     */
     private JSONArray midiTracksToJson() {
         JSONArray midiTracksJson = new JSONArray();
 

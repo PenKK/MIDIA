@@ -13,6 +13,10 @@ import javax.swing.event.MouseInputAdapter;
 
 import model.TimelineController;
 
+/**
+ * Mouse adapter for adjusting BPM by vertical dragging over a label.
+ * Supports fine adjustment with Shift and hides the cursor during drag.
+ */
 public class BpmMouseInputAdapter extends MouseInputAdapter {
 
     private static final int RESISTANCE = 10;
@@ -42,6 +46,9 @@ public class BpmMouseInputAdapter extends MouseInputAdapter {
     private float newBpm = 0;
     private Cursor orignalCursor;
 
+    /**
+     * Starts a BPM drag operation: captures anchor position, stores original cursor, and hides the cursor.
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         newBpm = timelineController.getTimeline().getPlayer().getBPM();
@@ -50,6 +57,9 @@ public class BpmMouseInputAdapter extends MouseInputAdapter {
         bpmDisplay.setCursor(INVISIBLE_CURSOR);
     }
 
+    /**
+     * Adjusts BPM based on vertical drag distance; Shift enables fine control.
+     */
     @Override
     public void mouseDragged(MouseEvent e) {
         int currentY = e.getYOnScreen();

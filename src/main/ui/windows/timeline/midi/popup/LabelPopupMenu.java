@@ -15,7 +15,9 @@ import model.instrument.TonalInstrument;
 import ui.windows.timeline.midi.TrackLabelPanel;
 import model.instrument.PercussiveInstrument;
 
-// The popup menu for modifying a track
+/**
+ * Context menu for track label actions (rename, change instrument, delete).
+ */
 public class LabelPopupMenu extends JPopupMenu implements ActionListener {
 
     private final TimelineController timelineController;
@@ -24,7 +26,9 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
     private final JMenuItem delete;
     private final JMenuItem changeInstrument;
 
-    // EFFECTS: creates a popup menu for the specified parent midiTrackLabelPanel
+    /**
+     * Creates a popup menu for the specified track label panel.
+     */
     public LabelPopupMenu(TrackLabelPanel parentPanel, TimelineController timelineController) {
         super(parentPanel.getName());
 
@@ -45,8 +49,9 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
         this.parentPanel = parentPanel;
     }
 
-    // MODIFIES: this, parentPanel
-    // EFFECTS: prompts user for a new label for the invoking track
+    /**
+     * Prompts for and applies a new name for the track.
+     */
     private void rename() {
         String newName = JOptionPane.showInputDialog("Enter a new track name for "
                 + parentPanel.getMidiTrack().getName());
@@ -58,8 +63,9 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
         parentPanel.getLabel().setText(newName);
     }
 
-    // MODIFIES: this, parentPanel
-    // EFFECTS: prompts user to choose a new instrument for the invoking track
+    /**
+     * Prompts the user to choose a new instrument and applies it to the track.
+     */
     private void changeInstrument() {
         MidiTrack midiTrack = parentPanel.getMidiTrack();
         Instrument[] options = midiTrack.isPercussive() ? PercussiveInstrument.values()
@@ -75,8 +81,9 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
         midiTrack.setInstrument((Instrument) choice);
     }
 
-    // MODIFIES: Timeline singleton
-    // EFFECTS: deletes this from the the miditrack list
+    /**
+     * Deletes the track from the timeline and restarts playback if necessary.
+     */
     private void delete() {
         Timeline tl = timelineController.getTimeline();
 
@@ -89,7 +96,9 @@ public class LabelPopupMenu extends JPopupMenu implements ActionListener {
         }
     }
 
-    // EFFECTS: listens for actions on the popup menu items and runs methods accordingly
+    /**
+     * Routes popup menu actions to the appropriate handlers.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();

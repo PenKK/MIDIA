@@ -11,6 +11,9 @@ import javax.swing.JScrollPane;
 import ui.common.BlankScrollPane;
 import ui.windows.timeline.midi.TrackLabelPanel;
 
+/**
+ * Fixed-width scroll pane that renders piano key names and octave guide lines.
+ */
 public class PianoRollNoteDisplay extends BlankScrollPane {
 
     public static final int KEY_HEIGHT = 20;
@@ -21,6 +24,9 @@ public class PianoRollNoteDisplay extends BlankScrollPane {
             "F#", "G", "G#", "A", "A#", "B"
     };
 
+    /**
+     * Constructs the piano key display panel with a fixed width and custom renderer.
+     */
     public PianoRollNoteDisplay() {
         super();
         JPanel keysRenderPanel = keysRenderPanel();
@@ -37,6 +43,9 @@ public class PianoRollNoteDisplay extends BlankScrollPane {
         setBorder(null);
     }
 
+    /**
+     * Creates the inner panel responsible for painting keys and octave guide lines.
+     */
     private JPanel keysRenderPanel() {
         return new JPanel() {
             
@@ -48,6 +57,9 @@ public class PianoRollNoteDisplay extends BlankScrollPane {
         };
     }
 
+    /**
+     * Renders black/white keys and octave markers with note names.
+     */
     private void addKeys(Graphics g) {
         for (int i = 0; i <= 127; i++) {
             g.setColor(Color.BLACK);

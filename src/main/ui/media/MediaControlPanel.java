@@ -26,7 +26,10 @@ import javax.swing.event.MouseInputAdapter;
 
 import model.TimelineController;
 
-// Panel containing UI elements related to playback
+/**
+ * Panel containing transport controls and timeline scaling UI.
+ * Provides play/pause, horizontal scale adjustment, BPM display and live time readout.
+ */
 public class MediaControlPanel extends JPanel implements ActionListener, ChangeListener, PropertyChangeListener {
 
     public static final double MAX_HORIZONTAL_SCALE = 5;
@@ -45,7 +48,11 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     private JSlider scaleSlider;
     private JLabel bpmDisplay;
 
-    // EFFECTS: creates a MediaControlPanel with timers and initializes image icons and components
+    /**
+     * Constructs the media control panel, initializes icons and components, and subscribes to timeline updates.
+     *
+     * @param timelineController the controller used to interact with playback and timeline state
+     */
     public MediaControlPanel(TimelineController timelineController) {
         this.timelineController = timelineController;
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -90,6 +97,9 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         rightAlignPanel.add(timeLabel);
     }
 
+    /**
+     * Initializes the BPM label with current tempo and attaches drag-to-adjust behavior.
+     */
     private void createBpmLabel() {
         float bpm = timelineController.getTimeline().getPlayer().getBPM();
         ImageIcon quaverIcon = getImageIcon("/resources/images/quaver.png");
@@ -111,7 +121,9 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         timeLabel.putClientProperty("FlatLaf.style", "font: bold 14; background:rgb(77, 77, 77); arc: 6;");
     }
 
-    // EFFECTS: toggles playback
+    /**
+     * Toggles timeline playback and updates the play/pause icon.
+     */
     public void togglePlay() {
         if (timelineController.isPlaying()) {
             timelineController.pauseTimeline();
@@ -123,15 +135,21 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         playButton.setIcon(pauseImage);
     }
 
-    // MODIFIES: this
-    // EFFECTS: sets the render scale sliders value to that of the timeline render scale
+    /**
+     * Synchronizes the scale slider value with the timeline's current horizontal scale.
+     */
     private void updateScaleSliderValue() {
         int value = (int) (100 * timelineController.getTimeline().getHorizontalScaleFactor()
                 / MAX_HORIZONTAL_SCALE);
         scaleSlider.setValue(value);
     }
 
-    // EFFECTS: returns the ImageIcon representation of the image at path
+    /**
+     * Loads and scales an icon image from the classpath.
+     *
+     * @param path the resource path to the image
+     * @return the loaded ImageIcon, or null if it could not be loaded
+     */
     private ImageIcon getImageIcon(String path) {
         try {
             return new ImageIcon(
@@ -143,8 +161,9 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         }
     }
 
-    // MODIFIES: timeline singleton
-    // EFFECTS: updates render scale according to slider
+    /**
+     * Applies the scale slider value to the timeline's horizontal scale (clamped to a safe range).
+     */
     private void updateScale() {
         double factor = (double) scaleSlider.getValue() / 100;
 
@@ -152,15 +171,17 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         timelineController.getTimeline().setHorizontalScaleFactor(scale);
     }
 
-    // MODIFIES: this
-    // EFFECTS: handles behavior for when song ends: changes play icon, stops tickUpdateTimer, brings position to 0
+    /**
+     * Handles end-of-playback UI: resets the play icon and stops the periodic updater.
+     */
     private void handleEnd() {
         playButton.setIcon(playImage);
         timelineController.getTimeline().getPlayer().getPlaybackUpdaterTimer().stop();
     }
 
-    // MODIFIES: this
-    // EFFECTS: updates the UI time display using the timeline player
+    /**
+     * Updates the on-screen time display to reflect the current playback position.
+     */
     private void updateTimeDisplay() {
         double ms = timelineController.getTimeline().getPlayer().getPositionMs();
         double sec = ms / 1000;
@@ -171,14 +192,17 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         timeLabel.setText(display);
     }
 
-    // MODIFIES: this
-    // EFFECTS: resets icon and other media related states such as playback
+    /**
+     * Resets transport UI elements to reflect a stopped state.
+     */
     private void reset() {
         handleEnd();
         updateTimeDisplay();
     }
 
-    // EFFECTS: listens for timer and button actions and runs methods accordingly
+    /**
+     * Handles UI actions (e.g., play/pause button).
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -187,6 +211,9 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         }
     }
 
+    /**
+     * Applies changes from controls such as the scale slider.
+     */
     @Override
     public void stateChanged(ChangeEvent e) {
         Object source = e.getSource();
@@ -204,6 +231,9 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         updateBpmValue();
     }
 
+    /**
+     * Reacts to timeline property changes by updating transport UI elements.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();

@@ -10,6 +10,9 @@ import model.TimelineController;
 import model.editing.DawClipboard;
 import ui.windows.timeline.midi.TrackRenderPanel;
 
+/**
+ * Context menu for actions in empty areas of a track lane (e.g., paste).
+ */
 public class TrackGapPopupMenu extends JPopupMenu implements ActionListener {
 
     private final TrackRenderPanel trackRenderPanel;
@@ -18,6 +21,9 @@ public class TrackGapPopupMenu extends JPopupMenu implements ActionListener {
     private final JMenuItem pasteMenuItem;
     private final long tick;
 
+    /**
+     * Creates a popup menu for track gaps and determines the timeline tick under the cursor.
+     */
     public TrackGapPopupMenu(TrackRenderPanel trackRenderPanel, TimelineController timelineController, 
                              DawClipboard dawClipboard, int mouseXPosition) {
         this.trackRenderPanel = trackRenderPanel;
@@ -31,6 +37,9 @@ public class TrackGapPopupMenu extends JPopupMenu implements ActionListener {
         this.add(pasteMenuItem);
     }
 
+    /**
+     * Pastes copied items into the track at the nearest lower division.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(pasteMenuItem)) {

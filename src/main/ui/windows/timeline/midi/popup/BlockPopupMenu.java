@@ -10,6 +10,9 @@ import javax.swing.JPopupMenu;
 import model.Block;
 import model.editing.DawClipboard;
 
+/**
+ * Context menu for actions on a specific block (e.g., copy).
+ */
 public class BlockPopupMenu extends JPopupMenu implements ActionListener {
 
     private final Block block;
@@ -17,6 +20,9 @@ public class BlockPopupMenu extends JPopupMenu implements ActionListener {
 
     private final JMenuItem copyMenuItem;
 
+    /**
+     * Creates the block context menu and wires its actions.
+     */
     public BlockPopupMenu(Block block, DawClipboard dawClipboard) {
         this.block = block;
         this.dawClipboard = dawClipboard;
@@ -27,6 +33,9 @@ public class BlockPopupMenu extends JPopupMenu implements ActionListener {
         this.add(copyMenuItem);
     }
 
+    /**
+     * Handles context menu actions for the block.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(copyMenuItem)) {

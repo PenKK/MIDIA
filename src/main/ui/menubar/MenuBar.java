@@ -7,14 +7,20 @@ import ui.menubar.menus.FileMenu;
 import ui.menubar.menus.TrackMenu;
 import ui.menubar.menus.ViewMenu;
 
-// The Menu bar at the top of the UI, holds many dropdown Menu's
+/**
+ * The application menu bar containing File, Track, and View menus.
+ */
 public class MenuBar extends JMenuBar {
 
     private FileMenu fileMenu;
     private TrackMenu trackMenu;
     private ViewMenu viewMenu;
 
-    // EFFECTS: Initializes all menus and adds them to the menu bar
+    /**
+     * Constructs the menu bar and initializes its menus.
+     *
+     * @param timelineController the controller used to wire menu actions
+     */
     public MenuBar(TimelineController timelineController) {
         fileMenu = new FileMenu(timelineController);
         trackMenu = new TrackMenu(timelineController);

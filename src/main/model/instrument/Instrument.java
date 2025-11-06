@@ -4,7 +4,9 @@ import org.json.JSONObject;
 
 import persistance.Writable;
 
-// An instrument with a name and program number
+/**
+ * Represents a musical instrument with a name and program number.
+ */
 public interface Instrument extends Writable {
 
     int getProgramNumber();

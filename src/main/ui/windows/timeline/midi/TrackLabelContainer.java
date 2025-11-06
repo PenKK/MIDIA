@@ -8,6 +8,9 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * Vertical list of track label panels, kept in sync with the timeline's tracks.
+ */
 public class TrackLabelContainer extends JPanel implements PropertyChangeListener {
 
     private final TimelineController timelineController;
@@ -22,6 +25,9 @@ public class TrackLabelContainer extends JPanel implements PropertyChangeListene
         setMaximumSize(new Dimension(TrackLabelPanel.LABEL_BOX_WIDTH,Integer.MAX_VALUE));
     }
 
+    /**
+     * Rebuilds the list of labels to match the current tracks.
+     */
     private void updateTrackLabelPanels() {
         removeAll();
         for (MidiTrack track : timelineController.getTimeline().getMidiTracks()) {
@@ -32,6 +38,9 @@ public class TrackLabelContainer extends JPanel implements PropertyChangeListene
         repaint();
     }
 
+    /**
+     * Updates the label list when tracks or the timeline change.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();

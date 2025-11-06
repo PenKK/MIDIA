@@ -1,7 +1,10 @@
 package model.instrument;
 
-// Constants for MIDI instrumental instruments with corresponding channel program numbers
-// Taken from https://en.wikipedia.org/wiki/General_MIDI
+/**
+ * Constants for MIDI tonal instruments with corresponding program numbers.
+ * <p>
+ * Taken from <a href="https://en.wikipedia.org/wiki/General_MIDI">...</a>
+ */
 public enum TonalInstrument implements Instrument {
     // Piano
     ACOUSTIC_GRAND_PIANO(0, "Acoustic Grand Piano"),
@@ -166,7 +169,12 @@ public enum TonalInstrument implements Instrument {
     private final int programNumber;
     private final String name;
 
-     // EFFECTS: creates an instrument enum with a programNumber and name
+    /**
+     * Creates an instrument enum with a program number and name.
+     *
+     * @param programNumber the MIDI program number
+     * @param name          the display name
+     */
     TonalInstrument(int programNumber, String name) {
         this.programNumber = programNumber;
         this.name = name;

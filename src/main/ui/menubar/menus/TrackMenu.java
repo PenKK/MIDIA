@@ -7,7 +7,9 @@ import ui.menubar.dialog.BlockInputDialog;
 import ui.menubar.dialog.NoteInputDialog;
 import ui.menubar.dialog.TrackInputDialog;
 
-// The track menu option in the menu bar
+/**
+ * Track menu providing commands to create tracks, blocks, and notes.
+ */
 public class TrackMenu extends Menu {
 
     private final MenuItem newTrack;
@@ -18,7 +20,11 @@ public class TrackMenu extends Menu {
     private final BlockInputDialog blockInputDialog;
     private final NoteInputDialog noteInputDialog;
 
-    // EFFECTS: creates a track menu and initializes menu items
+    /**
+     * Constructs the Track menu and initializes dialogs and menu items.
+     *
+     * @param timelineController the controller used to carry out menu actions
+     */
     public TrackMenu(TimelineController timelineController) {
         super("Track", timelineController);
 
@@ -31,22 +37,30 @@ public class TrackMenu extends Menu {
         noteInputDialog = new NoteInputDialog(this, timelineController);
     }
 
-    // EFFECTS: Prompts user to create a new track
+    /**
+     * Opens a dialog to create a new track.
+     */
     private void createTrack() {
         trackInputDialog.display();
     }
 
-    // EFFECTS: Prompts user to create a new block
+    /**
+     * Opens a dialog to add a block to a selected track.
+     */
     private void addBlock() {
         blockInputDialog.display();
     }
 
-    // EFFECTS: Prompts user to create a new note
+    /**
+     * Opens a dialog to add a note to a selected block.
+     */
     private void addNote() {
         noteInputDialog.display();
     }
 
-    // EFFECTS: listens for button actions on menu items and runs methods accordingly
+    /**
+     * Routes menu actions to the appropriate dialog.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();

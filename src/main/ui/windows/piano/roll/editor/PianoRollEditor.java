@@ -8,6 +8,10 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * The main editing surface for the piano roll, responsible for drawing the grid and notes,
+ * and handling simple keyboard controls (e.g., toggle loop).
+ */
 public class PianoRollEditor extends JPanel implements PropertyChangeListener {
 
     private static final Color BEAT_LINE_COLOR = Color.decode("#303234");
@@ -18,6 +22,9 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
     private final BlockPlayer blockPlayer;
     private final TimelineController timelineController;
 
+    /**
+     * Constructs the piano roll editor and wires mouse and keyboard interactions.
+     */
     PianoRollEditor(BlockPlayer blockPlayer, TimelineController timelineController) {
         this.blockPlayer = blockPlayer;
         this.timelineController = timelineController;
@@ -34,6 +41,9 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
         blockPlayer.addPropertyChangeListener(this);
     }
 
+    /**
+     * Binds keyboard shortcuts (e.g., Space to toggle loop).
+     */
     private void assignControls() {
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         inputMap.put(KeyStroke.getKeyStroke("SPACE"), "toggleLoop");
@@ -46,6 +56,9 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
         });
     }
 
+    /**
+     * Paints the piano roll background, grid lines, and notes.
+     */
     @Override
     public void paint(Graphics g) {
         super.paint(g);
@@ -60,6 +73,9 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
         return timelineController.getTimeline().scaleTickToPixel(blockPlayer.getBlock().getDurationTicks());
     }
 
+    /**
+     * Draws horizontal (pitches) and vertical (time) grid lines for the editor.
+     */
     @SuppressWarnings("methodlength")
     private void drawGridLines(Graphics g) {
         Timeline timeline = timelineController.getTimeline();
@@ -100,6 +116,9 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
         }
     }
 
+    /**
+     * Draws the notes contained in the current block onto the editor surface.
+     */
     private void drawBlockNotes(Graphics g) {
         Timeline timeline = timelineController.getTimeline();
         Block block = blockPlayer.getBlock();
@@ -114,6 +133,9 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
         });
     }
 
+    /**
+     * Repaints the editor when notes are created or removed.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String property =  evt.getPropertyName();

@@ -15,7 +15,9 @@ import model.MidiTrack;
 import model.Player;
 import model.TimelineController;
 
-// A JDialog to get input for creating a new block in a specified track
+/**
+ * Dialog for creating a new block on a selected track.
+ */
 public class BlockInputDialog extends InputDialog {
 
     private JComboBox<MidiTrack> midiTracksComboBox;
@@ -23,13 +25,16 @@ public class BlockInputDialog extends InputDialog {
     private JSpinner durationBeatsSpinner;
     private JButton create;
 
-    // EFFECTS: Creates a JDialog that prompts user to select a track and start beat for a new block
+    /**
+     * Creates a dialog prompting the user to select a track and beat range for a new block.
+     */
     public BlockInputDialog(Component invoker, TimelineController timelineController) {
         super("Add Block", invoker, new Dimension(300, 200), timelineController);
     }
 
-    // MODIFIES: this
-    // EFFECTS: initializes the midiTracksComboBox, spinner, and create button
+    /**
+     * Initializes UI components for track selection and timing inputs.
+     */
     @Override
     protected void initFields() {
         MidiTrack[] tracks = timelineController.getTimeline().getMidiTracksArray();
@@ -61,7 +66,9 @@ public class BlockInputDialog extends InputDialog {
         }
     }
 
-    // EFFECTS: Listens for button actions and runs methods accordingly
+    /**
+     * Handles the Create button action to add a new block.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(create)) {
@@ -69,8 +76,9 @@ public class BlockInputDialog extends InputDialog {
         }
     }
 
-    // MODIFIES: this (midiTrack from timeline singleton)
-    // EFFECTS: creates a new block in the selected midiTrack
+    /**
+     * Creates a new block in the selected track using the specified beats and duration.
+     */
     private void createBlock() {
         MidiTrack midiTrack = (MidiTrack) midiTracksComboBox.getSelectedItem();
         Player p = timelineController.getTimeline().getPlayer();
