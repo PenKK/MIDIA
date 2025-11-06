@@ -65,16 +65,16 @@ public class BlockPlayer extends Player implements MetaEventListener {
         Track track = sequence.createTrack();
 
         ShortMessage programChangeMessage = new ShortMessage(ShortMessage.PROGRAM_CHANGE,
-                parentMidiTrack.getChannel(), parentMidiTrack.getInstrument().getProgramNumber(),0);
+                parentMidiTrack.getChannel(), parentMidiTrack.getInstrument().getProgramNumber(), 0);
         ShortMessage volMessage = new ShortMessage(ShortMessage.CONTROL_CHANGE, parentMidiTrack.getChannel(),
                 7, volume);
 
         track.add(new MidiEvent(programChangeMessage, 0));
         track.add(new MidiEvent(volMessage, 0));
-        
+
         for (Note note : block.getNotes()) {
-            MidiTrack.applyNoteToTrack(track, note, parentMidiTrack.isPercussive(), 
-                                       parentMidiTrack.getInstrument(), parentMidiTrack.getChannel());
+            MidiTrack.applyNoteToTrack(track, note, parentMidiTrack.isPercussive(),
+                    parentMidiTrack.getInstrument(), parentMidiTrack.getChannel());
         }
 
         modifySystemReset(track);
@@ -82,7 +82,7 @@ public class BlockPlayer extends Player implements MetaEventListener {
         sequencer.setSequence(sequence);
 
         Event e = new Event(String.format("Playback sequence was updated in Block [Piano Roll] with instrument %s",
-                                          parentMidiTrack.getInstrument()));
+                parentMidiTrack.getInstrument()));
         EventLog.getInstance().logEvent(e);
     }
 
@@ -111,7 +111,7 @@ public class BlockPlayer extends Player implements MetaEventListener {
             ShortMessage onMessage = new ShortMessage(ShortMessage.NOTE_ON, parentMidiTrack.getChannel(), data1, 127);
             ShortMessage offMessage = new ShortMessage(ShortMessage.NOTE_OFF, parentMidiTrack.getChannel(), data1, 127);
             ShortMessage programMessage = new ShortMessage(ShortMessage.PROGRAM_CHANGE, parentMidiTrack.getChannel(),
-                    parentMidiTrack.getInstrument().getProgramNumber(),0);
+                    parentMidiTrack.getInstrument().getProgramNumber(), 0);
 
             receiver.send(programMessage, 0);
             receiver.send(onMessage, 0);
