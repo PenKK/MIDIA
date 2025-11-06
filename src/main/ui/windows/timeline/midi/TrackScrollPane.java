@@ -14,7 +14,9 @@ import ui.common.LineContainerPanel;
 import ui.common.RulerDimensionHelper;
 import ui.windows.timeline.TimelineLineContainerPanel;
 
-// JPanel that holds the interactable view of the timeline, rendered using graphics
+/**
+ * Scroll pane for the interactive timeline track area, including track renders and the playhead overlay.
+ */
 public class TrackScrollPane extends BlankScrollPane
         implements PropertyChangeListener, RulerDimensionHelper.ContainerWidthProvider {
 
@@ -22,7 +24,9 @@ public class TrackScrollPane extends BlankScrollPane
     private final LineContainerPanel lineContainer;
     private final DawClipboard dawClipboard;
 
-    // EFFECTS: initializes the timeline 
+    /**
+     * Constructs the track area, initializes scroll policies, and populates render panels.
+     */
     public TrackScrollPane(TimelineController timelineController, DawClipboard dawClipboard) {
         this.timelineController = timelineController;
         this.dawClipboard = dawClipboard;
@@ -38,7 +42,9 @@ public class TrackScrollPane extends BlankScrollPane
         updateTrackRenderPanels();
     }
 
-    // EFFECTS: clears all MidiTrackPanels and then populates according to current Timeline
+    /**
+     * Rebuilds the set of track render panels to match the current timeline content.
+     */
     private void updateTrackRenderPanels() {
         lineContainer.removeAll();
         for (MidiTrack track : timelineController.getTimeline().getMidiTracks()) {
@@ -49,8 +55,9 @@ public class TrackScrollPane extends BlankScrollPane
         repaint();
     }
 
-    // MODIFIES: this
-    // EFFECTS: listens for proper change events and executes methods accordingly
+    /**
+     * Listens for timeline changes to adjust rendered tracks and container width.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
@@ -74,13 +81,18 @@ public class TrackScrollPane extends BlankScrollPane
 
     }
 
+    /**
+     * Notifies listeners when the content width changes, enabling ruler resizes.
+     */
     public void updateWidth() {
         lineContainer.revalidate();
         int newWidth = lineContainer.getPreferredSize().width;
         timelineController.getPropertyChangeSupport().firePropertyChange("TrackScrollPaneWidth", null, newWidth);
     }
 
-    // EFFECTS: returns width of the scrollPanes container
+    /**
+     * Returns the preferred width of the track container (for ruler sizing).
+     */
     @Override
     public int getContainerWidth() {
         return lineContainer.getPreferredSize().width;

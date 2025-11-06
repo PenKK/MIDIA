@@ -13,7 +13,9 @@ import ui.windows.piano.roll.ruler.PianoRollRulerScrollPane;
 import ui.windows.timeline.TimelineViewPanel;
 import ui.windows.timeline.midi.TrackLabelPanel;
 
-// JPanel tab that lets the user create notes via graphical interface
+/**
+ * Piano roll container panel combining the ruler, note display, and editing grid.
+ */
 public class PianoRollViewPanel extends JPanel {
 
     private final JPanel topHorizontalContainer;
@@ -23,6 +25,9 @@ public class PianoRollViewPanel extends JPanel {
     private final PianoRollNoteDisplay pianoRollNoteDisplay;
     private final PianoRollEditorPane pianoRollNoteGrid;
 
+    /**
+     * Constructs the piano roll view and initializes its subcomponents.
+     */
     public PianoRollViewPanel(TimelineController timelineController, BlockPlayer blockPlayer) {
         bottomHorizontalContainer = new JPanel();
         topHorizontalContainer = new JPanel();
@@ -43,6 +48,9 @@ public class PianoRollViewPanel extends JPanel {
         this.add(bottomHorizontalContainer, BorderLayout.CENTER);
     }
 
+    /**
+     * Resizes the piano roll ruler to match the editor grid width.
+     */
     private void updateRulerDimensions() {
         RulerDimensionHelper.updateRulerDimensions(pianoRollNoteGrid, pianoRollRulerScrollPane);
     }

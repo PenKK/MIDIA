@@ -24,26 +24,36 @@ import model.instrument.Instrument;
 import model.instrument.TonalInstrument;
 import model.instrument.PercussiveInstrument;
 
-// Represents a reader that reads Timeline from JSON data stored in file
-// Code adapted from src/main/persistance/JsonReader
-//     at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-public class JsonReader {
-    private final String sourcePath;
+/**
+ * Reads a Timeline from JSON data stored in a file.
+ * <p>
+ * Code adapted from src/main/persistance/JsonReader
+ * at <a href="https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo">...</a>
+ */
+public record JsonReader(String sourcePath) {
+    // EFFECTS: constructs reader to read from a source file
 
-    // EFFECTS: constructs reader to read from source file
-    public JsonReader(String source) {
-        this.sourcePath = source;
-    }
-
-    // EFFECTS: reads timeline from json file and returns it;
-    // throws IOException if an error occurs reading data from file
+    /**
+     * Reads a timeline from the JSON file.
+     *
+     * @return the parsed Timeline
+     * @throws IOException                if an error occurs reading data from the file
+     * @throws MidiUnavailableException   if MIDI resources are unavailable
+     * @throws InvalidMidiDataException   if invalid MIDI data is encountered
+     */
     public Timeline read() throws IOException, MidiUnavailableException, InvalidMidiDataException {
         String jsonData = readFile(sourcePath);
         JSONObject jsonObject = new JSONObject(jsonData);
         return parseTimeline(jsonObject);
     }
 
-    // EFFECTS: reads source file as string and returns it
+    /**
+     * Reads the given file path into a string.
+     *
+     * @param source the file path
+     * @return the file contents as a string
+     * @throws IOException if reading fails
+     */
     private String readFile(String source) throws IOException {
         StringBuilder contentBuilder = new StringBuilder();
 
@@ -54,7 +64,12 @@ public class JsonReader {
         return contentBuilder.toString();
     }
 
-    // EFFECTS: parses timeline from JSON object and returns it
+    /**
+     * Parses a Timeline from a JSON object.
+     *
+     * @param jsonObject the JSON object representing the timeline
+     * @return the parsed Timeline
+     */
     private Timeline parseTimeline(JSONObject jsonObject) {
         String projectName = jsonObject.getString("projectName");
         Timeline timeline = new Timeline(projectName, new PropertyChangeSupport(projectName));
@@ -92,7 +107,12 @@ public class JsonReader {
         return p;
     }
 
-    // EFFECTS: returns the JSONArray as an ArrayList
+    /**
+     * Converts a JSONArray of integers into an ArrayList.
+     *
+     * @param jsonArray the JSON array
+     * @return a list of integers
+     */
     private ArrayList<Integer> parseIntegerArrayList(JSONArray jsonArray) {
         ArrayList<Integer> list = new ArrayList<>();
 
@@ -103,8 +123,12 @@ public class JsonReader {
         return list;
     }
 
-    // MODIFIES: timeline
-    // EFFECTS: parses MidiTracks and adds them to timeline
+    /**
+     * Parses MidiTracks from JSON and adds them to the timeline.
+     *
+     * @param timeline       the timeline to receive the tracks
+     * @param midiTracksJson the JSON array of tracks
+     */
     private void addMidiTracks(Timeline timeline, JSONArray midiTracksJson) {
         for (Object midiTrackJson : midiTracksJson) {
             JSONObject midiTrackData = (JSONObject) midiTrackJson;
@@ -134,8 +158,12 @@ public class JsonReader {
         }
     }
 
-    // MOFIES: midiTrack
-    // EFFECTS: parses blocks and adds them to midiTrack
+    /**
+     * Parses blocks from JSON and adds them to the given MidiTrack.
+     *
+     * @param midiTrack       the track to receive parsed blocks
+     * @param blocksJsonArray the JSON array of blocks
+     */
     private void addBlocks(MidiTrack midiTrack, JSONArray blocksJsonArray) {
         for (Object blockJson : blocksJsonArray) {
             JSONObject blockData = (JSONObject) blockJson;
@@ -150,8 +178,12 @@ public class JsonReader {
         }
     }
 
-    // MODIFIES: block
-    // EFFECTS: parses notes and adds them to block
+    /**
+     * Parses notes from JSON and adds them to the given block.
+     *
+     * @param block          the block to receive parsed notes
+     * @param notesJsonArray the JSON array of notes
+     */
     private void addNotes(Block block, JSONArray notesJsonArray) {
         for (Object noteJson : notesJsonArray) {
             JSONObject noteData = (JSONObject) noteJson;

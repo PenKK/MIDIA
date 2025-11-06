@@ -12,25 +12,39 @@ import model.event.Event;
 import model.event.EventLog;
 import persistance.Writable;
 
-// A block exists in a track and is a group of notes.
-// The block can be moved on the timeline by changing the startTick.
+/**
+ * A block is a group of notes that exists within a track.
+ * The block can be moved on the timeline by changing its start tick.
+ */
 public class Block implements Writable, Copyable, Pastable {
 
     private final ArrayList<Note> notes;
     private long startTick;
     private long durationTicks;
 
-    // REQUIRES: startTick >= 0
-    // EFFECTS: Creates a block with no notes inside of it with a startTick
+    /**
+     * Constructs an empty block.
+     * <p>
+     * Preconditions: startTick >= 0
+     *
+     * @param startTick     the start tick of the block (>= 0)
+     * @param durationTicks the duration of the block in ticks
+     */
     public Block(long startTick, long durationTicks) {
         this.notes = new ArrayList<>();
         this.startTick = startTick;
         this.durationTicks = durationTicks;
     }
     
-    // MODIFIES: this
-    // EFFECTS: Adds the note to the list of notes in this block and adjusts lengthTick if neccessary, 
-    //          returns created notes index
+    /**
+     * Adds a note to this block.
+     * <p>
+     * If the note extends beyond this block's duration, the note is rejected and -1 is returned.
+     * Logs an event describing the operation.
+     *
+     * @param note the note to add
+     * @return the index of the added note, or -1 if the note is out of bounds
+     */
     public int addNote(Note note) {
         if (note.getStartTick() + note.getDurationTicks() > durationTicks) {
             Event e = new Event(String.format("Unable to add note (out of bounds): %s to Block: %s", note, info()));
@@ -45,9 +59,14 @@ public class Block implements Writable, Copyable, Pastable {
         return notes.size() - 1;
     }
 
-    // REQUIRES: 0 <= index <= notes.size() - 1
-    // MODIFIES: this
-    // EFFECTS: Removes the specified index note from notes and returns it
+    /**
+     * Removes and returns the note at the given index.
+     * <p>
+     * Preconditions: 0 <= index <= notes.size() - 1
+     *
+     * @param index the index of the note to remove
+     * @return the removed note
+     */
     public Note removeNote(int index) {
         Note n = notes.remove(index);
 
@@ -57,9 +76,13 @@ public class Block implements Writable, Copyable, Pastable {
         return n;
     }
 
-    // REQUIRES: newStartTick >= 0
-    // MODIFIES: this
-    // EFFECTS: Changes the position of the block on the timeline
+    /**
+     * Sets the start tick of the block, changing its position on the timeline.
+     * <p>
+     * Preconditions: newStartTick >= 0
+     *
+     * @param newStartTick the new start tick (>= 0)
+     */
     public void setStartTick(long newStartTick) {
         startTick = newStartTick;
     }
@@ -68,7 +91,11 @@ public class Block implements Writable, Copyable, Pastable {
         this.durationTicks = durationTicks;
     }
 
-    // EFFECTS: Returns notes with timings adjusted relative to the timeline, rather than the block
+    /**
+     * Returns the notes with their start times adjusted relative to the timeline (not the block).
+     *
+     * @return a new list of notes adjusted to absolute timeline ticks
+     */
     public ArrayList<Note> getNotesTimeline() {
         ArrayList<Note> adjustedNotes = new ArrayList<>();
 
@@ -89,7 +116,11 @@ public class Block implements Writable, Copyable, Pastable {
         return startTick;
     }
 
-    // EFFECTS: Returns a clone of this block with its own unique memory address
+    /**
+     * Returns a deep copy of this block and its notes.
+     *
+     * @return a new Block instance containing clones of this block's notes
+     */
     @Override
     public Block clone() {
         Block cloneBlock = new Block(startTick, durationTicks);
@@ -99,7 +130,11 @@ public class Block implements Writable, Copyable, Pastable {
         return cloneBlock;
     }
 
-    // EFFECTS: returns a JSON object representation of the block
+    /**
+     * Returns a JSON object representation of this block.
+     *
+     * @return the JSON representation of this block
+     */
     @Override
     public JSONObject toJson() {
         JSONObject blockJson = new JSONObject();
@@ -111,7 +146,11 @@ public class Block implements Writable, Copyable, Pastable {
         return blockJson;
     }
 
-    // EFFECTS: returns a JSON Array representation of the notes in this block
+    /**
+     * Returns a JSON array representation of the notes in this block.
+     *
+     * @return a JSON array containing the notes
+     */
     private JSONArray notesToJson() {
         JSONArray notesJson = new JSONArray();
 
@@ -126,13 +165,21 @@ public class Block implements Writable, Copyable, Pastable {
         return durationTicks;
     }
 
-    // EFFECTS: returns a string with general information about the block
+    /**
+     * Returns a string containing general information about the block.
+     *
+     * @return formatted string with start tick, duration, and note count
+     */
     public String info() {
         return String.format("Start tick: %d, duration: %d, current note count: %d",
                              startTick, durationTicks, notes.size());
     }
 
-    // EFFECTS: returns a string with start tick and note count
+    /**
+     * Returns a concise string with start tick and note count.
+     *
+     * @return formatted summary string
+     */
     @Override
     public String toString() {
         return String.format("S: %d, N: %d", startTick, notes.size());

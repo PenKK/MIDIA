@@ -5,21 +5,29 @@ import java.awt.event.ActionEvent;
 import model.TimelineController;
 import ui.menubar.dialog.BeatConfigurationInputDialog;
 
-// A menubar with items that control how the timeline is scaled / viewed
+/**
+ * View menu for timeline-related display settings (e.g., beat configuration).
+ */
 public class ViewMenu extends Menu {
 
     private final MenuItem beatConfiguration;
     private final BeatConfigurationInputDialog beatConfigurationInputDialog;
 
-    // EFFECTS: creates a view menu with a title and MenuItems
+    /**
+     * Constructs the View menu and initializes its items.
+     *
+     * @param timelineController the controller used to handle menu actions
+     */
     public ViewMenu(TimelineController timelineController) {
         super("View", timelineController);
         this.timelineController = timelineController;
         beatConfiguration = new MenuItem("Beat configuration", this);
         beatConfigurationInputDialog = new BeatConfigurationInputDialog(this, timelineController);
     }
-    
-    // EFFECTS: listens for clicks on menu items and runs methods accordingly
+
+    /**
+     * Handles menu item clicks and opens corresponding dialogs.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(beatConfiguration)) {

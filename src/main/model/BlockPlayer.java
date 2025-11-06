@@ -8,6 +8,13 @@ import model.event.EventLog;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+/**
+ * Plays back a single Block in isolation (e.g., a piano roll preview).
+ * <p>
+ * Builds a temporary sequence for the given block, manages looping, and exposes
+ * property change notifications for UI synchronization (such as tick position updates).
+ * Uses the parent track's instrument, channel, and volume settings for accurate playback.
+ */
 public class BlockPlayer extends Player implements MetaEventListener {
 
     private final Block block;
@@ -16,6 +23,15 @@ public class BlockPlayer extends Player implements MetaEventListener {
     private int volume;
     private boolean loop;
 
+    /**
+     * Constructs a BlockPlayer for the given block using the parent track's configuration.
+     * <p>
+     * Registers as a MetaEventListener on the sequencer and initializes tempo.
+     *
+     * @param block            the block to preview/play
+     * @param parentMidiTrack  the parent track providing instrument, channel, and initial volume
+     * @param initialBpm       the initial tempo in BPM
+     */
     public BlockPlayer(Block block, MidiTrack parentMidiTrack, float initialBpm) {
         super();
         propertyChangeSupport = new PropertyChangeSupport(this);
@@ -29,6 +45,12 @@ public class BlockPlayer extends Player implements MetaEventListener {
         setBPM(initialBpm);
     }
 
+    /**
+     * Toggles looping playback for the current block.
+     * <p>
+     * When enabled, playback restarts automatically upon reaching the end of the block;
+     * when disabled, playback is paused.
+     */
     public void toggleLoop() {
         this.loop = !this.loop;
 
@@ -59,6 +81,15 @@ public class BlockPlayer extends Player implements MetaEventListener {
         return propertyChangeSupport;
     }
 
+    /**
+     * Rebuilds the playback sequence for this block.
+     * <p>
+     * Creates a single MIDI track, applies the parent track's program change and volume,
+     * converts each note in the block to NOTE_ON/NOTE_OFF events, adjusts the system reset,
+     * and sets the sequence on the sequencer.
+     *
+     * @throws InvalidMidiDataException if invalid MIDI data is encountered
+     */
     @Override
     public void updateSequence() throws InvalidMidiDataException {
         resetTracks();
@@ -86,6 +117,14 @@ public class BlockPlayer extends Player implements MetaEventListener {
         EventLog.getInstance().logEvent(e);
     }
 
+    /**
+     * Moves the system reset (end-of-track) event to the end of the block.
+     * <p>
+     * Ensures playback stops (or loops) exactly at the block's duration.
+     *
+     * @param track the MIDI track to adjust
+     * @throws RuntimeException if no system reset meta event is present
+     */
     private void modifySystemReset(Track track) {
         for (int i = track.size() - 1; i >= 0; i--) {
             MidiEvent event = track.get(i);
@@ -99,6 +138,13 @@ public class BlockPlayer extends Player implements MetaEventListener {
         throw new RuntimeException("No system reset found");
     }
 
+    /**
+     * Plays a short preview note using the parent track's channel and instrument.
+     * <p>
+     * For percussive tracks, the instrument program number is used instead of pitch.
+     *
+     * @param pitch the MIDI pitch to preview (ignored for percussive tracks)
+     */
     public void playNote(int pitch) {
         resetTracks();
         try {
@@ -124,6 +170,12 @@ public class BlockPlayer extends Player implements MetaEventListener {
         }
     }
 
+    /**
+     * Sets the tick position and notifies listeners via a property change event.
+     *
+     * @param newTickPosition the new tick position
+     * @return the previous tick position
+     */
     @Override
     public long setTickPosition(long newTickPosition) {
         long oldTickPosition = super.setTickPosition(newTickPosition);
@@ -157,6 +209,13 @@ public class BlockPlayer extends Player implements MetaEventListener {
         this.volume = volume;
     }
 
+    /**
+     * Handles end-of-track meta events to implement loop playback.
+     * <p>
+     * When looping is enabled and the end of the block is reached, resets the tick position and restarts playback.
+     *
+     * @param meta the meta event received from the sequencer
+     */
     @Override
     public void meta(MetaMessage meta) {
         if (meta.getType() == TimelineController.PLAYER_END_META_TYPE) {

@@ -13,6 +13,9 @@ import model.Timeline;
 import model.TimelineController;
 import ui.windows.timeline.midi.TrackLabelPanel;
 
+/**
+ * Base panel responsible for rendering the timeline ruler (measures, beats, divisions).
+ */
 public abstract class RulerRenderPanel extends JPanel {
 
     public static final int TICK_HEIGHT = (int) Math.round(RulerScrollPane.RULER_HEIGHT * 0.3);
@@ -39,8 +42,13 @@ public abstract class RulerRenderPanel extends JPanel {
         this.addMouseMotionListener(adapter);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Draws the ticks marks of measures, beats, and divisions, according to timeline instance
+    /**
+     * Draws tick marks for measures, beats, and beat divisions across the given width.
+     *
+     * @param g                  the graphics context
+     * @param timelineController the controller providing timing and scaling values
+     * @param width              the width in pixels to draw into
+     */
     @SuppressWarnings("methodlength")
     public static void drawAllTickMarks(Graphics g, TimelineController timelineController, int width) {
         Timeline timeline = timelineController.getTimeline();

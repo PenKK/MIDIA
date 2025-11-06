@@ -6,6 +6,13 @@ import javax.sound.midi.Track;
 import model.event.Event;
 import model.event.EventLog;
 
+/**
+ * Plays back the entire Timeline.
+ * <p>
+ * Converts each MidiTrack into a {@code javax.sound.midi.Track} for playback,
+ * manages updates to the underlying sequence, and propagates timeline-related
+ * property changes (e.g., BPM, ruler drag, tick position) for UI synchronization.
+ */
 public class TimelinePlayer extends Player {
     
     private final Timeline timeline;
@@ -14,10 +21,11 @@ public class TimelinePlayer extends Player {
         this.timeline = timeline;
     }
 
-    // MODIFIES: this
-    // EFFECTS: updates the sequence with the current midiTracks, converting each one 
-    //          to a Java Track. Throws InvalidMidiDataException if invalid midi data
-    //          is found when setting the sequence to the sequencer
+    /**
+     * Updates the playback sequence with the current MidiTracks, converting each to a Java Track.
+     *
+     * @throws InvalidMidiDataException if invalid MIDI data is encountered when setting the sequence
+     */
     @Override
     public void updateSequence() throws InvalidMidiDataException {
         resetTracks();
@@ -51,8 +59,12 @@ public class TimelinePlayer extends Player {
         EventLog.getInstance().logEvent(e);
     }
 
-    // MODIFIES: this
-    // EFFECTS: changes beatDivision and fires propertyChangeEvent
+    /**
+     * Sets the beat division and fires a property change event.
+     *
+     * @param newBeatDivision the new beat division
+     * @return the previous beat division
+     */
     @Override
     public int setBeatDivision(int newBeatDivision) {
         int oldBeatDivision = super.setBeatDivision(newBeatDivision);
@@ -60,8 +72,12 @@ public class TimelinePlayer extends Player {
         return oldBeatDivision;
     }
 
-    // MODIFIES: this
-    // EFFECTS: changes beatsPerMeasure and fires propertyChangeEvent
+    /**
+     * Sets the beats per measure and fires a property change event.
+     *
+     * @param newBeatsPerMeasure the new beats per measure
+     * @return the previous beats per measure value
+     */
     @Override
     public int setBeatsPerMeasure(int newBeatsPerMeasure) {
         int oldBeatsPerMeasure = super.setBeatsPerMeasure(newBeatsPerMeasure);
@@ -83,13 +99,21 @@ public class TimelinePlayer extends Player {
         return oldBpm;
     }
 
-    // EFFECTS: returns the calculation of the sequence length in beats
+    /**
+     * Returns the total sequence length in beats.
+     *
+     * @return length in beats
+     */
     @Override
     public double getLengthBeats() {
         return ticksToBeats(timeline.getLengthTicks());
     }
 
-    // EFFECTS: returns the calculation of the sequence length in milliseconds
+    /**
+     * Returns the total sequence length in milliseconds.
+     *
+     * @return length in milliseconds
+     */
     @Override
     public double getLengthMs() {
         return ticksToMs(timeline.getLengthTicks());

@@ -5,9 +5,12 @@ import org.json.JSONObject;
 import model.editing.Copyable;
 import persistance.Writable;
 
-// A high level MIDI note abstraction.
-// On its own, this Note is just pure information, which will be converted
-// to a MIDIEvent object and applied to a Track object by the MidiTrack class (by the timeline).
+/**
+ * A high-level MIDI note abstraction.
+ * <p>
+ * On its own, this Note is pure data, which will be converted to MIDI events and
+ * applied to a {@code javax.sound.midi.Track} by MidiTrack at playback time.
+ */
 public class Note implements Writable, Copyable {
 
     public static final int PERCUSSIVE_DEFAULT_PITCH = 120;
@@ -17,10 +20,20 @@ public class Note implements Writable, Copyable {
     private long startTick;
     private long durationTicks;
 
-    // REQUIRES: pitch and velocity are in range [0, 127].
-    //           durationTicks, startTick >= 0
-    // EFFECTS: Creates a note with pitch, velocity, startTick, and durationTicks.
-    //          Tick timings are kept relative to the block that they are in
+    /**
+     * Constructs a Note with the given attributes.
+     * <p>
+     * Preconditions:
+     * - pitch and velocity must be in the range [0, 127]
+     * - durationTicks >= 0 and startTick >= 0
+     * <p>
+     * Tick timings are kept relative to the block that they are in.
+     *
+     * @param pitch         the MIDI pitch (0-127); ignored for percussive tracks
+     * @param velocity      the MIDI velocity (0-127)
+     * @param startTick     the start tick relative to the containing block (>= 0)
+     * @param durationTicks the duration in ticks (>= 0)
+     */
     public Note(int pitch, int velocity, long startTick, long durationTicks) {
         this.pitch = pitch;
         this.velocity = velocity;
@@ -44,33 +57,57 @@ public class Note implements Writable, Copyable {
         return startTick;
     }
 
-    // REQUIRES: 0 <= newPitch <= 127
+    /**
+     * Sets the pitch.
+     *
+     * @param newPitch the MIDI pitch (0-127)
+     */
     public void setPitch(int newPitch) {
         pitch = newPitch;
     }
 
-    // REQUIRES: 0 <= newVelocity <= 127
+    /**
+     * Sets the velocity.
+     *
+     * @param newVelocity the MIDI velocity (0-127)
+     */
     public void setVelocity(int newVelocity) {
         velocity = newVelocity;
     }
 
-    // REQUIRES: newStartTick >= 0
+    /**
+     * Sets the start tick relative to the containing block.
+     *
+     * @param newStartTick the new start tick (>= 0)
+     */
     public void setStartTick(long newStartTick) {
         startTick = newStartTick;
     }
 
-    // REQUIRES: newDurationTicks>= 0
+    /**
+     * Sets the duration in ticks.
+     *
+     * @param newDurationTicks the new duration in ticks (>= 0)
+     */
     public void setDurationTicks(int newDurationTicks) {
         durationTicks = newDurationTicks;
     }
 
-    // EFFECTS: Creates a clone of the note at a new memory address and returns it.
+    /**
+     * Returns a copy of this note with the same attributes.
+     *
+     * @return a new Note instance equal to this one
+     */
     @Override
     public Note clone() {
         return new Note(getPitch(), getVelocity(), getStartTick(), getDurationTicks());
     }
 
-    // EFFECTS: returns a JSON object representation of the note
+    /**
+     * Returns a JSON object representation of this note.
+     *
+     * @return the JSON representation of this note
+     */
     @Override
     public JSONObject toJson() {
         JSONObject noteJson = new JSONObject();
@@ -83,7 +120,11 @@ public class Note implements Writable, Copyable {
         return noteJson;
     }
 
-    // EFFECTS: returns a more informative toString
+    /**
+     * Returns a human-readable description of this note.
+     *
+     * @return a string containing pitch, velocity, startTick, and durationTicks
+     */
     @Override 
     public String toString() {
         return String.format("pitch: %d, velocity: %d, startTick: %d, durationTicks: %d", 

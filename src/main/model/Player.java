@@ -3,6 +3,7 @@ package model;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
@@ -57,38 +58,35 @@ public abstract class Player implements Writable, ActionListener {
         } catch (InvalidMidiDataException e) {
             throw new RuntimeException("Invalid MIDI data found during player initialization, PPQ may be invalid", e);
         }
-
-        availableChannels = new ArrayList<>() {
-            {
-                for (int i = 0; i <= 15; i++) {
-                    if (i != 9) {
-                        add(i); // add numbers 0-15 excluding 9, 9 is for percussion
-                    }
-                }
-            }
-        };
+        // Omit 9 from available channels; 9 is reserved for percussion
+        availableChannels = new ArrayList<>(List.of(0,1,2,3,4,5,6,7,8,10,11,12,13,14,15));
     }
 
     public ArrayList<Integer> getAvailableChannels() {
         return availableChannels;
     }
 
-    // MODIFIES: this
-    // EFFECTS: updates the sequence with the correct notes
+    /**
+     * Updates the sequence with the current notes/tracks for playback.
+     *
+     * @throws InvalidMidiDataException if invalid MIDI data is encountered during update
+     */
     public abstract void updateSequence() throws InvalidMidiDataException;
 
-    // MODIFIES: this
-    // EFFECTS: deletes all Tracks from the sequence, essentially resetting playback
+    /**
+     * Deletes all tracks from the sequence, effectively resetting playback.
+     */
     public void resetTracks() {
         for (Track track : sequence.getTracks()) {
             sequence.deleteTrack(track);
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: Begins playback at the current tick position and with tempo according to 
-    //          beatsPerMinute. Can throw InvalidMidiDataException if invalid
-    //          midi data is found during the sequence update (handled by UI)
+    /**
+     * Begins playback at the current tick position with the current tempo.
+     *
+     * @throws InvalidMidiDataException if invalid MIDI data is found during sequence update
+     */
     public void play() throws InvalidMidiDataException {
         updateSequence();
         sequencer.setTickPosition(tickPosition);
@@ -101,45 +99,61 @@ public abstract class Player implements Writable, ActionListener {
         EventLog.getInstance().logEvent(e);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Pauses playback
+    /**
+     * Pauses playback and synchronizes internal tick position with the sequencer.
+     */
     public void pause() {
         sequencer.stop();
         playbackUpdateTimer.stop();
         syncToSequencerTickPosition();
     }
 
-    // MODIFIES: this
-    // EFFECTS: closes sequencer and releases system resources
+    /**
+     * Closes the sequencer and releases system resources.
+     */
     public void close() {
         sequencer.close();
     }
 
-    // MODIFIES: this
-    // EFFECTS: updates the position tick according to the current playback tick
+    /**
+     * Updates the internal tick position from the sequencer's current playback tick.
+     */
     public void syncToSequencerTickPosition() {
         setTickPosition(sequencer.getTickPosition());
     }
 
-    // MODIFIES: this
-    // EFFECTS: changes beatDivision
+    /**
+     * Sets the beat division.
+     *
+     * @param newBeatDivision the new beat division
+     * @return the previous beat division
+     */
     public int setBeatDivision(int newBeatDivision) {
         int oldBeatDivision = this.beatDivision;
         this.beatDivision = newBeatDivision;
         return oldBeatDivision;
     }
 
-    // MODIFIES: this
-    // EFFECTS: changes beatsPerMeasure and fires propertyChangeEvent
+    /**
+     * Sets the beats per measure.
+     *
+     * @param newBeatsPerMeasure the new beats per measure
+     * @return the previous beats per measure
+     */
     public int setBeatsPerMeasure(int newBeatsPerMeasure) {
         int oldBeatsPerMeasure = this.beatsPerMeasure;
         this.beatsPerMeasure = newBeatsPerMeasure;
         return oldBeatsPerMeasure;
     }
 
-    // REQUIRES: newTickPosition >= 0
-    // MODIFIES: this
-    // EFFECTS: Changes timeline position to start playback given ticks
+    /**
+     * Sets the timeline position (in ticks).
+     * <p>
+     * Preconditions: {@code newTickPosition >= 0}
+     *
+     * @param newTickPosition the new tick position
+     * @return the previous tick position
+     */
     public long setTickPosition(long newTickPosition) {
         long oldTickPosition = tickPosition;
         this.tickPosition = newTickPosition;
@@ -156,9 +170,12 @@ public abstract class Player implements Writable, ActionListener {
         return (rawTick / divisionTickInterval) * divisionTickInterval;
     }
 
-    // MODIFIES: this
-    // EFFECTS: replaces current available channels with new ones, use wisely
-    //          channels may be out of sync with tracks 
+    /**
+     * Replaces the current list of available channels.
+     * Use with caution; channels may become out of sync with tracks.
+     *
+     * @param newChannels the new available channels
+     */
     public void setAvailableChannels(ArrayList<Integer> newChannels) {
         availableChannels = newChannels;
     }
@@ -167,22 +184,36 @@ public abstract class Player implements Writable, ActionListener {
         return sequencer.isRunning();
     }
 
-    // REQUIRES: newPositionMs >= 0
-    // MODIFIES: this
-    // EFFECTS: Changes timeline position to start playback at the given milliseconds
+    /**
+     * Sets the timeline position by milliseconds.
+     * <p>
+     * Preconditions: {@code newPositionMs >= 0}
+     *
+     * @param newPositionMs the position in milliseconds
+     */
     public void setPositionMs(double newPositionMs) {
         setTickPosition(msToTicks(newPositionMs));
     }
 
-    // REQUIRES: newPositionBeat >= 1
-    // MODIFIES: this
-    // EFFECTS: Changes timeline position to start playback given the beat to start at
+    /**
+     * Sets the timeline position by beat number (1-based).
+     * <p>
+     * Preconditions: {@code newPositionBeat >= 1}
+     *
+     * @param newPositionBeat the beat number (1-based)
+     */
     public void setPositionBeat(double newPositionBeat) {
         setTickPosition(beatsToTicks(newPositionBeat - 1));
     }
 
-    // REQUIRES: bpm >= 1
-    // EFFECTS: changes the BPM
+    /**
+     * Sets the tempo in beats per minute.
+     * <p>
+     * Preconditions: {@code bpm >= 1}
+     *
+     * @param bpm the new tempo
+     * @return the previous tempo
+     */
     public float setBPM(float bpm) {
         float oldBpm = this.bpm;
         this.bpm = bpm;
@@ -194,16 +225,28 @@ public abstract class Player implements Writable, ActionListener {
         return oldBpm;
     }
 
-    // REQUIRES: ticks >= 0
-    // EFFECTS: converts ticks to milliseconds given the BPM
+    /**
+     * Converts ticks to milliseconds using the current BPM.
+     * <p>
+     * Preconditions: {@code ticks >= 0}
+     *
+     * @param ticks the tick count
+     * @return the duration in milliseconds
+     */
     public double ticksToMs(long ticks) {
         double durationInQuarterNotes = (double) ticks / (double) sequence.getResolution();
         double durationInMinutes = durationInQuarterNotes / bpm;
         return durationInMinutes * 60000;
     }
 
-    // REQUIRES: ms >= 0
-    // EFFECTS: converts milliseconds to ticks (reverse of above)
+    /**
+     * Converts milliseconds to ticks.
+     * <p>
+     * Preconditions: {@code ms >= 0}
+     *
+     * @param ms the duration in milliseconds
+     * @return the equivalent ticks
+     */
     public long msToTicks(double ms) {
         double durationInMinutes = ms / (double) 60000;
         double durationInQuarterNotes = bpm * durationInMinutes;
@@ -211,27 +254,51 @@ public abstract class Player implements Writable, ActionListener {
         return Math.round(ticks);
     }
 
-    // REQUIRES: beats >= 0
-    // EFFECTS: converts beats to ms
+    /**
+     * Converts beats to milliseconds.
+     * <p>
+     * Preconditions: {@code beats >= 0}
+     *
+     * @param beats the number of beats
+     * @return the duration in milliseconds
+     */
     public long beatsToMs(double beats) {
         return Math.round(beats / bpm * 60 * 1000);
     }
 
-    // REQUIRES: beats >= 0
-    // EFFECTS: calculates beats to ticks conversion
+    /**
+     * Converts beats to ticks using the sequence resolution.
+     * <p>
+     * Preconditions: {@code beats >= 0}
+     *
+     * @param beats the number of beats
+     * @return the equivalent ticks
+     */
     public long beatsToTicks(double beats) {
         double ticks = beats * (double) sequence.getResolution();
         return Math.round(ticks);
     }
 
-    // REQUIRES: ticks >= 0
-    // EFFECTS: calculates ticks to beats conversion (reverse of above)
+    /**
+     * Converts ticks to beats using the sequence resolution.
+     * <p>
+     * Preconditions: {@code ticks >= 0}
+     *
+     * @param ticks the tick count
+     * @return the number of beats
+     */
     public double ticksToBeats(long ticks) {
         return (double) ticks / (double) sequence.getResolution();
     }
 
-    // REQUIRES: ticks >= 0
-    // EFFECTS: converts the ticks to which beat the ticks are on
+    /**
+     * Converts ticks to a 1-based beat index.
+     * <p>
+     * Preconditions: {@code ticks >= 0}
+     *
+     * @param ticks the tick count
+     * @return the 1-based beat index
+     */
     public double ticksToOnBeat(int ticks) {
         return ticksToBeats(ticks) + 1;
     }
@@ -253,27 +320,47 @@ public abstract class Player implements Writable, ActionListener {
         }
     }
 
-    // EFFECTS: returns the calculation of the sequence length in beats
+    /**
+     * Returns the sequence length in beats.
+     *
+     * @return total length in beats
+     */
     public abstract double getLengthBeats();
 
-    // EFFECTS: returns the calculation of the sequence length in milliseconds
+    /**
+     * Returns the sequence length in milliseconds.
+     *
+     * @return total length in milliseconds
+     */
     public abstract double getLengthMs();
 
     public long getTickPosition() {
         return tickPosition;
     }
 
-    // EFFECTS: returns the timeline position in ms by converting ticks to ms
+    /**
+     * Returns the timeline position in milliseconds (converted from ticks).
+     *
+     * @return current position in milliseconds
+     */
     public double getPositionMs() {
         return ticksToMs(tickPosition);
     }
 
-    // EFFECTS: returns the timeline position in beats by converting ticks to beats
+    /**
+     * Returns the timeline position in beats (converted from ticks).
+     *
+     * @return current position in beats
+     */
     public double getPositionBeats() {
         return ticksToBeats(tickPosition);
     }
 
-    // EFFECTS: returns the beat on which the timeline position starts playback
+    /**
+     * Returns the 1-based beat index corresponding to the current position.
+     *
+     * @return the beat number (1-based)
+     */
     public double getPositionOnBeat() {
         return getPositionBeats() + 1;
     }

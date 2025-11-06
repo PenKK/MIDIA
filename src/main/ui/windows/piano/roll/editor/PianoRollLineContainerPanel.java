@@ -8,8 +8,14 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * Overlay panel drawing the playhead line above the piano roll editor grid.
+ */
 public class PianoRollLineContainerPanel extends LineContainerPanel implements PropertyChangeListener {
 
+    /**
+     * Constructs the overlay and sizes it to the block duration and piano roll height.
+     */
     PianoRollLineContainerPanel(TimelineController timelineController, BlockPlayer blockPlayer) {
         super(timelineController, blockPlayer);
         blockPlayer.addPropertyChangeListener(this);
@@ -20,6 +26,9 @@ public class PianoRollLineContainerPanel extends LineContainerPanel implements P
         this.setMinimumSize(new Dimension(1000, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
     }
 
+    /**
+     * Advances the playhead line during playback updates.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();

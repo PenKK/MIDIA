@@ -10,19 +10,26 @@ import model.TimelineController;
 import ui.common.RulerDimensionHelper;
 import ui.ruler.RulerScrollPane;
 
-// Panel that shows the tick marks above timeline to indicate beat marks and other timely information
+/**
+ * Scroll pane hosting the timeline's top ruler, used to display beat and measure marks.
+ * Implements a width updater so the ruler matches the track content width.
+ */
 public class TimelineRulerScrollPane extends RulerScrollPane implements RulerDimensionHelper.RulerWidthUpdater {
 
     private final TimelineRulerRenderPanel renderContainer;
 
-    // EFFECTS: Constructs the pane, setting dimensions and appropriate listeners and viewports
+    /**
+     * Constructs the ruler pane and embeds the render component.
+     */
     public TimelineRulerScrollPane(TimelineController timelineController) {
         renderContainer = new TimelineRulerRenderPanel(timelineController);
         renderContainer.setLayout(new BoxLayout(renderContainer, BoxLayout.X_AXIS));
         this.setViewportView(renderContainer);
     }
 
-    // EFFECTS: adjusts the width of the ruler to match the MidiTrackPanel rows
+    /**
+     * Adjusts the ruler width to match the content area.
+     */
     @Override
     public void updateWidth(int width) {
         SwingUtilities.invokeLater(() -> {

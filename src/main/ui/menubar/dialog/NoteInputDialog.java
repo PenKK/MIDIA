@@ -18,7 +18,9 @@ import model.Note;
 import model.Timeline;
 import model.TimelineController;
 
-// A JDialog for getting note input into a specified block in a specified track
+/**
+ * Dialog for adding a note to a selected block on a selected track.
+ */
 public class NoteInputDialog extends InputDialog {
 
     private JButton create;
@@ -32,13 +34,16 @@ public class NoteInputDialog extends InputDialog {
     JComboBox<MidiTrack> midiTracksComboBox;
     JComboBox<Block> blocksComboBox;
 
-    // Creates and launches an input dialog for note information 
+    /**
+     * Creates a dialog for entering note parameters.
+     */
     public NoteInputDialog(Component invoker, TimelineController timelineController) {
         super("Add note", invoker, new Dimension(300, 400), timelineController);
     }
 
-    // MODIFIES: this
-    // EFFECTS: initializes combo boxes and spinner fields and adds them to this
+    /**
+     * Initializes combo boxes and spinners for note parameters.
+     */
     @Override
     protected void initFields() {
         initComboBoxes();
@@ -70,8 +75,9 @@ public class NoteInputDialog extends InputDialog {
         this.add(create);
     }
 
-    // MODIFIES: this
-    // EFFECTS: Initializes ComboBox fields
+    /**
+     * Initializes the track and block selection combo boxes.
+     */
     private void initComboBoxes() {
         Timeline timeline = timelineController.getTimeline();
 
@@ -97,7 +103,9 @@ public class NoteInputDialog extends InputDialog {
         updateTrackSelectionUI();
     }
 
-    // EFFECTS: listens for actions and runs methods accordingly
+    /**
+     * Routes UI actions to note creation or track selection changes.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
@@ -108,9 +116,9 @@ public class NoteInputDialog extends InputDialog {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: updates the blocksComboBox list with the currently selected midiTrack decides visibility of
-    //          pitch option depending on track percussiveness
+    /**
+     * Updates the block list for the selected track and toggles pitch input for percussive tracks.
+     */
     private void updateTrackSelectionUI() {
         MidiTrack midiTrack = (MidiTrack) midiTracksComboBox.getSelectedItem();
 
@@ -137,9 +145,10 @@ public class NoteInputDialog extends InputDialog {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: creates a note in the specified block in a track with the avaliable field information
-    //          and closes the dialog
+    /**
+     * Creates a note in the selected block from the provided parameters.
+     * If the selected track is percussive, pitch is set to a default constant.
+     */
     private void createNote() {
         Block selectedBlock = (Block) blocksComboBox.getSelectedItem();
 

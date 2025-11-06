@@ -17,7 +17,10 @@ import ui.windows.timeline.midi.TrackLabelScrollPane;
 import ui.windows.timeline.midi.TrackScrollPane;
 import ui.windows.timeline.ruler.TimelineRulerScrollPane;
 
-// Holds the timeline view, and a ruler at the top
+/**
+ * Container panel for the timeline view, composed of a tracks area and a ruler at the top.
+ * Synchronizes scrolling between the ruler and tracks, and responds to timeline property changes.
+ */
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener {
 
     private final JPanel topHorizontalPanel;
@@ -29,7 +32,12 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
     
     private static final MatteBorder BLANK_BORDER = new MatteBorder(0, 0, 0, 0, Color.GRAY);
 
-    // EFFECTS: Creates timeline view container, and initializes subcomponents
+    /**
+     * Constructs the timeline view and initializes its subcomponents.
+     *
+     * @param timelineController the controller providing timeline state and events
+     * @param dawClipboard       the clipboard used for copy/paste operations
+     */
     public TimelineViewPanel(TimelineController timelineController, DawClipboard dawClipboard) {
         topHorizontalPanel = new JPanel();
         bottomHorizontalPanel = new JPanel();
@@ -76,8 +84,9 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
         return rulerFillerPanel;
     }
 
-    // MODIFIES: this
-    // EFFECTS: triggers adjustment listener for when the midiTrackScrollPane is scrolled
+    /**
+     * Synchronizes two scroll bars so the follower mirrors the leader's position.
+     */
     public static void syncScrollBars(JScrollBar leader, JScrollBar follower) {
         leader.addAdjustmentListener(e -> {
             if (!follower.getValueIsAdjusting()) {
@@ -86,14 +95,16 @@ public class TimelineViewPanel extends JPanel implements PropertyChangeListener 
         });
     }
 
-    // MODIFIES: this
-    // EFFECTS: resizes the ruler's width to match the midiTrackScrollPane's width
+    /**
+     * Resizes the ruler to match the width of the track area.
+     */
     private void updateRulerDimensions() {
         RulerDimensionHelper.updateRulerDimensions(trackScrollPane, rulerScrollPane);
     }
 
-    // MODIFIES: this
-    // EFFECTS: listens for changes in the timeline and executes methods accordingly
+    /**
+     * Handles timeline property changes that require ruler/track UI adjustments.
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();

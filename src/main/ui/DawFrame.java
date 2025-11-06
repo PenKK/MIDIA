@@ -26,7 +26,9 @@ import ui.menubar.MenuBar;
 import ui.menubar.menus.FileMenu;
 import ui.windows.timeline.TimelineViewPanel;
 
-// The frame of the graphical UI. Contains the entirety of the UI.
+/**
+ * The main application frame for the graphical UI, containing all UI components.
+ */
 public class DawFrame extends JFrame implements PropertyChangeListener {
 
     private MenuBar menuBar;
@@ -36,14 +38,18 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
     private TimelineController timelineController;
     private DawClipboard dawClipboard;
 
-    // EFFECTS: Creates the frame for the application and initializes the tabs and menu bar
-    DawFrame() throws MidiUnavailableException, IOException, InvalidMidiDataException {
+    /**
+     * Creates the main application frame and initializes UI components.
+     *
+     * @throws IOException              if UI resources cannot be loaded
+     */
+    DawFrame() throws IOException {
         timelineController = new TimelineController();
         menuBar = new MenuBar(timelineController);
         mediaControlPanel = new MediaControlPanel(timelineController);
         dawClipboard = new DawClipboard();
         timelineViewPanel = new TimelineViewPanel(timelineController, dawClipboard);
-        
+
         timelineController.addObserver(this);
 
         this.setLayout(new BorderLayout());
@@ -63,8 +69,11 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
 
     }
 
-    // MODIFIES: this
-    // EFFECTS: listens for certain property updates and runs methods accordingly
+    /**
+     * Handles timeline-related property changes to update the frame UI.
+     *
+     * @param evt the property change event
+     */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
@@ -78,13 +87,19 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: updates the title of the JFrame to timeline instance name
+    /**
+     * Updates the window title to reflect the current timeline's project name.
+     */
     private void updateTitle() {
         String newTitle = timelineController.getTimeline().getProjectName().concat(" - MIDIA");
         this.setTitle(newTitle);
     }
 
+    /**
+     * Creates a window listener that auto-saves and prints the event log on close.
+     *
+     * @return a WindowAdapter that handles windowClosing to auto-save and dump the event log
+     */
     private WindowAdapter onCloseWindowAdapter() {
         return new WindowAdapter() {
             @Override
@@ -97,7 +112,9 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
         };
     }
 
-    // EFFECTS: auto saves the currently timeline into the auto save directory
+    /**
+     * Auto-saves the current timeline to the auto-save directory.
+     */
     public void autoSave() {
         Timeline t = timelineController.getTimeline();
         JsonWriter writer = new JsonWriter(FileMenu.AUTO_SAVE_FILE_DIRECTORY.concat(t.getProjectName()));
