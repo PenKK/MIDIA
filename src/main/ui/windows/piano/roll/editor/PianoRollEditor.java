@@ -53,7 +53,6 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
         inputMap.put(KeyStroke.getKeyStroke("M"), "incrementBeatsPerMeasure");
         inputMap.put(KeyStroke.getKeyStroke("shift M"), "decrementBeatsPerMeasure");
 
-
         actionMap.put("toggleLoop", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -118,7 +117,6 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
 
         long divisionTickInterval = (long) ppq / pianoRollPlayer.getBeatDivision();
         long measureTickInterval = (long) ppq * pianoRollPlayer.getBeatsPerMeasure();
-        System.out.println("measureTickInterval: " + measureTickInterval);
 
         boolean percussive = pianoRollPlayer.getParentMidiTrack().isPercussive();
         int topY = 7 * PianoRollNoteDisplay.KEY_HEIGHT;

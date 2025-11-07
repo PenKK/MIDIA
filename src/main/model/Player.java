@@ -69,7 +69,7 @@ public abstract class Player implements Writable, ActionListener {
     /**
      * Updates the sequence with the current notes/tracks for playback.
      *
-     * @throws InvalidMidiDataException if invalid MIDI data is encountered during update
+     * @throws InvalidMidiDataException if invalid MIDI data is encountered during the update
      */
     public abstract void updateSequence() throws InvalidMidiDataException;
 
@@ -167,6 +167,11 @@ public abstract class Player implements Writable, ActionListener {
 
     public long snapTickLowerDivision(long rawTick) {
         long divisionTickInterval = PULSES_PER_QUARTER_NOTE / beatDivision;
+        return (rawTick / divisionTickInterval) * divisionTickInterval;
+    }
+
+    public long snapTickLowerBeatDivision(long rawTick) {
+        long divisionTickInterval = Player.PULSES_PER_QUARTER_NOTE / beatDivision;
         return (rawTick / divisionTickInterval) * divisionTickInterval;
     }
 

@@ -15,6 +15,7 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
 
     private final PianoRollPlayer pianoRollPlayer;
     private final TimelineController timelineController;
+    private Note draggedNote;
 
     private boolean draggingNote;
 
@@ -38,7 +39,8 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
 
         Note clickedNote = getNoteOnPosition(tick, pitch);
         if (clickedNote == null && e.getButton() == MouseEvent.BUTTON1) {
-            createNote(tick, pitch);
+            draggedNote = createNote(tick, pitch);
+            draggingNote = true;
             return;
         }
         if (clickedNote != null && e.getButton() == MouseEvent.BUTTON3) {
@@ -46,7 +48,24 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
             return;
         }
         if (clickedNote != null && e.getButton() == MouseEvent.BUTTON1) {
+            draggedNote = clickedNote;
             draggingNote = true;
+        }
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        if (!draggingNote) {
+            return;
+        }
+
+        Timeline timeline = timelineController.getTimeline();
+        long snappedTick = pianoRollPlayer.snapTickLowerBeatDivision(timeline.scalePixelToTick(e.getX()));
+        int pitch = 127 - e.getY() / PianoRollNoteDisplay.KEY_HEIGHT;
+
+        if (draggedNote.getPitch() != pitch || draggedNote.getStartTick() != snappedTick) {
+            removeNote(draggedNote);
+            draggedNote = createNote(snappedTick, pitch);
         }
     }
 
@@ -55,6 +74,8 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
      */
     @Override
     public void mouseReleased(MouseEvent e) {
+        if (draggingNote)
+            notifyControllerNoteChange();
         draggingNote = false;
     }
 
@@ -62,14 +83,13 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
      * Creates and adds a new note at the snapped tick and given pitch.
      * For percussive tracks, only the default pitch is allowed.
      */
-    private void createNote(long tick, int pitch) {
+    private Note createNote(long tick, int pitch) {
         if (pianoRollPlayer.getParentMidiTrack().isPercussive() && pitch != Note.PERCUSSIVE_DEFAULT_PITCH) {
-            return;
+            return null;
         }
 
-        Timeline timeline = timelineController.getTimeline();
-        long startTick = timeline.snapTickLowerBeat(tick);
-        long durationTicks = pianoRollPlayer.beatsToTicks(1);
+        long startTick = pianoRollPlayer.snapTickLowerBeatDivision(tick);
+        long durationTicks = pianoRollPlayer.beatsToTicks((double) 1 / pianoRollPlayer.getBeatDivision());
         Note newNote = new Note(pitch, 127, startTick, durationTicks);
         pianoRollPlayer.getBlock().addNote(newNote);
 
@@ -79,6 +99,8 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
 
         pianoRollPlayer.getPropertyChangeSupport().firePropertyChange("noteCreated", null, newNote);
         notifyControllerNoteChange();
+
+        return newNote;
     }
 
     /**

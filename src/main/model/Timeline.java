@@ -194,10 +194,6 @@ public class Timeline implements Writable {
         return Math.round(pixel / getPixelsPerTick());
     }
 
-    public long snapTickLowerBeat(long rawTick) {
-        return (rawTick / Player.PULSES_PER_QUARTER_NOTE) * Player.PULSES_PER_QUARTER_NOTE;
-    }
-
     public ArrayList<MidiTrack> getMidiTracks() {
         return midiTracks;
     }
