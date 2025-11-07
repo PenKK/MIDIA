@@ -41,6 +41,9 @@ public abstract class Player implements Writable, ActionListener {
     protected Timer playbackUpdateTimer;
     protected boolean isDraggingRuler;
 
+    /**
+     * Creates a new Player instance. User must run close() to free resources after use.
+     */
     public Player() {
         bpm = DEFAULT_BPM;
         tickPosition = 0;

@@ -2,6 +2,7 @@ package ui.windows.piano.roll.editor;
 
 import model.*;
 
+import javax.sound.midi.InvalidMidiDataException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -175,6 +176,12 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
             case "noteRemoved":
             case "noteCreated":
                 repaint();
+                try {
+                    pianoRollPlayer.updateSequence();
+                } catch (InvalidMidiDataException e) {
+                    throw new RuntimeException("Failed to update sequence on note change in Piano Roll", e);
+                }
+                break;
         }
     }
 }

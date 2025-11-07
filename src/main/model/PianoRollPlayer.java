@@ -7,6 +7,9 @@ import model.event.EventLog;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Plays back a single Block in isolation (e.g., a piano roll preview).
@@ -16,6 +19,8 @@ import java.beans.PropertyChangeSupport;
  * Uses the parent track's instrument, channel, and volume settings for accurate playback.
  */
 public class PianoRollPlayer extends Player implements MetaEventListener {
+
+    private static final int NOTE_CREATION_DURATION_MS = 500;
 
     private final Block block;
     private final MidiTrack parentMidiTrack;
@@ -189,8 +194,9 @@ public class PianoRollPlayer extends Player implements MetaEventListener {
 
             receiver.send(programMessage, 0);
             receiver.send(onMessage, 0);
-            receiver.send(offMessage, PULSES_PER_QUARTER_NOTE * 2);
-
+            receiver.send(offMessage, NOTE_CREATION_DURATION_MS * 1000);
+            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+            scheduler.schedule(synthesizer::close, NOTE_CREATION_DURATION_MS + 1000, TimeUnit.MILLISECONDS);
         } catch (MidiUnavailableException e) {
             throw new RuntimeException("Synthesizer unavailable", e);
         } catch (InvalidMidiDataException e) {

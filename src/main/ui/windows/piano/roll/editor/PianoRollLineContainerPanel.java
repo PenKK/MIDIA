@@ -35,6 +35,8 @@ public class PianoRollLineContainerPanel extends LineContainerPanel implements P
 
         if (propertyName.equals("tickPosition")) {
             updateLineX();
+        } else if (propertyName.equals("beatDivision") || propertyName.equals("beatsPerMeasure")) {
+            repaint();
         }
     }
 }
