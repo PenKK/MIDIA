@@ -222,6 +222,9 @@ public class PianoRollPlayer extends Player implements MetaEventListener {
         return ticksToMs(block.getDurationTicks());
     }
 
+    @Override
+    public long getLengthTicks() { return block.getDurationTicks(); };
+
     public MidiTrack getParentMidiTrack() {
         return parentMidiTrack;
     }

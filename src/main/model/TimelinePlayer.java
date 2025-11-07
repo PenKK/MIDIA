@@ -119,6 +119,14 @@ public class TimelinePlayer extends Player {
         return ticksToMs(timeline.getLengthTicks());
     }
 
+    /**
+     * Returns the total sequence length in ticks.
+     *
+     * @return length in ticks
+     */
+    @Override
+    public long getLengthTicks() { return timeline.getLengthTicks(); };
+
     @Override
     public void startRulerDrag() {
         super.startRulerDrag();

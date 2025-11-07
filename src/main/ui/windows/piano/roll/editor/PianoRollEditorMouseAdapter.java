@@ -63,6 +63,10 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         long snappedTick = pianoRollPlayer.snapTickLowerBeatDivision(timeline.scalePixelToTick(e.getX()));
         int pitch = 127 - e.getY() / PianoRollNoteDisplay.KEY_HEIGHT;
 
+        if (pitch < 0 || pitch > 127 || snappedTick < 0 || snappedTick >= pianoRollPlayer.getLengthTicks())
+            return;
+
+
         if (draggedNote.getPitch() != pitch || draggedNote.getStartTick() != snappedTick) {
             removeNote(draggedNote);
             draggedNote = createNote(snappedTick, pitch);

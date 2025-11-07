@@ -355,6 +355,13 @@ public abstract class Player implements Writable, ActionListener {
      */
     public abstract double getLengthMs();
 
+    /**
+     * Returns the sequence length in ticks.
+     *
+     * @return total length in ticks
+     */
+    public abstract long getLengthTicks();
+
     public long getTickPosition() {
         return tickPosition;
     }
