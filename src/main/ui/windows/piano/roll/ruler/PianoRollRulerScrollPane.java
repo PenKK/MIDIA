@@ -1,7 +1,7 @@
 package ui.windows.piano.roll.ruler;
 
 
-import model.BlockPlayer;
+import model.PianoRollPlayer;
 import model.TimelineController;
 import ui.common.RulerDimensionHelper;
 import ui.ruler.RulerScrollPane;
@@ -20,11 +20,11 @@ public class PianoRollRulerScrollPane extends RulerScrollPane implements RulerDi
      * Constructs the scroll pane and embeds the piano roll ruler renderer.
      *
      * @param timelineController the controller providing state
-     * @param blockPlayer        the block player associated with this piano roll
+     * @param pianoRollPlayer        the block player associated with this piano roll
      */
-    public PianoRollRulerScrollPane(TimelineController timelineController, BlockPlayer blockPlayer) {
+    public PianoRollRulerScrollPane(TimelineController timelineController, PianoRollPlayer pianoRollPlayer) {
         super();
-        pianoRollRulerRenderPanel = new PianoRollRulerRenderPanel(timelineController, blockPlayer);
+        pianoRollRulerRenderPanel = new PianoRollRulerRenderPanel(timelineController, pianoRollPlayer);
         setViewportView(pianoRollRulerRenderPanel);
     }
 

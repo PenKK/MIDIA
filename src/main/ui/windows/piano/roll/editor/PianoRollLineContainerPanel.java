@@ -1,6 +1,6 @@
 package ui.windows.piano.roll.editor;
 
-import model.BlockPlayer;
+import model.PianoRollPlayer;
 import model.TimelineController;
 import ui.common.LineContainerPanel;
 
@@ -16,11 +16,11 @@ public class PianoRollLineContainerPanel extends LineContainerPanel implements P
     /**
      * Constructs the overlay and sizes it to the block duration and piano roll height.
      */
-    PianoRollLineContainerPanel(TimelineController timelineController, BlockPlayer blockPlayer) {
-        super(timelineController, blockPlayer);
-        blockPlayer.addPropertyChangeListener(this);
+    PianoRollLineContainerPanel(TimelineController timelineController, PianoRollPlayer pianoRollPlayer) {
+        super(timelineController, pianoRollPlayer);
+        pianoRollPlayer.addPropertyChangeListener(this);
 
-        int width = timelineController.getTimeline().scaleTickToPixel(blockPlayer.getBlock().getDurationTicks());
+        int width = timelineController.getTimeline().scaleTickToPixel(pianoRollPlayer.getBlock().getDurationTicks());
 
         this.setPreferredSize(new Dimension(width, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
         this.setMinimumSize(new Dimension(1000, 128 * PianoRollNoteDisplay.KEY_HEIGHT));

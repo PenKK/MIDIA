@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import javax.swing.*;
 
-import model.BlockPlayer;
+import model.PianoRollPlayer;
 import model.TimelineController;
 import ui.common.BlankScrollPane;
 import ui.common.LineContainerPanel;
@@ -21,9 +21,9 @@ public class PianoRollEditorPane extends BlankScrollPane implements RulerDimensi
     /**
      * Constructs the editor pane, embedding the piano roll editor and playhead overlay panel.
      */
-    public PianoRollEditorPane(BlockPlayer blockPlayer, TimelineController timelineController) {
-        pianoRollEditor = new PianoRollEditor(blockPlayer, timelineController);
-        lineContainerPanel = new PianoRollLineContainerPanel(timelineController, blockPlayer);
+    public PianoRollEditorPane(PianoRollPlayer pianoRollPlayer, TimelineController timelineController) {
+        pianoRollEditor = new PianoRollEditor(pianoRollPlayer, timelineController);
+        lineContainerPanel = new PianoRollLineContainerPanel(timelineController, pianoRollPlayer);
         lineContainerPanel.add(pianoRollEditor);
 
         setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);

@@ -1,6 +1,6 @@
 package ui.windows.piano.roll.editor;
 
-import model.BlockPlayer;
+import model.PianoRollPlayer;
 import model.Note;
 import model.Timeline;
 import model.TimelineController;
@@ -13,7 +13,7 @@ import java.awt.event.MouseEvent;
  */
 public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
 
-    private final BlockPlayer blockPlayer;
+    private final PianoRollPlayer pianoRollPlayer;
     private final TimelineController timelineController;
 
     private boolean draggingNote;
@@ -21,8 +21,8 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
     /**
      * Creates a mouse adapter bound to a block player and timeline controller.
      */
-    public PianoRollEditorMouseAdapter(BlockPlayer blockPlayer, TimelineController timelineController) {
-        this.blockPlayer = blockPlayer;
+    public PianoRollEditorMouseAdapter(PianoRollPlayer pianoRollPlayer, TimelineController timelineController) {
+        this.pianoRollPlayer = pianoRollPlayer;
         this.timelineController = timelineController;
         this.draggingNote = false;
     }
@@ -63,21 +63,21 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
      * For percussive tracks, only the default pitch is allowed.
      */
     private void createNote(long tick, int pitch) {
-        if (blockPlayer.getParentMidiTrack().isPercussive() && pitch != Note.PERCUSSIVE_DEFAULT_PITCH) {
+        if (pianoRollPlayer.getParentMidiTrack().isPercussive() && pitch != Note.PERCUSSIVE_DEFAULT_PITCH) {
             return;
         }
 
         Timeline timeline = timelineController.getTimeline();
         long startTick = timeline.snapTickLowerBeat(tick);
-        long durationTicks = blockPlayer.beatsToTicks(1);
+        long durationTicks = pianoRollPlayer.beatsToTicks(1);
         Note newNote = new Note(pitch, 127, startTick, durationTicks);
-        blockPlayer.getBlock().addNote(newNote);
+        pianoRollPlayer.getBlock().addNote(newNote);
 
-        if (!blockPlayer.isPlaying()) {
-            blockPlayer.playNote(pitch);
+        if (!pianoRollPlayer.isPlaying()) {
+            pianoRollPlayer.playNote(pitch);
         }
 
-        blockPlayer.getPropertyChangeSupport().firePropertyChange("noteCreated", null, newNote);
+        pianoRollPlayer.getPropertyChangeSupport().firePropertyChange("noteCreated", null, newNote);
         notifyControllerNoteChange();
     }
 
@@ -85,9 +85,9 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
      * Removes the specified note from the block and notifies listeners.
      */
     private void removeNote(Note note) {
-        boolean removeSuccessful = blockPlayer.getBlock().getNotes().remove(note);
+        boolean removeSuccessful = pianoRollPlayer.getBlock().getNotes().remove(note);
         assert removeSuccessful : String.format("Note %s was note found when removing", note);
-        blockPlayer.getPropertyChangeSupport().firePropertyChange("noteRemoved", null, null);
+        pianoRollPlayer.getPropertyChangeSupport().firePropertyChange("noteRemoved", null, null);
         notifyControllerNoteChange();
     }
 
@@ -95,7 +95,7 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
      * Returns the note under the given tick and pitch, or null if none.
      */
     private Note getNoteOnPosition(long tick, int pitch) {
-        for (Note n : blockPlayer.getBlock().getNotes()) {
+        for (Note n : pianoRollPlayer.getBlock().getNotes()) {
             if (n.getStartTick() <= tick && n.getStartTick() + n.getDurationTicks() >= tick && pitch == n.getPitch()) {
                 return n;
             }

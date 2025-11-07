@@ -19,26 +19,26 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
     private static final Color NOTE_COLOR = Color.decode("#AB47BC");
     private static final Color BACKGROUND_COLOR = Color.decode("#2A2C2D");
 
-    private final BlockPlayer blockPlayer;
+    private final PianoRollPlayer pianoRollPlayer;
     private final TimelineController timelineController;
 
     /**
      * Constructs the piano roll editor and wires mouse and keyboard interactions.
      */
-    PianoRollEditor(BlockPlayer blockPlayer, TimelineController timelineController) {
-        this.blockPlayer = blockPlayer;
+    PianoRollEditor(PianoRollPlayer pianoRollPlayer, TimelineController timelineController) {
+        this.pianoRollPlayer = pianoRollPlayer;
         this.timelineController = timelineController;
         int width = getLoopPixelWidth();
         this.setPreferredSize(new Dimension(width, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
         this.setMinimumSize(new Dimension(width, 128 * PianoRollNoteDisplay.KEY_HEIGHT));
         this.setBackground(BACKGROUND_COLOR);
 
-        PianoRollEditorMouseAdapter mouseAdapter = new PianoRollEditorMouseAdapter(blockPlayer, timelineController);
+        PianoRollEditorMouseAdapter mouseAdapter = new PianoRollEditorMouseAdapter(pianoRollPlayer, timelineController);
         this.addMouseListener(mouseAdapter);
         this.addMouseMotionListener(mouseAdapter);
         assignControls();
 
-        blockPlayer.addPropertyChangeListener(this);
+        pianoRollPlayer.addPropertyChangeListener(this);
     }
 
     /**
@@ -46,12 +46,46 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
      */
     private void assignControls() {
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap actionMap = getActionMap();
         inputMap.put(KeyStroke.getKeyStroke("SPACE"), "toggleLoop");
+        inputMap.put(KeyStroke.getKeyStroke("D"), "incrementBeatDivision");
+        inputMap.put(KeyStroke.getKeyStroke("shift D"), "decrementBeatDivision");
+        inputMap.put(KeyStroke.getKeyStroke("M"), "incrementBeatsPerMeasure");
+        inputMap.put(KeyStroke.getKeyStroke("shift M"), "decrementBeatsPerMeasure");
 
-        getActionMap().put("toggleLoop", new AbstractAction() {
+
+        actionMap.put("toggleLoop", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                blockPlayer.toggleLoop();
+                pianoRollPlayer.toggleLoop();
+            }
+        });
+        actionMap.put("incrementBeatDivision", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pianoRollPlayer.incrementBeatDivision();
+                repaint();
+            }
+        });
+        actionMap.put("decrementBeatDivision", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pianoRollPlayer.decrementBeatDivision();
+                repaint();
+            }
+        });
+        actionMap.put("incrementBeatsPerMeasure", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pianoRollPlayer.incrementBeatsPerMeasure();
+                repaint();
+            }
+        });
+        actionMap.put("decrementBeatsPerMeasure", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pianoRollPlayer.decrementBeatsPerMeasure();
+                repaint();
             }
         });
     }
@@ -70,7 +104,7 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
     }
 
     private int getLoopPixelWidth() {
-        return timelineController.getTimeline().scaleTickToPixel(blockPlayer.getBlock().getDurationTicks());
+        return timelineController.getTimeline().scaleTickToPixel(pianoRollPlayer.getBlock().getDurationTicks());
     }
 
     /**
@@ -80,14 +114,13 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
     private void drawGridLines(Graphics g) {
         Timeline timeline = timelineController.getTimeline();
 
-        int beatDivisions = timeline.getPlayer().getBeatDivision();
-        int beatsPerMeasure = timeline.getPlayer().getBeatsPerMeasure();
         int ppq = Player.PULSES_PER_QUARTER_NOTE;
 
-        long divisionTickInterval = ppq / beatDivisions;
-        long measureTickInterval = (long) ppq * beatsPerMeasure;
+        long divisionTickInterval = (long) ppq / pianoRollPlayer.getBeatDivision();
+        long measureTickInterval = (long) ppq * pianoRollPlayer.getBeatsPerMeasure();
+        System.out.println("measureTickInterval: " + measureTickInterval);
 
-        boolean percussive = blockPlayer.getParentMidiTrack().isPercussive();
+        boolean percussive = pianoRollPlayer.getParentMidiTrack().isPercussive();
         int topY = 7 * PianoRollNoteDisplay.KEY_HEIGHT;
         int botY = 8 * PianoRollNoteDisplay.KEY_HEIGHT;
 
@@ -107,10 +140,10 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
             g.setColor(BEAT_LINE_COLOR);
             int pixelPosition = timeline.scaleTickToPixel(tick);
 
-            if (tick % ppq == 0) {
+            if (tick % measureTickInterval == 0) {
+                g.setColor(MEASURE_LINE_COLOR.darker().darker());
+            } else if (tick % ppq == 0) {
                 g.setColor(MEASURE_LINE_COLOR);
-            } else if (tick % measureTickInterval == 0) {
-                g.setColor(MEASURE_LINE_COLOR.darker());
             }
             g.drawLine(pixelPosition, percussive ? topY : 0, pixelPosition,percussive ? botY : getHeight());
         }
@@ -121,7 +154,7 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
      */
     private void drawBlockNotes(Graphics g) {
         Timeline timeline = timelineController.getTimeline();
-        Block block = blockPlayer.getBlock();
+        Block block = pianoRollPlayer.getBlock();
         g.setColor(NOTE_COLOR);
 
         block.getNotes().forEach(note -> {

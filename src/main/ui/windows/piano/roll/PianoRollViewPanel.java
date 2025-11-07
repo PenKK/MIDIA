@@ -4,7 +4,7 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import model.BlockPlayer;
+import model.PianoRollPlayer;
 import model.TimelineController;
 import ui.common.RulerDimensionHelper;
 import ui.windows.piano.roll.editor.PianoRollNoteDisplay;
@@ -28,12 +28,12 @@ public class PianoRollViewPanel extends JPanel {
     /**
      * Constructs the piano roll view and initializes its subcomponents.
      */
-    public PianoRollViewPanel(TimelineController timelineController, BlockPlayer blockPlayer) {
+    public PianoRollViewPanel(TimelineController timelineController, PianoRollPlayer pianoRollPlayer) {
         bottomHorizontalContainer = new JPanel();
         topHorizontalContainer = new JPanel();
-        pianoRollRulerScrollPane = new PianoRollRulerScrollPane(timelineController, blockPlayer);
+        pianoRollRulerScrollPane = new PianoRollRulerScrollPane(timelineController, pianoRollPlayer);
         pianoRollNoteDisplay = new PianoRollNoteDisplay();
-        pianoRollNoteGrid = new PianoRollEditorPane(blockPlayer, timelineController);
+        pianoRollNoteGrid = new PianoRollEditorPane(pianoRollPlayer, timelineController);
 
         initTopHorizontalContainer();
         initBottomHorizontalContainer();

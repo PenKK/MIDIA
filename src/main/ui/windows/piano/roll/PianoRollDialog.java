@@ -7,7 +7,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.*;
 
 import model.Block;
-import model.BlockPlayer;
+import model.PianoRollPlayer;
 import model.MidiTrack;
 import model.TimelineController;
 
@@ -17,14 +17,14 @@ import model.TimelineController;
  */
 public class PianoRollDialog extends JDialog implements PropertyChangeListener {
 
-    private final BlockPlayer blockPlayer;
+    private final PianoRollPlayer pianoRollPlayer;
 
     /**
      * Constructs a piano roll dialog for the given block and wires it to the timeline.
      */
     public PianoRollDialog(JFrame parent, Block block, TimelineController timelineController, MidiTrack parentMidiTrack, String title) {
         super(parent, title, false);
-        blockPlayer = new BlockPlayer(block, parentMidiTrack, timelineController.getTimeline().getPlayer().getBPM());
+        pianoRollPlayer = new PianoRollPlayer(block, parentMidiTrack, timelineController.getTimeline().getPlayer().getBPM());
         timelineController.addObserver(this);
 
         setLayout(new BorderLayout());
@@ -32,7 +32,7 @@ public class PianoRollDialog extends JDialog implements PropertyChangeListener {
         setResizable(true);
         getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 
-        PianoRollViewPanel pianoRollViewPanel = new PianoRollViewPanel(timelineController, blockPlayer);
+        PianoRollViewPanel pianoRollViewPanel = new PianoRollViewPanel(timelineController, pianoRollPlayer);
         add(pianoRollViewPanel, BorderLayout.CENTER);
 
         setSize(700, 600);
@@ -45,7 +45,7 @@ public class PianoRollDialog extends JDialog implements PropertyChangeListener {
     @Override
     public void dispose() {
         super.dispose();
-        blockPlayer.close();
+        pianoRollPlayer.close();
     }
 
     /**

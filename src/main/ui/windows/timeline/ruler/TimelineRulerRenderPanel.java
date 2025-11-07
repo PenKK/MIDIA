@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import model.Player;
 import model.TimelineController;
 import ui.ruler.RulerMouseAdapter;
 import ui.ruler.RulerRenderPanel;
@@ -34,7 +35,8 @@ public class TimelineRulerRenderPanel extends RulerRenderPanel implements Proper
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        drawAllTickMarks(g, timelineController, getWidth());
+        Player p = timelineController.getTimeline().getPlayer();
+        drawAllTickMarks(g, timelineController, getWidth(), p.getBeatDivision(), p.getBeatsPerMeasure());
     }
 
     /**

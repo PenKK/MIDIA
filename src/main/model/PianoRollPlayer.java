@@ -15,7 +15,7 @@ import java.beans.PropertyChangeSupport;
  * property change notifications for UI synchronization (such as tick position updates).
  * Uses the parent track's instrument, channel, and volume settings for accurate playback.
  */
-public class BlockPlayer extends Player implements MetaEventListener {
+public class PianoRollPlayer extends Player implements MetaEventListener {
 
     private final Block block;
     private final MidiTrack parentMidiTrack;
@@ -32,7 +32,7 @@ public class BlockPlayer extends Player implements MetaEventListener {
      * @param parentMidiTrack  the parent track providing instrument, channel, and initial volume
      * @param initialBpm       the initial tempo in BPM
      */
-    public BlockPlayer(Block block, MidiTrack parentMidiTrack, float initialBpm) {
+    public PianoRollPlayer(Block block, MidiTrack parentMidiTrack, float initialBpm) {
         super();
         propertyChangeSupport = new PropertyChangeSupport(this);
         this.block = block;
@@ -138,6 +138,34 @@ public class BlockPlayer extends Player implements MetaEventListener {
         throw new RuntimeException("No system reset found");
     }
 
+    @Override
+    public void incrementBeatDivision() {
+        int old = getBeatDivision();
+        super.incrementBeatDivision();
+        propertyChangeSupport.firePropertyChange("beatDivision", old, beatDivision);
+    }
+
+    @Override
+    public void decrementBeatDivision() {
+        int old = getBeatDivision();
+        super.decrementBeatDivision();
+        propertyChangeSupport.firePropertyChange("beatDivision", old, beatDivision);
+    }
+
+    @Override
+    public void incrementBeatsPerMeasure() {
+        int old = getBeatsPerMeasure();
+        super.incrementBeatsPerMeasure();
+        propertyChangeSupport.firePropertyChange("beatsPerMeasure", old, beatsPerMeasure);
+    }
+
+    @Override
+    public void decrementBeatsPerMeasure() {
+        int old = getBeatsPerMeasure();
+        super.decrementBeatsPerMeasure();
+        propertyChangeSupport.firePropertyChange("beatsPerMeasure", old, beatsPerMeasure);
+    }
+
     /**
      * Plays a short preview note using the parent track's channel and instrument.
      * <p>
@@ -182,6 +210,7 @@ public class BlockPlayer extends Player implements MetaEventListener {
         propertyChangeSupport.firePropertyChange("tickPosition", oldTickPosition, newTickPosition);
         return oldTickPosition;
     }
+
 
     @Override
     public double getLengthBeats() {

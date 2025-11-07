@@ -50,11 +50,8 @@ public abstract class RulerRenderPanel extends JPanel {
      * @param width              the width in pixels to draw into
      */
     @SuppressWarnings("methodlength")
-    public static void drawAllTickMarks(Graphics g, TimelineController timelineController, int width) {
+    public static void drawAllTickMarks(Graphics g, TimelineController timelineController, int width, int beatDivisions, int beatsPerMeasure) {
         Timeline timeline = timelineController.getTimeline();
-
-        int beatDivisions = timeline.getPlayer().getBeatDivision();
-        int beatsPerMeasure = timeline.getPlayer().getBeatsPerMeasure();
 
         g.setFont(MEASURE_FONT);
 

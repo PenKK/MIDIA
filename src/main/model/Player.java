@@ -32,8 +32,8 @@ public abstract class Player implements Writable, ActionListener {
     protected Sequencer sequencer;
     protected Sequence sequence;
 
-    private int beatDivision;
-    private int beatsPerMeasure;
+    protected int beatDivision;
+    protected int beatsPerMeasure;
 
     protected float bpm;
     protected long tickPosition;
@@ -301,6 +301,22 @@ public abstract class Player implements Writable, ActionListener {
      */
     public double ticksToOnBeat(int ticks) {
         return ticksToBeats(ticks) + 1;
+    }
+
+    public void incrementBeatDivision() {
+        beatDivision = Math.min(Player.PULSES_PER_QUARTER_NOTE, beatDivision + 1);
+    }
+
+    public void decrementBeatDivision() {
+        beatDivision = Math.max(1, beatDivision - 1);
+    }
+
+    public void incrementBeatsPerMeasure() {
+        beatsPerMeasure = Math.min(Player.PULSES_PER_QUARTER_NOTE * 4, beatsPerMeasure + 1);
+    }
+
+    public void decrementBeatsPerMeasure() {
+        beatsPerMeasure = Math.max(1, beatsPerMeasure - 1);
     }
 
     public void startRulerDrag() {

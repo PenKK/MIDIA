@@ -11,9 +11,9 @@ import javax.sound.midi.Track;
 
 // See https://midi.org/expanded-midi-1-0-messages-list
 // to understand the checking of bytes in MidiEvents in tests
-public class TestBlockPlayer {
+public class TestPianoRollPlayer {
 
-    private BlockPlayer blockPlayer;
+    private PianoRollPlayer pianoRollPlayer;
     private TimelineController timelineController;
 
     @BeforeEach
@@ -23,25 +23,25 @@ public class TestBlockPlayer {
         Block b = new Block(0, 1920);
         b.addNote(new Note(60, 100, 0, 480));
         mt.addBlock(b);
-        blockPlayer = new BlockPlayer(b, mt, 120);
+        pianoRollPlayer = new PianoRollPlayer(b, mt, 120);
     }
 
 
     @Test
     void testConstructor() throws InvalidMidiDataException {
-        assertEquals(blockPlayer.getBlock(),
+        assertEquals(pianoRollPlayer.getBlock(),
                 timelineController.getTimeline().getMidiTracks().get(0).getBlock(0));
-        assertEquals(blockPlayer.getParentMidiTrack(), timelineController.getTimeline().getMidiTracks().get(0));
-        assertEquals(120, blockPlayer.getBPM());
-        assertEquals(100, blockPlayer.getVolume());
+        assertEquals(pianoRollPlayer.getParentMidiTrack(), timelineController.getTimeline().getMidiTracks().get(0));
+        assertEquals(120, pianoRollPlayer.getBPM());
+        assertEquals(100, pianoRollPlayer.getVolume());
     }
 
     @Test
     void testSequence() throws InvalidMidiDataException {
-        assertNotEquals(-1, blockPlayer.getBlock().addNote(new Note(62, 80, 960, 960)));
-        blockPlayer.updateSequence();
+        assertNotEquals(-1, pianoRollPlayer.getBlock().addNote(new Note(62, 80, 960, 960)));
+        pianoRollPlayer.updateSequence();
 
-        Track track = blockPlayer.getSequence().getTracks()[0];
+        Track track = pianoRollPlayer.getSequence().getTracks()[0];
         assertEquals(7, track.size());
         byte[] message0 = track.get(0).getMessage().getMessage();
         byte[] message1 = track.get(1).getMessage().getMessage();
@@ -87,23 +87,23 @@ public class TestBlockPlayer {
 
     @Test
     void testSystemResetTick() throws InvalidMidiDataException {
-        blockPlayer.updateSequence();
+        pianoRollPlayer.updateSequence();
 
     }
 
     @Test
     void testGetters() {
-        assertEquals(2, blockPlayer.getLengthBeats());
-        assertEquals(1000, blockPlayer.getLengthMs());
-        blockPlayer.getBlock().setDurationTicks(960);
-        assertEquals(1, blockPlayer.getLengthBeats());
-        assertEquals(500, blockPlayer.getLengthMs());
-        blockPlayer.setBPM(240);
-        assertEquals(250, blockPlayer.getLengthMs());
+        assertEquals(2, pianoRollPlayer.getLengthBeats());
+        assertEquals(1000, pianoRollPlayer.getLengthMs());
+        pianoRollPlayer.getBlock().setDurationTicks(960);
+        assertEquals(1, pianoRollPlayer.getLengthBeats());
+        assertEquals(500, pianoRollPlayer.getLengthMs());
+        pianoRollPlayer.setBPM(240);
+        assertEquals(250, pianoRollPlayer.getLengthMs());
 
-        assertEquals(100, blockPlayer.getVolume());
-        blockPlayer.setVolume(120);
-        assertEquals(120, blockPlayer.getVolume());
+        assertEquals(100, pianoRollPlayer.getVolume());
+        pianoRollPlayer.setVolume(120);
+        assertEquals(120, pianoRollPlayer.getVolume());
 
 
     }
