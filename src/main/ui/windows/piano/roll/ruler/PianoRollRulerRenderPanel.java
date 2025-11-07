@@ -49,9 +49,7 @@ public class PianoRollRulerRenderPanel extends RulerRenderPanel implements Prope
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
-        System.out.println("called " + propertyName);
         if (propertyName.equals("beatsPerMeasure") || propertyName.equals("beatDivision")) {
-
             repaint();
         }
     }
