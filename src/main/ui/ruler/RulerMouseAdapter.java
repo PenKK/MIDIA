@@ -23,7 +23,7 @@ public class RulerMouseAdapter extends MouseInputAdapter implements PropertyChan
     private Player player;
 
     /**
-     * Creates an adapter bound to a controller and player, and subscribes to timeline events.
+     * Creates an adapter bound to a controller and player and subscribes to timeline events.
      *
      * @param timelineController the controller sourcing timeline state
      * @param player             the player to control during dragging
