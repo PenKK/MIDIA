@@ -23,7 +23,7 @@ import model.instrument.TonalInstrument;
 import persistance.TestUtil;
 import model.instrument.PercussiveInstrument;
 
-// Much of testing is done according to https://midi.org/spec-detail
+// Much of the testing is done according to https://midi.org/spec-detail
 public class TestMidiTrack {
 
     MidiTrack midiTrack;
