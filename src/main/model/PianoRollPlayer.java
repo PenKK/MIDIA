@@ -59,7 +59,7 @@ public class PianoRollPlayer extends Player implements MetaEventListener {
     public void toggleLoop() {
         this.loop = !this.loop;
 
-        if (loop) {
+        if (isLooping()) {
             try {
                 play();
             } catch (InvalidMidiDataException e) {
@@ -76,10 +76,6 @@ public class PianoRollPlayer extends Player implements MetaEventListener {
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
     public PropertyChangeSupport getPropertyChangeSupport() {
@@ -229,7 +225,7 @@ public class PianoRollPlayer extends Player implements MetaEventListener {
     }
 
     @Override
-    public long getLengthTicks() { return block.getDurationTicks(); };
+    public long getLengthTicks() { return block.getDurationTicks(); }
 
     public MidiTrack getParentMidiTrack() {
         return parentMidiTrack;

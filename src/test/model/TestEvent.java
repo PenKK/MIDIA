@@ -18,13 +18,12 @@ public class TestEvent {
     private Event e2;
     private Date d;
 
-    //NOTE: these tests might fail if time at which line (2) below is executed
-    //is different from time that line (1) is executed.  Lines (1) and (2) must
-    //run in same millisecond for this test to make sense and pass.
+    // NOTE: these tests might fail if the time at which line (2) below is executed
+    // is different from the time that line (1) is executed.  Lines (1) and (2) must
+    // run in the same millisecond for this test to make sense and pass.
 
     @BeforeEach
     public void runBefore() {
-        // Timing specific tests only work when running all tests in project, not individually
         e = new Event("Sensor open at door"); // (1)
         e2 = new Event("Sensor open at door");
         d = Calendar.getInstance().getTime(); // (2)
@@ -49,7 +48,7 @@ public class TestEvent {
 
     @Test
     public void testHashCode() {
-        // also may not pass if not constructor not run in same millisecond
+        // May not pass depending on the MS the two hashes are computed
         assertEquals(e.hashCode(), e2.hashCode());
     }
 }

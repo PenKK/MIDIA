@@ -11,7 +11,7 @@ import java.awt.*;
  */
 public class TrackLabelScrollPane extends BlankScrollPane {
 
-    private TrackLabelContainer trackLabelContainer;
+    private final TrackLabelContainer trackLabelContainer;
 
     /**
      * Constructs the scroll pane and embeds the track label container.

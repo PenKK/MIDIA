@@ -47,7 +47,7 @@ public class BpmMouseInputAdapter extends MouseInputAdapter {
     private Cursor orignalCursor;
 
     /**
-     * Starts a BPM drag operation: captures anchor position, stores original cursor, and hides the cursor.
+     * Starts a BPM drag operation: captures anchor position, stores the original cursor, and hides the cursor.
      */
     @Override
     public void mousePressed(MouseEvent e) {

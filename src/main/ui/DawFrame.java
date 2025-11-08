@@ -11,8 +11,6 @@ import java.io.IOException;
 import java.util.Objects;
 
 import javax.imageio.ImageIO;
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
 import javax.swing.JFrame;
 
 import model.Timeline;
@@ -31,12 +29,11 @@ import ui.windows.timeline.TimelineViewPanel;
  */
 public class DawFrame extends JFrame implements PropertyChangeListener {
 
-    private MenuBar menuBar;
-    // private TabbedPane tabbedPane;
-    private TimelineViewPanel timelineViewPanel;
-    private MediaControlPanel mediaControlPanel;
-    private TimelineController timelineController;
-    private DawClipboard dawClipboard;
+    private final MenuBar menuBar;
+    private final TimelineViewPanel timelineViewPanel;
+    private final MediaControlPanel mediaControlPanel;
+    private final TimelineController timelineController;
+    private final DawClipboard dawClipboard;
 
     /**
      * Creates the main application frame and initializes UI components.

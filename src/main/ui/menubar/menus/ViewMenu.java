@@ -6,7 +6,7 @@ import model.TimelineController;
 import ui.menubar.dialog.BeatConfigurationInputDialog;
 
 /**
- * View menu for timeline-related display settings (e.g., beat configuration).
+ * View the menu for timeline-related display settings (e.g., beat configuration).
  */
 public class ViewMenu extends Menu {
 

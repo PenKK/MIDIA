@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiMessage;
-import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
@@ -22,13 +21,14 @@ import org.junit.jupiter.api.BeforeEach;
 
 // See https://midi.org/expanded-midi-1-0-messages-list 
 // to understand the checking of bytes in MidiEvents in tests
+@SuppressWarnings("PointlessArithmeticExpression")
 public class TestTimelinePlayer extends TestUtil {
     Timeline timeline;
     ArrayList<Integer> expectedChannels;
     Instrument instr = TonalInstrument.ACOUSTIC_GRAND_PIANO;
 
     @BeforeEach
-    void runBefore() throws MidiUnavailableException, InvalidMidiDataException {
+    void runBefore() {
         timeline = new TimelineController().getTimeline();
         timeline.setProjectName("test");
         expectedChannels = new ArrayList<>();
@@ -62,7 +62,7 @@ public class TestTimelinePlayer extends TestUtil {
     }
 
     @Test
-    void testConstructor() throws MidiUnavailableException {
+    void testConstructor() {
         assertEquals("test", timeline.getProjectName());
         assertEquals(new ArrayList<MidiTrack>(), timeline.getMidiTracks());
         assertEquals(120, timeline.getPlayer().getBPM());
@@ -115,16 +115,21 @@ public class TestTimelinePlayer extends TestUtil {
         expectedChannels.remove(0);
         expectedChannels.remove(0);
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
+        assertEquals(timeline.getMidiTracks(), expectedMidiTracks);
 
         assertEquals(2, timeline.getMidiTracks().size());
         assertEquals(timeline.removeMidiTrack(0), midiTrack);
         expectedChannels.add(0);
+        expectedMidiTracks.remove(0);
+        assertEquals(expectedMidiTracks, timeline.getMidiTracks());
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
 
         assertEquals(1, timeline.getMidiTracks().size());
         assertEquals(timeline.removeMidiTrack(0), anotherMidiTrack);
         assertEquals(0, timeline.getMidiTracks().size());
+        expectedMidiTracks.remove(0);
         expectedChannels.add(1);
+        assertEquals(expectedMidiTracks, timeline.getMidiTracks());
         assertEquals(expectedChannels, timeline.getPlayer().getAvailableChannels());
     }
 
@@ -197,7 +202,7 @@ public class TestTimelinePlayer extends TestUtil {
         assertEquals(15, midiTracks.size());
 
         MidiTrack instrumentalTrack = timeline.createMidiTrack("inst", instr);
-        MidiTrack percussionTrack = timeline.createMidiTrack("perc", PercussiveInstrument.HIGH_TOM);
+        MidiTrack percussionTrack = timeline.createMidiTrack("per", PercussiveInstrument.HIGH_TOM);
         assertNull(instrumentalTrack);
         assertNotNull(percussionTrack);
     }
@@ -229,6 +234,27 @@ public class TestTimelinePlayer extends TestUtil {
         timeline.getPlayer().updateSequence();
 
         // Update sequence by hand, creating the expected midi events
+        Track[] expectedTracks = getExpectedTracks();
+
+        for (int i = 0; i < 2; i++) {
+            Track expectedTrack = expectedTracks[i];
+            Track actualTrack = timeline.getPlayer().getSequence().getTracks()[i];
+
+            for (int j = 0; j < expectedTrack.size(); j++) {
+                MidiMessage expectedEventData = expectedTrack.get(i).getMessage();
+                MidiMessage realEventData = actualTrack.get(i).getMessage();
+
+                assertEquals(expectedEventData.getStatus(), realEventData.getStatus());
+                assertEquals(expectedEventData.getMessage()[0], realEventData.getMessage()[0]);
+                assertEquals(expectedEventData.getMessage()[1], realEventData.getMessage()[1]);
+                if ((expectedEventData.getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) {
+                    assertEquals(expectedEventData.getMessage()[2], realEventData.getMessage()[2]);
+                }
+            }
+        }
+    }
+
+    private static Track[] getExpectedTracks() throws InvalidMidiDataException {
         MidiEvent n1on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
         MidiEvent n1off = new MidiEvent(new ShortMessage(ShortMessage.NOTE_OFF, 0, 60, 0), 5);
         MidiEvent n2on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 50), 4);
@@ -264,28 +290,11 @@ public class TestTimelinePlayer extends TestUtil {
         track2.add(n4on);
         track2.add(n4off);
 
-        Track[] expectedTracks = { track1, track2 };
-
-        for (int i = 0; i < 2; i++) {
-            Track expectedTrack = expectedTracks[i];
-            Track actualTrack = timeline.getPlayer().getSequence().getTracks()[i];
-
-            for (int j = 0; j < expectedTrack.size(); j++) {
-                MidiMessage expectedEventData = expectedTrack.get(i).getMessage();
-                MidiMessage realEventData = actualTrack.get(i).getMessage();
-
-                assertEquals(expectedEventData.getStatus(), realEventData.getStatus());
-                assertEquals(expectedEventData.getMessage()[0], realEventData.getMessage()[0]);
-                assertEquals(expectedEventData.getMessage()[1], realEventData.getMessage()[1]);
-                if ((expectedEventData.getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) {
-                    assertEquals(expectedEventData.getMessage()[2], realEventData.getMessage()[2]);
-                }
-            }
-        }
+        return new Track[]{ track1, track2 };
     }
 
     @Test
-    void testPlayBack() throws MidiUnavailableException, InvalidMidiDataException, InterruptedException {
+    void testPlayBack() throws InvalidMidiDataException, InterruptedException {
         Block b = new Block(0, 3000);
         Note n = new Note(60, 100, 0, 960);
         Note n2 = new Note(64, 127, 960, 960);
@@ -319,7 +328,7 @@ public class TestTimelinePlayer extends TestUtil {
     }
 
     @Test
-    void testTimelinePosition() throws MidiUnavailableException {
+    void testTimelinePosition() {
         double roundingDelta = 0.01;
 
         addSampleSong(timeline);

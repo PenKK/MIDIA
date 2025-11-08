@@ -26,9 +26,6 @@ import model.instrument.PercussiveInstrument;
 
 /**
  * Reads a Timeline from JSON data stored in a file.
- * <p>
- * Code adapted from src/main/persistance/JsonReader
- * at <a href="https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo">...</a>
  */
 public record JsonReader(String sourcePath) {
     // EFFECTS: constructs reader to read from a source file

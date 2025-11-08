@@ -5,9 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiUnavailableException;
-
 import org.junit.jupiter.api.*;
 
 import persistance.TestUtil;
@@ -22,7 +19,7 @@ public class TestTimelineController extends TestUtil {
     }
 
     @Test
-    void testObserverPattern() throws MidiUnavailableException, InvalidMidiDataException {
+    void testObserverPattern() {
         class TestObserver implements PropertyChangeListener {
             private int value = 0;
 
@@ -84,7 +81,7 @@ public class TestTimelineController extends TestUtil {
     }
 
     @Test
-    void testSetIntanceDuringPlayback() throws InterruptedException {
+    void testSetInstanceDuringPlayback() {
         addSampleSong(tc.getTimeline());
         assertFalse(tc.getTimeline().getPlayer().isPlaying());
         tc.playTimeline();
@@ -94,7 +91,7 @@ public class TestTimelineController extends TestUtil {
     }
 
     @Test
-    void testSetIntanceTimelineNull() throws InterruptedException {
+    void testSetInstanceTimelineNull() {
         try {
             tc.setInstance(null);
             fail();

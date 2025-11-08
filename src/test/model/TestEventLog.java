@@ -35,7 +35,7 @@ public class TestEventLog {
 	
 	@Test
 	public void testLogEvent() {	
-		List<Event> l = new ArrayList<Event>();
+		List<Event> l = new ArrayList<>();
 		
 		EventLog el = EventLog.getInstance();
 		for (Event next : el) {
@@ -52,7 +52,7 @@ public class TestEventLog {
 		EventLog el = EventLog.getInstance();
 		el.clear();
 		Iterator<Event> itr = el.iterator();
-		assertTrue(itr.hasNext());   // After log is cleared, the clear log event is added
+		assertTrue(itr.hasNext());   // After the log is cleared, the clear log event is added
 		assertEquals("Event log cleared.", itr.next().getDescription());
 		assertFalse(itr.hasNext());
 	}

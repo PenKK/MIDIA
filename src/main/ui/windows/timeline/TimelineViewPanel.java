@@ -11,15 +11,14 @@ import model.TimelineController;
 import model.editing.DawClipboard;
 import ui.common.RulerDimensionHelper;
 import ui.ruler.RulerScrollPane;
-import ui.windows.timeline.midi.TrackLabelContainer;
 import ui.windows.timeline.midi.TrackLabelPanel;
 import ui.windows.timeline.midi.TrackLabelScrollPane;
 import ui.windows.timeline.midi.TrackScrollPane;
 import ui.windows.timeline.ruler.TimelineRulerScrollPane;
 
 /**
- * Container panel for the timeline view, composed of a tracks area and a ruler at the top.
- * Synchronizes scrolling between the ruler and tracks, and responds to timeline property changes.
+ * Container panel for the timeline view, composed of a track area and a ruler at the top.
+ * Synchronizes scrolling between the ruler and tracks and responds to timeline property changes.
  */
 public class TimelineViewPanel extends JPanel implements PropertyChangeListener {
 

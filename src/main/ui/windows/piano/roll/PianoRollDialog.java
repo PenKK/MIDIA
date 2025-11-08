@@ -40,7 +40,7 @@ public class PianoRollDialog extends JDialog implements PropertyChangeListener {
     }
 
     /**
-     * Ensures the BlockPlayer is closed when the dialog is disposed.
+     * Ensures the BlockPlayer is closed when the dialog is disposed of.
      */
     @Override
     public void dispose() {

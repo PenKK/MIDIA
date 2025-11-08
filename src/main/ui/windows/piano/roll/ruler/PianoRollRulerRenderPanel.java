@@ -1,8 +1,6 @@
 package ui.windows.piano.roll.ruler;
 
 import java.awt.Graphics;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import model.PianoRollPlayer;
 import model.TimelineController;

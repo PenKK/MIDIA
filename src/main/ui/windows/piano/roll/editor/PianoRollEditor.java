@@ -10,7 +10,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
- * The main editing surface for the piano roll, responsible for drawing the grid and notes,
+ * The main editing surface for the piano roll, responsible for drawing the grid and notes
  * and handling simple keyboard controls (e.g., toggle loop).
  */
 public class PianoRollEditor extends JPanel implements PropertyChangeListener {

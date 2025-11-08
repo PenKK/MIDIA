@@ -4,7 +4,6 @@ import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import model.TimelineController;
 import ui.common.RulerDimensionHelper;

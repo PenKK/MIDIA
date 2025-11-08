@@ -9,7 +9,6 @@ import java.util.Arrays;
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiMessage;
-import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
@@ -112,15 +111,15 @@ public class TestMidiTrack {
         expectedBlocks.add(b2);
         expectedBlocks.add(b3);
 
-        midiTrack.removeBlock(2);
+        assertEquals(b3, midiTrack.removeBlock(2));
         expectedBlocks.remove(2);
         assertEquals(expectedBlocks, midiTrack.getBlocks());
 
-        midiTrack.removeBlock(0);
+        assertEquals(b1, midiTrack.removeBlock(0));
         expectedBlocks.remove(0);
         assertEquals(expectedBlocks, midiTrack.getBlocks());
 
-        midiTrack.removeBlock(0);
+        assertEquals(b2, midiTrack.removeBlock(0));
         expectedBlocks.remove(0);
         assertEquals(expectedBlocks, midiTrack.getBlocks());
 
@@ -192,7 +191,7 @@ public class TestMidiTrack {
     }
 
     @Test
-    void testSetInstrument() throws InvalidMidiDataException, MidiUnavailableException {
+    void testSetInstrument() throws InvalidMidiDataException {
         Timeline timeline = new Timeline("test", null);
         timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
         midiTrack = timeline.createMidiTrack("Piano melody", instr);
@@ -234,6 +233,27 @@ public class TestMidiTrack {
         assertEquals(1, midiTrack.addBlock(b2));
         midiTrack.applyToTrack(track);
 
+        ArrayList<MidiEvent> expectedMidiEvents = getExpectedMidiEvents();
+
+        // We ignore the last element of the track since it always ending signal
+        assertEquals(expectedMidiEvents.size(), track.size() - 1);
+
+        // since Java Track does not allow direct access to the MidiEvent list, we loop
+        for (int i = 0; i < expectedMidiEvents.size(); i++) {
+            MidiMessage expectedEventData = expectedMidiEvents.get(i).getMessage();
+            MidiMessage realEventData = track.get(i).getMessage();
+
+            assertEquals(realEventData.getStatus(), expectedEventData.getStatus());
+            assertEquals(realEventData.getMessage()[0], expectedEventData.getMessage()[0]);
+            assertEquals(realEventData.getMessage()[1], expectedEventData.getMessage()[1]);
+            if ((realEventData.getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) {
+                // The last byte of program change events is unused and can be random/unpredictable
+                assertEquals(realEventData.getMessage()[2], expectedEventData.getMessage()[2]);
+            }
+        }
+    }
+
+    private static ArrayList<MidiEvent> getExpectedMidiEvents() throws InvalidMidiDataException {
         ArrayList<MidiEvent> expectedMidiEvents = new ArrayList<>();
 
         MidiEvent n1on = new MidiEvent(new ShortMessage(ShortMessage.NOTE_ON, 0, 60, 60), 0);
@@ -262,23 +282,7 @@ public class TestMidiTrack {
         expectedMidiEvents.add(n3off);
         expectedMidiEvents.add(n4on);
         expectedMidiEvents.add(n4off);
-
-        // We ignore the last element of track since it always ending signal
-        assertEquals(expectedMidiEvents.size(), track.size() - 1);
-
-        // since Java Track does not allow direct access to MidiEvent list, we loop
-        for (int i = 0; i < expectedMidiEvents.size(); i++) {
-            MidiMessage expectedEventData = expectedMidiEvents.get(i).getMessage();
-            MidiMessage realEventData = track.get(i).getMessage();
-
-            assertEquals(realEventData.getStatus(), expectedEventData.getStatus());
-            assertEquals(realEventData.getMessage()[0], expectedEventData.getMessage()[0]);
-            assertEquals(realEventData.getMessage()[1], expectedEventData.getMessage()[1]);
-            if ((realEventData.getMessage()[0] & 0xFF) != ShortMessage.PROGRAM_CHANGE) {
-                // The last byte of program change events is unused, and can be random/unpredictable
-                assertEquals(realEventData.getMessage()[2], expectedEventData.getMessage()[2]);
-            }
-        }
+        return expectedMidiEvents;
     }
 
     @Test
@@ -293,7 +297,7 @@ public class TestMidiTrack {
         assertEquals(2, track.size()); // volume, and end message, there should be no program change event
 
         byte[] volumeEventData = track.get(0).getMessage().getMessage();
-        assertEquals(185, volumeEventData[0] & 0xFF); // 185 is change to channel 10, which is percussive
+        assertEquals(185, volumeEventData[0] & 0xFF); // 185 is a change to channel 10, which is percussive
         assertEquals(7, volumeEventData[1] & 0xFF); // next byte is the function, 7 is channel volume
         assertEquals(100, volumeEventData[2] & 0xFF); // set volume to 100
 
@@ -309,13 +313,13 @@ public class TestMidiTrack {
         midiTrack.applyToTrack(track);
 
         byte[] noteOnData = track.get(1).getMessage().getMessage();
-        assertEquals(153, noteOnData[0] & 0xFF); // Note on on channel 10
-        assertEquals(40, noteOnData[1] & 0xFF); // Note number 40, corresponding to instrument
+        assertEquals(153, noteOnData[0] & 0xFF); // Note on is on channel 10
+        assertEquals(40, noteOnData[1] & 0xFF); // Note number 40, corresponding to the instrument
         assertEquals(100, noteOnData[2] & 0xFF); // Velocity of note
 
         byte[] noteOffData = track.get(2).getMessage().getMessage();
         assertEquals(137, noteOffData[0] & 0xFF); // Note off on channel 10
-        assertEquals(40, noteOffData[1] & 0xFF); // Note number 40, corresponding to instrument
+        assertEquals(40, noteOffData[1] & 0xFF); // Note number 40, corresponding to the instrument
         assertEquals(0, noteOffData[2] & 0xFF); // Velocity of note
     }
 

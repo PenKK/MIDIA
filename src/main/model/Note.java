@@ -11,11 +11,11 @@ import persistance.Writable;
  * On its own, this Note is pure data, which will be converted to MIDI events and
  * applied to a {@code javax.sound.midi.Track} by MidiTrack at playback time.
  */
-public class Note implements Writable, Copyable {
+public class Note implements Writable, Copyable, Cloneable {
 
     public static final int PERCUSSIVE_DEFAULT_PITCH = 120;
 
-    private int pitch; // Notes in a percussive track do not utilize pitch
+    private int pitch; // Notes in a percussive track do not use pitch
     private int velocity;
     private long startTick;
     private long durationTicks;
@@ -89,7 +89,7 @@ public class Note implements Writable, Copyable {
      *
      * @param newDurationTicks the new duration in ticks (>= 0)
      */
-    public void setDurationTicks(int newDurationTicks) {
+    public void setDurationTicks(long newDurationTicks) {
         durationTicks = newDurationTicks;
     }
 
@@ -100,7 +100,16 @@ public class Note implements Writable, Copyable {
      */
     @Override
     public Note clone() {
-        return new Note(getPitch(), getVelocity(), getStartTick(), getDurationTicks());
+        try {
+            Note n = (Note) super.clone();
+            n.setPitch(getPitch());
+            n.setVelocity(getVelocity());
+            n.setStartTick(getStartTick());
+            n.setDurationTicks(getDurationTicks());
+            return n;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("Note clone failed.");
+        }
     }
 
     /**

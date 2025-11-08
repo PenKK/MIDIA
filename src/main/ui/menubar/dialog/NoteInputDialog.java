@@ -147,7 +147,7 @@ public class NoteInputDialog extends InputDialog {
 
     /**
      * Creates a note in the selected block from the provided parameters.
-     * If the selected track is percussive, pitch is set to a default constant.
+     * If the selected track is percussive, the pitch is set to a default constant.
      */
     private void createNote() {
         Block selectedBlock = (Block) blocksComboBox.getSelectedItem();

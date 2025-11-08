@@ -1,6 +1,5 @@
 package persistance;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
@@ -10,9 +9,6 @@ import model.Timeline;
 
 /**
  * Writes a JSON representation of a Timeline to a file.
- * <p>
- * Code adapted from src/main/persistance/JsonWriter
- * at <a href="https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo">...</a>
  */
 public class JsonWriter {
 

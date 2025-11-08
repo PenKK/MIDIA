@@ -28,7 +28,7 @@ public class TestPianoRollPlayer {
 
 
     @Test
-    void testConstructor() throws InvalidMidiDataException {
+    void testConstructor() {
         assertEquals(pianoRollPlayer.getBlock(),
                 timelineController.getTimeline().getMidiTracks().get(0).getBlock(0));
         assertEquals(pianoRollPlayer.getParentMidiTrack(), timelineController.getTimeline().getMidiTracks().get(0));
@@ -53,7 +53,7 @@ public class TestPianoRollPlayer {
 
         assertEquals(ShortMessage.PROGRAM_CHANGE, message0[0] & 0xFF);
         assertEquals(0, message0[1] & 0xFF); // On channel 0
-        // Third byte not used
+        // The third byte is not used
         assertEquals(0, track.get(0).getTick()); // At tick 0
 
         assertEquals(ShortMessage.CONTROL_CHANGE, message1[0] & 0xFF);
@@ -68,7 +68,7 @@ public class TestPianoRollPlayer {
 
         assertEquals(ShortMessage.NOTE_OFF, message3[0] & 0xFF);
         assertEquals(60, message3[1] & 0xFF); // With pitch 60
-        // can safely ignore third byte, velocity not used for note off
+        // can safely ignore the third byte, velocity not used for note off
         assertEquals(480, track.get(3).getTick());
 
         assertEquals(ShortMessage.NOTE_ON, message4[0] & 0xFF);
@@ -78,7 +78,7 @@ public class TestPianoRollPlayer {
 
         assertEquals(ShortMessage.NOTE_OFF, message5[0] & 0xFF);
         assertEquals(62, message5[1] & 0xFF); // With pitch 60
-        // can safely ignore third byte, velocity not used for note off
+        // can safely ignore the third byte, velocity not used for note off
         assertEquals(1920, track.get(5).getTick());
 
         assertEquals(ShortMessage.SYSTEM_RESET, message6[0] & 0xFF);

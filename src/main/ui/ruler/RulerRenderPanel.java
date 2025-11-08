@@ -4,14 +4,12 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.MouseAdapter;
 
 import javax.swing.JPanel;
 
 import model.Player;
 import model.Timeline;
 import model.TimelineController;
-import ui.windows.timeline.midi.TrackLabelPanel;
 
 /**
  * Base panel responsible for rendering the timeline ruler (measures, beats, divisions).

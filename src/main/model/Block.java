@@ -16,9 +16,9 @@ import persistance.Writable;
  * A block is a group of notes that exists within a track.
  * The block can be moved on the timeline by changing its start tick.
  */
-public class Block implements Writable, Copyable, Pastable {
+public class Block implements Writable, Copyable, Pastable, Cloneable {
 
-    private final ArrayList<Note> notes;
+    private ArrayList<Note> notes;
     private long startTick;
     private long durationTicks;
 
@@ -123,11 +123,18 @@ public class Block implements Writable, Copyable, Pastable {
      */
     @Override
     public Block clone() {
-        Block cloneBlock = new Block(startTick, durationTicks);
-        for (Note note : notes) {
-            cloneBlock.addNote(note.clone());
+        try {
+            Block cloneBlock = (Block) super.clone();
+            cloneBlock.notes = new ArrayList<>();
+            cloneBlock.setDurationTicks(this.durationTicks);
+            cloneBlock.setStartTick(this.startTick);
+            for (Note note : notes) {
+                cloneBlock.addNote(note.clone());
+            }
+            return cloneBlock;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
         }
-        return cloneBlock;
     }
 
     /**

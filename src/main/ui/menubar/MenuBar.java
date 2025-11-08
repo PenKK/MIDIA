@@ -12,9 +12,9 @@ import ui.menubar.menus.ViewMenu;
  */
 public class MenuBar extends JMenuBar {
 
-    private FileMenu fileMenu;
-    private TrackMenu trackMenu;
-    private ViewMenu viewMenu;
+    private final FileMenu fileMenu;
+    private final TrackMenu trackMenu;
+    private final ViewMenu viewMenu;
 
     /**
      * Constructs the menu bar and initializes its menus.

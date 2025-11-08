@@ -25,7 +25,7 @@ public class EventLog implements Iterable<Event> {
     }
 
     /**
-     * Gets instance of EventLog - creates it
+     * Gets an instance of EventLog - creates it
      * if it doesn't already exist.
      * (Singleton Design Pattern)
      * @return  instance of EventLog

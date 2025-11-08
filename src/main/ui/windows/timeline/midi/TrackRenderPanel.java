@@ -3,8 +3,6 @@ package ui.windows.timeline.midi;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -23,7 +21,7 @@ import ui.windows.timeline.midi.popup.BlockPopupMenu;
 import ui.windows.timeline.midi.popup.TrackGapPopupMenu;
 
 /**
- * Interactive rendering panel for a single MidiTrack's blocks and notes.
+ * Interactive rendering panel for a single MidiTrack's block and notes.
  * Supports context menus and opening a piano roll on double click.
  */
 public class TrackRenderPanel extends JPanel {

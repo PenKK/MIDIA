@@ -18,17 +18,18 @@ import model.instrument.TonalInstrument;
 import persistance.JsonReader;
 import persistance.JsonWriter;
 
-// Digital Audio Workstation console based application
-// This class is the user interface to interact with the MIDI timeline
-// This class is partially inspired by TellerApp ui/TellerApp.java 
-// https://github.students.cs.ubc.ca/CPSC210/TellerApp/blob/main/src/main/ca/ubc/cpsc210/bank/ui/TellerApp.java
-// The MIDI spec was referenced heavily to interpret MIDI events: https://midi.org/spec-detail
-// The MIDI instruments prompted for are from https://en.wikipedia.org/wiki/General_MIDI
+/**
+ * Digital Audio Workstation console-based application
+ * This class is the user interface to interact with the MIDI timeline
+ * This class is partially inspired by TellerApp ui/TellerApp.java
+ * <a href="https://github.students.cs.ubc.ca/CPSC210/TellerApp/blob/main/src/main/ca/ubc/cpsc210/bank/ui/TellerApp.java">...</a>
+ * The MIDI spec was referenced to interpret MIDI events: <a href="https://midi.org/spec-detail">...</a>
+ * The MIDI instruments prompted for are from <a href="https://en.wikipedia.org/wiki/General_MIDI">...</a>
+ */
 public class DawCLI {
 
     private TimelineController timelineController;
     private Scanner sc;
-    private JsonReader reader;
     private JsonWriter writer;
 
     public static void main(String[] args) {
@@ -39,20 +40,20 @@ public class DawCLI {
         }
     }
 
-    // EFFECTS: initializes an empty timeline, sets up scanner, and runs the application
+    // EFFECTS: initializes an empty timeline, sets up Scanner, and runs the application
     public DawCLI() throws InvalidMidiDataException {
         try {
             timelineController = new TimelineController();
             sc = new Scanner(System.in);
             appLoop();
         } catch (MidiUnavailableException e) {
-            System.out.println("No MIDI device avaliable, exiting");
+            System.out.println("No MIDI device available, exiting");
         }
     }
 
-    // EFFECTS: displays and handles user intereaction with program 
+    // EFFECTS: displays and handles user interaction with the program
     @SuppressWarnings("methodlength")
-    private void appLoop() throws MidiUnavailableException, InvalidMidiDataException {
+    private void appLoop() throws MidiUnavailableException {
         while (true) {
             displayMenuOptions();
             String[] validInputs = new String[] { "s", "l", "q", "t", "n", "d" };
@@ -84,7 +85,7 @@ public class DawCLI {
 
     // MODIFIES: this
     // EFFECTS: closes old project and opens a new one
-    private void configureNewProject() throws MidiUnavailableException, InvalidMidiDataException {
+    private void configureNewProject() {
         timelineController.setInstance(new Timeline("New project", 
                 timelineController.getPropertyChangeSupport()));
         timelineOptions();
@@ -104,7 +105,8 @@ public class DawCLI {
             return;
         }
 
-        projectFiles[index].delete();
+        if (!projectFiles[index].delete())
+            System.out.println("Unable to delete file");
     }
 
     // EFFECTS: prints possible menu options and additional data
@@ -120,7 +122,7 @@ public class DawCLI {
     }
 
     // EFFECTS: displays and handles user interaction with timeline
-    private void timelineOptions() throws MidiUnavailableException {
+    private void timelineOptions() {
         while (true) {
             displayTimelineOptions();
             String input = getStringInput(new String[] { "p", "t", "s", "b", "y", "r" }, false);
@@ -160,7 +162,7 @@ public class DawCLI {
         System.out.println("Select an index to load");
         int index = getNumericalInput(1, projectFiles.length, false) - 1;
 
-        reader = new JsonReader(projectFiles[index].getPath());
+        JsonReader reader = new JsonReader(projectFiles[index].getPath());
         try {
             System.out.println("Loading...");
             Timeline newTimeline = reader.read();
@@ -315,7 +317,7 @@ public class DawCLI {
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
-    // EFFECTS: Prompts user for options to modify track array
+    // EFFECTS: Prompts user for options to modify a track array
     private void handleTrackOptions() {
         String input;
         String[] validStrings = new String[] { "n", "n", "r", "d", };
@@ -412,7 +414,7 @@ public class DawCLI {
         String[] validInputs = { "n", "i", "v", "m", "n", "r", "d", "c" };
         Timeline timeline = timelineController.getTimeline();
         MidiTrack selectedTrack = timeline.getTrack(index);
-        displayEditTrackOptions(validInputs, selectedTrack);
+        displayEditTrackOptions(selectedTrack);
         if (!selectedTrack.getBlocks().isEmpty()) {
             validInputs[0] = "e";
         }
@@ -449,8 +451,8 @@ public class DawCLI {
         editTrack(index);
     }
 
-    // MODFIES: selectedTrack
-    // EFFECTS: prompts user for new volume in 0 to 100 and applies to to selectedTrack
+    // MODIFIES: selectedTrack
+    // EFFECTS: prompts user for new volume in 0 to 100 and applies to selectedTrack
     private void changeTrackVolume(MidiTrack selectedTrack) {
         System.out.println("Enter new volume");
         int volume = getNumericalInput(0, 100, false);
@@ -466,7 +468,7 @@ public class DawCLI {
     }
 
     // MODIFIES: midiTrack
-    // EFFECTS: Prompts for input to change a tracks instrument, gives different ranges depending on
+    // EFFECTS: Prompts for input to change a track instrument, gives different ranges depending on
     //          if the track is percussive.
     private void changeTrackInstrument(MidiTrack midiTrack) {
         printInstruments(midiTrack.isPercussive());
@@ -485,7 +487,7 @@ public class DawCLI {
         midiTrack.setInstrument(instr);
     }
 
-    // EFFECTS: prompts user to select a block by index to edit
+    // EFFECTS: prompts the user to select a block by index to edit
     private void chooseBlock(MidiTrack selectedTrack) {
         displayBlocks(selectedTrack);
         System.out.println("Select an index");
@@ -493,7 +495,7 @@ public class DawCLI {
     }
 
     // EFFECTS: prints possible options for user to edit a track and other track info
-    private void displayEditTrackOptions(String[] validInputs, MidiTrack selectedTrack) {
+    private void displayEditTrackOptions(MidiTrack selectedTrack) {
         clearConsole();
 
         System.out.printf("Track             %s%n", selectedTrack.getName());
@@ -526,7 +528,7 @@ public class DawCLI {
     }
 
     // MODIFIES: midiTrack
-    // EFFECTS: creates new block in a track, and prompts for a start tick, and returns the index it was created at
+    // EFFECTS: creates new block in a track, and prompts for a start tick and returns the index it was created at
     private int createNewBlock(MidiTrack midiTrack) {
         System.out.println("At what beat does this block start?");
         Player player = timelineController.getTimeline().getPlayer();
@@ -590,7 +592,7 @@ public class DawCLI {
         System.out.printf("Return                [r]%n");
     }
 
-    // EFFECTS: Prompts user to select a note from the given table of notes
+    // EFFECTS: Prompts the user to select a note from the given table of notes
     private void chooseNoteToEdit(Block selectedBlock, boolean percussive) {
         displayNotes(selectedBlock.getNotes(), percussive);
         System.out.println("Enter an index");
@@ -746,7 +748,7 @@ public class DawCLI {
 
     // REQUIRES: min <= max
     // EFFECTS: prompts the user for integer input in a range and returns it.
-    //          if returnFail is true then -1 will be returned on a non numeric input instead of reprompting
+    //          if returnFail is true, then -1 will be returned on a non-numeric input instead of reprompting
     private int getNumericalInput(int min, int max, boolean returnFail) {
         while (true) {
             int input;
@@ -807,7 +809,7 @@ public class DawCLI {
     }
 
     // REQUIRES: if acceptsAnyString == false, acceptedStrings != null.
-    // EFFECTS: takes input for a string value. If acceptsAnyString is true accepted strings will be ingnored
+    // EFFECTS: takes input for a string value. If acceptsAnyString is true, accepted strings will be ignored
     private String getStringInput(String[] acceptedStrings, boolean acceptsAnyString) {
         String input;
         while (true) {

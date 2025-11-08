@@ -19,7 +19,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
-import javax.swing.Timer;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.MouseInputAdapter;
@@ -98,7 +97,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
     }
 
     /**
-     * Initializes the BPM label with current tempo and attaches drag-to-adjust behavior.
+     * Initializes the BPM label with the current tempo and attaches drag-to-adjust behavior.
      */
     private void createBpmLabel() {
         float bpm = timelineController.getTimeline().getPlayer().getBPM();
@@ -109,9 +108,9 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         bpmDisplay.putClientProperty("FlatLaf.style", "font: bold 14 Monospaced; background:rgb(77, 77, 77); arc: 6;");
         bpmDisplay.setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
 
-        MouseInputAdapter bpmMouseAdapapter = new BpmMouseInputAdapter(timelineController, bpmDisplay);
-        bpmDisplay.addMouseListener(bpmMouseAdapapter);
-        bpmDisplay.addMouseMotionListener(bpmMouseAdapapter);
+        MouseInputAdapter bpmMouseAdapter = new BpmMouseInputAdapter(timelineController, bpmDisplay);
+        bpmDisplay.addMouseListener(bpmMouseAdapter);
+        bpmDisplay.addMouseMotionListener(bpmMouseAdapter);
     }
 
     private void createTimeLabel() {

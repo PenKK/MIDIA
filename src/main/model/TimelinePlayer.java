@@ -125,7 +125,7 @@ public class TimelinePlayer extends Player {
      * @return length in ticks
      */
     @Override
-    public long getLengthTicks() { return timeline.getLengthTicks(); };
+    public long getLengthTicks() { return timeline.getLengthTicks(); }
 
     @Override
     public void startRulerDrag() {

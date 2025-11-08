@@ -3,7 +3,6 @@ package model;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import model.editing.DawClipboard;
 import persistance.TestUtil;
 
+@SuppressWarnings("PointlessArithmeticExpression")
 public class TestBlock {
     Block block;
 

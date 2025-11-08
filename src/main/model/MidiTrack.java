@@ -225,7 +225,7 @@ public class MidiTrack implements Writable, Pastable {
     /**
      * Returns whether this track is percussive (MIDI channel 9).
      *
-     * @return true if channel is 9; false otherwise
+     * @return true if a channel is 9; false otherwise
      */
     public boolean isPercussive() {
         return channel == 9;

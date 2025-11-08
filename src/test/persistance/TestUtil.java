@@ -12,8 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
-// Code adapted from src/test/persistance/JsonTest
-//     at https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class TestUtil {
     public static void assertTimelineEquals(Timeline timeline1, Timeline timeline2) {
         assertEquals(timeline1.getProjectName(), timeline2.getProjectName());
@@ -89,7 +87,7 @@ public class TestUtil {
 
         Block melodyBlock = new Block(0, beatTicks * 19);
         Block drumsBlock = new Block(0, 20 * Player.PULSES_PER_QUARTER_NOTE);
-        Block bassBlock = new Block(beatTicks, (long) ((beatTicks * (double) 4.5) + (beatTicks / 2)));
+        Block bassBlock = new Block(beatTicks, (long) ((beatTicks * 4.5) + ((double) beatTicks / 2)));
         Block hiHatBlock = new Block(beatTicks * 4, beatTicks * 14);
 
         melody.addBlock(melodyBlock);
@@ -115,10 +113,10 @@ public class TestUtil {
         melodyBlock.addNote(new Note(66, 127, beatTicks * 15, beatTicks * 4));
 
         bassBlock.addNote(new Note(32, 100, beatTicks, beatTicks / 2));
-        bassBlock.addNote(new Note(32, 100, (int) (beatTicks * (double) 1.5), beatTicks / 2));
+        bassBlock.addNote(new Note(32, 100, (int) (beatTicks * 1.5), beatTicks / 2));
 
         bassBlock.addNote(new Note(32, 100, beatTicks * 4, beatTicks / 2));
-        bassBlock.addNote(new Note(32, 100, (int) (beatTicks * (double) 4.5), beatTicks / 2));
+        bassBlock.addNote(new Note(32, 100, (int) (beatTicks * 4.5), beatTicks / 2));
 
         Block bassBlock2 = bassBlock.clone();
         bassBlock2.setStartTick(beatTicks * 11);
