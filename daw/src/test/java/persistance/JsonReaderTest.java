@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import model.Timeline;
 
 
-public class TestJsonReader {
+public class JsonReaderTest {
 
     JsonReader reader;
 
@@ -35,7 +35,7 @@ public class TestJsonReader {
         reader = new JsonReader("./data/test/testReaderNewTimeline.json");
         try {
             Timeline timeline = reader.read();
-            TestUtil.assertTimelineEquals(timeline, new Timeline("New project", null));
+            UtilTest.assertTimelineEquals(timeline, new Timeline("New project", null));
         } catch (IOException e) {
             fail("Path should exist and be accessible");
         } catch (InvalidMidiDataException e) {
@@ -52,8 +52,8 @@ public class TestJsonReader {
             timeline2.setPropertyChangeSupport(new PropertyChangeSupport(timeline2));
             timeline2.getPlayer().setBPM(160);
 
-            TestUtil.addSampleSong(timeline2);
-            TestUtil.assertTimelineEquals(timeline, timeline2);
+            UtilTest.addSampleSong(timeline2);
+            UtilTest.assertTimelineEquals(timeline, timeline2);
         } catch (InvalidMidiDataException e) {
             fail("InvalidMidiDataException should not be thrown");
         } catch (IOException e) {

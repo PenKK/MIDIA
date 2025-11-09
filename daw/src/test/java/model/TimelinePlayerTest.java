@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import model.instrument.Instrument;
 import model.instrument.TonalInstrument;
 import model.instrument.PercussiveInstrument;
-import persistance.TestUtil;
+import persistance.UtilTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 // See https://midi.org/expanded-midi-1-0-messages-list 
 // to understand the checking of bytes in MidiEvents in tests
 @SuppressWarnings("PointlessArithmeticExpression")
-public class TestTimelinePlayer extends TestUtil {
+public class TimelinePlayerTest extends UtilTest {
     Timeline timeline;
     ArrayList<Integer> expectedChannels;
     Instrument instr = TonalInstrument.ACOUSTIC_GRAND_PIANO;

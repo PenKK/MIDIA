@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import model.Timeline;
 
-public class TestJsonWriter {
+public class JsonWriterTest {
 
     JsonWriter jsonWriter;
     JsonReader jsonReader;
@@ -63,7 +63,7 @@ public class TestJsonWriter {
 
             jsonReader = new JsonReader(path);
             Timeline timeline2 = jsonReader.read();
-            TestUtil.assertTimelineEquals(timeline, timeline2);
+            UtilTest.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         } catch (InvalidMidiDataException e) {
@@ -87,7 +87,7 @@ public class TestJsonWriter {
 
             jsonReader = new JsonReader(path);
             Timeline timeline2 = jsonReader.read();
-            TestUtil.assertTimelineEquals(timeline, timeline2);
+            UtilTest.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         } catch (InvalidMidiDataException e) {
@@ -111,7 +111,7 @@ public class TestJsonWriter {
 
             jsonReader = new JsonReader(path);
             Timeline timeline2 = jsonReader.read();
-            TestUtil.assertTimelineEquals(timeline, timeline2);
+            UtilTest.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         } catch (InvalidMidiDataException e) {
@@ -126,7 +126,7 @@ public class TestJsonWriter {
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe", null);
             timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
-            TestUtil.addSampleSong(timeline);
+            UtilTest.addSampleSong(timeline);
             timeline.getPlayer().setBPM(160);
 
             jsonWriter.open();
@@ -135,7 +135,7 @@ public class TestJsonWriter {
 
             jsonReader = new JsonReader(path);
             Timeline timeline2 = jsonReader.read();
-            TestUtil.assertTimelineEquals(timeline, timeline2);
+            UtilTest.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
         } catch (InvalidMidiDataException e) {

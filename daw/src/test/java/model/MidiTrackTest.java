@@ -19,11 +19,11 @@ import org.junit.jupiter.api.Test;
 import model.editing.DawClipboard;
 import model.instrument.Instrument;
 import model.instrument.TonalInstrument;
-import persistance.TestUtil;
+import persistance.UtilTest;
 import model.instrument.PercussiveInstrument;
 
 // Much of the testing is done according to https://midi.org/spec-detail
-public class TestMidiTrack {
+public class MidiTrackTest {
 
     MidiTrack midiTrack;
     Instrument instr = TonalInstrument.ACOUSTIC_GRAND_PIANO;
@@ -387,8 +387,8 @@ public class TestMidiTrack {
         assertEquals(3000, block2.getStartTick());
         assertEquals(1, block.getNotes().size());
         assertEquals(1, block2.getNotes().size());
-        TestUtil.assertNoteEquals(block.getNotes().get(0), n);
-        TestUtil.assertNoteEquals(block2.getNotes().get(0), n2);
+        UtilTest.assertNoteEquals(block.getNotes().get(0), n);
+        UtilTest.assertNoteEquals(block2.getNotes().get(0), n2);
     }
 
         @Test
@@ -417,7 +417,7 @@ public class TestMidiTrack {
         assertEquals(3000, block2.getStartTick());
         assertEquals(1, block.getNotes().size());
         assertEquals(1, block2.getNotes().size());
-        TestUtil.assertNoteEquals(block.getNotes().get(0), n);
-        TestUtil.assertNoteEquals(block2.getNotes().get(0), n2);
+        UtilTest.assertNoteEquals(block.getNotes().get(0), n);
+        UtilTest.assertNoteEquals(block2.getNotes().get(0), n2);
     }
 }

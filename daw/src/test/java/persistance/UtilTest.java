@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
-public class TestUtil {
+public class UtilTest {
     public static void assertTimelineEquals(Timeline timeline1, Timeline timeline2) {
         assertEquals(timeline1.getProjectName(), timeline2.getProjectName());
         assertEquals(timeline1.getPlayer().getBeatDivision(), timeline2.getPlayer().getBeatDivision());

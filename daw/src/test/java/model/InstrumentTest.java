@@ -7,7 +7,7 @@ import model.instrument.Instrument;
 import model.instrument.TonalInstrument;
 import model.instrument.PercussiveInstrument;
 
-public class TestInstrument {
+public class InstrumentTest {
 
     @Test
     void testGetters() {

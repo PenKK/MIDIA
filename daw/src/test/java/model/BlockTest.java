@@ -9,10 +9,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import model.editing.DawClipboard;
-import persistance.TestUtil;
+import persistance.UtilTest;
 
 @SuppressWarnings("PointlessArithmeticExpression")
-public class TestBlock {
+public class BlockTest {
     Block block;
 
     @BeforeEach
@@ -144,7 +144,7 @@ public class TestBlock {
         expectedNotes.add(new Note(65, 90, 9 + 10, 17));
         expectedNotes.add(new Note(56, 50, 4 + 10, 9));
 
-        TestUtil.checkNotesEqual(expectedNotes, block.getNotesTimeline());
+        UtilTest.checkNotesEqual(expectedNotes, block.getNotesTimeline());
 
         expectedNotes.clear();
 
@@ -153,7 +153,7 @@ public class TestBlock {
         expectedNotes.add(new Note(65, 90, 9 + 4, 17));
         expectedNotes.add(new Note(56, 50, 4 + 4, 9));
 
-        TestUtil.checkNotesEqual(expectedNotes, block.getNotesTimeline());
+        UtilTest.checkNotesEqual(expectedNotes, block.getNotesTimeline());
 
         block.setStartTick(0);
         expectedNotes.clear();
@@ -161,7 +161,7 @@ public class TestBlock {
         expectedNotes.add(new Note(60, 60, 0 + 0, 5));
         expectedNotes.add(new Note(65, 90, 9 + 0, 17));
         expectedNotes.add(new Note(56, 50, 4 + 0, 9));
-        TestUtil.checkNotesEqual(expectedNotes, block.getNotesTimeline());
+        UtilTest.checkNotesEqual(expectedNotes, block.getNotesTimeline());
     }
 
     @Test

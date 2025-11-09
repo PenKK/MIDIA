@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Unit tests for the Event class
  */
-public class TestEvent {
+public class EventTest {
     private Event e;
     private Event e2;
     private Date d;

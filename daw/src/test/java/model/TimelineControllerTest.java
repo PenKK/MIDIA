@@ -7,9 +7,9 @@ import java.beans.PropertyChangeListener;
 
 import org.junit.jupiter.api.*;
 
-import persistance.TestUtil;
+import persistance.UtilTest;
 
-public class TestTimelineController extends TestUtil {
+public class TimelineControllerTest extends UtilTest {
 
     private TimelineController tc;
 

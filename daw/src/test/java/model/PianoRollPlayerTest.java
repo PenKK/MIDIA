@@ -11,7 +11,7 @@ import javax.sound.midi.Track;
 
 // See https://midi.org/expanded-midi-1-0-messages-list
 // to understand the checking of bytes in MidiEvents in tests
-public class TestPianoRollPlayer {
+public class PianoRollPlayerTest {
 
     private PianoRollPlayer pianoRollPlayer;
     private TimelineController timelineController;
