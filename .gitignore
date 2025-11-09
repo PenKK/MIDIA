@@ -1,8 +1,9 @@
-/out/
+out/
 *.class
 /bin/
 data/projects/autosave
-/out/*
 *.iml
 .idea/
 .vscode/
+.gradle/
+build/

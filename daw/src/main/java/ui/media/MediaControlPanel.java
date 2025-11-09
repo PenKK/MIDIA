@@ -83,8 +83,8 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
         createBpmLabel();
 
         try {
-            playImage = getImageIcon("/resources/images/play.png");
-            pauseImage = getImageIcon("/resources/images/pause.png");
+            playImage = getImageIcon("/images/play.png");
+            pauseImage = getImageIcon("/images/pause.png");
         } catch (Exception e) {
             System.out.println("Unable to load media icons: " + e.getMessage());
         }
@@ -101,7 +101,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
      */
     private void createBpmLabel() {
         float bpm = timelineController.getTimeline().getPlayer().getBPM();
-        ImageIcon quaverIcon = getImageIcon("/resources/images/quaver.png");
+        ImageIcon quaverIcon = getImageIcon("/images/quaver.png");
 
         bpmDisplay = new JLabel(String.format("%.2f", bpm), quaverIcon, JLabel.RIGHT);
         bpmDisplay.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
@@ -149,7 +149,7 @@ public class MediaControlPanel extends JPanel implements ActionListener, ChangeL
      * @param path the resource path to the image
      * @return the loaded ImageIcon, or null if it could not be loaded
      */
-    private ImageIcon getImageIcon(String path) {
+    private ImageIcon   getImageIcon(String path) {
         try {
             return new ImageIcon(
                     ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream(path)))
