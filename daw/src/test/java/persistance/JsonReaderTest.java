@@ -16,12 +16,13 @@ import model.Timeline;
 public class JsonReaderTest {
 
     JsonReader reader;
+    PropertyChangeSupport pcsTest = new PropertyChangeSupport("test");
 
     @Test
     void testReaderNonExistentFile() throws MidiUnavailableException, IOException {
         reader = new JsonReader(UtilTest.getReadFilePath("noSuchFile.json"));
         try {
-            reader.read();
+            reader.read(pcsTest);
             fail("IOException expected");
         } catch (InvalidMidiDataException e) {
             fail("InvalidMidiDataException should not be thrown");
@@ -34,7 +35,7 @@ public class JsonReaderTest {
     void testNewTimeline() throws MidiUnavailableException, IOException {
         reader = new JsonReader(UtilTest.getReadFilePath("testReaderNewTimeline.json"));
         try {
-            Timeline timeline = reader.read();
+            Timeline timeline = reader.read(pcsTest);
             UtilTest.assertTimelineEquals(timeline, new Timeline("New project", null));
         } catch (IOException e) {
             fail("Path should exist and be accessible");
@@ -47,7 +48,7 @@ public class JsonReaderTest {
     void testExtensiveTimeline() throws MidiUnavailableException, IOException {
         reader = new JsonReader(UtilTest.getReadFilePath("testReaderExtensive.json"));
         try {
-            Timeline timeline = reader.read();
+            Timeline timeline = reader.read(pcsTest);
             Timeline timeline2 = new Timeline("aaaa", null);
             timeline2.setPropertyChangeSupport(new PropertyChangeSupport(timeline2));
             timeline2.getPlayer().setBPM(160);

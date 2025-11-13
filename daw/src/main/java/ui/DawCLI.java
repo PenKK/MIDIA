@@ -3,6 +3,7 @@ package ui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -17,12 +18,11 @@ import model.instrument.PercussiveInstrument;
 import model.instrument.TonalInstrument;
 import persistance.JsonReader;
 import persistance.JsonWriter;
+import persistance.OSPathResolver;
 
 /**
  * Digital Audio Workstation console-based application
- * This class is the user interface to interact with the MIDI timeline
- * This class is partially inspired by TellerApp ui/TellerApp.java
- * <a href="https://github.students.cs.ubc.ca/CPSC210/TellerApp/blob/main/src/main/ca/ubc/cpsc210/bank/ui/TellerApp.java">...</a>
+ * This class is the cli user interface to interact with the MIDI timeline
  * The MIDI spec was referenced to interpret MIDI events: <a href="https://midi.org/spec-detail">...</a>
  * The MIDI instruments prompted for are from <a href="https://en.wikipedia.org/wiki/General_MIDI">...</a>
  */
@@ -31,17 +31,10 @@ public class DawCLI {
     private TimelineController timelineController;
     private Scanner sc;
     private JsonWriter writer;
-
-    public static void main(String[] args) {
-        try {
-            new DawCLI();
-        } catch (InvalidMidiDataException e) {
-            System.err.println("Invalid MidiData!");
-        }
-    }
+    private final Path projDirectory = OSPathResolver.getProjectsDirectory();
 
     // EFFECTS: initializes an empty timeline, sets up Scanner, and runs the application
-    public DawCLI() throws InvalidMidiDataException {
+    public DawCLI() {
         try {
             timelineController = new TimelineController();
             sc = new Scanner(System.in);
@@ -153,7 +146,7 @@ public class DawCLI {
     // EFFECTS: prompts user to select a project to load by index
     private void load() throws MidiUnavailableException {
         clearConsole();
-        File projectsDirectory = new File("./data/projects");
+        File projectsDirectory = new File(projDirectory.toString());
         File[] projectFiles = projectsDirectory.listFiles(file -> file.getName().endsWith(".json"));
 
         assert projectFiles != null;
@@ -165,8 +158,7 @@ public class DawCLI {
         JsonReader reader = new JsonReader(projectFiles[index].getPath());
         try {
             System.out.println("Loading...");
-            Timeline newTimeline = reader.read();
-            newTimeline.setPropertyChangeSupport(timelineController.getPropertyChangeSupport());
+            Timeline newTimeline = reader.read(timelineController.getPropertyChangeSupport());
             timelineController.setInstance(newTimeline);
         } catch (IOException e) {
             System.out.println("Something went terribly wrong, unable to load project");
@@ -204,7 +196,7 @@ public class DawCLI {
             save();
         } else {
             try {
-                writer = new JsonWriter("./data/projects/" + timeline.getProjectName() + ".json");
+                writer = new JsonWriter(projDirectory.resolve( timeline.getProjectName() + ".json").toString());
                 writer.open();
                 writer.write(timeline);
                 writer.close();
@@ -222,7 +214,7 @@ public class DawCLI {
         Timeline timeline = timelineController.getTimeline();
         timeline.setProjectName(name);
 
-        writer = new JsonWriter("./data/projects/" + name + ".json");
+        writer = new JsonWriter(projDirectory.resolve(name + ".json").toString());
         try {
             writer.open();
             writer.write(timeline);

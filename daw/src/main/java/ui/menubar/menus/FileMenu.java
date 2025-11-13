@@ -93,8 +93,7 @@ public class FileMenu extends Menu {
         JsonReader reader = new JsonReader(path);
 
         try {
-            Timeline newTimeline = reader.read();
-            newTimeline.setPropertyChangeSupport(timelineController.getPropertyChangeSupport());
+            Timeline newTimeline = reader.read(timelineController.getPropertyChangeSupport());
             timelineController.setInstance(newTimeline);
         } catch (JSONException e) {
             System.out.printf("Invalid JSON data at path %s%n", path);

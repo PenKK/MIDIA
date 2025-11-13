@@ -37,10 +37,10 @@ public record JsonReader(String sourcePath) {
      * @throws MidiUnavailableException   if MIDI resources are unavailable
      * @throws InvalidMidiDataException   if invalid MIDI data is encountered
      */
-    public Timeline read() throws IOException, MidiUnavailableException, InvalidMidiDataException {
+    public Timeline read(PropertyChangeSupport pcs) throws IOException, MidiUnavailableException, InvalidMidiDataException {
         String jsonData = readFile(sourcePath);
         JSONObject jsonObject = new JSONObject(jsonData);
-        return parseTimeline(jsonObject);
+        return parseTimeline(jsonObject, pcs);
     }
 
     /**
@@ -64,11 +64,12 @@ public record JsonReader(String sourcePath) {
      * Parses a Timeline from a JSON object.
      *
      * @param jsonObject the JSON object representing the timeline
+     * @param pcs        the PropertyChangeSupport to use for the timeline
      * @return the parsed Timeline
      */
-    private Timeline parseTimeline(JSONObject jsonObject) {
+    private Timeline parseTimeline(JSONObject jsonObject, PropertyChangeSupport pcs) {
         String projectName = jsonObject.getString("projectName");
-        Timeline timeline = new Timeline(projectName, new PropertyChangeSupport(projectName));
+        Timeline timeline = new Timeline(projectName, pcs);
 
         int beatDivision = jsonObject.getInt("beatDivision");
         int beatsPerMeasure = jsonObject.getInt("beatsPerMeasure");
@@ -84,7 +85,6 @@ public record JsonReader(String sourcePath) {
         timeline.setHorizontalScaleFactor(horizontalScale);
         addMidiTracks(timeline, midiTracksJsonArray);
 
-        timeline.setPropertyChangeSupport(null);
         return timeline;
     }
 

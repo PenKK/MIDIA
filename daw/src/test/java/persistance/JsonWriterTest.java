@@ -17,6 +17,7 @@ public class JsonWriterTest {
 
     JsonWriter jsonWriter;
     JsonReader jsonReader;
+    PropertyChangeSupport pcsTest = new PropertyChangeSupport("test");
 
     @Test
     void testWriteValidPath() throws IOException {
@@ -54,7 +55,7 @@ public class JsonWriterTest {
             jsonWriter.close();
 
             jsonReader = new JsonReader(path);
-            Timeline timeline2 = jsonReader.read();
+            Timeline timeline2 = jsonReader.read(pcsTest);
             UtilTest.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
@@ -78,7 +79,7 @@ public class JsonWriterTest {
             jsonWriter.close();
 
             jsonReader = new JsonReader(path);
-            Timeline timeline2 = jsonReader.read();
+            Timeline timeline2 = jsonReader.read(pcsTest);
             UtilTest.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
@@ -102,7 +103,7 @@ public class JsonWriterTest {
             jsonWriter.close();
 
             jsonReader = new JsonReader(path);
-            Timeline timeline2 = jsonReader.read();
+            Timeline timeline2 = jsonReader.read(pcsTest);
             UtilTest.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");
@@ -126,7 +127,7 @@ public class JsonWriterTest {
             jsonWriter.close();
 
             jsonReader = new JsonReader(path);
-            Timeline timeline2 = jsonReader.read();
+            Timeline timeline2 = jsonReader.read(pcsTest);
             UtilTest.assertTimelineEquals(timeline, timeline2);
         } catch (IOException e) {
             fail("Exception should not have been thrown");

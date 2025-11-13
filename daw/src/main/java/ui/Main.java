@@ -7,9 +7,14 @@ import com.formdev.flatlaf.FlatDarculaLaf;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        // FlatLaf library for look and feel
-        // https://www.formdev.com/flatlaf/
-        FlatDarculaLaf.setup();
-        new DawFrame();
+
+        if (args.length > 0 && args[0].equals("--cli"))
+            new DawCLI();
+        else {
+            FlatDarculaLaf.setup();
+            new DawFrame();
+        }
+        // check for resource leaks; only the main thread should be alive
+        assert Thread.getAllStackTraces().keySet().stream().filter(t -> !t.isDaemon()).count() == 1;
     }
 }

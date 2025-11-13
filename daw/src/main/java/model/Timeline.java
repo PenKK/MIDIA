@@ -145,8 +145,14 @@ public class Timeline implements Writable {
         pcs.firePropertyChange("horizontalScaleFactor", oldHorizontalScale, newHorizontalScale);
     }
 
-    public void setPlayer(Player p) {
-        player = p;
+    /**
+     * Sets the player for this timeline and closes the old player if it exists.
+     * @param newPlayer the new player
+     */
+    public void setPlayer(Player newPlayer) {
+        if (player != null)
+            player.close();
+        player = newPlayer;
     }
 
     /**
