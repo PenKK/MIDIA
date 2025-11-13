@@ -28,7 +28,6 @@ import model.instrument.PercussiveInstrument;
  * Reads a Timeline from JSON data stored in a file.
  */
 public record JsonReader(String sourcePath) {
-    // EFFECTS: constructs reader to read from a source file
 
     /**
      * Reads a timeline from the JSON file.

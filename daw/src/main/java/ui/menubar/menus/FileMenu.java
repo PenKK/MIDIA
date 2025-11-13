@@ -18,14 +18,15 @@ import model.Timeline;
 import model.TimelineController;
 import persistance.JsonReader;
 import persistance.JsonWriter;
+import persistance.OSPathResolver;
 
 /**
  * The File menu, responsible for opening, saving, creating, and deleting projects.
  */
 public class FileMenu extends Menu {
 
-    public static final String PROJECTS_DIRECTORY = "./daw/data/projects";
-    public static final String AUTO_SAVE_FILE_DIRECTORY = PROJECTS_DIRECTORY.concat("/autosave/");
+    public static String PROJECTS_DIRECTORY = OSPathResolver.getProjectsDirectory().toString();
+    public static String AUTO_SAVE_FILE_DIRECTORY = PROJECTS_DIRECTORY.concat("/autosave/");
 
     private final MenuItem open;
     private final MenuItem save;

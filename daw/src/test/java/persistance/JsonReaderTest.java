@@ -18,8 +18,8 @@ public class JsonReaderTest {
     JsonReader reader;
 
     @Test
-    void testReaderNonExistentFile() throws MidiUnavailableException {
-        reader = new JsonReader("./data/test/noSuchFile.json");
+    void testReaderNonExistentFile() throws MidiUnavailableException, IOException {
+        reader = new JsonReader(UtilTest.getReadFilePath("noSuchFile.json"));
         try {
             reader.read();
             fail("IOException expected");
@@ -31,8 +31,8 @@ public class JsonReaderTest {
     }
 
     @Test
-    void testNewTimeline() throws MidiUnavailableException {
-        reader = new JsonReader("./data/test/testReaderNewTimeline.json");
+    void testNewTimeline() throws MidiUnavailableException, IOException {
+        reader = new JsonReader(UtilTest.getReadFilePath("testReaderNewTimeline.json"));
         try {
             Timeline timeline = reader.read();
             UtilTest.assertTimelineEquals(timeline, new Timeline("New project", null));
@@ -44,8 +44,8 @@ public class JsonReaderTest {
     }
 
     @Test
-    void testExtensiveTimeline() throws MidiUnavailableException {
-        reader = new JsonReader("./data/test/testReaderExtensive.json");
+    void testExtensiveTimeline() throws MidiUnavailableException, IOException {
+        reader = new JsonReader(UtilTest.getReadFilePath("testReaderExtensive.json"));
         try {
             Timeline timeline = reader.read();
             Timeline timeline2 = new Timeline("aaaa", null);

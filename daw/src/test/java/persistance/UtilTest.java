@@ -10,9 +10,28 @@ import model.instrument.PercussiveInstrument;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class UtilTest {
+
+    public static final Path TEST_PATH = Paths.get( "src", "test", "json-tests");
+    public static final Path TEST_PATH_WRITE = TEST_PATH.resolve("write");
+    public static final Path TEST_PATH_READ = TEST_PATH.resolve("read");
+
+    public static String getReadFilePath(String filename) throws IOException {
+        Files.createDirectories(TEST_PATH_READ);
+        return TEST_PATH_READ.resolve(filename).toString();
+    }
+
+    public static String getWriteFilePath(String filename) throws IOException {
+        Files.createDirectories(TEST_PATH_WRITE);
+        return TEST_PATH_WRITE.resolve(filename).toString();
+    }
+
     public static void assertTimelineEquals(Timeline timeline1, Timeline timeline2) {
         assertEquals(timeline1.getProjectName(), timeline2.getProjectName());
         assertEquals(timeline1.getPlayer().getBeatDivision(), timeline2.getPlayer().getBeatDivision());

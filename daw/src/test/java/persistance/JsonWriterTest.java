@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
+import java.nio.file.InvalidPathException;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiUnavailableException;
@@ -18,19 +19,8 @@ public class JsonWriterTest {
     JsonReader jsonReader;
 
     @Test
-    void testWriteValidPath() {
-        jsonWriter = new JsonWriter("./data/test/testFile.json");
-        try {
-            jsonWriter.open();
-            // pass
-        } catch (IOException e) {
-            fail("Did not expect an exception due to invalid file path");
-        }
-    }
-
-    @Test
-    void testWriteValidPathNoExtension() {
-        jsonWriter = new JsonWriter("./data/test/testFile");
+    void testWriteValidPath() throws IOException {
+        jsonWriter = new JsonWriter(UtilTest.getWriteFilePath("testFile.json"));
         try {
             jsonWriter.open();
             // pass
@@ -41,19 +31,21 @@ public class JsonWriterTest {
 
     @Test
     void testWriteInvalidPath() {
-        jsonWriter = new JsonWriter("./data/test/\0fil:e.json");
         try {
+            jsonWriter = new JsonWriter(UtilTest.getWriteFilePath("\0exception.json"));
             jsonWriter.open();
             fail("Excepted exception due to invalid path");
-        } catch (IOException e) {
+        } catch (InvalidPathException e) {
             // pass
+        } catch (IOException e) {
+            fail("Expected InvalidPathException, got " + e.getClass().getSimpleName());
         }
     }
 
     @Test
     void testWriteEmptyTimeline() throws MidiUnavailableException {
         try {
-            String path = "./data/test/testWriteEmptyTimeline.json";
+            String path = UtilTest.getWriteFilePath("testWriteEmptyTimeline.json");
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("bob", null);
 
@@ -74,7 +66,7 @@ public class JsonWriterTest {
     @Test
     void testModifiedTimeline() throws MidiUnavailableException {
         try {
-            String path = "./data/test/testModifiedTimeline.json";
+            String path = UtilTest.getWriteFilePath("testModifiedTimeline.json");
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe", null);
             timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
@@ -98,7 +90,7 @@ public class JsonWriterTest {
     @Test
     void testWriteInvalidMidiData() throws MidiUnavailableException {
         try {
-            String path = "./data/test/testInvalidMidiDataTimeline.json";
+            String path = UtilTest.getWriteFilePath("testInvalidMidiDataTimeline.json");
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe", null);
             timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
@@ -122,7 +114,7 @@ public class JsonWriterTest {
     @Test
     void testMidiTracksTimeline() throws MidiUnavailableException {
         try {
-            String path = "./data/test/testMidiTracksTimeline.json";
+            String path = UtilTest.getWriteFilePath("testMidiTracksTimeline.json");
             jsonWriter = new JsonWriter(path);
             Timeline timeline = new Timeline("joe", null);
             timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
