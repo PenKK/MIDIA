@@ -1,6 +1,8 @@
 package ui.windows.piano.roll.ruler;
 
 import java.awt.Graphics;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import model.PianoRollPlayer;
 import model.TimelineController;
@@ -13,7 +15,7 @@ import javax.swing.*;
  * Ruler render panel for the piano roll view.
  * Draws measure, beat, and division tick marks and allows position scrubbing.
  */
-public class PianoRollRulerRenderPanel extends RulerRenderPanel {
+public class PianoRollRulerRenderPanel extends RulerRenderPanel implements PropertyChangeListener {
 
     private final TimelineController timelineController;
     private final PianoRollPlayer pianoRollPlayer;
@@ -29,6 +31,8 @@ public class PianoRollRulerRenderPanel extends RulerRenderPanel {
         this.timelineController = timelineController;
         this.pianoRollPlayer = pianoRollPlayer;
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+
+        pianoRollPlayer.addPropertyChangeListener(this);
         RulerMouseAdapter mouseAdapter = new RulerMouseAdapter(timelineController, pianoRollPlayer);
         addMouseAdapter(mouseAdapter);
     }
@@ -41,5 +45,13 @@ public class PianoRollRulerRenderPanel extends RulerRenderPanel {
         super.paintComponent(g);
         drawAllTickMarks(g, timelineController, getWidth(), pianoRollPlayer.getBeatDivision(),
                 pianoRollPlayer.getBeatsPerMeasure());
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        String propertyName = evt.getPropertyName();
+        if (propertyName.equals("beatDivision") || propertyName.equals("beatsPerMeasure")) {
+            repaint();
+        }
     }
 }
