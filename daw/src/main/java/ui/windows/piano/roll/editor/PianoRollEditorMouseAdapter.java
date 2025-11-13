@@ -55,7 +55,7 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!draggingNote) {
+        if (!draggingNote || draggedNote == null) {
             return;
         }
 
@@ -67,8 +67,11 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
             return;
 
         if (draggedNote.getPitch() != pitch || draggedNote.getStartTick() != snappedTick) {
+            Note tempOldNote = draggedNote;
             removeNote(draggedNote);
             draggedNote = createNote(snappedTick, pitch);
+            if (draggedNote == null) // percussive note was dragged out of bounds; restore note
+                draggedNote = tempOldNote;
         }
     }
 
@@ -87,7 +90,8 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
      * For percussive tracks, only the default pitch is allowed.
      */
     private Note createNote(long tick, int pitch) {
-        if (pianoRollPlayer.getParentMidiTrack().isPercussive() && pitch != Note.PERCUSSIVE_DEFAULT_PITCH) {
+        boolean isPercussive = pianoRollPlayer.getParentMidiTrack().isPercussive();
+        if (isPercussive && pitch != Note.PERCUSSIVE_DEFAULT_PITCH) {
             return null;
         }
 
@@ -96,7 +100,7 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         Note newNote = new Note(pitch, 127, startTick, durationTicks);
         pianoRollPlayer.getBlock().addNote(newNote);
 
-        if (!pianoRollPlayer.isPlaying()) {
+        if (!pianoRollPlayer.isPlaying() && ((draggedNote == null || draggedNote.getPitch() != pitch) || isPercussive)) {
             pianoRollPlayer.playNote(pitch);
         }
 

@@ -1,7 +1,7 @@
 out/
 *.class
 /bin/
-data/projects/autosave
+daw/data/projects/autosave
 *.iml
 .idea/
 .vscode/

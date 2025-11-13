@@ -112,7 +112,8 @@ public abstract class Player implements Writable, ActionListener {
     }
 
     /**
-     * Closes the sequencer and releases system resources.
+     * Frees all system resources held by the player. <p>
+     * Closes {@code sequencer}.
      */
     public void close() {
         sequencer.close();

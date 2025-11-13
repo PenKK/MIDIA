@@ -24,7 +24,7 @@ import persistance.JsonWriter;
  */
 public class FileMenu extends Menu {
 
-    public static final String PROJECTS_DIRECTORY = "data/projects";
+    public static final String PROJECTS_DIRECTORY = "./daw/data/projects";
     public static final String AUTO_SAVE_FILE_DIRECTORY = PROJECTS_DIRECTORY.concat("/autosave/");
 
     private final MenuItem open;
@@ -41,7 +41,6 @@ public class FileMenu extends Menu {
      */
     public FileMenu(TimelineController timelineController) {
         super("File", timelineController);
-
         this.timelineController = timelineController;
         open = new MenuItem("Open Project", this);
         save = new MenuItem("Save Project", this);

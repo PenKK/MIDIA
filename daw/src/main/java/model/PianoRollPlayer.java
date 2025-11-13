@@ -9,6 +9,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -20,13 +21,17 @@ import java.util.concurrent.TimeUnit;
  */
 public class PianoRollPlayer extends Player implements MetaEventListener {
 
-    private static final int NOTE_CREATION_DURATION_MS = 500;
+    private static final int STOP_NOTE_SCHEDULER_DELAY = 500;
 
     private final Block block;
     private final MidiTrack parentMidiTrack;
     private final PropertyChangeSupport propertyChangeSupport;
     private int volume;
     private boolean loop;
+
+    private final Synthesizer previewSynthesizer;
+    private ScheduledFuture<?> noteFuture;
+    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     /**
      * Constructs a BlockPlayer for the given block using the parent track's configuration.
@@ -44,7 +49,12 @@ public class PianoRollPlayer extends Player implements MetaEventListener {
         this.parentMidiTrack = parentMidiTrack;
         this.volume = parentMidiTrack.getVolume();
         this.loop = false;
-
+        try {
+            this.previewSynthesizer = MidiSystem.getSynthesizer();
+            previewSynthesizer.open();
+        } catch (MidiUnavailableException e) {
+            throw new RuntimeException("PianoRoll Synthesizer unavailable, note previews may not play", e);
+        }
         sequencer.addMetaEventListener(this);
 
         setBPM(initialBpm);
@@ -110,7 +120,6 @@ public class PianoRollPlayer extends Player implements MetaEventListener {
         }
 
         modifySystemReset(track);
-
         sequencer.setSequence(sequence);
 
         Event e = new Event(String.format("Playback sequence was updated in Block [Piano Roll] with instrument %s",
@@ -137,6 +146,17 @@ public class PianoRollPlayer extends Player implements MetaEventListener {
         }
 
         throw new RuntimeException("No system reset found");
+    }
+
+    /**
+     * Frees all system resources held by the player. <p>
+     * Closes {@code sequencer}, {@code previewSynthesizer}, and {@code scheduler}
+     */
+    @Override
+    public void close() {
+        super.close();
+        previewSynthesizer.close();
+        scheduler.shutdownNow();
     }
 
     @Override
@@ -170,33 +190,45 @@ public class PianoRollPlayer extends Player implements MetaEventListener {
     /**
      * Plays a short preview note using the parent track's channel and instrument.
      * <p>
-     * For percussive tracks, the instrument program number is used instead of pitch.
      *
      * @param pitch the MIDI pitch to preview (ignored for percussive tracks)
      */
     public void playNote(int pitch) {
         resetTracks();
         try {
-            Synthesizer synthesizer = MidiSystem.getSynthesizer();
-            Receiver receiver = synthesizer.getReceiver();
-            synthesizer.open();
+            if (noteFuture != null)
+                noteFuture.cancel(false);
+            previewSynthesizerSoundOff();
+            Receiver receiver = previewSynthesizer.getReceiver();
 
+            // data1: percussive tracks use the instrument program number, tonal tracks use pitch
             int data1 = parentMidiTrack.isPercussive() ? parentMidiTrack.getInstrument().getProgramNumber() : pitch;
 
             ShortMessage onMessage = new ShortMessage(ShortMessage.NOTE_ON, parentMidiTrack.getChannel(), data1, 127);
-            ShortMessage offMessage = new ShortMessage(ShortMessage.NOTE_OFF, parentMidiTrack.getChannel(), data1, 127);
             ShortMessage programMessage = new ShortMessage(ShortMessage.PROGRAM_CHANGE, parentMidiTrack.getChannel(),
                     parentMidiTrack.getInstrument().getProgramNumber(), 0);
 
             receiver.send(programMessage, 0);
             receiver.send(onMessage, 0);
-            receiver.send(offMessage, NOTE_CREATION_DURATION_MS * 1000);
-            ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-            scheduler.schedule(synthesizer::close, NOTE_CREATION_DURATION_MS + 1000, TimeUnit.MILLISECONDS);
+
+            noteFuture = scheduler.schedule(this::previewSynthesizerSoundOff,
+                    STOP_NOTE_SCHEDULER_DELAY, TimeUnit.MILLISECONDS);
         } catch (MidiUnavailableException e) {
             throw new RuntimeException("Synthesizer unavailable", e);
         } catch (InvalidMidiDataException e) {
             throw new RuntimeException("Invalid midi in synthesizer", e);
+        }
+    }
+
+    /**
+     * Stops all notes/sound on all {@code previewSynthesizer} channels.
+     */
+    private void previewSynthesizerSoundOff() {
+        for (MidiChannel channel : previewSynthesizer.getChannels()) {
+            if (channel == null)
+                continue;
+            channel.allNotesOff();
+            channel.allSoundOff();
         }
     }
 
@@ -212,7 +244,6 @@ public class PianoRollPlayer extends Player implements MetaEventListener {
         propertyChangeSupport.firePropertyChange("tickPosition", oldTickPosition, newTickPosition);
         return oldTickPosition;
     }
-
 
     @Override
     public double getLengthBeats() {
