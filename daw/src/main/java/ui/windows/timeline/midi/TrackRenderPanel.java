@@ -16,7 +16,7 @@ import model.Player;
 import model.Timeline;
 import model.TimelineController;
 import model.editing.DawClipboard;
-import ui.windows.piano.roll.PianoRollDialog;
+import ui.windows.piano.roll.PianoRollFrame;
 import ui.windows.timeline.midi.popup.BlockPopupMenu;
 import ui.windows.timeline.midi.popup.TrackGapPopupMenu;
 
@@ -42,7 +42,7 @@ public class TrackRenderPanel extends JPanel {
 
     private final MidiTrack midiTrack;
     private final TimelineController timelineController;
-    private PianoRollDialog pianoRollDialog;
+    private PianoRollFrame pianoRollFrame;
     private final DawClipboard dawClipboard;
 
     /**
@@ -253,12 +253,12 @@ public class TrackRenderPanel extends JPanel {
         String title = midiTrack.getName().concat(String.format(" [%d]", midiTrack.getBlocks().indexOf(b) + 1));
 
         if (b != null) {
-            if (pianoRollDialog != null && pianoRollDialog.isVisible()) {
-                pianoRollDialog.dispose();
+            if (pianoRollFrame != null && pianoRollFrame.isVisible()) {
+                pianoRollFrame.dispose();
             }
-            pianoRollDialog = new PianoRollDialog((JFrame) SwingUtilities.getWindowAncestor(this), 
+            pianoRollFrame = new PianoRollFrame((JFrame) SwingUtilities.getWindowAncestor(this),
                                                   b, timelineController, midiTrack, title);
-            pianoRollDialog.setVisible(true);
+            pianoRollFrame.setVisible(true);
         }
     }
 

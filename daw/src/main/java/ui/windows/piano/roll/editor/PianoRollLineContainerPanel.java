@@ -33,10 +33,17 @@ public class PianoRollLineContainerPanel extends LineContainerPanel implements P
     public void propertyChange(PropertyChangeEvent evt) {
         String propertyName = evt.getPropertyName();
 
-        if (propertyName.equals("tickPosition")) {
-            updateLineX();
-        } else if (propertyName.equals("beatDivision") || propertyName.equals("beatsPerMeasure")) {
-            repaint();
+        switch(propertyName) {
+            case "tickPosition":
+                updateLineX();
+                break;
+            case "beatDivision":
+            case "beatsPerMeasure":
+            case "noteCreated":
+            case "noteRemoved":
+            case "noteDragged":
+                repaint();
+                break;
         }
     }
 }

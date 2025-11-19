@@ -15,22 +15,21 @@ import model.TimelineController;
  * Non-modal dialog hosting the piano roll editor for a single block.
  * It uses a dedicated BlockPlayer for auditioning and closes when the timeline changes.
  */
-public class PianoRollDialog extends JDialog implements PropertyChangeListener {
+public class PianoRollFrame extends JFrame implements PropertyChangeListener {
 
     private final PianoRollPlayer pianoRollPlayer;
 
     /**
      * Constructs a piano roll dialog for the given block and wires it to the timeline.
      */
-    public PianoRollDialog(JFrame parent, Block block, TimelineController timelineController, MidiTrack parentMidiTrack, String title) {
-        super(parent, title, false);
+    public PianoRollFrame(JFrame parent, Block block, TimelineController timelineController, MidiTrack parentMidiTrack, String title) {
+        super(title);
         pianoRollPlayer = new PianoRollPlayer(block, parentMidiTrack, timelineController.getTimeline().getPlayer().getBPM());
         timelineController.addObserver(this);
 
         setLayout(new BorderLayout());
-        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
-        getRootPane().setWindowDecorationStyle(JRootPane.FRAME);
 
         PianoRollViewPanel pianoRollViewPanel = new PianoRollViewPanel(timelineController, pianoRollPlayer);
         add(pianoRollViewPanel, BorderLayout.CENTER);

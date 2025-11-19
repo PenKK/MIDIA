@@ -25,7 +25,8 @@ public class TimelineLineContainerPanel extends LineContainerPanel implements Pr
         String propertyName = evt.getPropertyName();
 
         switch (propertyName) {
-            case "tickPosition": case "horizontalScaleFactor":
+            case "tickPosition":
+            case "horizontalScaleFactor":
                 updateLineX();
                 break;
             case "timelineReplaced":
@@ -34,7 +35,6 @@ public class TimelineLineContainerPanel extends LineContainerPanel implements Pr
             case "blockPasted":
             case "blockCreated":
             case "noteCreated":
-            case "noteDragged":
             case "pianoRollNoteEdited":
                 repaint();
                 break;
