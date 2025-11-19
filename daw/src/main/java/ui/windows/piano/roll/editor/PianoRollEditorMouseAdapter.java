@@ -15,9 +15,14 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
 
     private final PianoRollPlayer pianoRollPlayer;
     private final TimelineController timelineController;
-    private Note draggedNote;
+    private final boolean isPercussive;
 
-    private boolean draggingNote;
+    private Note draggedNote;
+    private int draggedButton;
+    private boolean isDraggingNote;
+
+    private int noteCreateStartPitch;
+    private long noteCreateStartTick;
 
     /**
      * Creates a mouse adapter bound to a block player and timeline controller.
@@ -25,7 +30,8 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
     public PianoRollEditorMouseAdapter(PianoRollPlayer pianoRollPlayer, TimelineController timelineController) {
         this.pianoRollPlayer = pianoRollPlayer;
         this.timelineController = timelineController;
-        this.draggingNote = false;
+        this.isPercussive = pianoRollPlayer.getParentMidiTrack().isPercussive();
+        this.isDraggingNote = false;
     }
 
     /**
@@ -39,39 +45,54 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
 
         Note clickedNote = getNoteOnPosition(tick, pitch);
         if (clickedNote == null && e.getButton() == MouseEvent.BUTTON1) {
-            draggedNote = createNote(tick, pitch);
-            draggingNote = true;
-            return;
-        }
-        if (clickedNote != null && e.getButton() == MouseEvent.BUTTON3) {
-            removeNote(clickedNote);
-            return;
+            noteCreateStartTick = pianoRollPlayer.snapTickLowerBeatDivision(tick);
+            noteCreateStartPitch = pitch;
         }
         if (clickedNote != null && e.getButton() == MouseEvent.BUTTON1) {
             draggedNote = clickedNote;
-            draggingNote = true;
+            isDraggingNote = true;
         }
+        draggedButton = e.getButton();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if (!draggingNote || draggedNote == null) {
-            return;
+        if (isDraggingNote && draggedNote != null) {
+            handleNoteDrag(e);
+        } else if (draggedButton == MouseEvent.BUTTON3) {
+            handleNoteRemoveDrag(e);
         }
+    }
 
+    private void handleNoteRemoveDrag(MouseEvent e) {
+        Timeline timeline = timelineController.getTimeline();
+        long tick = timeline.scalePixelToTick(e.getX());
+        int pitch = 127 - e.getY() / PianoRollNoteDisplay.KEY_HEIGHT;
+
+        Note onNote = getNoteOnPosition(tick, pitch);
+
+        if (onNote != null) {
+            removeNote(onNote);
+            notifyControllerNoteChange("noteRemoved");
+        }
+    }
+
+    private void handleNoteDrag(MouseEvent e) {
         Timeline timeline = timelineController.getTimeline();
         long snappedTick = pianoRollPlayer.snapTickLowerBeatDivision(timeline.scalePixelToTick(e.getX()));
         int pitch = 127 - e.getY() / PianoRollNoteDisplay.KEY_HEIGHT;
 
         if (pitch < 0 || pitch > 127 || snappedTick < 0 || snappedTick >= pianoRollPlayer.getLengthTicks())
             return;
+        if (isPercussive && pitch != Note.PERCUSSIVE_DEFAULT_PITCH)
+            return;
 
         if (draggedNote.getPitch() != pitch || draggedNote.getStartTick() != snappedTick) {
-            Note tempOldNote = draggedNote;
-            removeNote(draggedNote);
-            draggedNote = createNote(snappedTick, pitch);
-            if (draggedNote == null) // percussive note was dragged out of bounds; restore note
-                draggedNote = tempOldNote;
+            if (draggedNote.getPitch() != pitch)
+                pianoRollPlayer.playNote(pitch);
+            draggedNote.setPitch(pitch);
+            draggedNote.setStartTick(snappedTick);
+            notifyControllerNoteChange("noteDragged");
         }
     }
 
@@ -80,9 +101,27 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
      */
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (draggingNote)
-            notifyControllerNoteChange();
-        draggingNote = false;
+        Timeline timeline = timelineController.getTimeline();
+        long tick = timeline.scalePixelToTick(e.getX());
+        int pitch = 127 - e.getY() / PianoRollNoteDisplay.KEY_HEIGHT;
+
+        if (isDraggingNote)
+            notifyControllerNoteChange("noteDragged");
+
+        Note clickedNote = getNoteOnPosition(tick, pitch);
+        if (clickedNote == null && e.getButton() == MouseEvent.BUTTON1
+                && noteCreateStartTick == pianoRollPlayer.snapTickLowerBeatDivision(tick)
+                && noteCreateStartPitch == pitch) {
+            draggedNote = createNote(tick, pitch);
+            isDraggingNote = true;
+        }
+        if (clickedNote != null && e.getButton() == MouseEvent.BUTTON3) {
+            removeNote(clickedNote);
+        }
+
+        draggedNote = null;
+        draggedButton = 0;
+        isDraggingNote = false;
     }
 
     /**
@@ -90,7 +129,6 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
      * For percussive tracks, only the default pitch is allowed.
      */
     private Note createNote(long tick, int pitch) {
-        boolean isPercussive = pianoRollPlayer.getParentMidiTrack().isPercussive();
         if (isPercussive && pitch != Note.PERCUSSIVE_DEFAULT_PITCH) {
             return null;
         }
@@ -100,13 +138,11 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
         Note newNote = new Note(pitch, 127, startTick, durationTicks);
         pianoRollPlayer.getBlock().addNote(newNote);
 
-        if (!pianoRollPlayer.isPlaying() && ((draggedNote == null || draggedNote.getPitch() != pitch) || isPercussive)) {
+        if (!pianoRollPlayer.isPlaying()) {
             pianoRollPlayer.playNote(pitch);
         }
 
-        pianoRollPlayer.getPropertyChangeSupport().firePropertyChange("noteCreated", null, newNote);
-        notifyControllerNoteChange();
-
+        notifyControllerNoteChange("noteCreated");
         return newNote;
     }
 
@@ -116,8 +152,7 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
     private void removeNote(Note note) {
         boolean removeSuccessful = pianoRollPlayer.getBlock().getNotes().remove(note);
         assert removeSuccessful : String.format("Note %s was note found when removing", note);
-        pianoRollPlayer.getPropertyChangeSupport().firePropertyChange("noteRemoved", null, null);
-        notifyControllerNoteChange();
+        notifyControllerNoteChange("noteRemoved");
     }
 
     /**
@@ -136,7 +171,8 @@ public class PianoRollEditorMouseAdapter extends MouseInputAdapter {
     /**
      * Notifies the controller that a note edit occurred, triggering UI updates.
      */
-    private void notifyControllerNoteChange() {
+    private void notifyControllerNoteChange(String property) {
+        pianoRollPlayer.getPropertyChangeSupport().firePropertyChange(property, null, null);
         timelineController.getPropertyChangeSupport().firePropertyChange("pianoRollNoteEdited", null, null);
     }
 }

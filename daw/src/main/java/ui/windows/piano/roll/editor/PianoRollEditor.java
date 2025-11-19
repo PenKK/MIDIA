@@ -175,6 +175,7 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
         switch (property) {
             case "noteRemoved":
             case "noteCreated":
+            case "noteDragged":
                 repaint();
                 try {
                     pianoRollPlayer.updateSequence();
