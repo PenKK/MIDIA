@@ -176,7 +176,6 @@ public class PianoRollEditor extends JPanel implements PropertyChangeListener {
             case "noteRemoved":
             case "noteCreated":
             case "noteDragged":
-                repaint();
                 try {
                     pianoRollPlayer.updateSequence();
                 } catch (InvalidMidiDataException e) {
