@@ -29,6 +29,7 @@ public class TimelinePlayerTest extends UtilTest {
 
     @BeforeEach
     void runBefore() {
+        skipIfHeadless();
         timeline = new TimelineController().getTimeline();
         timeline.setProjectName("test");
         expectedChannels = new ArrayList<>();

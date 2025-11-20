@@ -1,6 +1,7 @@
 package persistance;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static persistance.UtilTest.skipIfHeadless;
 
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class JsonWriterTest {
 
     @Test
     void testWriteEmptyTimeline() throws MidiUnavailableException {
+        skipIfHeadless();
         try {
             String path = UtilTest.getWriteFilePath("testWriteEmptyTimeline.json");
             jsonWriter = new JsonWriter(path);
@@ -66,6 +68,7 @@ public class JsonWriterTest {
 
     @Test
     void testModifiedTimeline() throws MidiUnavailableException {
+        skipIfHeadless();
         try {
             String path = UtilTest.getWriteFilePath("testModifiedTimeline.json");
             jsonWriter = new JsonWriter(path);
@@ -90,6 +93,7 @@ public class JsonWriterTest {
 
     @Test
     void testWriteInvalidMidiData() throws MidiUnavailableException {
+        skipIfHeadless();
         try {
             String path = UtilTest.getWriteFilePath("testInvalidMidiDataTimeline.json");
             jsonWriter = new JsonWriter(path);
@@ -114,6 +118,7 @@ public class JsonWriterTest {
 
     @Test
     void testMidiTracksTimeline() throws MidiUnavailableException {
+        skipIfHeadless();
         try {
             String path = UtilTest.getWriteFilePath("testMidiTracksTimeline.json");
             jsonWriter = new JsonWriter(path);

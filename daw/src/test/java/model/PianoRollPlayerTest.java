@@ -2,12 +2,15 @@ package model;
 
 import model.instrument.TonalInstrument;
 import static org.junit.jupiter.api.Assertions.*;
+import static persistance.UtilTest.skipIfHeadless;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Track;
+import java.awt.*;
 
 // See https://midi.org/expanded-midi-1-0-messages-list
 // to understand the checking of bytes in MidiEvents in tests
@@ -18,6 +21,7 @@ public class PianoRollPlayerTest {
 
     @BeforeEach
     void setup() {
+        skipIfHeadless();
         timelineController = new TimelineController();
         MidiTrack mt = timelineController.getTimeline().createMidiTrack("piano", TonalInstrument.ACOUSTIC_GRAND_PIANO);
         Block b = new Block(0, 1920);

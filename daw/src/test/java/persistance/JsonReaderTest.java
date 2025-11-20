@@ -1,6 +1,7 @@
 package persistance;
 
 import static org.junit.jupiter.api.Assertions.fail;
+import static persistance.UtilTest.skipIfHeadless;
 
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -33,6 +34,7 @@ public class JsonReaderTest {
 
     @Test
     void testNewTimeline() throws MidiUnavailableException, IOException {
+        skipIfHeadless();
         reader = new JsonReader(UtilTest.getReadFilePath("testReaderNewTimeline.json"));
         try {
             Timeline timeline = reader.read(pcsTest);
@@ -46,6 +48,7 @@ public class JsonReaderTest {
 
     @Test
     void testExtensiveTimeline() throws MidiUnavailableException, IOException {
+        skipIfHeadless();
         reader = new JsonReader(UtilTest.getReadFilePath("testReaderExtensive.json"));
         try {
             Timeline timeline = reader.read(pcsTest);

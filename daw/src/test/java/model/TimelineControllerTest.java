@@ -15,6 +15,7 @@ public class TimelineControllerTest extends UtilTest {
 
     @BeforeEach
     void setup() {
+        skipIfHeadless();
         tc = new TimelineController();
     }
 

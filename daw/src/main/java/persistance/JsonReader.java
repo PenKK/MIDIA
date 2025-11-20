@@ -32,6 +32,7 @@ public record JsonReader(String sourcePath) {
     /**
      * Reads a timeline from the JSON file.
      *
+     * @param pcs the PropertyChangeSupport to use for the timeline
      * @return the parsed Timeline
      * @throws IOException                if an error occurs reading data from the file
      * @throws MidiUnavailableException   if MIDI resources are unavailable

@@ -9,7 +9,9 @@ import model.instrument.TonalInstrument;
 import model.instrument.PercussiveInstrument;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
+import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +32,10 @@ public class UtilTest {
     public static String getWriteFilePath(String filename) throws IOException {
         Files.createDirectories(TEST_PATH_WRITE);
         return TEST_PATH_WRITE.resolve(filename).toString();
+    }
+
+    public static void skipIfHeadless() {
+        assumeFalse(GraphicsEnvironment.isHeadless(), "Skipping playback test in CI");
     }
 
     public static void assertTimelineEquals(Timeline timeline1, Timeline timeline2) {

@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.awt.*;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -192,6 +193,7 @@ public class MidiTrackTest {
 
     @Test
     void testSetInstrument() throws InvalidMidiDataException {
+        UtilTest.skipIfHeadless();
         Timeline timeline = new Timeline("test", null);
         timeline.setPropertyChangeSupport(new PropertyChangeSupport(timeline));
         midiTrack = timeline.createMidiTrack("Piano melody", instr);
