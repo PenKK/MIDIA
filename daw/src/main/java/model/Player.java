@@ -1,16 +1,12 @@
 package model;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sound.midi.InvalidMidiDataException;
-import javax.sound.midi.MidiSystem;
-import javax.sound.midi.MidiUnavailableException;
-import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
-import javax.sound.midi.Track;
+import javax.sound.midi.*;
 import javax.swing.Timer;
 
 import org.json.JSONArray;
@@ -53,9 +49,20 @@ public abstract class Player implements Writable, ActionListener {
         isDraggingRuler = false;
 
         try {
-            sequencer = MidiSystem.getSequencer();
-            sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
+            if (GraphicsEnvironment.isHeadless()) {
+//                 Headless: use software synthesizer, don't attempt connection with default hardware
+                sequencer = MidiSystem.getSequencer(false);
+                Synthesizer synth = MidiSystem.getSynthesizer();
+                synth.open();
+                sequencer.getTransmitter().setReceiver(synth.getReceiver());
+                EventLog.getInstance().logEvent(new Event("Headless system, using software synthesizer"));
+            } else {
+//                 else use the default sequencer
+                sequencer = MidiSystem.getSequencer();
+            }
+
             sequencer.open();
+            sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
         } catch (MidiUnavailableException e) {
             throw new RuntimeException("MIDI device unavailable, unable to initialize player", e);
         } catch (InvalidMidiDataException e) {
