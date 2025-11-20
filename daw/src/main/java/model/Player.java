@@ -50,18 +50,18 @@ public abstract class Player implements Writable, ActionListener {
 
         try {
             if (GraphicsEnvironment.isHeadless()) {
-//                 Headless: use software synthesizer, don't attempt connection with default hardware
+                // Headless: use software synthesizer, don't attempt connection with default hardware
                 sequencer = MidiSystem.getSequencer(false);
+                sequencer.open();
                 Synthesizer synth = MidiSystem.getSynthesizer();
                 synth.open();
                 sequencer.getTransmitter().setReceiver(synth.getReceiver());
                 EventLog.getInstance().logEvent(new Event("Headless system, using software synthesizer"));
             } else {
-//                 else use the default sequencer
+                // else use the default sequencer
                 sequencer = MidiSystem.getSequencer();
+                sequencer.open();
             }
-
-            sequencer.open();
             sequence = new Sequence(Sequence.PPQ, PULSES_PER_QUARTER_NOTE);
         } catch (MidiUnavailableException e) {
             throw new RuntimeException("MIDI device unavailable, unable to initialize player", e);
