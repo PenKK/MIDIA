@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: daw
+        working-directory: midia-daw
     steps:
     - name: Checkout project sources
       uses: actions/checkout@v4
