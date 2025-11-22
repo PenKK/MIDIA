@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 DEBUG = bool(os.environ.get('DEBUG', default=0))
-SECRET_KEY = 'dev-secret' if DEBUG else os.environ['SECRET_KEY']
+SECRET_KEY = os.environ['SECRET_KEY']
 
 ALLOWED_HOSTS = ["*"]
 
@@ -111,4 +111,5 @@ USE_TZ = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
+STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -7,3 +7,4 @@ daw/data/projects/autosave
 .vscode/
 .gradle/
 build/
+.env
