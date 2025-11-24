@@ -17,9 +17,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 env = Env()
 env.read_env(os.path.join(BASE_DIR, '.env'))
 
-# https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-DEBUG = bool(os.environ.get('DEBUG', default=0))
+# https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+DEV = env.bool('DEV', default=False)
+DEBUG = DEV
 SECRET_KEY = env('SECRET_KEY')
 ALLOWED_HOSTS = ['*']
 
@@ -106,7 +107,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.Argon2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2PasswordHasher",
+    "django.contrib.auth.hashers.PBKDF2SHA1PasswordHasher",
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+    "django.contrib.auth.hashers.ScryptPasswordHasher",
+]
+
 AUTH_USER_MODEL = 'users.User'
+
+SIMPLE_JWT = {
+    "AUTH_COOKIE": "api-auth",
+    "AUTH_COOKIE_SECURE": not DEV,
+    "AUTH_COOKIE_HTTPONLY": True,
+    "AUTH_COOKIE_SAMESITE": "Lax",
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/

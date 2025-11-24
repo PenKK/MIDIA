@@ -2,4 +2,5 @@ Django~=5.2.8
 djangorestframework~=3.16.1
 djangorestframework-simplejwt~=5.5.1
 psycopg~=3.2.13
-environs
+argon2-cffi~=25.1.0
+environs~=14.5.0
