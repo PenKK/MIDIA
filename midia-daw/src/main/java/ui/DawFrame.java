@@ -38,20 +38,25 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
     /**
      * Creates the main application frame and initializes UI components.
      *
-     * @throws IOException              if UI resources cannot be loaded
      */
-    DawFrame() throws IOException {
+    DawFrame() {
         timelineController = new TimelineController();
         menuBar = new MenuBar(timelineController);
         mediaControlPanel = new MediaControlPanel(timelineController);
         dawClipboard = new DawClipboard();
         timelineViewPanel = new TimelineViewPanel(timelineController, dawClipboard);
-
         timelineController.addObserver(this);
+        String iconPath = "/images/logo.png";
+
+        try {
+            this.setIconImage(ImageIO.read(Objects
+                    .requireNonNull(getClass().getResourceAsStream(iconPath))));
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("Failed to read ImageIcon for DawFrame at path %s%n",
+                    iconPath), e);
+        }
 
         this.setLayout(new BorderLayout());
-        this.setIconImage(ImageIO.read(Objects
-                .requireNonNull(getClass().getResourceAsStream("/images/logo.png"))));
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setBounds(new Rectangle(800, 600));
         this.addWindowListener(onCloseWindowAdapter());
@@ -114,14 +119,15 @@ public class DawFrame extends JFrame implements PropertyChangeListener {
      */
     public void autoSave() {
         Timeline t = timelineController.getTimeline();
-        JsonWriter writer = new JsonWriter(FileMenu.AUTO_SAVE_FILE_DIRECTORY.concat(t.getProjectName()));
+        String savePath = FileMenu.AUTO_SAVE_FILE_DIRECTORY.concat(t.getProjectName());
+        JsonWriter writer = new JsonWriter(savePath);
 
         try {
             writer.open();
             writer.write(t);
             writer.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Unable to auto save, invalid path");
+            System.out.printf("Unable to auto save, invalid file path: %s%n", savePath);
         }
     }
 }
