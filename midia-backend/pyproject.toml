@@ -1,0 +1,9 @@
+[project]
+name = "midia-backend"
+version = "0.1.0"
+description = "Midia backend for auth and cloud syncing"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "uvicorn"
+]
