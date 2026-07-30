@@ -1,22 +1,13 @@
-FROM python:3.11
+FROM public.ecr.aws/lambda/python:3.11
 
-WORKDIR /app
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+WORKDIR ${LAMBDA_TASK_ROOT}
 
-# install uv
-RUN pip install uv
+COPY pyproject.toml uv.lock ./
 
-# copy only dependency files first (cache optimization)
-COPY pyproject.toml uv.lock* /app/
-
-# install into SYSTEM (no venv!)
 RUN uv pip install --system .
 
-# now copy rest of code
-COPY . /app/
+COPY . .
 
-EXPOSE 8000
-
-CMD ["uv", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["main.handler"]
