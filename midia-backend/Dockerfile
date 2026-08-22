@@ -8,6 +8,7 @@ COPY pyproject.toml uv.lock ./
 
 RUN uv pip install --system .
 
-COPY . .
+COPY main.py .
+COPY src/ .
 
 CMD ["main.handler"]

@@ -3,10 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8"
-    )
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
     # JWT
     secret_key: SecretStr
@@ -21,4 +18,4 @@ class Settings(BaseSettings):
     db_port: str = 5432
 
 
-settings = Settings() # type: ignore[call-arg] # Loaded from .env file
+settings = Settings()  # type: ignore[call-arg] # Loaded from .env file

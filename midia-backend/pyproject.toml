@@ -12,3 +12,13 @@ dependencies = [
     "sqlalchemy>=2.0.48",
     "mangum>=0.21.0",
 ]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.0.0",
+    "ruff>=0.11.0",
+    "mypy>=1.15.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=6.0.0",
+    "httpx>=0.28.0",
+]

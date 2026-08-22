@@ -8,3 +8,4 @@ daw/data/projects/autosave
 .gradle/
 build/
 .env
+.terraform
