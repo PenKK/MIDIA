@@ -2,6 +2,8 @@ name: Build Gradle project
 
 on:
   push:
+    paths:
+      - midia-daw/src/**
   pull_request:
 
 jobs:
