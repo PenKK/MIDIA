@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from src.auth.constants import PASSWORD_MIN, USERNAME_MAX, USERNAME_MIN
@@ -15,7 +17,7 @@ class UserCreate(UserBase):
 class UserCreateResponse(UserBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    date_created: str
+    date_created: datetime
 
 
 class Token(BaseModel):

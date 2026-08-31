@@ -1,9 +1,24 @@
-from pydantic import BaseModel, ConfigDict
-from sqlalchemy import DateTime
+from datetime import datetime
+
+from pydantic import BaseModel, ConfigDict, Field
+
+from project.constants import PROJECT_NAME_MAX
 
 
 class ProjectBase(BaseModel):
+    project_name: str = Field(min_length=1, max_length=PROJECT_NAME_MAX)
+    data: dict
+
+
+class ProjectCreate(ProjectBase):
     pass
+
+
+class ProjectUpdate(BaseModel):
+    project_name: str | None = Field(
+        default=None, min_length=1, max_length=PROJECT_NAME_MAX
+    )
+    data: dict | None = None
 
 
 class ProjectResponse(ProjectBase):
@@ -11,6 +26,5 @@ class ProjectResponse(ProjectBase):
 
     id: int
     user_id: int
-    project_name: str
-    created_at: DateTime
-    updated_at: DateTime
+    created_at: datetime
+    updated_at: datetime
