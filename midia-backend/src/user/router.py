@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
-from src.auth import models, schemas
+from src.user import models, schemas
 from src.database import get_db
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/user", tags=["user"])
 
 
 @router.post(

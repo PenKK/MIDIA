@@ -7,7 +7,7 @@ from pwdlib import PasswordHash
 from src.config import settings
 
 password_hash = PasswordHash.recommended()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/users/token")
 
 
 def hash_password(password: str) -> str:

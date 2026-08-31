@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from src.auth.constants import PASSWORD_MIN, USERNAME_MAX, USERNAME_MIN
+from src.user.constants import PASSWORD_MIN, USERNAME_MAX, USERNAME_MIN
 
 
 class UserBase(BaseModel):

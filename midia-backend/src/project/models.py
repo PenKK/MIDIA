@@ -11,7 +11,7 @@ from src.util import utc_now
 
 
 if TYPE_CHECKING:
-    from src.auth.models import User
+    from src.user.models import User
 
 
 class DAWProject(Base):

@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 from sqlalchemy import Integer, String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from src.auth.constants import EMAIL_MAX, PASSWORD_HASH_MAX, USERNAME_MAX
+from src.user.constants import EMAIL_MAX, PASSWORD_HASH_MAX, USERNAME_MAX
 from src.database import Base
 from src.util import utc_now
 
